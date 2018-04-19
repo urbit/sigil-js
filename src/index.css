@@ -1,0 +1,65 @@
+
+html {
+  background-color: black;
+  color: white;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Source Code Pro', monospace;
+}
+
+.App {
+  text-align: center;
+}
+
+.App-header {
+  background-color: #222;
+  height: 150px;
+  padding: 20px;
+  color: white;
+}
+
+canvas {
+  border: 1px solid black;
+  background-color: white;
+}
+
+nav {
+  width: 500px;
+  padding: 2rem;
+  text-align: left;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid white;
+}
+
+.row pre {
+  padding: 0.1rem;
+}
+
+button {
+  font-family: "Work Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: 500;
+  font-size: 1rem;
+  line-height: 1rem;
+  padding: .5rem 1rem;
+  color: black;
+  background-color: #B3B3B3;
+  margin: 0 0 6px;
+  background-color: #4330FC;
+  color: white;
+  border: none;
+  outline: none;
+  border-radius: 0;
+  margin-right: 0.5rem;
+}
+
+button:hover {
+  opacity: 0.6;
+  cursor: pointer;
+}

@@ -27,7 +27,7 @@ canvas {
 }
 
 nav {
-  width: 500px;
+  width: 100%;
   padding: 2rem;
   text-align: left;
 }
@@ -62,4 +62,14 @@ button {
 button:hover {
   opacity: 0.6;
   cursor: pointer;
+}
+
+input {
+  font-family: "Work Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: 500;
+  font-size: 1rem;
+  line-height: 1rem;
+  padding: .4rem 1rem;
+  border: none;
+  outline: none;
 }

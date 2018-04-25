@@ -20,7 +20,9 @@ const fromLeft = arr => i => arr.reverse().slice(0, i).reverse()
 
 //
 const flatten = ([x, ...xs]) => x
-  ? Array.isArray(x) ? [...flatten(x), ...flatten(xs)] : [x, ...flatten(xs)]
+  ? Array.isArray(x)
+    ? [...flatten(x), ...flatten(xs)]
+    : [x, ...flatten(xs)]
   : []
 
 //
@@ -38,7 +40,17 @@ const chunk = arr => mod => arr.reduce((acc, a, i) => {
   return acc
 }, [])
 
+// recursive map
+const rmap = ([x, ...xs], f) => def(x)
+  ? [f(x), ...map(xs, f)]
+  : []
 
+// Array.prototype.map() as a pure function
+const map = (arr, f) => def(arr)
+  ? arr.map((item, i, array) => f(item, i, array))
+  : []
+
+// const map = Array.prototype.map
 
 // Object
 const thread = obj => f => Object.entries(obj).reduce((acc, [k, v]) => (acc[k] = f(v), acc), {} )
@@ -87,7 +99,7 @@ const parseDec = a => parseInt(a, 10)
 const replace = s => test => delimiter => s.replace(test, delimiter)
 
 // the english alphabet as an array
-const alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('')
+const abc = 'abcdefghijklmnopqrstuvwxyz'.split('')
 
 const loadImage = src => {
   return new Promise((resolve, reject) => {
@@ -97,6 +109,8 @@ const loadImage = src => {
     img.src = src
   })
 }
+
+const end = arr => arr[arr.length - 1]
 
 // Base Conversion
 // const binDec = s => parseInt(s, 2).toString(10)
@@ -118,104 +132,13 @@ const { binDec, binHex, decBin, decHex, hexBin, hexDec } = thread({
   return s => conversion(s)
 })
 
-
-// all urbit ship name prefixes
-// regex strips any line breaks from template literal
-const pre = replace(`
-dozmarbinwansamlitsighidfidlissogdirwacsabwissib
-rigsoldopmodfoglidhopdardorlorhodfolrintogsilmir
-holpaslacrovlivdalsatlibtabhanticpidtorbolfosdot
-losdilforpilramtirwintadbicdifrocwidbisdasmidlop
-rilnardapmolsanlocnovsitnidtipsicropwitnatpanmin
-ritpodmottamtolsavposnapnopsomfinfonbanmorworsip
-ronnorbotwicsocwatdolmagpicdavbidbaltimtasmallig
-sivtagpadsaldivdactansidfabtarmonranniswolmispal
-lasdismaprabtobrollatlonnodnavfignomnibpagsopral
-bilhaddocridmocpacravripfaltodtiltinhapmicfanpat
-taclabmogsimsonpinlomrictapfirhasbosbatpochactid
-havsaplindibhosdabbitbarracparloddosbortochilmac
-tomdigfilfasmithobharmighinradmashalraglagfadtop
-mophabnilnosmilfopfamdatnoldinhatnacrisfotribhoc
-nimlarfitwalrapsarnalmoslandondanladdovrivbacpol
-laptalpitnambonrostonfodponsovnocsorlavmatmipfip
-`)(/(\r\n|\n|\r)/gm)('')
-
-
-// all urbit ship name suffixes
-// regex strips any line breaks from template literal
-const suf = replace(`
-zodnecbudwessevpersutletfulpensytdurwepserwylsun
-rypsyxdyrnuphebpeglupdepd 2 ysputlughecryttyvsydnex
-lunmeplutseppesdelsulpedtemledtulmetwenbynhexfeb
-pyldulhetmevruttylwydtepbesdexsefwycburderneppur
-rysrebdennutsubpetrulsynregtydsupsemwynrecmegnet
-secmulnymtevwebsummutnyxrextebfushepbenmuswyxsym
-selrucdecwexsyrwetdylmynmesdetbetbeltuxtugmyrpel
-syptermebsetdutdegtexsurfeltudnuxruxrenwytnubmed
-lytdusnebrumtynseglyxpunresredfunrevrefmectedrus
-bexlebduxrynnumpyxrygryxfeptyrtustyclegnemfermer
-tenlusnussyltecmexpubrymtucfyllepdebbermughuttun
-bylsudpemdevlurdefbusbeprunmelpexdytbyttyplevmyl
-wedducfurfexnulluclennerlexrupnedlecrydlydfenwel
-nydhusrelrudneshesfetdesretdunlernyrsebhulryllud
-remlysfynwerrycsugnysnyllyndyndemluxfedsedbecmun
-lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes
-`)(/(\r\n|\n|\r)/gm)('')
-
-
-// parse suffixes and prefixes into strings of length 3
-const sufChunk = match(suf)(/.{1,3}/g)
-const preChunk = match(pre)(/.{1,3}/g)
-
-
-// generates a random ship name
-const randomShipName = bitLength =>
-  sequence(bitLength / 8).map(index => index % 2 === 0
-    ? preChunk[randInt(255)]
-    : sufChunk[randInt(255)]
-  )
-
-
-const lineage = root => ({
-  galaxy: ship(root)(8),
-  star: ship(root)(16),
-  planet: ship(root)(32),
-  // cannot go above 32 bits now
-})
-
-
-const ship = root => offset => {
-  const parsed = stringBar(root)
-  const binary = barString(fromLeft(parsed)(offset))
-  const integer = compose(parseDec, binDec)(binary)
-  // const prime = primes(integer)
-  const splitTwo = chunk(parsed)(2).map(val => splitInt(val))
-  const splitFour = chunk(parsed)(4).map(val => splitInt(val))
-  const splitEight = chunk(parsed)(8).map(val => splitInt(val))
-  return {
-    binary,
-    integer,
-    // prime,
-    splitTwo,
-    splitFour,
-    splitEight,
-  }
-}
-
-
-const randomShipArray = length => bitLength =>
-  sequence(length)
-  .map(index => randomShipName(bitLength))
-
-
-const callIfDef = (f, ...args) => def(f)
-  ? f(... args)
+const callIfDef = f => (...args) => def(f)
+  ? f(...args)
   : null
 
 
 export {
   randomBinaryOfLength,
-  lineage,
   flatten,
   sequence,
   filter,
@@ -230,10 +153,14 @@ export {
   hexBin,
   hexDec,
   loadImage,
-  randomShipName,
-  randomShipArray,
   join,
   split,
   def,
   callIfDef,
+  map,
+  abc,
+  match,
+  randInt,
+  replace,
+  end,
 }

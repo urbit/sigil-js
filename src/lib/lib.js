@@ -50,6 +50,9 @@ const map = (arr, f) => def(arr)
   ? arr.map((item, i, array) => f(item, i, array))
   : []
 
+const avg = arr => arr.reduce((a,b) => a + b, 0) / arr.length
+
+
 // const map = Array.prototype.map
 
 // Object
@@ -137,6 +140,14 @@ const callIfDef = f => (...args) => def(f)
   : null
 
 
+const slice = arr => start => end => arr.slice(start, end)
+
+const getPage = arr => perPage => pageIndex => {
+  const start = pageIndex*perPage
+  const end = (pageIndex*perPage) + perPage
+  return slice(arr)(start)(end)
+}
+
 export {
   randomBinaryOfLength,
   flatten,
@@ -163,4 +174,5 @@ export {
   randInt,
   replace,
   end,
+  getPage,
 }

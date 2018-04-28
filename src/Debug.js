@@ -1,36 +1,18 @@
 import React, { Component } from 'react'
 import chr from 'chroma-js'
 import paper from 'paper'
-import {
-  bigCombination,
-} from 'js-combinatorics'
+import { bigCombination, permutation, baseN } from 'js-combinatorics'
 
-import {
-  initCanvas,
-} from './lib/lib.canvas'
-
-import {
-  pPoint,
-  pGroup,
-  pPathRect,
-  pPathCircle,
-  pRect,
-  genAvatar,
-  drawChars,
-  rectGrid,
-  unitePaths,
-  intersectPaths,
-  excludePaths,
-  subtractPaths,
-  symGrid,
-} from './lib/lib.paper'
+import { initCanvas } from './lib/lib.canvas'
+import { genAvatar, drawChars, rectGrid, pGroup, opPipe } from './lib/lib.paper'
+import {randomShipName, printShip, randomShipArray } from './lib/lib.urbit'
+import { getChar, getSet } from './lib/lib.symset'
 
 import {
   lineage,
   flatten,
   sequence,
   map,
-  factors,
   thread,
   through,
   chunk,
@@ -42,19 +24,6 @@ import {
   match,
 } from './lib/lib'
 
-import {
-  suffixes,
-  prefixes,
-  randomShipName,
-  printShip,
-  randomShipArray,
-} from './lib/lib.urbit'
-
-import { getChar, getSet } from './lib/lib.symset'
-
-const SIZE_Y = 2048
-const SIZE_X = 1024
-const MAX_BITS = 32
 
 class Debug extends Component {
   constructor(props) {
@@ -69,25 +38,74 @@ class Debug extends Component {
       ships: randomShipArray(1)(32),
       debug: false,
       input: '',
+      symSet: false,
     }
   }
 
   componentDidMount = () => {
-    const {ctx, canvas} = initCanvas(this.paperCanvas, {x:1024, y:1024})
+    const {ctx, canvas} = initCanvas(this.paperCanvas, {x:2000, y:6000})
     paper.setup(canvas)
     // paper is a globally scoped object and independant from the vDOM
     this.draw()
     // this.drawSymbols()
   }
 
+  // draw = () => {
+  //   paper.project.clear()
+  //   const symGrid = rectGrid({x:0, y:0}, { x: 32, y: 32 }, { x: 2, y: 2 }, false)
+  //   const tileGrid = rectGrid({x:256, y:256}, {x: 256, y: 256}, { x: 2, y: 2 }, true)
+  //   const { ships } = this.state
+  //   // const allShipGroups = map(ships, name => genAvatar(name, tileGrid, symGrid, 'symsetSymbolsB'))
+	// 	paper.view.draw()
+  // }
+
   draw = () => {
     paper.project.clear()
-    const symGrid = rectGrid({x:0, y:0}, { x: 32, y: 32 }, { x: 9, y: 9 }, false)
-    const tileGrid = rectGrid({x:256, y:256}, {x: 256, y: 256}, { x: 2, y: 2 }, true)
-    const { ships } = this.state
-    const allShipGroups = map(ships, name => genAvatar(name, tileGrid, symGrid, 'symsetAlphabetA'))
-		paper.view.draw()
+
+    const size = 16
+    const gap = 10
+
+    const symbolGrid = rectGrid({x:0, y:0}, { x:size, y:size }, { x: 2, y: 2 }, false)
+    const avatarGrid = rectGrid({x:0, y:0}, {x: size-0.1, y: size-0.1}, { x: 2, y: 2 }, true)
+    console.log(symbolGrid)
+    const pageGrid = rectGrid({x:100, y:100}, {x: (size * 2) + gap, y: (size * 2) + gap}, { x: 45, y: 256 }, true)
+    if (this.state.symSet) {
+      const permutations = permutation(getSet(this.state.symSet), 4).toArray()
+      const avatarSet = map(permutations, (set, outerIndex) => {
+        // const fillColor = chr.random().hex()
+        const fillColor = 'black'
+
+
+        const avatar = map(set, (symbol, innerIndex) => {
+          const params = {
+            fillColor,
+            strokeWidth: 1,
+            // strokeColor: 'white',
+            // blendMode:'multiply',
+            selected: this.state.debug,
+            position: avatarGrid[innerIndex],
+          }
+
+          return symbol(symbolGrid, params)
+        })
+
+
+      const symbol = pGroup(avatar)
+      // console.log(symbol)
+      // console.log(count)
+      // symbol.position = pageGrid[count]
+      return symbol
+    })
+
+    console.log(avatarSet.length, avatarSet[0])
+
+    map(avatarSet, (avatar, index) => avatar.position = pageGrid[index] )
+
+    paper.view.draw()
+    }
   }
+
+
 
   // drawSymbols = () => {
   //   // const alphabetGrid = rectGrid({ x:0, y:512 }, {x: 64, y: 64}, 15, 16, true)
@@ -127,17 +145,23 @@ class Debug extends Component {
     this.setState({ timeout })
   }
 
-  setShip = (ship) => {
+  setShip = ship => {
     const parsed = match(ship)(/.{1,3}/g)
     this.setState({ships: [parsed]}, () => this.draw())
   }
+
+  setSymbolSet = setName => this.setState({symSet: setName}, () => this.draw())
+
+  toggleDebug = () => this.setState({debug: !this.state.debug}, () => this.draw())
 
   render = () => {
     return (
       <div>
         <nav>
+          <h3>Urbit Avatar Debug</h3>
           <button onClick={() => this.randomShip(1)}>{'random patp'}</button>
           <button onClick={() => this.randomContinuous()}>{'▶'}</button>
+          <button onClick={() => this.toggleDebug()}>{'debug'}</button>
           <span>
             <input
               value={this.state.input}
@@ -147,7 +171,14 @@ class Debug extends Component {
               {'submit'}
             </button>
           </span>
-          <h2>{printShip(this.state.ships[0])}</h2>
+          <button onClick={() => this.setSymbolSet('symsetSymbolsA')}>{'A'}</button>
+          <button onClick={() => this.setSymbolSet('symsetSymbolsB')}>{'B'}</button>
+          <button onClick={() => this.setSymbolSet('symsetSymbolsC')}>{'C'}</button>
+          <button onClick={() => this.setSymbolSet('symsetSymbolsD')}>{'D'}</button>
+          <button onClick={() => this.setSymbolSet('symsetSymbolsE')}>{'E'}</button>
+          <button onClick={() => this.setSymbolSet('symsetSymbolsF')}>{'F'}</button>
+
+          <h3>{printShip(this.state.ships[0])}</h3>
 
         </nav>
 

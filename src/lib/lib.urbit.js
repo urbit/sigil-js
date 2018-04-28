@@ -10,59 +10,59 @@ import {
   randInt,
 } from './lib'
 
-const pre = replace(`
-dozmarbinwansamlitsighidfidlissogdirwacsabwissib
-rigsoldopmodfoglidhopdardorlorhodfolrintogsilmir
-holpaslacrovlivdalsatlibtabhanticpidtorbolfosdot
-losdilforpilramtirwintadbicdifrocwidbisdasmidlop
-rilnardapmolsanlocnovsitnidtipsicropwitnatpanmin
-ritpodmottamtolsavposnapnopsomfinfonbanmorworsip
-ronnorbotwicsocwatdolmagpicdavbidbaltimtasmallig
-sivtagpadsaldivdactansidfabtarmonranniswolmispal
-lasdismaprabtobrollatlonnodnavfignomnibpagsopral
-bilhaddocridmocpacravripfaltodtiltinhapmicfanpat
-taclabmogsimsonpinlomrictapfirhasbosbatpochactid
-havsaplindibhosdabbitbarracparloddosbortochilmac
-tomdigfilfasmithobharmighinradmashalraglagfadtop
-mophabnilnosmilfopfamdatnoldinhatnacrisfotribhoc
-nimlarfitwalrapsarnalmoslandondanladdovrivbacpol
-laptalpitnambonrostonfodponsovnocsorlavmatmipfip
-`)(/(\r\n|\n|\r)/gm)('')
+const pre = `
+dozmarbinwansamlitsighidfidlissogdirwacsabwissib\
+rigsoldopmodfoglidhopdardorlorhodfolrintogsilmir\
+holpaslacrovlivdalsatlibtabhanticpidtorbolfosdot\
+losdilforpilramtirwintadbicdifrocwidbisdasmidlop\
+rilnardapmolsanlocnovsitnidtipsicropwitnatpanmin\
+ritpodmottamtolsavposnapnopsomfinfonbanmorworsip\
+ronnorbotwicsocwatdolmagpicdavbidbaltimtasmallig\
+sivtagpadsaldivdactansidfabtarmonranniswolmispal\
+lasdismaprabtobrollatlonnodnavfignomnibpagsopral\
+bilhaddocridmocpacravripfaltodtiltinhapmicfanpat\
+taclabmogsimsonpinlomrictapfirhasbosbatpochactid\
+havsaplindibhosdabbitbarracparloddosbortochilmac\
+tomdigfilfasmithobharmighinradmashalraglagfadtop\
+mophabnilnosmilfopfamdatnoldinhatnacrisfotribhoc\
+nimlarfitwalrapsarnalmoslandondanladdovrivbacpol\
+laptalpitnambonrostonfodponsovnocsorlavmatmipfip\
+`
 
-const suf = replace(`
-zodnecbudwessevpersutletfulpensytdurwepserwylsun
-rypsyxdyrnuphebpeglupdepdysputlughecryttyvsydnex
-lunmeplutseppesdelsulpedtemledtulmetwenbynhexfeb
-pyldulhetmevruttylwydtepbesdexsefwycburderneppur
-rysrebdennutsubpetrulsynregtydsupsemwynrecmegnet
-secmulnymtevwebsummutnyxrextebfushepbenmuswyxsym
-selrucdecwexsyrwetdylmynmesdetbetbeltuxtugmyrpel
-syptermebsetdutdegtexsurfeltudnuxruxrenwytnubmed
-lytdusnebrumtynseglyxpunresredfunrevrefmectedrus
-bexlebduxrynnumpyxrygryxfeptyrtustyclegnemfermer
-tenlusnussyltecmexpubrymtucfyllepdebbermughuttun
-bylsudpemdevlurdefbusbeprunmelpexdytbyttyplevmyl
-wedducfurfexnulluclennerlexrupnedlecrydlydfenwel
-nydhusrelrudneshesfetdesretdunlernyrsebhulryllud
-remlysfynwerrycsugnysnyllyndyndemluxfedsedbecmun
-lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes
-`)(/(\r\n|\n|\r)/gm)('')
+const suf = `
+zodnecbudwessevpersutletfulpensytdurwepserwylsun\
+rypsyxdyrnuphebpeglupdepdysputlughecryttyvsydnex\
+lunmeplutseppesdelsulpedtemledtulmetwenbynhexfeb\
+pyldulhetmevruttylwydtepbesdexsefwycburderneppur\
+rysrebdennutsubpetrulsynregtydsupsemwynrecmegnet\
+secmulnymtevwebsummutnyxrextebfushepbenmuswyxsym\
+selrucdecwexsyrwetdylmynmesdetbetbeltuxtugmyrpel\
+syptermebsetdutdegtexsurfeltudnuxruxrenwytnubmed\
+lytdusnebrumtynseglyxpunresredfunrevrefmectedrus\
+bexlebduxrynnumpyxrygryxfeptyrtustyclegnemfermer\
+tenlusnussyltecmexpubrymtucfyllepdebbermughuttun\
+bylsudpemdevlurdefbusbeprunmelpexdytbyttyplevmyl\
+wedducfurfexnulluclennerlexrupnedlecrydlydfenwel\
+nydhusrelrudneshesfetdesretdunlernyrsebhulryllud\
+remlysfynwerrycsugnysnyllyndyndemluxfedsedbecmun\
+lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
+`
 
 // parse suffixes and prefixes into strings of length 3
 const suffixes = match(suf)(/.{1,3}/g)
 const prefixes = match(pre)(/.{1,3}/g)
 
-const randomShipName = bitLength =>
-  sequence(bitLength / 8).map(index => index % 2 === 0
+const randomShipName = bitLength => {
+  return sequence(bitLength / 8).map(index => index % 2 === 0
     ? suffixes[randInt(255)]
-    : prefixes[randInt(255)]
-  )
+    : prefixes[randInt(255)])
+}
 
 const printShip = ship => `~${ship[0]}${ship[1]}-${ship[2]}${ship[3]}`
 
-const randomShipArray = length => bitLength =>
-  sequence(length)
-  .map(index => randomShipName(bitLength))
+const randomShipArray = length => bitLength => {
+  return sequence(length).map(index => randomShipName(bitLength))
+}
 
 
   // generates a random ship name

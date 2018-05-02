@@ -21,9 +21,8 @@ import {
 } from '../lib/lib.paper'
 //'unite', 'intersect', 'subtract', 'exclude', 'divide'
 // composable symbols
-const scale = 0.5
+const scale = 2
 const symset = [
-  // start vertical bars
   (g, params) => {
     return pPathRect({ from: g[0][0], to:g[1][1], ...params })
   },

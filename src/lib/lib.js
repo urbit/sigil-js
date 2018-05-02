@@ -142,11 +142,20 @@ const callIfDef = f => (...args) => def(f)
 
 const slice = arr => start => end => arr.slice(start, end)
 
-const getPage = arr => perPage => pageIndex => {
-  const start = pageIndex*perPage
-  const end = (pageIndex*perPage) + perPage
-  return slice(arr)(start)(end)
+const numPages = (length, perPage) => Math.ceil(length / perPage)
+
+const getPage = arr => pageIndex => perPage => {
+  const start = pageIndex * perPage
+  const end = (pageIndex * perPage) + perPage
+  return 0 <= pageIndex && pageIndex <= numPages(arr.length, perPage)
+    ? slice(arr)(start)(end)
+    : []
 }
+
+const keys = obj => Object.keys(obj)
+
+const prop = key => obj => obj[key]
+
 
 export {
   randomBinaryOfLength,
@@ -175,4 +184,7 @@ export {
   replace,
   end,
   getPage,
+  numPages,
+  keys,
+  prop,
 }

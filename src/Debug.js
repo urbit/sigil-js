@@ -22,8 +22,13 @@ import {
   def,
   callIfDef,
   match,
+  getPage,
+  numPages,
+  keys,
+  prop,
 } from './lib/lib'
 
+const PER_PAGE = 4
 
 class Debug extends Component {
   constructor(props) {
@@ -38,104 +43,63 @@ class Debug extends Component {
       ships: randomShipArray(1)(32),
       debug: false,
       input: '',
-      symSet: false,
+      symSet: 'glyphsetSchemaA',
+      symbolState: 'glyphsetSchemaA',
+      pageIndex: 0,
+      combMethod: bigCombination,
+      comboState: 'bigCombination',
+      currentPage: [],
+      all: [],
     }
   }
 
   componentDidMount = () => {
-    const {ctx, canvas} = initCanvas(this.paperCanvas, {x:2000, y:6000})
+    const {ctx, canvas} = initCanvas(this.paperCanvas, {x:2000, y:2000})
     paper.setup(canvas)
     // paper is a globally scoped object and independant from the vDOM
-    this.draw()
-    // this.drawSymbols()
+    this.generate(bigCombination, 'glyphsetSchemaA')
+    this.setState({didInit: true})
   }
-
-  // draw = () => {
-  //   paper.project.clear()
-  //   const symGrid = rectGrid({x:0, y:0}, { x: 32, y: 32 }, { x: 2, y: 2 }, false)
-  //   const tileGrid = rectGrid({x:256, y:256}, {x: 256, y: 256}, { x: 2, y: 2 }, true)
-  //   const { ships } = this.state
-  //   // const allShipGroups = map(ships, name => genAvatar(name, tileGrid, symGrid, 'symsetSymbolsB'))
-	// 	paper.view.draw()
-  // }
 
   draw = () => {
     paper.project.clear()
+    const size = 128
+    const gap = -0.4
+    const glyphset = getSet(this.state.symSet)
 
-    const size = 16
-    const gap = 10
+    const glyphGrid = glyphset.glyphGrid()
+    const groupGrid = glyphset.groupGrid()
 
-    const symbolGrid = rectGrid({x:0, y:0}, { x:size, y:size }, { x: 2, y: 2 }, false)
-    const avatarGrid = rectGrid({x:0, y:0}, {x: size-0.1, y: size-0.1}, { x: 2, y: 2 }, true)
-    console.log(symbolGrid)
-    const pageGrid = rectGrid({x:100, y:100}, {x: (size * 2) + gap, y: (size * 2) + gap}, { x: 45, y: 256 }, true)
-    if (this.state.symSet) {
-      const permutations = permutation(getSet(this.state.symSet), 4).toArray()
-      const avatarSet = map(permutations, (set, outerIndex) => {
-        // const fillColor = chr.random().hex()
-        const fillColor = 'black'
+    const pageGrid = rectGrid({x:300, y:300}, {x: (size * 2) + gap, y: (size * 2) + gap}, { x: 2, y: 2 }, true)
 
-
-        const avatar = map(set, (symbol, innerIndex) => {
-          const params = {
-            fillColor,
-            strokeWidth: 1,
-            // strokeColor: 'white',
-            // blendMode:'multiply',
-            selected: this.state.debug,
-            position: avatarGrid[innerIndex],
-          }
-
-          return symbol(symbolGrid, params)
-        })
+    const avatarSet = map(this.state.currentPage, (set, outerIndex) => {
+      // const fillColor = chr.random().hex()
+      const fillColor = 'black'
+      const avatar = map(set, (symbolKey, innerIndex) => {
+        const params = {
+          fillColor,
+          strokeWidth: 1,
+          scaleFactor: 4,
+          selected: this.state.debug,
+          position: groupGrid[innerIndex],
+        }
+        const symbol = glyphset.glyphs[symbolKey].svg
+        return symbol(glyphGrid, params)
+      })
 
 
-      const symbol = pGroup(avatar)
-      // console.log(symbol)
-      // console.log(count)
-      // symbol.position = pageGrid[count]
-      return symbol
+      const symbolGroup = pGroup(avatar)
+      return symbolGroup
     })
 
-    console.log(avatarSet.length, avatarSet[0])
 
     map(avatarSet, (avatar, index) => avatar.position = pageGrid[index] )
 
     paper.view.draw()
-    }
   }
 
-
-
-  // drawSymbols = () => {
-  //   // const alphabetGrid = rectGrid({ x:0, y:512 }, {x: 64, y: 64}, 15, 16, true)
-  //   // const allChars = drawChars(abc, alphabetGrid)
-  //   const combinationsGrid = rectGrid({x:64, y:768}, {x: 32, y: 32}, 32, 256, true)
-  //   const unitGrid = rectGrid({x:0, y:0}, {x: 2, y: 2}, 9, 9, false)
-  //
-  //   let idx = 0
-  //   const operations = ['unite', 'intersect', 'subtract', 'divide']
-  //   const combinations = bigCombination(getSet('symsetA'), 2).toArray()
-  //   const pairs = map(combinations, combination => {
-  //     return map(operations, op => {
-  //       const a = combination[0]
-  //       const b = combination[1]
-  //       const newShape = a(unitGrid)[op](b(unitGrid))
-  //
-  //       newShape.selected = false
-  //       newShape.insert = true
-  //       newShape.fillRule = 'evenodd'
-  //       newShape.fillColor = 'black'
-  //       newShape.position = combinationsGrid[idx]
-  //       idx++
-  //     })
-  //   })
-  //   console.log(pairs.length * 4)
-  //   paper.view.draw()
-  // }
-
   randomShip = length => {
-    this.setState({ ships: randomShipArray(length)(32) }, () => this.draw())
+    this.setState({ ships: randomShipArray(length)(32) })
   }
 
   randomContinuous = () => {
@@ -147,38 +111,138 @@ class Debug extends Component {
 
   setShip = ship => {
     const parsed = match(ship)(/.{1,3}/g)
-    this.setState({ships: [parsed]}, () => this.draw())
+    this.setState({ships: [parsed]})
   }
 
-  setSymbolSet = setName => this.setState({symSet: setName}, () => this.draw())
+  setSymbolSet = symSet => this.setState({symSet, symbolState: symSet}, () => {
+    this.generate(this.state.combMethod, symSet)
+  })
 
-  toggleDebug = () => this.setState({debug: !this.state.debug}, () => this.draw())
+  toggleDebug = () => this.setState({debug: !this.state.debug})
+
+  thisPage = index => {
+    const { all } = this.state
+    this.setState({
+      pageIndex: index,
+      currentPage: getPage(all)(index)(PER_PAGE),
+    })
+  }
+
+  nextPage = () => {
+    const { pageIndex, all } = this.state
+    const next = pageIndex + 1
+    this.setState({
+      pageIndex: next,
+      currentPage: getPage(all)(next)(PER_PAGE),
+  })
+}
+
+  prevPage = () => {
+    const { pageIndex, all } = this.state
+    const prev = pageIndex - 1
+    this.setState({
+      pageIndex: prev,
+      currentPage: getPage(all)(prev)(PER_PAGE),
+    })
+  }
+
+  setMethod = combMethod => this.setState({combMethod, comboState: combMethod.name}, () => {
+    this.generate(combMethod, this.state.symSet)
+  })
+
+  generate = (method, symSet) => {
+    const set = getSet(symSet)
+    const glyphs = prop('glyphs')(set)
+    const iter = keys(glyphs)
+    this.setState({all: method(iter, 4).toArray() })
+  }
+
+  goToIndex = index => this.setState({pageIndex: index})
+
 
   render = () => {
+
+    if (this.state.didInit) this.draw()
     return (
       <div>
         <nav>
-          <h3>Urbit Avatar Debug</h3>
-          <button onClick={() => this.randomShip(1)}>{'random patp'}</button>
-          <button onClick={() => this.randomContinuous()}>{'▶'}</button>
-          <button onClick={() => this.toggleDebug()}>{'debug'}</button>
           <span>
-            <input
-              value={this.state.input}
-              onChange={e => this.setState({ input: e.target.value })} />
-            <button
-              onClick={() => this.setShip(this.state.input)}>
-              {'submit'}
-            </button>
-          </span>
-          <button onClick={() => this.setSymbolSet('symsetSymbolsA')}>{'A'}</button>
-          <button onClick={() => this.setSymbolSet('symsetSymbolsB')}>{'B'}</button>
-          <button onClick={() => this.setSymbolSet('symsetSymbolsC')}>{'C'}</button>
-          <button onClick={() => this.setSymbolSet('symsetSymbolsD')}>{'D'}</button>
-          <button onClick={() => this.setSymbolSet('symsetSymbolsE')}>{'E'}</button>
-          <button onClick={() => this.setSymbolSet('symsetSymbolsF')}>{'F'}</button>
+            <Button
+              onClick={() => this.toggleDebug()}
+              title={'debug'}
+              id={true}
+              keySelectedInPanel={this.state.debug} />
+            </span>
 
-          <h3>{printShip(this.state.ships[0])}</h3>
+          {
+            // <button onClick={() => this.randomShip(1)}>{'random patp'}</button>
+            // <button onClick={() => this.randomContinuous()}>{'▶'}</button>
+            // <button onClick={() => this.toggleDebug()}>{'debug'}</button>
+            // <span>
+            //   <input
+            //     value={this.state.input}
+            //     onChange={e => this.setState({ input: e.target.value })} />
+            //   <button
+            //     onClick={() => this.setShip(this.state.input)}>
+            //     {'submit'}
+            //   </button>
+            // </span>
+            // <h3>{printShip(this.state.ships[0])}</h3>
+          }
+          <span>
+          {
+            // <Button
+            //   onClick={() => this.setSymbolSet('symsetSymbolsB')}
+            //   title={'B'}
+            //   id={'symsetSymbolsB'}
+            //   keySelectedInPanel={this.state.symbolState} />
+            // <Button
+            //   onClick={() => this.setSymbolSet('symsetSymbolsC')}
+            //   title={'C'}
+            //   id={'symsetSymbolsC'}
+            //   keySelectedInPanel={this.state.symbolState} />
+            }
+            <Button
+              onClick={() => this.setSymbolSet('glyphsetSchemaA')}
+              title={'A'}
+              id={'glyphsetSchemaA'}
+              keySelectedInPanel={this.state.symbolState} />
+            <Button
+              onClick={() => this.setSymbolSet('glyphsetSchemaB')}
+              title={'B'}
+              id={'glyphsetSchemaB'}
+              keySelectedInPanel={this.state.symbolState} />
+          </span>
+
+          <span>
+            <Button
+              onClick={() => this.setMethod(bigCombination)}
+              title={'bigCombination'}
+              id={'bigCombination'}
+              keySelectedInPanel={this.state.comboState} />
+            <Button
+              onClick={() => this.setMethod(permutation)}
+              title={'permutation'}
+              id={'permutation'}
+              keySelectedInPanel={this.state.comboState} />
+            <Button
+              onClick={() => this.setMethod(baseN)}
+              title={'baseN'}
+              id={'baseN'}
+              keySelectedInPanel={this.state.comboState} />
+          </span>
+
+          <span>
+            <button onClick={() => this.setState({pageIndex: 0})}>{'Go 0'}</button>
+            <button onClick={() => this.prevPage()}>{'←'}</button>
+            <p>{`${this.state.pageIndex}/${numPages(this.state.all.length, PER_PAGE) - 1}`}</p>
+            <button onClick={() => this.nextPage()}>{'→'}</button>
+
+          </span>
+
+          <span>
+            <p>{this.state.all.length}</p>
+          </span>
 
         </nav>
 
@@ -189,6 +253,13 @@ class Debug extends Component {
       </div>
     )
   }
+}
+
+const Button = ({ keySelectedInPanel, title, onClick, id }) => {
+  const classes = keySelectedInPanel === id ? 'selected' : 'unselected'
+  return (
+    <button className={classes} onClick={onClick}>{title}</button>
+  )
 }
 
 

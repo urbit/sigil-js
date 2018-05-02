@@ -21,7 +21,7 @@ import {
 } from '../lib/lib.paper'
 //'unite', 'intersect', 'subtract', 'exclude', 'divide'
 
-const scale = 0.5
+const scale = 2
 const symset = [
   (g, params) => {
     return pPathRect({ from: g[0][0], to:g[1][1], ...params })
@@ -49,7 +49,14 @@ const symset = [
     path.rotate(270)
     return path
   },
+  // (g, params) => {
+  //   const path = pPath({pathData: 'M 16 0L 0 0L 0 32L 32 32L 32 16L 16 16L 16 0Z', ...params})
+  //   path.scale(scale)
+  //   path.rotate(0)
+  //   return path
+  // },
 ]
+
 
 
 

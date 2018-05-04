@@ -187,4 +187,5 @@ export {
   numPages,
   keys,
   prop,
+  compose,
 }

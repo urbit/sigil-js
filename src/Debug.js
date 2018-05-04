@@ -28,6 +28,8 @@ import {
   prop,
 } from './lib/lib'
 
+import base from './lib/lib.firebase'
+
 const PER_PAGE = 4
 
 class Debug extends Component {
@@ -59,7 +61,17 @@ class Debug extends Component {
     // paper is a globally scoped object and independant from the vDOM
     this.generate(bigCombination, 'glyphsetSchemaA')
     this.setState({didInit: true})
+    this.callBase('slug', false)
+
   }
+
+  callBase = (key, asArray, callback) => {
+    base.listenTo(key, {
+     context: this,
+     asArray: asArray,
+     then(key) { console.log(key) }
+   })
+ }
 
   draw = () => {
     paper.project.clear()
@@ -91,7 +103,6 @@ class Debug extends Component {
       const symbolGroup = pGroup(avatar)
       return symbolGroup
     })
-
 
     map(avatarSet, (avatar, index) => avatar.position = pageGrid[index] )
 
@@ -161,7 +172,6 @@ class Debug extends Component {
 
 
   render = () => {
-
     if (this.state.didInit) this.draw()
     return (
       <div>
@@ -173,7 +183,6 @@ class Debug extends Component {
               id={true}
               keySelectedInPanel={this.state.debug} />
             </span>
-
           {
             // <button onClick={() => this.randomShip(1)}>{'random patp'}</button>
             // <button onClick={() => this.randomContinuous()}>{'▶'}</button>
@@ -219,7 +228,7 @@ class Debug extends Component {
               onClick={() => this.setMethod(bigCombination)}
               title={'bigCombination'}
               id={'bigCombination'}
-              keySelectedInPanel={this.state.comboState} />
+              keySelectedIn Panel={this.state.comboState} />
             <Button
               onClick={() => this.setMethod(permutation)}
               title={'permutation'}

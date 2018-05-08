@@ -2,11 +2,12 @@
 An avatar function
 
 ## Commands
-`npm` can be substituted for `yarn` if you want to have a bad time.
-Commands              | Description                                   |
-----------------------|-----------------------------------------------|
-`$ yarn start`        | Start development server                      |
-`$ yarn build`        | Create a build                                |
+`yarn` can be substituted for `npm` if you want to have a bad time.
+
+|Commands              | Description                                   |
+| -------------------- | --------------------------------------------- |
+|`$ yarn start`        | Start development server                      |
+|`$ yarn build`        | Create a build                                |
 
 ## How this works
 I don't know yet. But something like `patp => ? => svg`

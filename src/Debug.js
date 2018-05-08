@@ -3,8 +3,10 @@ import chr from 'chroma-js'
 import paper from 'paper'
 import { bigCombination, permutation, baseN } from 'js-combinatorics'
 
+import fileDownload from 'js-file-download'
+
 import { initCanvas } from './lib/lib.canvas'
-import { genAvatar, drawChars, rectGrid, pGroup, opPipe } from './lib/lib.paper'
+import { genAvatar, drawChars, rectGrid, pGroup, opPipe, pPathRect, pCompoundPath, pPath, pPathCircle } from './lib/lib.paper'
 import {randomShipName, printShip, randomShipArray } from './lib/lib.urbit'
 import { getChar, getSet } from './lib/lib.symset'
 
@@ -28,7 +30,11 @@ import {
   prop,
 } from './lib/lib'
 
-import base from './lib/lib.firebase'
+import {
+  isObject,
+} from './lib/lib.type'
+
+import { base, baseState } from './lib/lib.firebase'
 
 const PER_PAGE = 4
 
@@ -52,59 +58,150 @@ class Debug extends Component {
       comboState: 'bigCombination',
       currentPage: [],
       all: [],
+      baseState: baseState.idle,
     }
   }
 
   componentDidMount = () => {
-    const {ctx, canvas} = initCanvas(this.paperCanvas, {x:2000, y:2000})
+    const { ctx, canvas } = initCanvas(this.paperCanvas, {x:600, y:600})
     paper.setup(canvas)
     // paper is a globally scoped object and independant from the vDOM
     this.generate(bigCombination, 'glyphsetSchemaA')
-    this.setState({didInit: true})
-    this.callBase('slug', false)
-
+    this.getGlpyhset('A')
+    this.setState({ didInit: true })
   }
 
-  callBase = (key, asArray, callback) => {
-    base.listenTo(key, {
-     context: this,
-     asArray: asArray,
-     then(key) { console.log(key) }
-   })
- }
+  getGlpyhset = key => {
+    base.fetch(key, {
+      context: this,
+      asArray: false
+    }).then(data => {
+      // console.log(data)
+    }).catch(err => {
+      console.error(err)
+    })
+  }
+
+
+  addGlpyh = (glyph, key) => {
+    base.post(key, {
+      data: glyph
+    }).then(() => {
+      console.log(glyph)
+    }).catch(err => {
+      console.error(err)
+    })
+  }
+
+  pushGlpyh = (glyph, key) => {
+    base.push(key, {
+      data: glyph
+    }).then(() => {
+      console.log(glyph)
+    }).catch(err => {
+      console.error(err)
+    })
+  }
 
   draw = () => {
+    const { currentPage } = this.state
+
     paper.project.clear()
     const size = 128
-    const gap = -0.4
+    // const gap = -0.02
+    const gap = 0
     const glyphset = getSet(this.state.symSet)
 
-    const glyphGrid = glyphset.glyphGrid()
-    const groupGrid = glyphset.groupGrid()
+    const motifGrid = glyphset.glyphGrid()
+    const avatarGrid = glyphset.groupGrid()
 
     const pageGrid = rectGrid({x:300, y:300}, {x: (size * 2) + gap, y: (size * 2) + gap}, { x: 2, y: 2 }, true)
+    // const backdrop = pPathRect({ from: [0,0], to: [512, 512], fillColor: 'white', selected: this.state.debug })
+    // backdrop.position = [428,428]
+    // const backdrop = pPathRect({from: [350, 350], to:[450, 450], fillColor: '#fff'})
+    // backdrop.scale(6)
 
-    const avatarSet = map(this.state.currentPage, (set, outerIndex) => {
-      // const fillColor = chr.random().hex()
-      const fillColor = 'black'
-      const avatar = map(set, (symbolKey, innerIndex) => {
-        const params = {
-          fillColor,
-          strokeWidth: 1,
-          scaleFactor: 4,
-          selected: this.state.debug,
-          position: groupGrid[innerIndex],
-        }
-        const symbol = glyphset.glyphs[symbolKey].svg
-        return symbol(glyphGrid, params)
+
+    const avatar = map(currentPage, (outerItem, outerIndex) => {
+
+      const sigil = map(outerItem, (innerItem, innerIndex) => {
+
+        // stop throwing 1 million errors
+        if (!def(glyphset.glyphs[innerItem])) return
+
+        const glyphFn = glyphset.glyphs[innerItem].svg
+
+        const glyphReference = glyphFn(motifGrid, {
+            fillColor: '#000',
+            // strokeWidth: 1,
+            scaleFactor: 1,
+            selected: this.state.debug,
+            position: motifGrid[innerIndex],
+            // insert: true,
+        })
+
+        return glyphReference
       })
 
+      // const s = pCompoundPath({children:sigil})
+      const s = pGroup(sigil)
+      s.position = avatarGrid[outerIndex]
+      // s.insert = true
+      return s
 
-      const symbolGroup = pGroup(avatar)
-      return symbolGroup
     })
 
-    map(avatarSet, (avatar, index) => avatar.position = pageGrid[index] )
+
+    // const a = pCompoundPath({children:avatar})
+    const a = pGroup(avatar)
+    a.position = [300, 300]
+    // a.insert = true
+    a.fillColor = '#000'
+    // a.strokeWidth = 1
+    // a.strokeColor = '#000'
+
+    // a.fillColor = 'black'
+    // a.rotate(45)
+    a.scale(4)
+
+
+    // pPathCircle({center: [400 - 128, 400 - 128], radius: 16, fillColor: '#000'})
+    // pPathCircle({center: [400 + 128, 400 + 128], radius: 16, fillColor: '#000'})
+    // pPathCircle({center: [400 - 128, 400 + 128], radius: 16, fillColor: '#000'})
+    // pPathCircle({center: [400 + 128, 400 - 128], radius: 16, fillColor: '#000'})
+
+
+
+
+
+
+    // const shapeBackdropA = pPath({pathData: 'M 512 512L 0 0L 0 512L 512 512Z', fillColor: '#DD6F66'})
+    // const shapeBackdropB = pPath({pathData: 'M 512 512L 0 0L 0 512L 512 512Z', fillColor: '#2B821C'})
+    // const shapeBackdropC = pPath({pathData: 'M 512 512L 0 0L 0 512L 512 512Z', fillColor: '#102D56'})
+    // const shapeBackdropD = pPath({pathData: 'M 512 512L 0 0L 0 512L 512 512Z', fillColor: '#C4B6FD'})
+    //
+    // shapeBackdropB.scale(1.67)
+    // shapeBackdropB.rotate(270)
+    // shapeBackdropC.scale(1.67)
+    // shapeBackdropC.rotate(180)
+    // shapeBackdropA.scale(1.67)
+    // shapeBackdropD.scale(1.67)
+    // shapeBackdropD.rotate(180)
+    //
+    //
+    // shapeBackdropB.position=[400,400]
+    // shapeBackdropC.position=[400,400]
+    // shapeBackdropA.position=[400,400]
+    // shapeBackdropD.position=[400,400 - 256]
+
+    // const avatarPath = pCompoundPath({ children: avatar, fillColor: 'black' })
+
+    // const maskingGroup = pGroup([ a, shapeBackdropC, shapeBackdropD, shapeBackdropB, shapeBackdropA ])
+    // const maskingGroup = pGroup([a, c, b])
+    // maskingGroup.clipped = true
+
+
+
 
     paper.view.draw()
   }
@@ -170,9 +267,14 @@ class Debug extends Component {
 
   goToIndex = index => this.setState({pageIndex: index})
 
+  exportSVG = () => {
+    const data = paper.project.exportSVG({asString: true})
+    fileDownload(data, 'avatar.svg')
+  }
+
 
   render = () => {
-    if (this.state.didInit) this.draw()
+    if (this.state.didInit && this.state.currentPage.length > 0 ) this.draw()
     return (
       <div>
         <nav>
@@ -221,6 +323,16 @@ class Debug extends Component {
               title={'B'}
               id={'glyphsetSchemaB'}
               keySelectedInPanel={this.state.symbolState} />
+            <Button
+              onClick={() => this.setSymbolSet('glyphsetSchemaC')}
+              title={'C'}
+              id={'glyphsetSchemaC'}
+              keySelectedInPanel={this.state.symbolState} />
+            <Button
+              onClick={() => this.setSymbolSet('glyphsetSchemaD')}
+              title={'D'}
+              id={'glyphsetSchemaD'}
+              keySelectedInPanel={this.state.symbolState} />
           </span>
 
           <span>
@@ -251,6 +363,10 @@ class Debug extends Component {
 
           <span>
             <p>{this.state.all.length}</p>
+          </span>
+
+          <span>
+            <button onClick={() => this.exportSVG()}>{'export'}</button>
           </span>
 
         </nav>

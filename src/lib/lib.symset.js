@@ -7,6 +7,8 @@ import symsetSymbolsE from '../symsets/symset.symbols.e'
 import symsetSymbolsF from '../symsets/symset.symbols.f'
 import glyphsetSchemaA from '../symsets/glyphset.schema.a'
 import glyphsetSchemaB from '../symsets/glyphset.schema.b'
+import glyphsetSchemaC from '../symsets/glyphset.schema.c'
+import glyphsetSchemaD from '../symsets/glyphset.schema.d'
 
 
 // re-package sets
@@ -20,6 +22,8 @@ const sets = {
   symsetSymbolsF,
   glyphsetSchemaA,
   glyphsetSchemaB,
+  glyphsetSchemaC,
+  glyphsetSchemaD,
 }
 
 const getChar = (set, char) => getSet(set)[char]

@@ -3,14 +3,21 @@ import { initializeApp, database } from 'firebase'
 import  { compose } from './lib'
 
 const config = {
-  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
-  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
-  databaseURL: process.env.REACT_APP_FIREBASE_DATABASE_URL,
-  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_ID,
+  apiKey: "AIzaSyA8HQIDfIZ-AKKaLqfZNNviZPRFaUXZOTY",
+      authDomain: "avatar-64402.firebaseapp.com",
+      databaseURL: "https://avatar-64402.firebaseio.com",
+      projectId: "avatar-64402",
+      storageBucket: "avatar-64402.appspot.com",
+      messagingSenderId: "990982199385"
 }
 
 const base = compose(createClass, database, initializeApp)(config)
 
-export default base
+const baseState = {
+  idle: 'IDLE',
+  pending: 'PENDING',
+  success: 'SUCCESS',
+  failure: 'FAILURE',
+}
+
+export {base, baseState}

@@ -21,13 +21,13 @@ import {
 } from '../lib/lib.paper'
 //'unite', 'intersect', 'subtract', 'exclude', 'divide'
 
-const size = 128
+const size = 32
 
 const glyphset = {
   glyphs: {
     0: {
       svg: (g, params) => {
-        return pPathRect({ from: g[0][0], to:g[1][1], ...params })
+        return pPathRect({ from: [0,0], to:[size,size], ...params })
       },
     },
     1: {
@@ -62,8 +62,8 @@ const glyphset = {
       },
     },
   },
-  glyphGrid: () => rectGrid({ x:0, y:0 }, { x:size, y:size }, { x: 2, y: 2 }, false),
-  groupGrid: () => rectGrid({ x:0, y:0 }, { x:size, y:size }, { x: 2, y: 2 }, true),
+  glyphGrid: () => rectGrid({ x:0, y:0 }, { x:size, y:size }, { x: 2, y: 2 }, true),
+  groupGrid: () => rectGrid({ x:0, y:0 }, { x:size * 2, y:size *2 }, { x: 2, y: 2 }, true),
   name: 'Lorem'
 }
 

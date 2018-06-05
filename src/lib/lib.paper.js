@@ -22,7 +22,7 @@ import {
   end,
 } from './lib'
 
-import { getChar, getSet } from './lib.symset'
+// import { getChar, getSet } from './lib.symset'
 
 const pPathRect = (...params) => new Path.Rectangle(...params)
 
@@ -44,30 +44,30 @@ const pCompoundPath = (...params) => new CompoundPath(...params)
 
 const pPath = (...params) => new Path(...params)
 
-const genAvatar = (name, quadrants, symGrid, set) => {
-  const avatar = map(name, (sylArr, i) => {
-    // split each syllable into a 3 item array, like ['r', 'i', 'd']
-    const charsInSyl = split(sylArr)('')
-    // set some parameters
-    const params = {
-      fillColor: chr.random().hex(),
-      // fillColor: 'black',
-      strokeWidth: 1,
-      // strokeColor: 'white',
-      blendMode:'multiply'
-    }
-    // map through letters of a syllable and call it's same-named method
-    const sylShapes = map(charsInSyl, char => {
-      return callIfDef(getChar(set, char))(symGrid, params)
-    })
-    const symbolGroup =  pGroup({
-      children: sylShapes,
-      position: quadrants[i],
-    })
-    return symbolGroup
-  })
-  return pGroup({ children: avatar, })
-}
+// const genAvatar = (name, quadrants, symGrid, set) => {
+//   const avatar = map(name, (sylArr, i) => {
+//     // split each syllable into a 3 item array, like ['r', 'i', 'd']
+//     const charsInSyl = split(sylArr)('')
+//     // set some parameters
+//     const params = {
+//       fillColor: chr.random().hex(),
+//       // fillColor: 'black',
+//       strokeWidth: 1,
+//       // strokeColor: 'white',
+//       blendMode:'multiply'
+//     }
+//     // map through letters of a syllable and call it's same-named method
+//     const sylShapes = map(charsInSyl, char => {
+//       return callIfDef(getChar(set, char))(symGrid, params)
+//     })
+//     const symbolGroup =  pGroup({
+//       children: sylShapes,
+//       position: quadrants[i],
+//     })
+//     return symbolGroup
+//   })
+//   return pGroup({ children: avatar, })
+// }
 
 // const drawChars = (symset, grid) => map(syms, (sym, i) => {
 //   const params = {
@@ -129,6 +129,6 @@ export {
   toDegrees,
   toRadians,
 
-  genAvatar,
+  // genAvatar,
   // drawChars,
 }

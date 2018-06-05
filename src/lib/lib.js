@@ -139,7 +139,6 @@ const callIfDef = f => (...args) => def(f)
   ? f(...args)
   : null
 
-
 const slice = arr => start => end => arr.slice(start, end)
 
 const numPages = (length, perPage) => Math.ceil(length / perPage)

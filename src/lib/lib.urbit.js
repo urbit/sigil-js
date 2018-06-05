@@ -99,6 +99,18 @@ const randomShipArray = length => bitLength => {
   //   }
   // }
 
+const patp = () => {}
+
+const glif = () => {}
+
+const flow = () => {}
+
+const etch = () => {}
+
+const dyes = () => {}
+
+const rend = () => {}
+
 export {
   suffixes,
   prefixes,

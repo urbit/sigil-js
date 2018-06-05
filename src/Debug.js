@@ -7,8 +7,8 @@ import fileDownload from 'js-file-download'
 
 import { initCanvas } from './lib/lib.canvas'
 import { genAvatar, drawChars, rectGrid, pGroup, opPipe, pPathRect, pCompoundPath, pPath, pPathCircle } from './lib/lib.paper'
-import {randomShipName, printShip, randomShipArray } from './lib/lib.urbit'
-import { getChar, getSet } from './lib/lib.symset'
+// import {randomShipName, printShip, randomShipArray } from './lib/lib.urbit'
+import glyphset from './symsets/glyphset'
 
 import {
   lineage,
@@ -28,6 +28,7 @@ import {
   numPages,
   keys,
   prop,
+  reduce,
 } from './lib/lib'
 
 import {
@@ -36,7 +37,49 @@ import {
 
 import { base, baseState } from './lib/lib.firebase'
 
-const PER_PAGE = 4
+const PER_PAGE = 1
+
+const mateCount = glyphMap => {
+  // []
+  const edges = map(glyphMap, symbolKey => glyphset.glyphs[symbolKey].edgeMap)
+
+  const count = edges.reduce((acc, symbol, index) => {
+    switch(index) {
+      case 0: return
+        break
+
+      case 1:
+        break
+
+      case 2:
+        break
+
+      case 3:
+        break
+
+    }
+  })
+
+  console.log(edges)
+
+
+
+  // switch(index) {
+  //   case 0:
+  //     break
+  //
+  //   case 1:
+  //     break
+  //
+  //   case 2:
+  //     break
+  //
+  //   case 3:
+  //     break
+  //
+  // }
+
+}
 
 class Debug extends Component {
   constructor(props) {
@@ -48,11 +91,11 @@ class Debug extends Component {
       index: 0,
       playState: 0,
       timeout: null,
-      ships: randomShipArray(1)(32),
+      // ships: randomShipArray(1)(32),
       debug: false,
       input: '',
-      symSet: 'glyphsetSchemaA',
-      symbolState: 'glyphsetSchemaA',
+      symSet: 'glyphset',
+      symbolState: 'glyphset',
       pageIndex: 0,
       combMethod: bigCombination,
       comboState: 'bigCombination',
@@ -66,7 +109,7 @@ class Debug extends Component {
     const { ctx, canvas } = initCanvas(this.paperCanvas, {x:600, y:600})
     paper.setup(canvas)
     // paper is a globally scoped object and independant from the vDOM
-    this.generate(bigCombination, 'glyphsetSchemaA')
+    this.generate(bigCombination)
     this.getGlpyhset('A')
     this.setState({ didInit: true })
   }
@@ -110,7 +153,7 @@ class Debug extends Component {
     const size = 128
     // const gap = -0.02
     const gap = 0
-    const glyphset = getSet(this.state.symSet)
+    // const glyphset = getSet(this.state.symSet)
 
     const motifGrid = glyphset.glyphGrid()
     const avatarGrid = glyphset.groupGrid()
@@ -122,93 +165,84 @@ class Debug extends Component {
     // backdrop.scale(6)
 
 
-    const avatar = map(currentPage, (outerItem, outerIndex) => {
+    // draw
+    const refs = map(currentPage, glyphMap => map(glyphMap, (symbolKey, index) => {
+      const params = {
+        fillColor: '#333',
+        // strokeWidth: 1,
+        scaleFactor: 0.1,
+        selected: this.state.debug,
+        position: motifGrid[index],
+        insert: true,
+      }
+      const ref = glyphset.glyphs[symbolKey].render(params)
 
-      const sigil = map(outerItem, (innerItem, innerIndex) => {
+      return ref
+    }))
 
-        // stop throwing 1 million errors
-        if (!def(glyphset.glyphs[innerItem])) return
-
-        const glyphFn = glyphset.glyphs[innerItem].svg
-
-        const glyphReference = glyphFn(motifGrid, {
-            fillColor: '#000',
-            // strokeWidth: 1,
-            scaleFactor: 1,
-            selected: this.state.debug,
-            position: motifGrid[innerIndex],
-            // insert: true,
-        })
-
-        return glyphReference
+    map(currentPage, glyphMap => {
+      map(glyphMap, (symbolKey, index) => {
+        mateCount(glyphMap)
       })
-
-      // const s = pCompoundPath({children:sigil})
-      const s = pGroup(sigil)
-      s.position = avatarGrid[outerIndex]
-      // s.insert = true
-      return s
-
     })
+
+    // const ranked = map(this.state.all, set => map(set, (symbolKey, index) => {
+    //
+    //
+    //
+    // }))
+
+
+
+
+
+
+    // const avatar = map(currentPage, (outerItem, outerIndex) => {
+
+    // const sigil = map(outerItem, (innerItem, innerIndex) => {
+    //
+    //   // stop throwing 1 million errors
+    //   if (!def(glyphset.glyphs[innerItem])) return
+    //
+    //   const glyphRenderer = glyphset.glyphs[innerItem].render
+    //
+    //   const glyphReference = glyphRenderer(motifGrid, {
+    //       fillColor: '#000',
+    //       // strokeWidth: 1,
+    //       scaleFactor: 0.1,
+    //       selected: this.state.debug,
+    //       position: motifGrid[innerIndex],
+    //       // insert: true,
+    //   })
+    //
+    //   glyphReference.scale(0.1)
+    //
+    //   return glyphReference
+    // })
+
+    // // const s = pCompoundPath({children:sigil})
+    // const s = pGroup(sigil)
+    // s.position = avatarGrid[outerIndex]
+    // // s.insert = true
+    // return s
+
+    // })
 
 
     // const a = pCompoundPath({children:avatar})
-    const a = pGroup(avatar)
-    a.position = [300, 300]
-    // a.insert = true
-    a.fillColor = '#000'
-    // a.strokeWidth = 1
-    // a.strokeColor = '#000'
-
-    // a.fillColor = 'black'
-    // a.rotate(45)
-    a.scale(4)
-
-
-    // pPathCircle({center: [400 - 128, 400 - 128], radius: 16, fillColor: '#000'})
-    // pPathCircle({center: [400 + 128, 400 + 128], radius: 16, fillColor: '#000'})
-    // pPathCircle({center: [400 - 128, 400 + 128], radius: 16, fillColor: '#000'})
-    // pPathCircle({center: [400 + 128, 400 - 128], radius: 16, fillColor: '#000'})
-
-
-
-
-
-
-    // const shapeBackdropA = pPath({pathData: 'M 512 512L 0 0L 0 512L 512 512Z', fillColor: '#DD6F66'})
-    // const shapeBackdropB = pPath({pathData: 'M 512 512L 0 0L 0 512L 512 512Z', fillColor: '#2B821C'})
-    // const shapeBackdropC = pPath({pathData: 'M 512 512L 0 0L 0 512L 512 512Z', fillColor: '#102D56'})
-    // const shapeBackdropD = pPath({pathData: 'M 512 512L 0 0L 0 512L 512 512Z', fillColor: '#C4B6FD'})
+    // const a = pGroup(avatar)
+    // a.position = [300, 300]
+    // // a.insert = true
+    // a.fillColor = '#000'
     //
-    // shapeBackdropB.scale(1.67)
-    // shapeBackdropB.rotate(270)
-    // shapeBackdropC.scale(1.67)
-    // shapeBackdropC.rotate(180)
-    // shapeBackdropA.scale(1.67)
-    // shapeBackdropD.scale(1.67)
-    // shapeBackdropD.rotate(180)
-    //
-    //
-    // shapeBackdropB.position=[400,400]
-    // shapeBackdropC.position=[400,400]
-    // shapeBackdropA.position=[400,400]
-    // shapeBackdropD.position=[400,400 - 256]
-
-    // const avatarPath = pCompoundPath({ children: avatar, fillColor: 'black' })
-
-    // const maskingGroup = pGroup([ a, shapeBackdropC, shapeBackdropD, shapeBackdropB, shapeBackdropA ])
-    // const maskingGroup = pGroup([a, c, b])
-    // maskingGroup.clipped = true
-
-
-
+    // a.scale(4)
 
     paper.view.draw()
   }
 
-  randomShip = length => {
-    this.setState({ ships: randomShipArray(length)(32) })
-  }
+  // randomShip = length => {
+  //   this.setState({ ships: randomShipArray(length)(32) })
+  // }
 
   randomContinuous = () => {
     const { index, speed } = this.state
@@ -217,10 +251,10 @@ class Debug extends Component {
     this.setState({ timeout })
   }
 
-  setShip = ship => {
-    const parsed = match(ship)(/.{1,3}/g)
-    this.setState({ships: [parsed]})
-  }
+  // setShip = ship => {
+  //   const parsed = match(ship)(/.{1,3}/g)
+  //   this.setState({ships: [parsed]})
+  // }
 
   setSymbolSet = symSet => this.setState({symSet, symbolState: symSet}, () => {
     this.generate(this.state.combMethod, symSet)
@@ -259,7 +293,7 @@ class Debug extends Component {
   })
 
   generate = (method, symSet) => {
-    const set = getSet(symSet)
+    const set = glyphset
     const glyphs = prop('glyphs')(set)
     const iter = keys(glyphs)
     this.setState({all: method(iter, 4).toArray() })
@@ -312,27 +346,28 @@ class Debug extends Component {
             //   title={'C'}
             //   id={'symsetSymbolsC'}
             //   keySelectedInPanel={this.state.symbolState} />
-            }
-            <Button
-              onClick={() => this.setSymbolSet('glyphsetSchemaA')}
-              title={'A'}
-              id={'glyphsetSchemaA'}
-              keySelectedInPanel={this.state.symbolState} />
-            <Button
-              onClick={() => this.setSymbolSet('glyphsetSchemaB')}
-              title={'B'}
-              id={'glyphsetSchemaB'}
-              keySelectedInPanel={this.state.symbolState} />
-            <Button
-              onClick={() => this.setSymbolSet('glyphsetSchemaC')}
-              title={'C'}
-              id={'glyphsetSchemaC'}
-              keySelectedInPanel={this.state.symbolState} />
-            <Button
-              onClick={() => this.setSymbolSet('glyphsetSchemaD')}
-              title={'D'}
-              id={'glyphsetSchemaD'}
-              keySelectedInPanel={this.state.symbolState} />
+
+            // <Button
+            //   onClick={() => this.setSymbolSet('glyphsetSchemaA')}
+            //   title={'A'}
+            //   id={'glyphsetSchemaA'}
+            //   keySelectedInPanel={this.state.symbolState} />
+            // <Button
+            //   onClick={() => this.setSymbolSet('glyphsetSchemaB')}
+            //   title={'B'}
+            //   id={'glyphsetSchemaB'}
+            //   keySelectedInPanel={this.state.symbolState} />
+            // <Button
+            //   onClick={() => this.setSymbolSet('glyphsetSchemaC')}
+            //   title={'C'}
+            //   id={'glyphsetSchemaC'}
+            //   keySelectedInPanel={this.state.symbolState} />
+            // <Button
+            //   onClick={() => this.setSymbolSet('glyphsetSchemaD')}
+            //   title={'D'}
+            //   id={'glyphsetSchemaD'}
+            //   keySelectedInPanel={this.state.symbolState} />
+          }
           </span>
 
           <span>

@@ -29,6 +29,7 @@ import {
   keys,
   prop,
   reduce,
+  countMates,
 } from './lib/lib'
 
 import {
@@ -39,47 +40,7 @@ import { base, baseState } from './lib/lib.firebase'
 
 const PER_PAGE = 1
 
-const mateCount = glyphMap => {
-  // []
-  const edges = map(glyphMap, symbolKey => glyphset.glyphs[symbolKey].edgeMap)
 
-  const count = edges.reduce((acc, symbol, index) => {
-    switch(index) {
-      case 0: return
-        break
-
-      case 1:
-        break
-
-      case 2:
-        break
-
-      case 3:
-        break
-
-    }
-  })
-
-  console.log(edges)
-
-
-
-  // switch(index) {
-  //   case 0:
-  //     break
-  //
-  //   case 1:
-  //     break
-  //
-  //   case 2:
-  //     break
-  //
-  //   case 3:
-  //     break
-  //
-  // }
-
-}
 
 class Debug extends Component {
   constructor(props) {
@@ -182,7 +143,7 @@ class Debug extends Component {
 
     map(currentPage, glyphMap => {
       map(glyphMap, (symbolKey, index) => {
-        mateCount(glyphMap)
+        countMates(glyphset, glyphMap)
       })
     })
 

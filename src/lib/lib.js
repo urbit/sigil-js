@@ -33,7 +33,7 @@ const filter = ([x, ...xs], f) => def(x)
     : []
 
 //
-const chunk = arr => mod => arr.reduce((acc, a, i) => {
+const chunk = (arr, mod) => arr.reduce((acc, a, i) => {
   const offset = Math.floor(i / mod)
   if(!acc[offset]) { acc[offset] = [] }
   acc[offset].push(a)
@@ -155,8 +155,85 @@ const keys = obj => Object.keys(obj)
 
 const prop = key => obj => obj[key]
 
+const getCellBelow = (matrix, row, col) => {
+  return matrix[row + 1][col]
+}
+
+const getCellRight = (matrix, row, col) => {
+  return matrix[row][col + 1]
+}
+
+const getEdgeOfBelow = (matrix, row, col) => {
+  return topEdge(getCellBelow(matrix, row, col))
+}
+
+const getEdgeOfRight = (matrix, row, col) => {
+  return leftEdge(getCellRight(matrix, row, col))
+}
+
+const mate = (a, b) => {
+  if (a === b) {
+    if (a === 'a' || a === 'c') {
+      return true
+    }
+  } else {
+    return false
+  }
+}
+
+const topEdge = cell => cell[0]
+const rightEdge = cell => cell[1]
+const bottomEdge = cell => cell[2]
+const leftEdge = cell => cell[3]
+
+const inBounds = (matrix, row, col) => {
+  if (row < matrix.length - 1) {
+    if (col < matrix[0].length - 1) {
+      return true
+    }
+  }
+  return false
+}
+
+const inBoundsX = (matrix, col) => {
+  if (col < matrix[0].length - 1) {
+    return true
+  }
+  return false
+}
+
+const inBoundsY = (matrix, row) => {
+  if (row < matrix.length - 1) {
+    return true
+  }
+}
+
+const countMates = (glyphset, glyphMap, width) => {
+
+  const reshaped = chunk(glyphMap, 2)
+
+  const edges = map(reshaped, row => map(row, cell => glyphset.glyphs[cell].edgeMap))
+
+  let acc = 0
+  edges.forEach((row, rowIndex) => row.forEach((cell, colIndex) => {
+    if (inBoundsX(edges, colIndex)) {
+      if (mate(rightEdge(cell), getEdgeOfRight(edges, rowIndex, colIndex))) {
+        acc = acc + 1
+      }
+    }
+    if (inBoundsY(edges, rowIndex)) {
+      if (mate(bottomEdge(cell), getEdgeOfBelow(edges, rowIndex, colIndex))) {
+        acc = acc + 1
+      }
+    }
+  }))
+
+  return acc
+}
+
 
 export {
+  countMates,
   randomBinaryOfLength,
   flatten,
   sequence,

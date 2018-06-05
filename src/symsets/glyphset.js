@@ -122,7 +122,7 @@ const glyphset = {
           ...params,
         })
       },
-      edgeMap: ['a','c','d','c']
+      edgeMap: ['a','c','b','c']
     },
     // toomstone, 90deg
     7: {
@@ -134,7 +134,7 @@ const glyphset = {
         p.rotate(90)
         return p
       },
-      edgeMap: ['c','a','c','d']
+      edgeMap: ['c','a','c','b']
     },
     // toomstone, 180deg
     8: {
@@ -146,7 +146,7 @@ const glyphset = {
         p.rotate(180)
         return p
       },
-      edgeMap: ['d','c','a','c']
+      edgeMap: ['b','c','a','c']
     },
     // toomstone, 270deg
     9: {
@@ -158,7 +158,7 @@ const glyphset = {
         p.rotate(270)
         return p
       },
-      edgeMap: ['c','d','c','a']
+      edgeMap: ['c','b','c','a']
     },
     // leef, 0deg
     10: {

@@ -1,12 +1,13 @@
 import React, { Component } from 'react'
 
-import Debug from './Debug'
+// import Proto from './Proto'
+import Gen from './Gen'
 
 class App extends Component {
   render() {
     return (
       <div className="App">
-        <Debug />
+        <Gen />
       </div>
     )
   }

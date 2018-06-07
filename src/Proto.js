@@ -10,6 +10,8 @@ import { genAvatar, drawChars, rectGrid, pGroup, opPipe, pPathRect, pCompoundPat
 // import {randomShipName, printShip, randomShipArray } from './lib/lib.urbit'
 import glyphset from './symsets/glyphset'
 
+import { suffixes, prefixes } from './lib/lib.urbit'
+
 import {
   lineage,
   flatten,
@@ -30,10 +32,15 @@ import {
   prop,
   reduce,
   countMates,
+  sort,
+  numComparator,
+  rotateArr,
+  objHasAnyPropInArr,
 } from './lib/lib'
 
 import {
   isObject,
+  isString,
 } from './lib/lib.type'
 
 import { base, baseState } from './lib/lib.firebase'
@@ -41,6 +48,7 @@ import { base, baseState } from './lib/lib.firebase'
 const PER_PAGE = 1
 
 
+const DB_GLYPHSET_KEY = 'a-v001'
 
 class Debug extends Component {
   constructor(props) {
@@ -61,8 +69,11 @@ class Debug extends Component {
       combMethod: bigCombination,
       comboState: 'bigCombination',
       currentPage: [],
+      sorted: [],
       all: [],
       baseState: baseState.idle,
+      sylset: [],
+      syllables: [...prefixes, ...suffixes]
     }
   }
 
@@ -71,24 +82,42 @@ class Debug extends Component {
     paper.setup(canvas)
     // paper is a globally scoped object and independant from the vDOM
     this.generate(bigCombination)
-    this.getGlpyhset('A')
+    this.getGlyphset(DB_GLYPHSET_KEY)
+
+    window.addEventListener('keydown', e => {
+      if (e.keyCode === 39) {
+        this.nextPage()
+      }
+      if (e.keyCode === 37) {
+        this.prevPage()
+      }
+    })
+
+
+
+
     this.setState({ didInit: true })
   }
 
-  getGlpyhset = key => {
-    base.fetch(key, {
+  getGlyphset = () => {
+    base.fetch(DB_GLYPHSET_KEY, {
       context: this,
-      asArray: false
+      asArray: true
     }).then(data => {
-      // console.log(data)
+      const dataWithLookup = {}
+      Object.values(data).forEach((val, index) => {
+        const key = [...prefixes, ...suffixes][index]
+         dataWithLookup[key] = val.glyph
+      })
+      this.setState({ sylset: dataWithLookup })
     }).catch(err => {
       console.error(err)
     })
   }
 
 
-  addGlpyh = (glyph, key) => {
-    base.post(key, {
+  addGlyph = (glyph) => {
+    base.post(DB_GLYPHSET_KEY, {
       data: glyph
     }).then(() => {
       console.log(glyph)
@@ -97,11 +126,12 @@ class Debug extends Component {
     })
   }
 
-  pushGlpyh = (glyph, key) => {
-    base.push(key, {
+  pushGlyph = (glyph) => {
+    base.push(DB_GLYPHSET_KEY, {
       data: glyph
     }).then(() => {
       console.log(glyph)
+      this.getGlyphset(DB_GLYPHSET_KEY)
     }).catch(err => {
       console.error(err)
     })
@@ -127,7 +157,7 @@ class Debug extends Component {
 
 
     // draw
-    const refs = map(currentPage, glyphMap => map(glyphMap, (symbolKey, index) => {
+    const refs = map(currentPage, glyphMap => map(glyphMap.glyph, (symbolKey, index) => {
       const params = {
         fillColor: '#333',
         // strokeWidth: 1,
@@ -141,11 +171,9 @@ class Debug extends Component {
       return ref
     }))
 
-    map(currentPage, glyphMap => {
-      map(glyphMap, (symbolKey, index) => {
-        countMates(glyphset, glyphMap)
-      })
-    })
+    this.drawAvatar(glyphset, this.state.sylset, '~ridlur-figbud')
+
+
 
     // const ranked = map(this.state.all, set => map(set, (symbolKey, index) => {
     //
@@ -199,6 +227,35 @@ class Debug extends Component {
     // a.scale(4)
 
     paper.view.draw()
+  }
+
+
+  drawGlyph = (glyphset, syllable) => {
+
+  }
+
+  drawAvatar = (glyphset, syllablemap, patp) => {
+    if (isString(patp)) patp = patp.replace('~','').replace('-','').match(/.{1,3}/g)
+
+    const motifGrid = glyphset.glyphGrid()
+    const avatarGrid = glyphset.groupGrid()
+
+    patp.map((syllable, index) => {
+      // map(currentPage, glyphMap => map(glyphset.glyph, (symbolKey, index) => {
+      //   const params = {
+      //     fillColor: '#333',
+      //     // strokeWidth: 1,
+      //     scaleFactor: 0.1,
+      //     selected: this.state.debug,
+      //     position: motifGrid[index],
+      //     insert: true,
+      //   }
+      //   const ref = glyphset.glyphs[symbolKey].render(params)
+      //
+      //   return ref
+      // }))
+    })
+
   }
 
   // randomShip = length => {
@@ -257,7 +314,76 @@ class Debug extends Component {
     const set = glyphset
     const glyphs = prop('glyphs')(set)
     const iter = keys(glyphs)
-    this.setState({all: method(iter, 4).toArray() })
+    const combinations = method(iter, 4).toArray()
+
+    // turn into object to support extra metadata
+    // const deAliased = {}
+    // const delimiter = '-'
+    // combinations.forEach(glyphMap => {
+    //   const rotationalAliases = sequence(4).map(i => rotateArr(glyphMap, i).join(delimiter))
+    //   const test = objHasAnyPropInArr(deAliased, rotationalAliases)
+    //   if (test === false) {
+    //     deAliased[glyphMap.join(delimiter)] = glyphMap
+    //   }
+    // })
+
+    // console.log(Object.values(deAliased).length)
+
+    // console.log(objHasAnyPropInArr(test, testArr))
+
+
+
+
+
+    // const sortedCopy = [...sorted]
+    //
+    // const first = sortedCopy[0]
+    //
+    // const bySequence = {}
+    // sorted.forEach(glyph => {
+    //
+    //   const rotations = sequence(4).map(index => rotateArr(glyph.glyph, index))
+    //
+    //
+    //   const key = glyph.glyph.join('-')
+    //
+    //
+    //
+    //   if (hasAnyOwnProperty(glyph.glyph, rotations)) {
+    //
+    //   } else {
+    //
+    //   }
+    // })
+    //
+    // const glyphRotations = sequence(4).map(index => rotateArr(first.glyph, index))
+    //
+    // console.log(glyphRotations)
+
+    // const groupBy = (arr, prop) => {
+    //   return arr.reduce((groups, item) => {
+    //     const val = item[prop]
+    //     groups[val] = groups[val] || []
+    //     groups[val].push(item)
+    //     return groups
+    //   }, {})
+    // }
+
+    // sortedCopy.forEach(glyph => {
+    //   const glyphRotations = sequence(4).reduce((acc, index) => acc.concat(rotateArr(acc)), glyph.glyph)
+    //
+    // })
+
+    const withMateCount = map(combinations, glyph => ({
+      glyph,
+      key: glyph.join('-'),
+      mateCount: countMates(glyphset, glyph, 2),
+    }))
+
+    const sorted = sort(withMateCount, numComparator, 'mateCount')
+
+
+    this.setState({all: sorted.reverse() })
   }
 
   goToIndex = index => this.setState({pageIndex: index})
@@ -267,6 +393,11 @@ class Debug extends Component {
     fileDownload(data, 'avatar.svg')
   }
 
+  exportJSON = (data, filename) => {
+    fileDownload(JSON.stringify(data, null, 2), `${filename}.json`)
+  }
+
+
 
   render = () => {
     if (this.state.didInit && this.state.currentPage.length > 0 ) this.draw()
@@ -275,7 +406,7 @@ class Debug extends Component {
         <nav>
           <span>
             <Button
-              onClick={() => this.toggleDebug()}
+              onClick={ () => this.toggleDebug() }
               title={'debug'}
               id={true}
               keySelectedInPanel={this.state.debug} />
@@ -329,6 +460,8 @@ class Debug extends Component {
             //   id={'glyphsetSchemaD'}
             //   keySelectedInPanel={this.state.symbolState} />
           }
+
+
           </span>
 
           <span>
@@ -336,7 +469,7 @@ class Debug extends Component {
               onClick={() => this.setMethod(bigCombination)}
               title={'bigCombination'}
               id={'bigCombination'}
-              keySelectedIn Panel={this.state.comboState} />
+              keySelectedInPanel={this.state.comboState} />
             <Button
               onClick={() => this.setMethod(permutation)}
               title={'permutation'}
@@ -355,6 +488,11 @@ class Debug extends Component {
             <p>{`${this.state.pageIndex}/${numPages(this.state.all.length, PER_PAGE) - 1}`}</p>
             <button onClick={() => this.nextPage()}>{'→'}</button>
 
+            <Button
+              onClick={() => this.pushGlyph(this.state.currentPage[0])}
+              title={'Push'}
+              id={'pushGlyph'} />
+
           </span>
 
           <span>
@@ -363,6 +501,8 @@ class Debug extends Component {
 
           <span>
             <button onClick={() => this.exportSVG()}>{'export'}</button>
+            <button onClick={() => this.exportJSON(this.state.sylset, 'sylset')}>{'export sylset'}</button>
+
           </span>
 
         </nav>

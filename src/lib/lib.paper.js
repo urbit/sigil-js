@@ -14,7 +14,6 @@ import {
 import chr from 'chroma-js'
 
 import {
-  map,
   split,
   callIfDef,
   sequence,
@@ -83,7 +82,7 @@ const opPipe = arr => op => arr.reduce((acc, item) => acc[op](item), end(arr))
 const rectGrid = (origin, cellSize, extents, flat) => {
   const x = sequence(extents.x)
   const y = sequence(extents.y)
-  const nestedGrid = map(y, iY => map(x, iX => ({
+  const nestedGrid = y.map(iY => x.map(iX => ({
     x: origin.x + (cellSize.x * iX),
     y: origin.y + (cellSize.y * iY),
   })

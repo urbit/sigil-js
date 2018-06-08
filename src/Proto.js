@@ -128,7 +128,7 @@ class Debug extends Component {
 
   pushGlyph = (glyph) => {
     base.push(DB_GLYPHSET_KEY, {
-      data: glyph
+      data: {glyph}
     }).then(() => {
       console.log(glyph)
       this.getGlyphset(DB_GLYPHSET_KEY)
@@ -396,8 +396,6 @@ class Debug extends Component {
   exportJSON = (data, filename) => {
     fileDownload(JSON.stringify(data, null, 2), `${filename}.json`)
   }
-
-
 
   render = () => {
     if (this.state.didInit && this.state.currentPage.length > 0 ) this.draw()

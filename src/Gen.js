@@ -2,16 +2,14 @@ import React, { Component } from 'react'
 // import chr from 'chroma-js'
 import paper from 'paper'
 import { bigCombination, permutation, baseN } from 'js-combinatorics'
-
 import fileDownload from 'js-file-download'
 
 import { initCanvas } from './lib/lib.canvas'
 import { rectGrid } from './lib/lib.paper'
-// import { genAvatar, drawChars, rectGrid, pGroup, opPipe, pPathRect, pCompoundPath, pPath, pPathCircle } from './lib/lib.paper'
-// import {randomShipName, printShip, randomShipArray } from './lib/lib.urbit'
-import geonset from './geonsets/geonset_000'
-import sylmap from './sylmaps/sylmap_000'
 import { suffixes, prefixes, patp } from './lib/lib.urbit'
+
+import geonset from './geonsets/geonset_000'
+import sylmap from './sylmaps/sylmap_000.json'
 
 import {
   countMates,
@@ -24,7 +22,6 @@ import {
   compose,
   sort,
   prop,
-  keys,
   numComparator,
   rotateArr,
   objHasAnyPropInArr,
@@ -32,12 +29,13 @@ import {
   isEven,
   isOdd,
   arrEq,
-} from './lib/lib'
-
-import {
   isObject,
   isString,
-} from './lib/lib.type'
+  values,
+  entries,
+  keys,
+} from './lib/lib'
+
 
 // import { base, baseState } from './lib/lib.firebase'
 
@@ -54,12 +52,31 @@ class Gen extends Component {
   }
 
   componentDidMount = () => {
-    const { ctx, canvas } = initCanvas(this.paperCanvas, {x:600, y:600})
+
+    // const n = entries(sylmap).reduce((acc, [k, v]) => {
+    //   acc[k] = {
+    //     geonset: v,
+    //     mateCount: 0
+    //   }
+    //   return acc
+    // }, {})
+    //
+    // const updated = {
+    //   name: 'sylmap_002',
+    //   date: new Date(),
+    //   sylmap: {...n},
+    // }
+    //
+    // console.log(updated)
+    //
+    // this.exportJSON(updated, 'sylmap_002')
+
+
+    const { ctx, canvas } = initCanvas(this.gen_canvas, {x:600, y:600})
     paper.setup(canvas)
-    const dupes = this.checkDupes(sylmap)
-    console.log(dupes)
+    // const dupes = this.checkDupes(sylmap)
     // paper is a globally scoped object and independant from the vDOM
-    this.setState({ didInit: true, dupes })
+    this.setState({ didInit: true })
   }
 
 
@@ -79,13 +96,11 @@ class Gen extends Component {
 
     if (isString(patp)) patp = patp.replace('~','').replace('-','').match(/.{1,3}/g)
 
-    const geonGrid = geonset.geonGrid()
-    const syllableGrid = geonset.syllableGrid()
-    const grid = rectGrid({ x:96, y:96 }, { x:128, y:128 }, { x: 4, y: 4 }, true)
+    const grid = geonset.grid()
 
     const sylRefs = patp.map((syllable, syllableIndex) => {
-      const geonMap = sylmap[syllable]
-      const glyphRefs = geonMap.map((geonRef, geonIndex) => {
+      const geonmap = sylmap.sylmap[syllable].geonset
+      const glyphRefs = geonmap.map((geonRef, geonIndex) => {
         const params = {
           fillColor: '#fff',
           selected: this.state.debug,
@@ -122,7 +137,7 @@ class Gen extends Component {
       return acc
     }, {})
 
-    this.exportJSON(newSylmap, 'sylmap_???')
+    this.exportJSON(newSylmap, 'sylmap_')
   }
 
   combinatoric = (method, geonset) => {
@@ -141,26 +156,28 @@ class Gen extends Component {
     this.setState({ patpInput }, () => this.drawAvatar(geonset, sylmap, this.state.patpInput))
   }
 
-  checkDupes = sylmap => {
-    const geonmaps = Object.values(sylmap)
-    const dupes = geonmaps.filter((geonmap, index, arr) => {
-      const dupeCount = geonmaps.reduce((acc, item) => {
-        const test = arrEq(geonmap, item)
-        if (test === true) {
-          return acc + 1
-        }
-        return acc
-      }, 0)
-      return dupeCount > 1
-    })
-    return dupes
-  }
+  // checkDupes = sylmap => {
+  //   const geonmaps = values(sylmap)
+  //   console.log(geonmaps)
+  //   const dupes = geonmaps.geonmap.filter((geonmap, index, arr) => {
+  //     const dupeCount = geonmaps.geonmap.reduce((acc, item) => {
+  //       const test = arrEq(geonmaps.geonmap.glyph, item)
+  //       if (test === true) {
+  //         return acc + 1
+  //       }
+  //       return acc
+  //     }, 0)
+  //     return dupeCount > 1
+  //   })
+  //   return dupes
+  // }
 
   render = () => {
     if (this.state.didInit) this.draw()
     return (
       <div>
         <nav>
+          <h2>Gen</h2>
           <span>
             <Button
               onClick={ () => this.toggleDebug() }
@@ -169,25 +186,25 @@ class Gen extends Component {
               keySelectedInPanel={this.state.debug} />
             </span>
 
-
           <span>
             <button onClick={() => this.exportSVG()}>{'export SVG'}</button>
           </span>
 
           <input placeholder="@p" type="text" value={this.state.patpInput} onChange={e => this.setState({patpInput: e.target.value})} />
-          <button onClick={() => this.drawAvatar(geonset, sylmap, this.state.patpInput)}>{'Generate'}</button>
-          <button onClick={() => this.randomPatp()}>{'Random @p'}</button>
-
-
-          <button onClick={() => this.generateRandomSylmap(geonset, [...suffixes, ...prefixes])}>{'Export random sylmap'}</button>
-
-
+          <button
+            onClick={() => this.drawAvatar(geonset, sylmap, this.state.patpInput)}>
+            {'Generate'}
+          </button>
+          <button
+            onClick={() => this.randomPatp()}>
+            {'Random @p'}
+          </button>
         </nav>
 
         <canvas
-          ref={paperCanvas => this.paperCanvas = paperCanvas}
+          ref={ gen_canvas => this.gen_canvas = gen_canvas }
           data-paper-resize
-          id={`paperCanvas`} />
+          id={`gen_canvas`} />
       </div>
     )
   }

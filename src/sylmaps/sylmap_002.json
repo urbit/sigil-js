@@ -1,372 +1,2676 @@
 {
   "name": "sylmap_002",
-  "date": "2018-06-08T18:13:00.173Z",
+  "date": "2018-06-08T18:09:12.741Z",
   "sylmap": {
-    "doz": {
+    "zod": {
       "geonset": [
-        "1",
-        "2",
+        "14",
         "4",
-        "9"
+        "5",
+        "15"
       ],
       "mateCount": 0
     },
-    "mar": {
+    "nec": {
       "geonset": [
-        "5",
-        "5",
-        "5",
-        "5"
-      ],
-      "mateCount": 0
-    },
-    "bin": {
-      "geonset": [
+        "16",
+        "15",
         "1",
-        "5",
-        "5",
-        "5"
+        "10"
       ],
       "mateCount": 0
     },
-    "wan": {
+    "bud": {
       "geonset": [
-        "1",
-        "2",
-        "5",
-        "5"
-      ],
-      "mateCount": 0
-    },
-    "sam": {
-      "geonset": [
-        "1",
-        "5",
-        "4",
-        "5"
-      ],
-      "mateCount": 0
-    },
-    "lit": {
-      "geonset": [
-        "5",
-        "2",
-        "4",
-        "5"
-      ],
-      "mateCount": 0
-    },
-    "sig": {
-      "geonset": [
-        "5",
-        "2",
-        "4",
-        "3"
-      ],
-      "mateCount": 0
-    },
-    "hid": {
-      "geonset": [
-        "5",
-        "5",
-        "5",
-        "3"
-      ],
-      "mateCount": 0
-    },
-    "fid": {
-      "geonset": [
-        "1",
-        "2",
-        "4",
-        "3"
-      ],
-      "mateCount": 0
-    },
-    "lis": {
-      "geonset": [
-        "5",
-        "5",
+        "15",
+        "9",
         "6",
         "4"
       ],
       "mateCount": 0
     },
-    "sog": {
+    "wes": {
       "geonset": [
+        "15",
+        "5",
+        "1",
+        "16"
+      ],
+      "mateCount": 0
+    },
+    "sev": {
+      "geonset": [
+        "16",
+        "12",
         "8",
-        "1",
-        "4",
-        "3"
+        "9"
       ],
       "mateCount": 0
     },
-    "dir": {
+    "per": {
       "geonset": [
-        "2",
-        "2",
-        "4",
-        "3"
-      ],
-      "mateCount": 0
-    },
-    "wac": {
-      "geonset": [
-        "5",
-        "1",
-        "4",
-        "3"
-      ],
-      "mateCount": 0
-    },
-    "sab": {
-      "geonset": [
-        "1",
-        "3",
-        "4",
-        "3"
-      ],
-      "mateCount": 0
-    },
-    "wis": {
-      "geonset": [
-        "2",
-        "1",
-        "4",
-        "3"
-      ],
-      "mateCount": 0
-    },
-    "sib": {
-      "geonset": [
-        "5",
         "9",
-        "5",
-        "2"
-      ],
-      "mateCount": 0
-    },
-    "rig": {
-      "geonset": [
-        "1",
-        "8",
         "4",
+        "11",
         "3"
       ],
       "mateCount": 0
     },
-    "sol": {
+    "sut": {
       "geonset": [
-        "8",
-        "8",
-        "4",
-        "3"
-      ],
-      "mateCount": 0
-    },
-    "dop": {
-      "geonset": [
-        "5",
-        "5",
-        "5",
-        "2"
-      ],
-      "mateCount": 0
-    },
-    "mod": {
-      "geonset": [
-        "1",
         "5",
         "6",
-        "3"
+        "11",
+        "10"
       ],
       "mateCount": 0
     },
-    "fog": {
+    "let": {
       "geonset": [
+        "11",
         "5",
         "9",
-        "4",
-        "2"
-      ],
-      "mateCount": 0
-    },
-    "lid": {
-      "geonset": [
-        "5",
-        "5",
-        "4",
-        "2"
-      ],
-      "mateCount": 0
-    },
-    "hop": {
-      "geonset": [
-        "1",
-        "2",
-        "4",
-        "2"
-      ],
-      "mateCount": 0
-    },
-    "dar": {
-      "geonset": [
-        "5",
-        "2",
-        "3",
         "4"
       ],
       "mateCount": 0
     },
-    "dor": {
+    "ful": {
       "geonset": [
-        "8",
+        "14",
         "5",
-        "5",
-        "5"
+        "4",
+        "15"
       ],
       "mateCount": 0
     },
-    "lor": {
+    "pen": {
       "geonset": [
-        "2",
-        "8",
-        "5",
-        "5"
-      ],
-      "mateCount": 0
-    },
-    "hod": {
-      "geonset": [
-        "1",
-        "2",
         "6",
+        "12",
+        "8",
+        "2"
+      ],
+      "mateCount": 0
+    },
+    "syt": {
+      "geonset": [
+        "10",
+        "9",
+        "6",
+        "14"
+      ],
+      "mateCount": 0
+    },
+    "dur": {
+      "geonset": [
+        "10",
+        "3",
+        "4",
+        "15"
+      ],
+      "mateCount": 0
+    },
+    "wep": {
+      "geonset": [
+        "4",
+        "15",
+        "1",
+        "0"
+      ],
+      "mateCount": 0
+    },
+    "ser": {
+      "geonset": [
+        "17",
+        "16",
+        "6",
+        "11"
+      ],
+      "mateCount": 0
+    },
+    "wyl": {
+      "geonset": [
+        "10",
+        "3",
+        "14",
+        "0"
+      ],
+      "mateCount": 0
+    },
+    "sun": {
+      "geonset": [
+        "6",
+        "14",
+        "10",
+        "7"
+      ],
+      "mateCount": 0
+    },
+    "ryp": {
+      "geonset": [
+        "9",
+        "0",
+        "16",
+        "14"
+      ],
+      "mateCount": 0
+    },
+    "syx": {
+      "geonset": [
+        "4",
+        "1",
+        "7",
         "5"
       ],
       "mateCount": 0
     },
-    "fol": {
-      "geonset": [
-        "5",
-        "2",
-        "4",
-        "6"
-      ],
-      "mateCount": 0
-    },
-    "rin": {
-      "geonset": [
-        "5",
-        "2",
-        "4",
-        "9"
-      ],
-      "mateCount": 0
-    },
-    "tog": {
+    "dyr": {
       "geonset": [
         "1",
-        "2",
-        "5",
-        "9"
+        "8",
+        "10",
+        "15"
       ],
       "mateCount": 0
     },
-    "sil": {
+    "nup": {
+      "geonset": [
+        "9",
+        "10",
+        "17",
+        "5"
+      ],
+      "mateCount": 0
+    },
+    "heb": {
+      "geonset": [
+        "8",
+        "14",
+        "5",
+        "0"
+      ],
+      "mateCount": 0
+    },
+    "peg": {
+      "geonset": [
+        "2",
+        "15",
+        "12",
+        "3"
+      ],
+      "mateCount": 0
+    },
+    "lup": {
+      "geonset": [
+        "9",
+        "8",
+        "5",
+        "3"
+      ],
+      "mateCount": 0
+    },
+    "dep": {
+      "geonset": [
+        "12",
+        "17",
+        "14",
+        "5"
+      ],
+      "mateCount": 0
+    },
+    "dys": {
+      "geonset": [
+        "16",
+        "7",
+        "2",
+        "14"
+      ],
+      "mateCount": 0
+    },
+    "put": {
+      "geonset": [
+        "15",
+        "14",
+        "7",
+        "10"
+      ],
+      "mateCount": 0
+    },
+    "lug": {
       "geonset": [
         "5",
-        "3",
-        "5",
+        "9",
+        "2",
         "17"
       ],
       "mateCount": 0
     },
-    "mir": {
+    "hec": {
+      "geonset": [
+        "2",
+        "0",
+        "14",
+        "15"
+      ],
+      "mateCount": 0
+    },
+    "ryt": {
+      "geonset": [
+        "8",
+        "3",
+        "10",
+        "12"
+      ],
+      "mateCount": 0
+    },
+    "tyv": {
+      "geonset": [
+        "15",
+        "17",
+        "10",
+        "7"
+      ],
+      "mateCount": 0
+    },
+    "syd": {
+      "geonset": [
+        "17",
+        "8",
+        "2",
+        "5"
+      ],
+      "mateCount": 0
+    },
+    "nex": {
+      "geonset": [
+        "16",
+        "9",
+        "15",
+        "12"
+      ],
+      "mateCount": 0
+    },
+    "lun": {
+      "geonset": [
+        "12",
+        "1",
+        "9",
+        "4"
+      ],
+      "mateCount": 0
+    },
+    "mep": {
+      "geonset": [
+        "4",
+        "2",
+        "12",
+        "17"
+      ],
+      "mateCount": 0
+    },
+    "lut": {
+      "geonset": [
+        "8",
+        "17",
+        "16",
+        "11"
+      ],
+      "mateCount": 0
+    },
+    "sep": {
+      "geonset": [
+        "3",
+        "5",
+        "1",
+        "6"
+      ],
+      "mateCount": 0
+    },
+    "pes": {
+      "geonset": [
+        "5",
+        "14",
+        "7",
+        "6"
+      ],
+      "mateCount": 0
+    },
+    "del": {
+      "geonset": [
+        "10",
+        "12",
+        "3",
+        "16"
+      ],
+      "mateCount": 0
+    },
+    "sul": {
+      "geonset": [
+        "2",
+        "14",
+        "9",
+        "6"
+      ],
+      "mateCount": 0
+    },
+    "ped": {
+      "geonset": [
+        "1",
+        "10",
+        "2",
+        "6"
+      ],
+      "mateCount": 0
+    },
+    "tem": {
+      "geonset": [
+        "10",
+        "6",
+        "16",
+        "7"
+      ],
+      "mateCount": 0
+    },
+    "led": {
+      "geonset": [
+        "5",
+        "14",
+        "15",
+        "10"
+      ],
+      "mateCount": 0
+    },
+    "tul": {
+      "geonset": [
+        "0",
+        "7",
+        "4",
+        "16"
+      ],
+      "mateCount": 0
+    },
+    "met": {
+      "geonset": [
+        "6",
+        "10",
+        "11",
+        "8"
+      ],
+      "mateCount": 0
+    },
+    "wen": {
+      "geonset": [
+        "0",
+        "12",
+        "7",
+        "10"
+      ],
+      "mateCount": 0
+    },
+    "byn": {
+      "geonset": [
+        "1",
+        "14",
+        "4",
+        "11"
+      ],
+      "mateCount": 0
+    },
+    "hex": {
+      "geonset": [
+        "1",
+        "3",
+        "9",
+        "16"
+      ],
+      "mateCount": 0
+    },
+    "feb": {
+      "geonset": [
+        "0",
+        "9",
+        "8",
+        "11"
+      ],
+      "mateCount": 0
+    },
+    "pyl": {
+      "geonset": [
+        "16",
+        "9",
+        "6",
+        "14"
+      ],
+      "mateCount": 0
+    },
+    "dul": {
+      "geonset": [
+        "5",
+        "3",
+        "8",
+        "2"
+      ],
+      "mateCount": 0
+    },
+    "het": {
+      "geonset": [
+        "17",
+        "9",
+        "3",
+        "15"
+      ],
+      "mateCount": 0
+    },
+    "mev": {
+      "geonset": [
+        "14",
+        "17",
+        "0",
+        "2"
+      ],
+      "mateCount": 0
+    },
+    "rut": {
+      "geonset": [
+        "8",
+        "10",
+        "7",
+        "12"
+      ],
+      "mateCount": 0
+    },
+    "tyl": {
+      "geonset": [
+        "5",
+        "11",
+        "4",
+        "9"
+      ],
+      "mateCount": 0
+    },
+    "wyd": {
+      "geonset": [
+        "12",
+        "15",
+        "10",
+        "11"
+      ],
+      "mateCount": 0
+    },
+    "tep": {
+      "geonset": [
+        "1",
+        "12",
+        "0",
+        "3"
+      ],
+      "mateCount": 0
+    },
+    "bes": {
+      "geonset": [
+        "0",
+        "11",
+        "9",
+        "2"
+      ],
+      "mateCount": 0
+    },
+    "dex": {
+      "geonset": [
+        "2",
+        "16",
+        "6",
+        "11"
+      ],
+      "mateCount": 0
+    },
+    "sef": {
+      "geonset": [
+        "9",
+        "12",
+        "2",
+        "16"
+      ],
+      "mateCount": 0
+    },
+    "wyc": {
+      "geonset": [
+        "8",
+        "14",
+        "1",
+        "6"
+      ],
+      "mateCount": 0
+    },
+    "bur": {
+      "geonset": [
+        "3",
+        "0",
+        "16",
+        "8"
+      ],
+      "mateCount": 0
+    },
+    "der": {
+      "geonset": [
+        "9",
+        "1",
+        "16",
+        "11"
+      ],
+      "mateCount": 0
+    },
+    "nep": {
+      "geonset": [
+        "1",
+        "8",
+        "6",
+        "5"
+      ],
+      "mateCount": 0
+    },
+    "pur": {
+      "geonset": [
+        "8",
+        "0",
+        "12",
+        "17"
+      ],
+      "mateCount": 0
+    },
+    "rys": {
+      "geonset": [
+        "3",
+        "6",
+        "10",
+        "7"
+      ],
+      "mateCount": 0
+    },
+    "reb": {
+      "geonset": [
+        "16",
+        "14",
+        "10",
+        "3"
+      ],
+      "mateCount": 0
+    },
+    "den": {
+      "geonset": [
+        "17",
+        "12",
+        "10",
+        "4"
+      ],
+      "mateCount": 0
+    },
+    "nut": {
+      "geonset": [
+        "12",
+        "7",
+        "4",
+        "1"
+      ],
+      "mateCount": 0
+    },
+    "sub": {
+      "geonset": [
+        "14",
+        "8",
+        "6",
+        "5"
+      ],
+      "mateCount": 0
+    },
+    "pet": {
+      "geonset": [
+        "7",
+        "15",
+        "0",
+        "5"
+      ],
+      "mateCount": 0
+    },
+    "rul": {
+      "geonset": [
+        "14",
+        "17",
+        "2",
+        "7"
+      ],
+      "mateCount": 0
+    },
+    "syn": {
+      "geonset": [
+        "2",
+        "1",
+        "14",
+        "11"
+      ],
+      "mateCount": 0
+    },
+    "reg": {
+      "geonset": [
+        "17",
+        "14",
+        "5",
+        "15"
+      ],
+      "mateCount": 0
+    },
+    "tyd": {
+      "geonset": [
+        "16",
+        "6",
+        "9",
+        "3"
+      ],
+      "mateCount": 0
+    },
+    "sup": {
+      "geonset": [
+        "14",
+        "9",
+        "8",
+        "12"
+      ],
+      "mateCount": 0
+    },
+    "sem": {
+      "geonset": [
+        "8",
+        "0",
+        "4",
+        "7"
+      ],
+      "mateCount": 0
+    },
+    "wyn": {
+      "geonset": [
+        "2",
+        "7",
+        "5",
+        "16"
+      ],
+      "mateCount": 0
+    },
+    "rec": {
+      "geonset": [
+        "9",
+        "4",
+        "0",
+        "2"
+      ],
+      "mateCount": 0
+    },
+    "meg": {
+      "geonset": [
+        "3",
+        "4",
+        "17",
+        "2"
+      ],
+      "mateCount": 0
+    },
+    "net": {
+      "geonset": [
+        "5",
+        "7",
+        "4",
+        "2"
+      ],
+      "mateCount": 0
+    },
+    "sec": {
+      "geonset": [
+        "2",
+        "15",
+        "7",
+        "10"
+      ],
+      "mateCount": 0
+    },
+    "mul": {
+      "geonset": [
+        "1",
+        "4",
+        "15",
+        "10"
+      ],
+      "mateCount": 0
+    },
+    "nym": {
+      "geonset": [
+        "8",
+        "9",
+        "11",
+        "6"
+      ],
+      "mateCount": 0
+    },
+    "tev": {
+      "geonset": [
+        "6",
+        "10",
+        "4",
+        "8"
+      ],
+      "mateCount": 0
+    },
+    "web": {
+      "geonset": [
+        "0",
+        "11",
+        "6",
+        "14"
+      ],
+      "mateCount": 0
+    },
+    "sum": {
+      "geonset": [
+        "14",
+        "8",
+        "3",
+        "9"
+      ],
+      "mateCount": 0
+    },
+    "mut": {
+      "geonset": [
+        "10",
+        "8",
+        "3",
+        "14"
+      ],
+      "mateCount": 0
+    },
+    "nyx": {
+      "geonset": [
+        "10",
+        "12",
+        "5",
+        "0"
+      ],
+      "mateCount": 0
+    },
+    "rex": {
+      "geonset": [
+        "4",
+        "2",
+        "10",
+        "5"
+      ],
+      "mateCount": 0
+    },
+    "teb": {
+      "geonset": [
+        "16",
+        "17",
+        "14",
+        "10"
+      ],
+      "mateCount": 0
+    },
+    "fus": {
+      "geonset": [
+        "16",
+        "4",
+        "7",
+        "10"
+      ],
+      "mateCount": 0
+    },
+    "hep": {
+      "geonset": [
+        "14",
+        "3",
+        "16",
+        "0"
+      ],
+      "mateCount": 0
+    },
+    "ben": {
+      "geonset": [
+        "9",
+        "11",
+        "8",
+        "4"
+      ],
+      "mateCount": 0
+    },
+    "mus": {
+      "geonset": [
+        "14",
+        "16",
+        "3",
+        "6"
+      ],
+      "mateCount": 0
+    },
+    "wyx": {
+      "geonset": [
+        "11",
+        "7",
+        "10",
+        "6"
+      ],
+      "mateCount": 0
+    },
+    "sym": {
+      "geonset": [
+        "17",
+        "3",
+        "4",
+        "2"
+      ],
+      "mateCount": 0
+    },
+    "sel": {
+      "geonset": [
+        "7",
+        "2",
+        "5",
+        "1"
+      ],
+      "mateCount": 0
+    },
+    "ruc": {
+      "geonset": [
+        "7",
+        "17",
+        "2",
+        "14"
+      ],
+      "mateCount": 0
+    },
+    "dec": {
+      "geonset": [
+        "3",
+        "16",
+        "12",
+        "6"
+      ],
+      "mateCount": 0
+    },
+    "wex": {
+      "geonset": [
+        "3",
+        "8",
+        "17",
+        "1"
+      ],
+      "mateCount": 0
+    },
+    "syr": {
+      "geonset": [
+        "12",
+        "8",
+        "6",
+        "1"
+      ],
+      "mateCount": 0
+    },
+    "wet": {
+      "geonset": [
+        "6",
+        "12",
+        "0",
+        "3"
+      ],
+      "mateCount": 0
+    },
+    "dyl": {
+      "geonset": [
+        "17",
+        "10",
+        "7",
+        "14"
+      ],
+      "mateCount": 0
+    },
+    "myn": {
+      "geonset": [
+        "17",
+        "8",
+        "15",
+        "12"
+      ],
+      "mateCount": 0
+    },
+    "mes": {
+      "geonset": [
+        "17",
+        "16",
+        "10",
+        "11"
+      ],
+      "mateCount": 0
+    },
+    "det": {
+      "geonset": [
+        "0",
+        "2",
+        "4",
+        "17"
+      ],
+      "mateCount": 0
+    },
+    "bet": {
+      "geonset": [
+        "11",
+        "8",
+        "5",
+        "6"
+      ],
+      "mateCount": 0
+    },
+    "bel": {
       "geonset": [
         "2",
         "12",
-        "5",
-        "9"
+        "7",
+        "15"
       ],
       "mateCount": 0
     },
-    "hol": {
+    "tux": {
+      "geonset": [
+        "7",
+        "15",
+        "6",
+        "4"
+      ],
+      "mateCount": 0
+    },
+    "tug": {
+      "geonset": [
+        "2",
+        "8",
+        "1",
+        "14"
+      ],
+      "mateCount": 0
+    },
+    "myr": {
+      "geonset": [
+        "16",
+        "12",
+        "11",
+        "10"
+      ],
+      "mateCount": 0
+    },
+    "pel": {
+      "geonset": [
+        "5",
+        "10",
+        "4",
+        "7"
+      ],
+      "mateCount": 0
+    },
+    "syp": {
+      "geonset": [
+        "10",
+        "2",
+        "9",
+        "0"
+      ],
+      "mateCount": 0
+    },
+    "ter": {
+      "geonset": [
+        "5",
+        "9",
+        "7",
+        "11"
+      ],
+      "mateCount": 0
+    },
+    "meb": {
+      "geonset": [
+        "14",
+        "2",
+        "10",
+        "8"
+      ],
+      "mateCount": 0
+    },
+    "set": {
+      "geonset": [
+        "2",
+        "10",
+        "0",
+        "5"
+      ],
+      "mateCount": 0
+    },
+    "dut": {
+      "geonset": [
+        "2",
+        "3",
+        "15",
+        "8"
+      ],
+      "mateCount": 0
+    },
+    "deg": {
+      "geonset": [
+        "17",
+        "7",
+        "9",
+        "1"
+      ],
+      "mateCount": 0
+    },
+    "tex": {
+      "geonset": [
+        "11",
+        "1",
+        "10",
+        "4"
+      ],
+      "mateCount": 0
+    },
+    "sur": {
+      "geonset": [
+        "12",
+        "6",
+        "14",
+        "1"
+      ],
+      "mateCount": 0
+    },
+    "fel": {
+      "geonset": [
+        "11",
+        "7",
+        "9",
+        "0"
+      ],
+      "mateCount": 0
+    },
+    "tud": {
+      "geonset": [
+        "8",
+        "12",
+        "14",
+        "7"
+      ],
+      "mateCount": 0
+    },
+    "nux": {
+      "geonset": [
+        "17",
+        "7",
+        "3",
+        "11"
+      ],
+      "mateCount": 0
+    },
+    "rux": {
+      "geonset": [
+        "7",
+        "8",
+        "14",
+        "16"
+      ],
+      "mateCount": 0
+    },
+    "ren": {
+      "geonset": [
+        "8",
+        "12",
+        "11",
+        "17"
+      ],
+      "mateCount": 0
+    },
+    "wyt": {
+      "geonset": [
+        "16",
+        "1",
+        "4",
+        "8"
+      ],
+      "mateCount": 0
+    },
+    "nub": {
+      "geonset": [
+        "9",
+        "17",
+        "0",
+        "8"
+      ],
+      "mateCount": 0
+    },
+    "med": {
       "geonset": [
         "8",
         "11",
+        "2",
+        "0"
+      ],
+      "mateCount": 0
+    },
+    "lyt": {
+      "geonset": [
+        "16",
+        "10",
+        "17",
+        "15"
+      ],
+      "mateCount": 0
+    },
+    "dus": {
+      "geonset": [
+        "2",
+        "8",
+        "12",
+        "14"
+      ],
+      "mateCount": 0
+    },
+    "neb": {
+      "geonset": [
+        "12",
+        "9",
+        "10",
+        "2"
+      ],
+      "mateCount": 0
+    },
+    "rum": {
+      "geonset": [
+        "14",
+        "12",
+        "7",
+        "15"
+      ],
+      "mateCount": 0
+    },
+    "tyn": {
+      "geonset": [
+        "3",
         "5",
+        "12",
+        "17"
+      ],
+      "mateCount": 0
+    },
+    "seg": {
+      "geonset": [
+        "0",
+        "14",
+        "15",
+        "6"
+      ],
+      "mateCount": 0
+    },
+    "lyx": {
+      "geonset": [
+        "6",
+        "7",
+        "15",
+        "0"
+      ],
+      "mateCount": 0
+    },
+    "pun": {
+      "geonset": [
+        "5",
+        "10",
+        "7",
+        "6"
+      ],
+      "mateCount": 0
+    },
+    "res": {
+      "geonset": [
+        "14",
+        "11",
+        "0",
         "9"
       ],
       "mateCount": 0
     },
-    "pas": {
+    "red": {
+      "geonset": [
+        "11",
+        "1",
+        "0",
+        "14"
+      ],
+      "mateCount": 0
+    },
+    "fun": {
+      "geonset": [
+        "7",
+        "16",
+        "9",
+        "10"
+      ],
+      "mateCount": 0
+    },
+    "rev": {
+      "geonset": [
+        "11",
+        "6",
+        "2",
+        "16"
+      ],
+      "mateCount": 0
+    },
+    "ref": {
+      "geonset": [
+        "8",
+        "17",
+        "10",
+        "16"
+      ],
+      "mateCount": 0
+    },
+    "mec": {
+      "geonset": [
+        "2",
+        "14",
+        "4",
+        "15"
+      ],
+      "mateCount": 0
+    },
+    "ted": {
+      "geonset": [
+        "7",
+        "11",
+        "6",
+        "5"
+      ],
+      "mateCount": 0
+    },
+    "rus": {
       "geonset": [
         "1",
+        "0",
+        "17",
+        "2"
+      ],
+      "mateCount": 0
+    },
+    "bex": {
+      "geonset": [
+        "0",
+        "12",
+        "2",
+        "15"
+      ],
+      "mateCount": 0
+    },
+    "leb": {
+      "geonset": [
+        "12",
+        "15",
+        "8",
+        "14"
+      ],
+      "mateCount": 0
+    },
+    "dux": {
+      "geonset": [
+        "8",
         "9",
         "5",
         "15"
       ],
       "mateCount": 0
     },
-    "lac": {
+    "ryn": {
+      "geonset": [
+        "2",
+        "12",
+        "8",
+        "10"
+      ],
+      "mateCount": 0
+    },
+    "num": {
+      "geonset": [
+        "15",
+        "12",
+        "11",
+        "2"
+      ],
+      "mateCount": 0
+    },
+    "pyx": {
+      "geonset": [
+        "9",
+        "6",
+        "11",
+        "0"
+      ],
+      "mateCount": 0
+    },
+    "ryg": {
+      "geonset": [
+        "6",
+        "7",
+        "15",
+        "1"
+      ],
+      "mateCount": 0
+    },
+    "ryx": {
+      "geonset": [
+        "7",
+        "2",
+        "17",
+        "10"
+      ],
+      "mateCount": 0
+    },
+    "fep": {
+      "geonset": [
+        "5",
+        "16",
+        "4",
+        "7"
+      ],
+      "mateCount": 0
+    },
+    "tyr": {
+      "geonset": [
+        "3",
+        "12",
+        "7",
+        "14"
+      ],
+      "mateCount": 0
+    },
+    "tus": {
+      "geonset": [
+        "4",
+        "9",
+        "17",
+        "6"
+      ],
+      "mateCount": 0
+    },
+    "tyc": {
+      "geonset": [
+        "11",
+        "10",
+        "14",
+        "12"
+      ],
+      "mateCount": 0
+    },
+    "leg": {
+      "geonset": [
+        "11",
+        "7",
+        "4",
+        "17"
+      ],
+      "mateCount": 0
+    },
+    "nem": {
+      "geonset": [
+        "15",
+        "0",
+        "12",
+        "14"
+      ],
+      "mateCount": 0
+    },
+    "fer": {
+      "geonset": [
+        "0",
+        "12",
+        "2",
+        "17"
+      ],
+      "mateCount": 0
+    },
+    "mer": {
+      "geonset": [
+        "3",
+        "15",
+        "0",
+        "1"
+      ],
+      "mateCount": 0
+    },
+    "ten": {
+      "geonset": [
+        "17",
+        "8",
+        "2",
+        "14"
+      ],
+      "mateCount": 0
+    },
+    "lus": {
+      "geonset": [
+        "11",
+        "5",
+        "15",
+        "7"
+      ],
+      "mateCount": 0
+    },
+    "nus": {
+      "geonset": [
+        "3",
+        "9",
+        "1",
+        "16"
+      ],
+      "mateCount": 0
+    },
+    "syl": {
+      "geonset": [
+        "6",
+        "14",
+        "9",
+        "16"
+      ],
+      "mateCount": 0
+    },
+    "tec": {
+      "geonset": [
+        "14",
+        "4",
+        "7",
+        "0"
+      ],
+      "mateCount": 0
+    },
+    "mex": {
+      "geonset": [
+        "4",
+        "2",
+        "1",
+        "6"
+      ],
+      "mateCount": 0
+    },
+    "pub": {
+      "geonset": [
+        "7",
+        "11",
+        "10",
+        "16"
+      ],
+      "mateCount": 0
+    },
+    "rym": {
+      "geonset": [
+        "14",
+        "7",
+        "8",
+        "15"
+      ],
+      "mateCount": 0
+    },
+    "tuc": {
+      "geonset": [
+        "2",
+        "10",
+        "17",
+        "12"
+      ],
+      "mateCount": 0
+    },
+    "fyl": {
+      "geonset": [
+        "10",
+        "17",
+        "1",
+        "15"
+      ],
+      "mateCount": 0
+    },
+    "lep": {
+      "geonset": [
+        "16",
+        "10",
+        "8",
+        "11"
+      ],
+      "mateCount": 0
+    },
+    "deb": {
+      "geonset": [
+        "1",
+        "0",
+        "5",
+        "2"
+      ],
+      "mateCount": 0
+    },
+    "ber": {
+      "geonset": [
+        "11",
+        "4",
+        "9",
+        "7"
+      ],
+      "mateCount": 0
+    },
+    "mug": {
+      "geonset": [
+        "9",
+        "11",
+        "17",
+        "14"
+      ],
+      "mateCount": 0
+    },
+    "hut": {
+      "geonset": [
+        "6",
+        "17",
+        "11",
+        "2"
+      ],
+      "mateCount": 0
+    },
+    "tun": {
+      "geonset": [
+        "17",
+        "12",
+        "11",
+        "5"
+      ],
+      "mateCount": 0
+    },
+    "byl": {
+      "geonset": [
+        "12",
+        "5",
+        "6",
+        "0"
+      ],
+      "mateCount": 0
+    },
+    "sud": {
+      "geonset": [
+        "0",
+        "10",
+        "12",
+        "15"
+      ],
+      "mateCount": 0
+    },
+    "pem": {
+      "geonset": [
+        "11",
+        "4",
+        "6",
+        "0"
+      ],
+      "mateCount": 0
+    },
+    "dev": {
+      "geonset": [
+        "17",
+        "6",
+        "7",
+        "0"
+      ],
+      "mateCount": 0
+    },
+    "lur": {
+      "geonset": [
+        "17",
+        "0",
+        "14",
+        "8"
+      ],
+      "mateCount": 0
+    },
+    "def": {
+      "geonset": [
+        "0",
+        "9",
+        "16",
+        "15"
+      ],
+      "mateCount": 0
+    },
+    "bus": {
+      "geonset": [
+        "3",
+        "11",
+        "8",
+        "1"
+      ],
+      "mateCount": 0
+    },
+    "bep": {
+      "geonset": [
+        "1",
+        "2",
+        "10",
+        "17"
+      ],
+      "mateCount": 0
+    },
+    "run": {
+      "geonset": [
+        "5",
+        "2",
+        "10",
+        "15"
+      ],
+      "mateCount": 0
+    },
+    "mel": {
+      "geonset": [
+        "17",
+        "16",
+        "9",
+        "7"
+      ],
+      "mateCount": 0
+    },
+    "pex": {
+      "geonset": [
+        "17",
+        "11",
+        "14",
+        "9"
+      ],
+      "mateCount": 0
+    },
+    "dyt": {
+      "geonset": [
+        "0",
+        "5",
+        "9",
+        "7"
+      ],
+      "mateCount": 0
+    },
+    "byt": {
       "geonset": [
         "8",
+        "2",
+        "1",
+        "3"
+      ],
+      "mateCount": 0
+    },
+    "typ": {
+      "geonset": [
+        "9",
+        "17",
+        "4",
+        "10"
+      ],
+      "mateCount": 0
+    },
+    "lev": {
+      "geonset": [
+        "2",
+        "12",
+        "8",
+        "3"
+      ],
+      "mateCount": 0
+    },
+    "myl": {
+      "geonset": [
+        "9",
         "10",
+        "1",
+        "12"
+      ],
+      "mateCount": 0
+    },
+    "wed": {
+      "geonset": [
+        "3",
+        "4",
+        "1",
+        "0"
+      ],
+      "mateCount": 0
+    },
+    "duc": {
+      "geonset": [
+        "10",
+        "15",
+        "7",
+        "5"
+      ],
+      "mateCount": 0
+    },
+    "fur": {
+      "geonset": [
+        "3",
+        "4",
+        "15",
+        "6"
+      ],
+      "mateCount": 0
+    },
+    "fex": {
+      "geonset": [
+        "3",
+        "4",
+        "8",
+        "16"
+      ],
+      "mateCount": 0
+    },
+    "nul": {
+      "geonset": [
+        "10",
+        "4",
         "5",
         "9"
       ],
       "mateCount": 0
     },
-    "rov": {
+    "luc": {
+      "geonset": [
+        "3",
+        "14",
+        "6",
+        "0"
+      ],
+      "mateCount": 0
+    },
+    "len": {
+      "geonset": [
+        "17",
+        "8",
+        "11",
+        "9"
+      ],
+      "mateCount": 0
+    },
+    "ner": {
+      "geonset": [
+        "0",
+        "11",
+        "14",
+        "5"
+      ],
+      "mateCount": 0
+    },
+    "lex": {
+      "geonset": [
+        "14",
+        "5",
+        "12",
+        "11"
+      ],
+      "mateCount": 0
+    },
+    "rup": {
+      "geonset": [
+        "15",
+        "4",
+        "10",
+        "3"
+      ],
+      "mateCount": 0
+    },
+    "ned": {
+      "geonset": [
+        "3",
+        "7",
+        "16",
+        "4"
+      ],
+      "mateCount": 0
+    },
+    "lec": {
       "geonset": [
         "1",
+        "12",
+        "0",
+        "16"
+      ],
+      "mateCount": 0
+    },
+    "ryd": {
+      "geonset": [
+        "0",
+        "14",
+        "11",
+        "8"
+      ],
+      "mateCount": 0
+    },
+    "lyd": {
+      "geonset": [
+        "1",
+        "8",
+        "5",
+        "11"
+      ],
+      "mateCount": 0
+    },
+    "fen": {
+      "geonset": [
+        "7",
+        "0",
+        "5",
+        "16"
+      ],
+      "mateCount": 0
+    },
+    "wel": {
+      "geonset": [
+        "10",
+        "17",
+        "1",
+        "15"
+      ],
+      "mateCount": 0
+    },
+    "nyd": {
+      "geonset": [
+        "5",
+        "1",
+        "10",
+        "17"
+      ],
+      "mateCount": 0
+    },
+    "hus": {
+      "geonset": [
+        "15",
+        "1",
+        "3",
+        "7"
+      ],
+      "mateCount": 0
+    },
+    "rel": {
+      "geonset": [
+        "3",
+        "15",
+        "0",
+        "17"
+      ],
+      "mateCount": 0
+    },
+    "rud": {
+      "geonset": [
+        "7",
+        "0",
+        "12",
+        "8"
+      ],
+      "mateCount": 0
+    },
+    "nes": {
+      "geonset": [
+        "8",
+        "15",
+        "4",
+        "10"
+      ],
+      "mateCount": 0
+    },
+    "hes": {
+      "geonset": [
+        "8",
+        "2",
+        "7",
+        "11"
+      ],
+      "mateCount": 0
+    },
+    "fet": {
+      "geonset": [
+        "14",
+        "16",
+        "15",
+        "9"
+      ],
+      "mateCount": 0
+    },
+    "des": {
+      "geonset": [
+        "5",
+        "7",
+        "8",
+        "10"
+      ],
+      "mateCount": 0
+    },
+    "ret": {
+      "geonset": [
+        "2",
+        "15",
+        "12",
+        "9"
+      ],
+      "mateCount": 0
+    },
+    "dun": {
+      "geonset": [
+        "15",
+        "14",
+        "0",
+        "4"
+      ],
+      "mateCount": 0
+    },
+    "ler": {
+      "geonset": [
+        "9",
+        "6",
+        "1",
+        "12"
+      ],
+      "mateCount": 0
+    },
+    "nyr": {
+      "geonset": [
+        "17",
+        "8",
+        "11",
+        "15"
+      ],
+      "mateCount": 0
+    },
+    "seb": {
+      "geonset": [
+        "11",
+        "14",
+        "2",
+        "9"
+      ],
+      "mateCount": 0
+    },
+    "hul": {
+      "geonset": [
+        "2",
+        "16",
+        "3",
+        "11"
+      ],
+      "mateCount": 0
+    },
+    "ryl": {
+      "geonset": [
+        "1",
+        "4",
+        "11",
+        "3"
+      ],
+      "mateCount": 0
+    },
+    "lud": {
+      "geonset": [
+        "6",
+        "15",
+        "17",
+        "2"
+      ],
+      "mateCount": 0
+    },
+    "rem": {
+      "geonset": [
+        "11",
+        "6",
+        "15",
+        "3"
+      ],
+      "mateCount": 0
+    },
+    "lys": {
+      "geonset": [
+        "5",
+        "7",
+        "1",
+        "6"
+      ],
+      "mateCount": 0
+    },
+    "fyn": {
+      "geonset": [
+        "9",
+        "3",
+        "14",
+        "12"
+      ],
+      "mateCount": 0
+    },
+    "wer": {
+      "geonset": [
+        "2",
+        "8",
+        "0",
+        "16"
+      ],
+      "mateCount": 0
+    },
+    "ryc": {
+      "geonset": [
+        "6",
+        "10",
+        "9",
+        "7"
+      ],
+      "mateCount": 0
+    },
+    "sug": {
+      "geonset": [
+        "5",
+        "15",
+        "10",
+        "16"
+      ],
+      "mateCount": 0
+    },
+    "nys": {
+      "geonset": [
+        "2",
+        "10",
+        "12",
+        "15"
+      ],
+      "mateCount": 0
+    },
+    "nyl": {
+      "geonset": [
+        "8",
+        "11",
+        "2",
+        "3"
+      ],
+      "mateCount": 0
+    },
+    "lyn": {
+      "geonset": [
+        "0",
+        "17",
+        "2",
+        "9"
+      ],
+      "mateCount": 0
+    },
+    "dyn": {
+      "geonset": [
+        "5",
+        "0",
+        "12",
+        "7"
+      ],
+      "mateCount": 0
+    },
+    "dem": {
+      "geonset": [
+        "15",
+        "2",
+        "3",
+        "8"
+      ],
+      "mateCount": 0
+    },
+    "lux": {
+      "geonset": [
+        "4",
+        "2",
+        "15",
+        "0"
+      ],
+      "mateCount": 0
+    },
+    "fed": {
+      "geonset": [
+        "8",
+        "14",
+        "11",
+        "5"
+      ],
+      "mateCount": 0
+    },
+    "sed": {
+      "geonset": [
+        "4",
+        "6",
+        "12",
+        "3"
+      ],
+      "mateCount": 0
+    },
+    "bec": {
+      "geonset": [
+        "3",
+        "11",
+        "0",
+        "10"
+      ],
+      "mateCount": 0
+    },
+    "mun": {
+      "geonset": [
+        "14",
+        "0",
+        "12",
+        "11"
+      ],
+      "mateCount": 0
+    },
+    "lyr": {
+      "geonset": [
+        "3",
+        "17",
+        "16",
+        "4"
+      ],
+      "mateCount": 0
+    },
+    "tes": {
+      "geonset": [
+        "4",
+        "0",
+        "15",
+        "1"
+      ],
+      "mateCount": 0
+    },
+    "mud": {
+      "geonset": [
+        "15",
+        "3",
+        "0",
+        "16"
+      ],
+      "mateCount": 0
+    },
+    "nyt": {
+      "geonset": [
+        "5",
+        "0",
+        "8",
+        "9"
+      ],
+      "mateCount": 0
+    },
+    "byr": {
+      "geonset": [
+        "7",
+        "16",
+        "9",
+        "8"
+      ],
+      "mateCount": 0
+    },
+    "sen": {
+      "geonset": [
+        "7",
+        "4",
+        "16",
+        "12"
+      ],
+      "mateCount": 0
+    },
+    "weg": {
+      "geonset": [
+        "16",
+        "12",
+        "15",
+        "5"
+      ],
+      "mateCount": 0
+    },
+    "fyr": {
+      "geonset": [
+        "14",
+        "7",
+        "6",
+        "16"
+      ],
+      "mateCount": 0
+    },
+    "mur": {
+      "geonset": [
+        "5",
+        "3",
+        "11",
+        "16"
+      ],
+      "mateCount": 0
+    },
+    "tel": {
+      "geonset": [
+        "0",
+        "5",
+        "2",
+        "1"
+      ],
+      "mateCount": 0
+    },
+    "rep": {
+      "geonset": [
+        "9",
+        "11",
+        "16",
+        "4"
+      ],
+      "mateCount": 0
+    },
+    "teg": {
+      "geonset": [
+        "12",
+        "10",
+        "8",
+        "0"
+      ],
+      "mateCount": 0
+    },
+    "pec": {
+      "geonset": [
+        "14",
+        "12",
+        "4",
+        "10"
+      ],
+      "mateCount": 0
+    },
+    "nel": {
+      "geonset": [
+        "9",
         "2",
         "5",
         "0"
       ],
       "mateCount": 0
     },
-    "liv": {
+    "nev": {
+      "geonset": [
+        "2",
+        "3",
+        "5",
+        "11"
+      ],
+      "mateCount": 0
+    },
+    "fes": {
+      "geonset": [
+        "16",
+        "4",
+        "9",
+        "11"
+      ],
+      "mateCount": 0
+    },
+    "doz": {
+      "geonset": [
+        "17",
+        "1",
+        "6",
+        "7"
+      ],
+      "mateCount": 0
+    },
+    "mar": {
+      "geonset": [
+        "0",
+        "14",
+        "17",
+        "11"
+      ],
+      "mateCount": 0
+    },
+    "bin": {
+      "geonset": [
+        "2",
+        "8",
+        "12",
+        "16"
+      ],
+      "mateCount": 0
+    },
+    "wan": {
+      "geonset": [
+        "3",
+        "14",
+        "8",
+        "11"
+      ],
+      "mateCount": 0
+    },
+    "sam": {
+      "geonset": [
+        "5",
+        "17",
+        "6",
+        "8"
+      ],
+      "mateCount": 0
+    },
+    "lit": {
+      "geonset": [
+        "0",
+        "6",
+        "14",
+        "1"
+      ],
+      "mateCount": 0
+    },
+    "sig": {
+      "geonset": [
+        "11",
+        "15",
+        "1",
+        "3"
+      ],
+      "mateCount": 0
+    },
+    "hid": {
+      "geonset": [
+        "16",
+        "15",
+        "17",
+        "1"
+      ],
+      "mateCount": 0
+    },
+    "fid": {
+      "geonset": [
+        "10",
+        "5",
+        "1",
+        "11"
+      ],
+      "mateCount": 0
+    },
+    "lis": {
+      "geonset": [
+        "9",
+        "14",
+        "2",
+        "10"
+      ],
+      "mateCount": 0
+    },
+    "sog": {
+      "geonset": [
+        "5",
+        "12",
+        "15",
+        "16"
+      ],
+      "mateCount": 0
+    },
+    "dir": {
+      "geonset": [
+        "0",
+        "2",
+        "1",
+        "11"
+      ],
+      "mateCount": 0
+    },
+    "wac": {
+      "geonset": [
+        "2",
+        "7",
+        "15",
+        "10"
+      ],
+      "mateCount": 0
+    },
+    "sab": {
+      "geonset": [
+        "2",
+        "1",
+        "9",
+        "17"
+      ],
+      "mateCount": 0
+    },
+    "wis": {
       "geonset": [
         "8",
-        "9",
+        "0",
+        "1",
+        "14"
+      ],
+      "mateCount": 0
+    },
+    "sib": {
+      "geonset": [
+        "8",
+        "6",
+        "16",
+        "1"
+      ],
+      "mateCount": 0
+    },
+    "rig": {
+      "geonset": [
+        "8",
+        "7",
+        "17",
+        "0"
+      ],
+      "mateCount": 0
+    },
+    "sol": {
+      "geonset": [
         "5",
+        "12",
+        "8",
+        "16"
+      ],
+      "mateCount": 0
+    },
+    "dop": {
+      "geonset": [
+        "11",
+        "15",
+        "2",
+        "0"
+      ],
+      "mateCount": 0
+    },
+    "mod": {
+      "geonset": [
+        "11",
+        "2",
+        "9",
+        "7"
+      ],
+      "mateCount": 0
+    },
+    "fog": {
+      "geonset": [
+        "16",
+        "15",
+        "7",
         "9"
+      ],
+      "mateCount": 0
+    },
+    "lid": {
+      "geonset": [
+        "6",
+        "16",
+        "0",
+        "10"
+      ],
+      "mateCount": 0
+    },
+    "hop": {
+      "geonset": [
+        "7",
+        "1",
+        "4",
+        "15"
+      ],
+      "mateCount": 0
+    },
+    "dar": {
+      "geonset": [
+        "1",
+        "12",
+        "11",
+        "5"
+      ],
+      "mateCount": 0
+    },
+    "dor": {
+      "geonset": [
+        "1",
+        "16",
+        "11",
+        "14"
+      ],
+      "mateCount": 0
+    },
+    "lor": {
+      "geonset": [
+        "9",
+        "6",
+        "11",
+        "4"
+      ],
+      "mateCount": 0
+    },
+    "hod": {
+      "geonset": [
+        "2",
+        "11",
+        "10",
+        "8"
+      ],
+      "mateCount": 0
+    },
+    "fol": {
+      "geonset": [
+        "6",
+        "14",
+        "4",
+        "2"
+      ],
+      "mateCount": 0
+    },
+    "rin": {
+      "geonset": [
+        "12",
+        "0",
+        "15",
+        "6"
+      ],
+      "mateCount": 0
+    },
+    "tog": {
+      "geonset": [
+        "17",
+        "1",
+        "6",
+        "12"
+      ],
+      "mateCount": 0
+    },
+    "sil": {
+      "geonset": [
+        "2",
+        "14",
+        "0",
+        "16"
+      ],
+      "mateCount": 0
+    },
+    "mir": {
+      "geonset": [
+        "2",
+        "10",
+        "1",
+        "7"
+      ],
+      "mateCount": 0
+    },
+    "hol": {
+      "geonset": [
+        "2",
+        "1",
+        "4",
+        "14"
+      ],
+      "mateCount": 0
+    },
+    "pas": {
+      "geonset": [
+        "12",
+        "4",
+        "11",
+        "14"
+      ],
+      "mateCount": 0
+    },
+    "lac": {
+      "geonset": [
+        "2",
+        "5",
+        "8",
+        "12"
+      ],
+      "mateCount": 0
+    },
+    "rov": {
+      "geonset": [
+        "10",
+        "15",
+        "8",
+        "6"
+      ],
+      "mateCount": 0
+    },
+    "liv": {
+      "geonset": [
+        "17",
+        "8",
+        "6",
+        "7"
       ],
       "mateCount": 0
     },
     "dal": {
       "geonset": [
-        "7",
-        "9",
-        "5",
-        "9"
+        "8",
+        "10",
+        "2",
+        "7"
       ],
       "mateCount": 0
     },
     "sat": {
       "geonset": [
-        "5",
-        "12",
-        "5",
-        "9"
+        "11",
+        "8",
+        "1",
+        "12"
       ],
       "mateCount": 0
     },
     "lib": {
       "geonset": [
-        "4",
-        "9",
-        "5",
-        "9"
+        "11",
+        "7",
+        "8",
+        "12"
       ],
       "mateCount": 0
     },
     "tab": {
       "geonset": [
-        "2",
-        "9",
-        "5",
+        "4",
+        "7",
+        "6",
         "9"
       ],
       "mateCount": 0
@@ -374,1609 +2678,1609 @@
     "han": {
       "geonset": [
         "1",
-        "5",
-        "5",
-        "0"
+        "15",
+        "14",
+        "5"
       ],
       "mateCount": 0
     },
     "tic": {
       "geonset": [
-        "5",
-        "5",
-        "5",
-        "0"
+        "17",
+        "1",
+        "7",
+        "6"
       ],
       "mateCount": 0
     },
     "pid": {
       "geonset": [
+        "1",
+        "7",
         "8",
-        "6",
-        "5",
-        "9"
+        "4"
       ],
       "mateCount": 0
     },
     "tor": {
       "geonset": [
-        "7",
         "5",
-        "5",
-        "9"
+        "2",
+        "4",
+        "6"
       ],
       "mateCount": 0
     },
     "bol": {
       "geonset": [
-        "1",
-        "14",
-        "5",
-        "9"
+        "11",
+        "3",
+        "7",
+        "0"
       ],
       "mateCount": 0
     },
     "fos": {
       "geonset": [
-        "7",
         "3",
-        "5",
-        "9"
+        "7",
+        "17",
+        "11"
       ],
       "mateCount": 0
     },
     "dot": {
       "geonset": [
-        "5",
         "14",
-        "5",
-        "9"
+        "3",
+        "6",
+        "2"
       ],
       "mateCount": 0
     },
     "los": {
       "geonset": [
-        "4",
-        "3",
-        "5",
-        "9"
+        "2",
+        "1",
+        "12",
+        "6"
       ],
       "mateCount": 0
     },
     "dil": {
       "geonset": [
-        "1",
-        "9",
-        "5",
-        "0"
+        "12",
+        "2",
+        "11",
+        "15"
       ],
       "mateCount": 0
     },
     "for": {
       "geonset": [
+        "12",
+        "7",
         "2",
-        "3",
-        "5",
-        "9"
+        "10"
       ],
       "mateCount": 0
     },
     "pil": {
       "geonset": [
-        "5",
-        "5",
-        "5",
-        "15"
+        "17",
+        "10",
+        "12",
+        "4"
       ],
       "mateCount": 0
     },
     "ram": {
       "geonset": [
-        "1",
-        "2",
-        "6",
-        "15"
+        "0",
+        "3",
+        "14",
+        "9"
       ],
       "mateCount": 0
     },
     "tir": {
       "geonset": [
-        "8",
-        "2",
-        "5",
-        "9"
+        "16",
+        "1",
+        "15",
+        "10"
       ],
       "mateCount": 0
     },
     "win": {
       "geonset": [
-        "1",
-        "3",
-        "6",
-        "15"
+        "11",
+        "0",
+        "4",
+        "16"
       ],
       "mateCount": 0
     },
     "tad": {
       "geonset": [
-        "4",
-        "2",
-        "5",
-        "9"
+        "0",
+        "6",
+        "8",
+        "2"
       ],
       "mateCount": 0
     },
     "bic": {
       "geonset": [
-        "2",
-        "2",
-        "5",
-        "9"
+        "0",
+        "7",
+        "15",
+        "1"
       ],
       "mateCount": 0
     },
     "dif": {
       "geonset": [
-        "8",
         "14",
-        "5",
-        "9"
+        "6",
+        "0",
+        "1"
       ],
       "mateCount": 0
     },
     "roc": {
       "geonset": [
-        "1",
-        "5",
-        "6",
+        "9",
+        "14",
+        "0",
         "15"
       ],
       "mateCount": 0
     },
     "wid": {
       "geonset": [
-        "8",
-        "0",
-        "5",
-        "9"
+        "7",
+        "9",
+        "1",
+        "0"
       ],
       "mateCount": 0
     },
     "bis": {
       "geonset": [
+        "12",
         "1",
-        "15",
-        "5",
-        "9"
+        "3",
+        "7"
       ],
       "mateCount": 0
     },
     "das": {
       "geonset": [
-        "4",
-        "9",
-        "4",
-        "9"
+        "12",
+        "0",
+        "11",
+        "10"
       ],
       "mateCount": 0
     },
     "mid": {
       "geonset": [
+        "2",
         "7",
-        "5",
-        "4",
-        "9"
+        "3",
+        "10"
       ],
       "mateCount": 0
     },
     "lop": {
       "geonset": [
-        "2",
-        "5",
-        "4",
-        "9"
+        "10",
+        "8",
+        "17",
+        "16"
       ],
       "mateCount": 0
     },
     "ril": {
       "geonset": [
-        "7",
-        "5",
-        "14",
-        "6"
+        "9",
+        "17",
+        "12",
+        "3"
       ],
       "mateCount": 0
     },
     "nar": {
       "geonset": [
-        "1",
-        "2",
-        "12",
-        "6"
+        "9",
+        "4",
+        "14",
+        "2"
       ],
       "mateCount": 0
     },
     "dap": {
       "geonset": [
-        "5",
         "2",
+        "10",
         "9",
-        "6"
+        "15"
       ],
       "mateCount": 0
     },
     "mol": {
       "geonset": [
         "2",
-        "5",
-        "6",
-        "6"
+        "9",
+        "17",
+        "12"
       ],
       "mateCount": 0
     },
     "san": {
       "geonset": [
+        "1",
         "5",
-        "2",
-        "5",
-        "15"
+        "14",
+        "3"
       ],
       "mateCount": 0
     },
     "loc": {
       "geonset": [
-        "5",
-        "3",
+        "16",
         "6",
-        "6"
+        "2",
+        "17"
       ],
       "mateCount": 0
     },
     "nov": {
       "geonset": [
+        "15",
         "2",
-        "1",
-        "6",
-        "6"
+        "10",
+        "12"
       ],
       "mateCount": 0
     },
     "sit": {
       "geonset": [
-        "1",
-        "9",
-        "5",
-        "6"
+        "12",
+        "11",
+        "3",
+        "17"
       ],
       "mateCount": 0
     },
     "nid": {
       "geonset": [
-        "5",
-        "1",
-        "5",
-        "6"
+        "8",
+        "11",
+        "16",
+        "7"
       ],
       "mateCount": 0
     },
     "tip": {
       "geonset": [
-        "8",
-        "1",
-        "3",
-        "6"
+        "7",
+        "5",
+        "11",
+        "12"
       ],
       "mateCount": 0
     },
     "sic": {
       "geonset": [
-        "2",
+        "5",
         "1",
-        "3",
-        "6"
+        "10",
+        "15"
       ],
       "mateCount": 0
     },
     "rop": {
       "geonset": [
-        "1",
-        "5",
-        "1",
-        "6"
+        "7",
+        "3",
+        "11",
+        "9"
       ],
       "mateCount": 0
     },
     "wit": {
       "geonset": [
+        "16",
+        "0",
         "5",
-        "2",
-        "4",
-        "1"
+        "17"
       ],
       "mateCount": 0
     },
     "nat": {
       "geonset": [
-        "1",
-        "5",
-        "4",
-        "1"
+        "8",
+        "14",
+        "11",
+        "17"
       ],
       "mateCount": 0
     },
     "pan": {
       "geonset": [
         "4",
-        "2",
-        "12",
-        "5"
+        "15",
+        "0",
+        "17"
       ],
       "mateCount": 0
     },
     "min": {
       "geonset": [
-        "5",
-        "5",
         "4",
-        "16"
+        "10",
+        "6",
+        "12"
       ],
       "mateCount": 0
     },
     "rit": {
       "geonset": [
         "7",
-        "9",
-        "7",
-        "5"
+        "8",
+        "11",
+        "15"
       ],
       "mateCount": 0
     },
     "pod": {
       "geonset": [
+        "16",
+        "3",
         "12",
-        "8",
-        "7",
-        "5"
+        "7"
       ],
       "mateCount": 0
     },
     "mot": {
       "geonset": [
-        "6",
-        "5",
-        "7",
-        "5"
+        "9",
+        "10",
+        "16",
+        "0"
       ],
       "mateCount": 0
     },
     "tam": {
       "geonset": [
-        "3",
+        "6",
+        "2",
         "5",
-        "7",
-        "5"
+        "1"
       ],
       "mateCount": 0
     },
     "tol": {
       "geonset": [
-        "1",
-        "1",
-        "7",
-        "5"
+        "11",
+        "9",
+        "12",
+        "10"
       ],
       "mateCount": 0
     },
     "sav": {
       "geonset": [
-        "5",
-        "2",
-        "6",
-        "1"
+        "8",
+        "1",
+        "15",
+        "11"
       ],
       "mateCount": 0
     },
     "pos": {
       "geonset": [
-        "5",
-        "3",
-        "5",
-        "16"
+        "4",
+        "12",
+        "1",
+        "17"
       ],
       "mateCount": 0
     },
     "nap": {
       "geonset": [
-        "1",
-        "5",
+        "4",
+        "16",
         "6",
-        "1"
+        "14"
       ],
       "mateCount": 0
     },
     "nop": {
       "geonset": [
+        "16",
+        "12",
         "8",
-        "5",
-        "6",
-        "5"
+        "2"
       ],
       "mateCount": 0
     },
     "som": {
       "geonset": [
-        "5",
-        "16",
-        "5",
-        "5"
+        "10",
+        "14",
+        "17",
+        "1"
       ],
       "mateCount": 0
     },
     "fin": {
       "geonset": [
-        "1",
-        "2",
+        "0",
         "6",
-        "16"
+        "10",
+        "9"
       ],
       "mateCount": 0
     },
     "fon": {
       "geonset": [
-        "7",
-        "9",
-        "5",
-        "5"
+        "1",
+        "4",
+        "8",
+        "17"
       ],
       "mateCount": 0
     },
     "ban": {
       "geonset": [
+        "11",
+        "7",
         "4",
-        "9",
-        "5",
-        "5"
+        "6"
       ],
       "mateCount": 0
     },
     "mor": {
       "geonset": [
+        "0",
         "1",
-        "5",
-        "4",
-        "15"
+        "2",
+        "8"
       ],
       "mateCount": 0
     },
     "wor": {
       "geonset": [
-        "5",
-        "5",
+        "11",
+        "14",
         "3",
-        "15"
+        "12"
       ],
       "mateCount": 0
     },
     "sip": {
       "geonset": [
-        "1",
-        "3",
-        "3",
-        "15"
+        "11",
+        "16",
+        "14",
+        "7"
       ],
       "mateCount": 0
     },
     "ron": {
       "geonset": [
-        "8",
-        "0",
-        "5",
-        "5"
+        "16",
+        "14",
+        "3",
+        "0"
       ],
       "mateCount": 0
     },
     "nor": {
       "geonset": [
-        "2",
-        "9",
-        "4",
-        "5"
+        "0",
+        "17",
+        "15",
+        "3"
       ],
       "mateCount": 0
     },
     "bot": {
       "geonset": [
-        "1",
-        "9",
         "3",
-        "10"
+        "0",
+        "12",
+        "1"
       ],
       "mateCount": 0
     },
     "wic": {
       "geonset": [
-        "1",
-        "2",
+        "16",
         "4",
+        "12",
         "10"
       ],
       "mateCount": 0
     },
     "soc": {
       "geonset": [
-        "8",
-        "0",
         "4",
-        "5"
+        "3",
+        "1",
+        "16"
       ],
       "mateCount": 0
     },
     "wat": {
       "geonset": [
-        "4",
-        "3",
-        "1",
-        "2"
+        "16",
+        "8",
+        "9",
+        "7"
       ],
       "mateCount": 0
     },
     "dol": {
       "geonset": [
-        "5",
-        "9",
-        "1",
-        "5"
+        "3",
+        "11",
+        "16",
+        "8"
       ],
       "mateCount": 0
     },
     "mag": {
       "geonset": [
-        "12",
-        "8",
+        "11",
         "1",
-        "5"
+        "9",
+        "3"
       ],
       "mateCount": 0
     },
     "pic": {
       "geonset": [
-        "1",
-        "2",
-        "6",
-        "10"
+        "7",
+        "5",
+        "3",
+        "11"
       ],
       "mateCount": 0
     },
     "dav": {
       "geonset": [
-        "6",
         "5",
-        "1",
-        "5"
+        "3",
+        "17",
+        "4"
       ],
       "mateCount": 0
     },
     "bid": {
       "geonset": [
-        "0",
+        "17",
+        "9",
         "5",
-        "1",
-        "5"
+        "15"
       ],
       "mateCount": 0
     },
     "bal": {
       "geonset": [
-        "17",
-        "1",
-        "1",
-        "5"
+        "10",
+        "8",
+        "11",
+        "6"
       ],
       "mateCount": 0
     },
     "tim": {
       "geonset": [
-        "16",
-        "1",
-        "1",
-        "5"
+        "2",
+        "3",
+        "7",
+        "1"
       ],
       "mateCount": 0
     },
     "tas": {
       "geonset": [
         "1",
-        "9",
-        "1",
-        "2"
+        "12",
+        "17",
+        "11"
       ],
       "mateCount": 0
     },
     "mal": {
       "geonset": [
-        "7",
-        "9",
-        "1",
-        "2"
+        "14",
+        "10",
+        "17",
+        "12"
       ],
       "mateCount": 0
     },
     "lig": {
       "geonset": [
-        "4",
-        "5",
-        "6",
-        "4"
+        "7",
+        "11",
+        "15",
+        "3"
       ],
       "mateCount": 0
     },
     "siv": {
       "geonset": [
-        "7",
-        "2",
-        "6",
-        "4"
+        "8",
+        "3",
+        "12",
+        "17"
       ],
       "mateCount": 0
     },
     "tag": {
       "geonset": [
-        "5",
-        "3",
-        "3",
-        "11"
+        "10",
+        "0",
+        "9",
+        "7"
       ],
       "mateCount": 0
     },
     "pad": {
       "geonset": [
-        "2",
-        "1",
-        "6",
-        "4"
+        "4",
+        "5",
+        "8",
+        "7"
       ],
       "mateCount": 0
     },
     "sal": {
       "geonset": [
-        "2",
-        "5",
-        "5",
-        "4"
+        "15",
+        "17",
+        "0",
+        "10"
       ],
       "mateCount": 0
     },
     "div": {
       "geonset": [
-        "5",
-        "1",
-        "5",
-        "4"
+        "2",
+        "8",
+        "0",
+        "5"
       ],
       "mateCount": 0
     },
     "dac": {
       "geonset": [
-        "1",
-        "2",
-        "4",
-        "11"
+        "11",
+        "6",
+        "3",
+        "8"
       ],
       "mateCount": 0
     },
     "tan": {
       "geonset": [
-        "4",
-        "5",
-        "4",
+        "0",
+        "16",
+        "11",
         "4"
       ],
       "mateCount": 0
     },
     "sid": {
       "geonset": [
+        "7",
+        "2",
         "4",
-        "5",
-        "16",
-        "3"
+        "10"
       ],
       "mateCount": 0
     },
     "fab": {
       "geonset": [
-        "1",
+        "17",
+        "3",
         "2",
-        "16",
-        "3"
+        "11"
       ],
       "mateCount": 0
     },
     "tar": {
       "geonset": [
-        "1",
-        "2",
-        "15",
-        "3"
+        "9",
+        "12",
+        "17",
+        "8"
       ],
       "mateCount": 0
     },
     "mon": {
       "geonset": [
         "7",
-        "2",
-        "14",
-        "3"
+        "17",
+        "15",
+        "2"
       ],
       "mateCount": 0
     },
     "ran": {
       "geonset": [
-        "4",
-        "5",
-        "12",
-        "3"
+        "11",
+        "10",
+        "3",
+        "9"
       ],
       "mateCount": 0
     },
     "nis": {
       "geonset": [
-        "4",
+        "17",
         "2",
         "4",
-        "2"
+        "0"
       ],
       "mateCount": 0
     },
     "wol": {
       "geonset": [
-        "1",
-        "9",
         "7",
-        "3"
+        "9",
+        "2",
+        "16"
       ],
       "mateCount": 0
     },
     "mis": {
       "geonset": [
-        "6",
-        "5",
-        "7",
-        "3"
+        "3",
+        "11",
+        "4",
+        "1"
       ],
       "mateCount": 0
     },
     "pal": {
       "geonset": [
-        "5",
-        "17",
-        "5",
-        "3"
+        "14",
+        "12",
+        "15",
+        "5"
       ],
       "mateCount": 0
     },
     "las": {
       "geonset": [
-        "5",
+        "14",
         "12",
         "5",
-        "3"
+        "1"
       ],
       "mateCount": 0
     },
     "dis": {
       "geonset": [
-        "2",
-        "12",
         "5",
-        "3"
+        "0",
+        "17",
+        "12"
       ],
       "mateCount": 0
     },
     "map": {
       "geonset": [
-        "2",
-        "15",
         "4",
-        "2"
+        "0",
+        "7",
+        "1"
       ],
       "mateCount": 0
     },
     "rab": {
       "geonset": [
-        "15",
-        "8",
-        "5",
-        "3"
+        "7",
+        "17",
+        "9",
+        "0"
       ],
       "mateCount": 0
     },
     "tob": {
       "geonset": [
-        "2",
+        "10",
         "0",
-        "5",
-        "2"
+        "3",
+        "11"
       ],
       "mateCount": 0
     },
     "rol": {
       "geonset": [
-        "5",
-        "9",
-        "3",
-        "12"
+        "17",
+        "12",
+        "4",
+        "11"
       ],
       "mateCount": 0
     },
     "lat": {
       "geonset": [
-        "5",
-        "7",
-        "4",
-        "3"
+        "0",
+        "6",
+        "2",
+        "14"
       ],
       "mateCount": 0
     },
     "lon": {
       "geonset": [
-        "1",
         "9",
-        "3",
-        "3"
+        "8",
+        "6",
+        "10"
       ],
       "mateCount": 0
     },
     "nod": {
       "geonset": [
-        "2",
+        "15",
+        "14",
         "8",
-        "3",
-        "3"
+        "2"
       ],
       "mateCount": 0
     },
     "nav": {
       "geonset": [
-        "1",
-        "5",
-        "5",
-        "14"
+        "7",
+        "14",
+        "17",
+        "2"
       ],
       "mateCount": 0
     },
     "fig": {
       "geonset": [
         "2",
-        "16",
-        "5",
-        "2"
+        "0",
+        "14",
+        "9"
       ],
       "mateCount": 0
     },
     "nom": {
       "geonset": [
-        "8",
-        "1",
-        "3",
-        "3"
+        "16",
+        "10",
+        "15",
+        "6"
       ],
       "mateCount": 0
     },
     "nib": {
       "geonset": [
-        "2",
-        "17",
-        "5",
-        "2"
+        "10",
+        "9",
+        "0",
+        "15"
       ],
       "mateCount": 0
     },
     "pag": {
       "geonset": [
-        "0",
-        "8",
-        "1",
-        "3"
+        "11",
+        "15",
+        "17",
+        "14"
       ],
       "mateCount": 0
     },
     "sop": {
       "geonset": [
         "9",
-        "3",
-        "7",
-        "2"
+        "12",
+        "2",
+        "16"
       ],
       "mateCount": 0
     },
     "ral": {
       "geonset": [
-        "7",
-        "7",
-        "7",
-        "2"
+        "0",
+        "8",
+        "6",
+        "14"
       ],
       "mateCount": 0
     },
     "bil": {
       "geonset": [
+        "2",
         "11",
-        "11",
-        "7",
-        "2"
+        "12",
+        "0"
       ],
       "mateCount": 0
     },
     "had": {
       "geonset": [
-        "1",
-        "9",
-        "8",
-        "17"
+        "4",
+        "0",
+        "3",
+        "9"
       ],
       "mateCount": 0
     },
     "doc": {
       "geonset": [
-        "4",
-        "5",
+        "17",
+        "16",
         "8",
-        "2"
+        "1"
       ],
       "mateCount": 0
     },
     "rid": {
       "geonset": [
         "4",
-        "3",
-        "10",
-        "2"
+        "2",
+        "5",
+        "7"
       ],
       "mateCount": 0
     },
     "moc": {
       "geonset": [
-        "1",
-        "3",
-        "12",
-        "2"
+        "7",
+        "2",
+        "8",
+        "11"
       ],
       "mateCount": 0
     },
     "pac": {
       "geonset": [
-        "4",
-        "9",
-        "12",
-        "2"
+        "8",
+        "5",
+        "6",
+        "17"
       ],
       "mateCount": 0
     },
     "rav": {
       "geonset": [
+        "6",
         "1",
-        "3",
-        "15",
-        "2"
+        "11",
+        "7"
       ],
       "mateCount": 0
     },
     "rip": {
       "geonset": [
-        "6",
-        "1",
         "0",
-        "3"
+        "15",
+        "7",
+        "6"
       ],
       "mateCount": 0
     },
     "fal": {
       "geonset": [
-        "12",
-        "1",
-        "0",
+        "7",
+        "6",
+        "9",
         "3"
       ],
       "mateCount": 0
     },
     "tod": {
       "geonset": [
-        "12",
         "2",
-        "0",
-        "3"
+        "15",
+        "10",
+        "5"
       ],
       "mateCount": 0
     },
     "til": {
       "geonset": [
-        "1",
-        "9",
-        "0",
-        "3"
+        "7",
+        "17",
+        "14",
+        "16"
       ],
       "mateCount": 0
     },
     "tin": {
       "geonset": [
-        "12",
-        "0",
-        "1",
-        "3"
+        "11",
+        "14",
+        "9",
+        "12"
       ],
       "mateCount": 0
     },
     "hap": {
       "geonset": [
-        "1",
-        "10",
+        "15",
+        "8",
         "6",
-        "2"
+        "10"
       ],
       "mateCount": 0
     },
     "mic": {
       "geonset": [
-        "7",
-        "5",
-        "7",
-        "17"
+        "2",
+        "0",
+        "17",
+        "5"
       ],
       "mateCount": 0
     },
     "fan": {
       "geonset": [
-        "12",
-        "3",
-        "1",
-        "3"
+        "15",
+        "0",
+        "4",
+        "10"
       ],
       "mateCount": 0
     },
     "pat": {
       "geonset": [
-        "5",
-        "9",
-        "9",
-        "17"
+        "8",
+        "2",
+        "11",
+        "3"
       ],
       "mateCount": 0
     },
     "tac": {
       "geonset": [
-        "5",
         "4",
-        "6",
-        "2"
+        "12",
+        "14",
+        "10"
       ],
       "mateCount": 0
     },
     "lab": {
       "geonset": [
-        "8",
-        "17",
         "6",
-        "17"
+        "12",
+        "10",
+        "7"
       ],
       "mateCount": 0
     },
     "mog": {
       "geonset": [
-        "8",
-        "16",
-        "6",
-        "17"
+        "2",
+        "1",
+        "0",
+        "9"
       ],
       "mateCount": 0
     },
     "sim": {
       "geonset": [
-        "0",
+        "4",
+        "5",
         "10",
-        "1",
-        "3"
+        "12"
       ],
       "mateCount": 0
     },
     "son": {
       "geonset": [
+        "14",
         "8",
-        "15",
-        "6",
-        "17"
+        "7",
+        "16"
       ],
       "mateCount": 0
     },
     "pin": {
       "geonset": [
         "8",
-        "12",
-        "6",
+        "2",
+        "16",
         "17"
       ],
       "mateCount": 0
     },
     "lom": {
       "geonset": [
-        "5",
-        "8",
-        "6",
-        "17"
+        "3",
+        "16",
+        "15",
+        "14"
       ],
       "mateCount": 0
     },
     "ric": {
       "geonset": [
-        "15",
         "16",
         "1",
-        "3"
+        "0",
+        "8"
       ],
       "mateCount": 0
     },
     "tap": {
       "geonset": [
-        "16",
-        "16",
-        "1",
-        "3"
+        "11",
+        "9",
+        "12",
+        "17"
       ],
       "mateCount": 0
     },
     "fir": {
       "geonset": [
-        "12",
-        "17",
-        "1",
+        "6",
+        "10",
+        "2",
         "3"
       ],
       "mateCount": 0
     },
     "has": {
       "geonset": [
-        "7",
-        "5",
-        "6",
-        "17"
+        "0",
+        "16",
+        "17",
+        "6"
       ],
       "mateCount": 0
     },
     "bos": {
       "geonset": [
-        "16",
-        "17",
+        "0",
+        "2",
         "5",
-        "2"
+        "12"
       ],
       "mateCount": 0
     },
     "bat": {
       "geonset": [
-        "8",
-        "2",
-        "2",
-        "3"
+        "7",
+        "15",
+        "4",
+        "12"
       ],
       "mateCount": 0
     },
     "poc": {
       "geonset": [
-        "2",
         "5",
-        "2",
-        "3"
+        "4",
+        "0",
+        "9"
       ],
       "mateCount": 0
     },
     "hac": {
       "geonset": [
-        "2",
-        "2",
-        "6",
-        "17"
+        "14",
+        "16",
+        "5",
+        "2"
       ],
       "mateCount": 0
     },
     "tid": {
       "geonset": [
-        "9",
+        "6",
         "5",
-        "2",
-        "3"
+        "17",
+        "12"
       ],
       "mateCount": 0
     },
     "hav": {
       "geonset": [
-        "2",
-        "1",
-        "6",
-        "17"
+        "14",
+        "3",
+        "16",
+        "8"
       ],
       "mateCount": 0
     },
     "sap": {
       "geonset": [
+        "4",
+        "17",
         "5",
-        "0",
-        "6",
-        "17"
+        "9"
       ],
       "mateCount": 0
     },
     "lin": {
       "geonset": [
-        "3",
-        "2",
-        "3",
-        "3"
+        "11",
+        "8",
+        "7",
+        "16"
       ],
       "mateCount": 0
     },
     "dib": {
       "geonset": [
         "4",
-        "3",
-        "3",
-        "3"
+        "17",
+        "9",
+        "8"
       ],
       "mateCount": 0
     },
     "hos": {
       "geonset": [
-        "8",
-        "12",
-        "5",
-        "17"
+        "6",
+        "17",
+        "10",
+        "1"
       ],
       "mateCount": 0
     },
     "dab": {
       "geonset": [
-        "4",
-        "9",
-        "5",
-        "17"
+        "12",
+        "3",
+        "2",
+        "7"
       ],
       "mateCount": 0
     },
     "bit": {
       "geonset": [
-        "8",
+        "16",
         "12",
-        "3",
-        "3"
+        "4",
+        "14"
       ],
       "mateCount": 0
     },
     "bar": {
       "geonset": [
-        "1",
-        "14",
         "3",
-        "3"
+        "9",
+        "12",
+        "0"
       ],
       "mateCount": 0
     },
     "rac": {
       "geonset": [
+        "12",
         "1",
-        "15",
-        "3",
-        "3"
+        "11",
+        "4"
       ],
       "mateCount": 0
     },
     "par": {
       "geonset": [
-        "2",
-        "2",
-        "5",
-        "17"
+        "6",
+        "4",
+        "9",
+        "5"
       ],
       "mateCount": 0
     },
     "lod": {
       "geonset": [
-        "11",
-        "9",
-        "5",
-        "2"
+        "10",
+        "12",
+        "14",
+        "15"
       ],
       "mateCount": 0
     },
     "dos": {
       "geonset": [
-        "4",
-        "2",
         "10",
-        "17"
+        "8",
+        "12",
+        "0"
       ],
       "mateCount": 0
     },
     "bor": {
       "geonset": [
-        "7",
-        "2",
-        "10",
-        "17"
+        "15",
+        "1",
+        "9",
+        "12"
       ],
       "mateCount": 0
     },
     "toc": {
       "geonset": [
-        "3",
-        "9",
-        "5",
-        "2"
+        "15",
+        "0",
+        "4",
+        "11"
       ],
       "mateCount": 0
     },
     "hil": {
       "geonset": [
+        "0",
         "17",
-        "8",
-        "5",
-        "2"
+        "4",
+        "10"
       ],
       "mateCount": 0
     },
     "mac": {
       "geonset": [
-        "1",
         "3",
-        "10",
-        "17"
+        "0",
+        "1",
+        "7"
       ],
       "mateCount": 0
     },
     "tom": {
       "geonset": [
-        "8",
-        "16",
-        "4",
-        "17"
+        "10",
+        "15",
+        "1",
+        "4"
       ],
       "mateCount": 0
     },
     "dig": {
       "geonset": [
-        "5",
-        "16",
-        "4",
-        "17"
+        "10",
+        "0",
+        "12",
+        "9"
       ],
       "mateCount": 0
     },
     "fil": {
       "geonset": [
-        "9",
-        "7",
-        "4",
-        "3"
+        "16",
+        "2",
+        "10",
+        "5"
       ],
       "mateCount": 0
     },
     "fas": {
       "geonset": [
-        "8",
-        "14",
-        "4",
-        "17"
+        "1",
+        "15",
+        "0",
+        "7"
       ],
       "mateCount": 0
     },
     "mit": {
       "geonset": [
-        "5",
-        "14",
-        "4",
-        "17"
+        "10",
+        "16",
+        "2",
+        "15"
       ],
       "mateCount": 0
     },
     "hob": {
       "geonset": [
-        "2",
-        "14",
-        "4",
-        "17"
+        "0",
+        "3",
+        "11",
+        "9"
       ],
       "mateCount": 0
     },
     "har": {
       "geonset": [
-        "4",
-        "9",
-        "4",
-        "17"
+        "17",
+        "8",
+        "16",
+        "11"
       ],
       "mateCount": 0
     },
     "mig": {
       "geonset": [
-        "12",
-        "10",
-        "4",
-        "3"
+        "14",
+        "15",
+        "7",
+        "4"
       ],
       "mateCount": 0
     },
     "hin": {
       "geonset": [
+        "16",
         "15",
-        "10",
-        "4",
+        "14",
         "3"
       ],
       "mateCount": 0
     },
     "rad": {
       "geonset": [
-        "1",
-        "8",
         "4",
-        "17"
+        "1",
+        "0",
+        "2"
       ],
       "mateCount": 0
     },
     "mas": {
       "geonset": [
-        "10",
-        "11",
-        "4",
-        "3"
+        "5",
+        "3",
+        "17",
+        "11"
       ],
       "mateCount": 0
     },
     "hal": {
       "geonset": [
-        "3",
-        "12",
-        "4",
-        "3"
+        "7",
+        "11",
+        "6",
+        "9"
       ],
       "mateCount": 0
     },
     "rag": {
       "geonset": [
-        "1",
-        "7",
-        "4",
-        "17"
+        "15",
+        "11",
+        "10",
+        "2"
       ],
       "mateCount": 0
     },
     "lag": {
       "geonset": [
-        "5",
-        "4",
-        "4",
-        "17"
+        "12",
+        "3",
+        "0",
+        "14"
       ],
       "mateCount": 0
     },
     "fad": {
       "geonset": [
-        "11",
-        "16",
         "4",
-        "3"
+        "8",
+        "9",
+        "15"
       ],
       "mateCount": 0
     },
     "top": {
       "geonset": [
-        "0",
-        "17",
-        "4",
-        "3"
+        "8",
+        "11",
+        "15",
+        "12"
       ],
       "mateCount": 0
     },
     "mop": {
       "geonset": [
-        "1",
-        "1",
-        "4",
-        "17"
+        "8",
+        "6",
+        "2",
+        "11"
       ],
       "mateCount": 0
     },
     "hab": {
       "geonset": [
-        "14",
-        "17",
-        "4",
-        "3"
+        "10",
+        "6",
+        "12",
+        "5"
       ],
       "mateCount": 0
     },
     "nil": {
       "geonset": [
-        "8",
-        "0",
+        "11",
         "4",
-        "17"
+        "9",
+        "15"
       ],
       "mateCount": 0
     },
     "nos": {
       "geonset": [
+        "14",
         "2",
         "17",
-        "3",
-        "17"
+        "15"
       ],
       "mateCount": 0
     },
     "mil": {
       "geonset": [
         "8",
-        "16",
-        "3",
-        "17"
+        "10",
+        "14",
+        "7"
       ],
       "mateCount": 0
     },
     "fop": {
       "geonset": [
-        "0",
-        "3",
+        "10",
         "5",
-        "2"
+        "0",
+        "11"
       ],
       "mateCount": 0
     },
     "fam": {
       "geonset": [
-        "17",
-        "1",
+        "15",
         "5",
-        "2"
+        "6",
+        "17"
       ],
       "mateCount": 0
     },
     "dat": {
       "geonset": [
-        "4",
-        "1",
-        "5",
-        "2"
+        "7",
+        "3",
+        "12",
+        "14"
       ],
       "mateCount": 0
     },
     "nol": {
       "geonset": [
-        "2",
-        "14",
-        "3",
-        "17"
+        "8",
+        "6",
+        "4",
+        "12"
       ],
       "mateCount": 0
     },
     "din": {
       "geonset": [
-        "15",
-        "3",
-        "5",
-        "3"
+        "0",
+        "10",
+        "2",
+        "14"
       ],
       "mateCount": 0
     },
     "hat": {
       "geonset": [
-        "8",
-        "12",
-        "3",
-        "17"
+        "6",
+        "10",
+        "11",
+        "8"
       ],
       "mateCount": 0
     },
     "nac": {
       "geonset": [
-        "14",
-        "0",
+        "12",
+        "17",
         "5",
         "2"
       ],
@@ -1984,2627 +4288,323 @@
     },
     "ris": {
       "geonset": [
-        "3",
-        "4",
-        "5",
-        "3"
+        "17",
+        "12",
+        "7",
+        "6"
       ],
       "mateCount": 0
     },
     "fot": {
       "geonset": [
-        "8",
-        "11",
-        "3",
-        "17"
+        "14",
+        "1",
+        "17",
+        "2"
       ],
       "mateCount": 0
     },
     "rib": {
       "geonset": [
-        "9",
-        "0",
-        "5",
-        "2"
+        "11",
+        "4",
+        "3",
+        "5"
       ],
       "mateCount": 0
     },
     "hoc": {
       "geonset": [
         "5",
-        "10",
-        "3",
-        "17"
+        "12",
+        "11",
+        "1"
       ],
       "mateCount": 0
     },
     "nim": {
       "geonset": [
-        "12",
-        "17",
-        "4",
-        "2"
+        "3",
+        "9",
+        "1",
+        "10"
       ],
       "mateCount": 0
     },
     "lar": {
       "geonset": [
-        "3",
-        "7",
+        "11",
         "5",
-        "3"
+        "8",
+        "2"
       ],
       "mateCount": 0
     },
     "fit": {
       "geonset": [
-        "12",
-        "7",
-        "5",
-        "3"
+        "10",
+        "8",
+        "3",
+        "5"
       ],
       "mateCount": 0
     },
     "wal": {
       "geonset": [
-        "17",
-        "15",
-        "4",
-        "2"
+        "5",
+        "2",
+        "16",
+        "12"
       ],
       "mateCount": 0
     },
     "rap": {
       "geonset": [
-        "5",
-        "6",
-        "3",
-        "17"
+        "8",
+        "14",
+        "12",
+        "5"
       ],
       "mateCount": 0
     },
     "sar": {
       "geonset": [
+        "15",
         "2",
-        "5",
-        "3",
-        "17"
+        "17",
+        "14"
       ],
       "mateCount": 0
     },
     "nal": {
       "geonset": [
-        "15",
+        "11",
+        "1",
         "14",
-        "4",
-        "2"
+        "8"
       ],
       "mateCount": 0
     },
     "mos": {
       "geonset": [
-        "11",
-        "9",
-        "5",
-        "3"
+        "16",
+        "6",
+        "2",
+        "9"
       ],
       "mateCount": 0
     },
     "lan": {
       "geonset": [
-        "8",
-        "4",
-        "3",
+        "15",
+        "9",
+        "10",
         "17"
       ],
       "mateCount": 0
     },
     "don": {
       "geonset": [
-        "5",
-        "4",
-        "3",
-        "17"
+        "12",
+        "16",
+        "9",
+        "10"
       ],
       "mateCount": 0
     },
     "dan": {
       "geonset": [
+        "1",
+        "17",
         "3",
-        "10",
-        "5",
-        "3"
+        "2"
       ],
       "mateCount": 0
     },
     "lad": {
       "geonset": [
-        "10",
-        "10",
         "5",
-        "3"
+        "2",
+        "17",
+        "9"
       ],
       "mateCount": 0
     },
     "dov": {
       "geonset": [
-        "2",
-        "3",
-        "3",
-        "17"
+        "9",
+        "5",
+        "16",
+        "8"
       ],
       "mateCount": 0
     },
     "riv": {
       "geonset": [
-        "16",
-        "12",
-        "4",
-        "2"
+        "7",
+        "14",
+        "6",
+        "4"
       ],
       "mateCount": 0
     },
     "bac": {
       "geonset": [
-        "14",
-        "12",
-        "4",
-        "2"
+        "15",
+        "0",
+        "7",
+        "17"
       ],
       "mateCount": 0
     },
     "pol": {
       "geonset": [
-        "12",
-        "12",
+        "16",
+        "9",
         "4",
-        "2"
+        "17"
       ],
       "mateCount": 0
     },
     "lap": {
       "geonset": [
-        "10",
-        "12",
-        "4",
-        "2"
+        "16",
+        "17",
+        "14",
+        "1"
       ],
       "mateCount": 0
     },
     "tal": {
       "geonset": [
-        "1",
-        "0",
-        "3",
-        "17"
+        "9",
+        "5",
+        "12",
+        "16"
       ],
       "mateCount": 0
     },
     "pit": {
       "geonset": [
-        "3",
-        "1",
-        "6",
-        "3"
+        "7",
+        "14",
+        "12",
+        "2"
       ],
       "mateCount": 0
     },
     "nam": {
       "geonset": [
         "0",
-        "2",
-        "6",
-        "3"
+        "3",
+        "7",
+        "14"
       ],
       "mateCount": 0
     },
     "bon": {
       "geonset": [
+        "15",
         "9",
-        "2",
-        "6",
-        "3"
+        "12",
+        "11"
       ],
       "mateCount": 0
     },
     "ros": {
       "geonset": [
-        "4",
-        "10",
-        "4",
-        "2"
+        "0",
+        "7",
+        "12",
+        "5"
       ],
       "mateCount": 0
     },
     "ton": {
       "geonset": [
-        "4",
         "5",
-        "2",
-        "17"
+        "6",
+        "11",
+        "3"
       ],
       "mateCount": 0
     },
     "fod": {
       "geonset": [
-        "2",
-        "0",
-        "7",
+        "12",
+        "10",
+        "15",
         "3"
       ],
       "mateCount": 0
     },
     "pon": {
       "geonset": [
+        "0",
+        "15",
         "16",
-        "4",
-        "4",
-        "2"
+        "10"
       ],
       "mateCount": 0
     },
     "sov": {
       "geonset": [
-        "1",
-        "9",
+        "4",
         "11",
-        "17"
+        "12",
+        "0"
       ],
       "mateCount": 0
     },
     "noc": {
       "geonset": [
-        "6",
-        "9",
+        "11",
         "7",
-        "3"
+        "6",
+        "9"
       ],
       "mateCount": 0
     },
     "sor": {
       "geonset": [
+        "17",
         "11",
-        "9",
-        "7",
-        "3"
+        "12",
+        "1"
       ],
       "mateCount": 0
     },
     "lav": {
       "geonset": [
-        "12",
-        "10",
-        "7",
-        "3"
+        "14",
+        "0",
+        "8",
+        "1"
       ],
       "mateCount": 0
     },
     "mat": {
       "geonset": [
         "3",
-        "12",
-        "7",
-        "3"
+        "0",
+        "5",
+        "8"
       ],
       "mateCount": 0
     },
     "mip": {
       "geonset": [
-        "5",
-        "14",
+        "11",
         "7",
-        "3"
+        "8",
+        "16"
       ],
       "mateCount": 0
     },
     "fip": {
       "geonset": [
-        "5",
-        "16",
-        "7",
-        "3"
-      ],
-      "mateCount": 0
-    },
-    "zod": {
-      "geonset": [
-        "1",
-        "2",
-        "4",
-        "3"
-      ],
-      "mateCount": 0
-    },
-    "nec": {
-      "geonset": [
-        "2",
-        "17",
-        "7",
-        "3"
-      ],
-      "mateCount": 0
-    },
-    "bud": {
-      "geonset": [
-        "7",
-        "17",
-        "7",
-        "3"
-      ],
-      "mateCount": 0
-    },
-    "wes": {
-      "geonset": [
         "6",
-        "1",
-        "8",
-        "3"
-      ],
-      "mateCount": 0
-    },
-    "sev": {
-      "geonset": [
-        "12",
-        "1",
-        "8",
-        "3"
-      ],
-      "mateCount": 0
-    },
-    "per": {
-      "geonset": [
-        "3",
-        "4",
-        "4",
-        "2"
-      ],
-      "mateCount": 0
-    },
-    "sut": {
-      "geonset": [
-        "2",
-        "2",
-        "8",
-        "3"
-      ],
-      "mateCount": 0
-    },
-    "let": {
-      "geonset": [
-        "7",
-        "9",
-        "11",
-        "17"
-      ],
-      "mateCount": 0
-    },
-    "ful": {
-      "geonset": [
-        "6",
-        "2",
-        "8",
-        "3"
-      ],
-      "mateCount": 0
-    },
-    "pen": {
-      "geonset": [
-        "10",
-        "2",
-        "8",
-        "3"
-      ],
-      "mateCount": 0
-    },
-    "syt": {
-      "geonset": [
-        "11",
-        "2",
-        "8",
-        "3"
-      ],
-      "mateCount": 0
-    },
-    "dur": {
-      "geonset": [
-        "16",
-        "2",
-        "8",
-        "3"
-      ],
-      "mateCount": 0
-    },
-    "wep": {
-      "geonset": [
-        "4",
-        "3",
-        "8",
-        "3"
-      ],
-      "mateCount": 0
-    },
-    "ser": {
-      "geonset": [
-        "2",
-        "5",
-        "8",
-        "3"
-      ],
-      "mateCount": 0
-    },
-    "wyl": {
-      "geonset": [
-        "3",
-        "5",
-        "8",
-        "3"
-      ],
-      "mateCount": 0
-    },
-    "sun": {
-      "geonset": [
-        "15",
-        "3",
-        "4",
-        "2"
-      ],
-      "mateCount": 0
-    },
-    "ryp": {
-      "geonset": [
-        "14",
-        "3",
-        "4",
-        "2"
-      ],
-      "mateCount": 0
-    },
-    "syx": {
-      "geonset": [
-        "12",
-        "3",
-        "4",
-        "2"
-      ],
-      "mateCount": 0
-    },
-    "dyr": {
-      "geonset": [
-        "4",
-        "9",
-        "8",
-        "3"
-      ],
-      "mateCount": 0
-    },
-    "nup": {
-      "geonset": [
-        "1",
-        "1",
-        "9",
-        "3"
-      ],
-      "mateCount": 0
-    },
-    "heb": {
-      "geonset": [
-        "2",
-        "2",
-        "9",
-        "3"
-      ],
-      "mateCount": 0
-    },
-    "peg": {
-      "geonset": [
-        "9",
-        "3",
-        "4",
-        "2"
-      ],
-      "mateCount": 0
-    },
-    "lup": {
-      "geonset": [
-        "12",
-        "2",
-        "9",
-        "3"
-      ],
-      "mateCount": 0
-    },
-    "dep": {
-      "geonset": [
-        "1",
-        "3",
-        "9",
-        "3"
-      ],
-      "mateCount": 0
-    },
-    "dys": {
-      "geonset": [
-        "3",
-        "3",
-        "4",
-        "2"
-      ],
-      "mateCount": 0
-    },
-    "put": {
-      "geonset": [
-        "16",
-        "2",
-        "4",
-        "2"
-      ],
-      "mateCount": 0
-    },
-    "lug": {
-      "geonset": [
         "0",
-        "1",
-        "10",
-        "3"
-      ],
-      "mateCount": 0
-    },
-    "hec": {
-      "geonset": [
-        "12",
-        "1",
-        "10",
-        "3"
-      ],
-      "mateCount": 0
-    },
-    "ryt": {
-      "geonset": [
-        "7",
-        "3",
-        "10",
-        "3"
-      ],
-      "mateCount": 0
-    },
-    "tyv": {
-      "geonset": [
-        "7",
-        "9",
-        "0",
-        "17"
-      ],
-      "mateCount": 0
-    },
-    "syd": {
-      "geonset": [
-        "10",
-        "2",
-        "4",
-        "2"
-      ],
-      "mateCount": 0
-    },
-    "nex": {
-      "geonset": [
-        "9",
-        "2",
-        "4",
-        "2"
-      ],
-      "mateCount": 0
-    },
-    "lun": {
-      "geonset": [
-        "0",
-        "8",
-        "10",
-        "3"
-      ],
-      "mateCount": 0
-    },
-    "mep": {
-      "geonset": [
-        "17",
-        "8",
-        "10",
-        "3"
-      ],
-      "mateCount": 0
-    },
-    "lut": {
-      "geonset": [
-        "4",
-        "9",
-        "10",
-        "3"
-      ],
-      "mateCount": 0
-    },
-    "sep": {
-      "geonset": [
-        "2",
-        "1",
-        "11",
-        "3"
-      ],
-      "mateCount": 0
-    },
-    "pes": {
-      "geonset": [
-        "2",
-        "1",
-        "11",
-        "3"
-      ],
-      "mateCount": 0
-    },
-    "del": {
-      "geonset": [
-        "0",
-        "2",
-        "4",
-        "2"
-      ],
-      "mateCount": 0
-    },
-    "sul": {
-      "geonset": [
-        "17",
-        "1",
-        "4",
-        "2"
-      ],
-      "mateCount": 0
-    },
-    "ped": {
-      "geonset": [
-        "7",
-        "5",
-        "0",
-        "17"
-      ],
-      "mateCount": 0
-    },
-    "tem": {
-      "geonset": [
-        "10",
-        "2",
-        "11",
-        "3"
-      ],
-      "mateCount": 0
-    },
-    "led": {
-      "geonset": [
-        "17",
-        "2",
-        "11",
-        "3"
-      ],
-      "mateCount": 0
-    },
-    "tul": {
-      "geonset": [
-        "0",
-        "5",
-        "11",
-        "3"
-      ],
-      "mateCount": 0
-    },
-    "met": {
-      "geonset": [
-        "8",
-        "5",
-        "11",
-        "3"
-      ],
-      "mateCount": 0
-    },
-    "wen": {
-      "geonset": [
-        "5",
-        "8",
-        "11",
-        "3"
-      ],
-      "mateCount": 0
-    },
-    "byn": {
-      "geonset": [
-        "10",
-        "8",
-        "11",
-        "3"
-      ],
-      "mateCount": 0
-    },
-    "hex": {
-      "geonset": [
-        "1",
-        "2",
-        "0",
-        "17"
-      ],
-      "mateCount": 0
-    },
-    "feb": {
-      "geonset": [
-        "9",
-        "1",
-        "4",
-        "2"
-      ],
-      "mateCount": 0
-    },
-    "pyl": {
-      "geonset": [
-        "3",
-        "2",
-        "12",
-        "3"
-      ],
-      "mateCount": 0
-    },
-    "dul": {
-      "geonset": [
-        "12",
-        "2",
-        "12",
-        "3"
-      ],
-      "mateCount": 0
-    },
-    "het": {
-      "geonset": [
-        "4",
-        "3",
-        "12",
-        "3"
-      ],
-      "mateCount": 0
-    },
-    "mev": {
-      "geonset": [
-        "0",
-        "1",
-        "14",
-        "3"
-      ],
-      "mateCount": 0
-    },
-    "rut": {
-      "geonset": [
-        "16",
-        "1",
-        "14",
-        "3"
-      ],
-      "mateCount": 0
-    },
-    "tyl": {
-      "geonset": [
-        "0",
-        "2",
-        "14",
-        "3"
-      ],
-      "mateCount": 0
-    },
-    "wyd": {
-      "geonset": [
-        "2",
-        "2",
-        "14",
-        "3"
-      ],
-      "mateCount": 0
-    },
-    "tep": {
-      "geonset": [
-        "11",
-        "0",
-        "4",
-        "2"
-      ],
-      "mateCount": 0
-    },
-    "bes": {
-      "geonset": [
-        "9",
-        "2",
-        "14",
-        "3"
-      ],
-      "mateCount": 0
-    },
-    "dex": {
-      "geonset": [
-        "14",
-        "2",
-        "14",
-        "3"
-      ],
-      "mateCount": 0
-    },
-    "sef": {
-      "geonset": [
-        "1",
-        "3",
-        "14",
-        "3"
-      ],
-      "mateCount": 0
-    },
-    "wyc": {
-      "geonset": [
-        "17",
-        "2",
-        "14",
-        "3"
-      ],
-      "mateCount": 0
-    },
-    "bur": {
-      "geonset": [
-        "0",
-        "5",
-        "14",
-        "3"
-      ],
-      "mateCount": 0
-    },
-    "der": {
-      "geonset": [
-        "8",
-        "5",
-        "14",
-        "3"
-      ],
-      "mateCount": 0
-    },
-    "nep": {
-      "geonset": [
-        "8",
-        "8",
-        "14",
-        "3"
-      ],
-      "mateCount": 0
-    },
-    "pur": {
-      "geonset": [
-        "12",
-        "8",
-        "14",
-        "3"
-      ],
-      "mateCount": 0
-    },
-    "rys": {
-      "geonset": [
-        "17",
-        "8",
-        "14",
-        "3"
-      ],
-      "mateCount": 0
-    },
-    "reb": {
-      "geonset": [
-        "7",
-        "9",
-        "17",
-        "16"
-      ],
-      "mateCount": 0
-    },
-    "den": {
-      "geonset": [
-        "5",
-        "9",
-        "17",
-        "16"
-      ],
-      "mateCount": 0
-    },
-    "nut": {
-      "geonset": [
-        "12",
-        "1",
-        "15",
-        "3"
-      ],
-      "mateCount": 0
-    },
-    "sub": {
-      "geonset": [
-        "4",
-        "0",
-        "4",
-        "2"
-      ],
-      "mateCount": 0
-    },
-    "pet": {
-      "geonset": [
-        "0",
-        "0",
-        "4",
-        "2"
-      ],
-      "mateCount": 0
-    },
-    "rul": {
-      "geonset": [
-        "5",
-        "17",
-        "3",
-        "2"
-      ],
-      "mateCount": 0
-    },
-    "syn": {
-      "geonset": [
-        "2",
-        "17",
-        "3",
-        "2"
-      ],
-      "mateCount": 0
-    },
-    "reg": {
-      "geonset": [
-        "6",
-        "5",
-        "15",
-        "3"
-      ],
-      "mateCount": 0
-    },
-    "tyd": {
-      "geonset": [
-        "8",
-        "16",
-        "3",
-        "2"
-      ],
-      "mateCount": 0
-    },
-    "sup": {
-      "geonset": [
-        "7",
-        "5",
-        "17",
-        "16"
-      ],
-      "mateCount": 0
-    },
-    "sem": {
-      "geonset": [
-        "7",
-        "3",
-        "17",
-        "16"
-      ],
-      "mateCount": 0
-    },
-    "wyn": {
-      "geonset": [
-        "11",
-        "2",
-        "16",
-        "3"
-      ],
-      "mateCount": 0
-    },
-    "rec": {
-      "geonset": [
-        "6",
-        "5",
-        "16",
-        "3"
-      ],
-      "mateCount": 0
-    },
-    "meg": {
-      "geonset": [
-        "0",
-        "8",
-        "16",
-        "3"
-      ],
-      "mateCount": 0
-    },
-    "net": {
-      "geonset": [
-        "8",
-        "1",
-        "17",
-        "3"
-      ],
-      "mateCount": 0
-    },
-    "sec": {
-      "geonset": [
-        "5",
-        "14",
-        "3",
-        "2"
-      ],
-      "mateCount": 0
-    },
-    "mul": {
-      "geonset": [
-        "8",
-        "2",
-        "17",
-        "3"
-      ],
-      "mateCount": 0
-    },
-    "nym": {
-      "geonset": [
-        "0",
-        "5",
-        "17",
-        "3"
-      ],
-      "mateCount": 0
-    },
-    "tev": {
-      "geonset": [
-        "9",
-        "8",
-        "17",
-        "3"
-      ],
-      "mateCount": 0
-    },
-    "web": {
-      "geonset": [
-        "2",
-        "1",
-        "0",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "sum": {
-      "geonset": [
-        "6",
-        "1",
-        "0",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "mut": {
-      "geonset": [
-        "7",
-        "3",
-        "0",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "nyx": {
-      "geonset": [
-        "6",
-        "5",
-        "0",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "rex": {
-      "geonset": [
-        "17",
-        "8",
-        "0",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "teb": {
-      "geonset": [
-        "4",
-        "9",
-        "0",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "fus": {
-      "geonset": [
-        "7",
-        "9",
-        "0",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "hep": {
-      "geonset": [
-        "2",
-        "1",
-        "1",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "ben": {
-      "geonset": [
-        "4",
-        "1",
-        "1",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "mus": {
-      "geonset": [
-        "8",
-        "8",
-        "3",
-        "2"
-      ],
-      "mateCount": 0
-    },
-    "wyx": {
-      "geonset": [
-        "5",
-        "8",
-        "3",
-        "2"
-      ],
-      "mateCount": 0
-    },
-    "sym": {
-      "geonset": [
-        "1",
-        "5",
-        "16",
-        "16"
-      ],
-      "mateCount": 0
-    },
-    "sel": {
-      "geonset": [
-        "16",
-        "8",
-        "1",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "ruc": {
-      "geonset": [
-        "7",
-        "3",
-        "16",
-        "16"
-      ],
-      "mateCount": 0
-    },
-    "dec": {
-      "geonset": [
-        "7",
-        "2",
-        "16",
-        "16"
-      ],
-      "mateCount": 0
-    },
-    "wex": {
-      "geonset": [
-        "1",
-        "7",
-        "3",
-        "2"
-      ],
-      "mateCount": 0
-    },
-    "syr": {
-      "geonset": [
-        "6",
-        "2",
-        "2",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "wet": {
-      "geonset": [
-        "1",
-        "3",
-        "2",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "dyl": {
-      "geonset": [
-        "4",
-        "3",
-        "2",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "myn": {
-      "geonset": [
-        "10",
-        "5",
-        "2",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "mes": {
-      "geonset": [
-        "12",
-        "5",
-        "2",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "det": {
-      "geonset": [
-        "1",
-        "0",
-        "3",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "bet": {
-      "geonset": [
-        "6",
-        "1",
-        "3",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "bel": {
-      "geonset": [
-        "4",
-        "2",
-        "3",
-        "2"
-      ],
-      "mateCount": 0
-    },
-    "tux": {
-      "geonset": [
-        "5",
-        "1",
-        "3",
-        "2"
-      ],
-      "mateCount": 0
-    },
-    "tug": {
-      "geonset": [
-        "10",
-        "5",
-        "3",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "myr": {
-      "geonset": [
-        "4",
-        "8",
-        "3",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "pel": {
-      "geonset": [
-        "2",
-        "9",
-        "3",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "syp": {
-      "geonset": [
-        "7",
-        "9",
-        "3",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "ter": {
-      "geonset": [
-        "5",
-        "10",
-        "3",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "meb": {
-      "geonset": [
-        "8",
-        "10",
-        "3",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "set": {
-      "geonset": [
-        "1",
-        "14",
-        "3",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "dut": {
-      "geonset": [
-        "1",
-        "0",
-        "4",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "deg": {
-      "geonset": [
-        "5",
-        "9",
-        "2",
-        "2"
-      ],
-      "mateCount": 0
-    },
-    "tex": {
-      "geonset": [
-        "5",
-        "5",
-        "2",
-        "2"
-      ],
-      "mateCount": 0
-    },
-    "sur": {
-      "geonset": [
-        "3",
-        "2",
-        "4",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "fel": {
-      "geonset": [
-        "7",
-        "5",
-        "15",
-        "16"
-      ],
-      "mateCount": 0
-    },
-    "tud": {
-      "geonset": [
-        "3",
-        "5",
-        "4",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "nux": {
-      "geonset": [
-        "1",
-        "2",
-        "12",
-        "17"
-      ],
-      "mateCount": 0
-    },
-    "rux": {
-      "geonset": [
-        "16",
-        "17",
-        "1",
-        "2"
-      ],
-      "mateCount": 0
-    },
-    "ren": {
-      "geonset": [
-        "15",
-        "17",
-        "1",
-        "2"
-      ],
-      "mateCount": 0
-    },
-    "wyt": {
-      "geonset": [
-        "7",
-        "2",
-        "12",
-        "17"
-      ],
-      "mateCount": 0
-    },
-    "nub": {
-      "geonset": [
-        "2",
-        "9",
-        "4",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "med": {
-      "geonset": [
-        "5",
-        "10",
-        "4",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "lyt": {
-      "geonset": [
-        "8",
-        "11",
-        "4",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "dus": {
-      "geonset": [
-        "2",
-        "15",
-        "4",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "neb": {
-      "geonset": [
-        "11",
-        "17",
-        "1",
-        "2"
-      ],
-      "mateCount": 0
-    },
-    "rum": {
-      "geonset": [
-        "7",
-        "1",
-        "5",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "tyn": {
-      "geonset": [
-        "11",
-        "1",
-        "5",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "seg": {
-      "geonset": [
-        "3",
-        "2",
-        "5",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "lyx": {
-      "geonset": [
-        "1",
-        "3",
-        "12",
-        "17"
-      ],
-      "mateCount": 0
-    },
-    "pun": {
-      "geonset": [
-        "4",
-        "3",
-        "5",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "res": {
-      "geonset": [
-        "3",
-        "5",
-        "5",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "red": {
-      "geonset": [
-        "7",
-        "3",
-        "12",
-        "17"
-      ],
-      "mateCount": 0
-    },
-    "fun": {
-      "geonset": [
-        "0",
-        "17",
-        "1",
-        "2"
-      ],
-      "mateCount": 0
-    },
-    "rev": {
-      "geonset": [
-        "6",
-        "5",
-        "5",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "ref": {
-      "geonset": [
-        "17",
-        "16",
-        "1",
-        "2"
-      ],
-      "mateCount": 0
-    },
-    "mec": {
-      "geonset": [
-        "16",
-        "16",
-        "1",
-        "2"
-      ],
-      "mateCount": 0
-    },
-    "ted": {
-      "geonset": [
-        "4",
-        "8",
-        "5",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "rus": {
-      "geonset": [
-        "4",
-        "9",
-        "5",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "bex": {
-      "geonset": [
-        "7",
-        "9",
-        "5",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "leb": {
-      "geonset": [
-        "9",
-        "16",
-        "1",
-        "2"
-      ],
-      "mateCount": 0
-    },
-    "dux": {
-      "geonset": [
-        "9",
-        "2",
-        "6",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "ryn": {
-      "geonset": [
-        "12",
-        "2",
-        "6",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "num": {
-      "geonset": [
-        "0",
-        "5",
-        "6",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "pyx": {
-      "geonset": [
-        "1",
-        "5",
-        "14",
-        "16"
-      ],
-      "mateCount": 0
-    },
-    "ryg": {
-      "geonset": [
-        "5",
-        "6",
-        "6",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "ryx": {
-      "geonset": [
-        "0",
-        "8",
-        "6",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "fep": {
-      "geonset": [
-        "1",
-        "5",
-        "12",
-        "17"
-      ],
-      "mateCount": 0
-    },
-    "tyr": {
-      "geonset": [
-        "7",
-        "8",
-        "6",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "tus": {
-      "geonset": [
-        "5",
-        "5",
-        "12",
-        "17"
-      ],
-      "mateCount": 0
-    },
-    "tyc": {
-      "geonset": [
-        "7",
-        "3",
-        "14",
-        "16"
-      ],
-      "mateCount": 0
-    },
-    "leg": {
-      "geonset": [
-        "1",
-        "1",
-        "7",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "nem": {
-      "geonset": [
-        "7",
-        "5",
-        "12",
-        "17"
-      ],
-      "mateCount": 0
-    },
-    "fer": {
-      "geonset": [
-        "2",
-        "2",
-        "7",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "mer": {
-      "geonset": [
-        "4",
-        "3",
-        "7",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "ten": {
-      "geonset": [
-        "0",
-        "5",
-        "7",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "lus": {
-      "geonset": [
-        "3",
-        "5",
-        "7",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "nus": {
-      "geonset": [
-        "17",
-        "14",
-        "1",
-        "2"
-      ],
-      "mateCount": 0
-    },
-    "syl": {
-      "geonset": [
-        "16",
-        "14",
-        "1",
-        "2"
-      ],
-      "mateCount": 0
-    },
-    "tec": {
-      "geonset": [
-        "8",
-        "5",
-        "7",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "mex": {
-      "geonset": [
-        "14",
-        "8",
-        "7",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "pub": {
-      "geonset": [
-        "5",
-        "1",
-        "8",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "rym": {
-      "geonset": [
-        "15",
-        "14",
-        "1",
-        "2"
-      ],
-      "mateCount": 0
-    },
-    "tuc": {
-      "geonset": [
-        "3",
-        "2",
-        "8",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "fyl": {
-      "geonset": [
-        "12",
-        "14",
-        "1",
-        "2"
-      ],
-      "mateCount": 0
-    },
-    "lep": {
-      "geonset": [
-        "5",
-        "3",
-        "8",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "deb": {
-      "geonset": [
-        "1",
-        "8",
-        "8",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "ber": {
-      "geonset": [
-        "5",
-        "8",
-        "8",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "mug": {
-      "geonset": [
-        "1",
-        "9",
-        "8",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "hut": {
-      "geonset": [
-        "6",
-        "1",
-        "9",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "tun": {
-      "geonset": [
-        "2",
-        "5",
-        "9",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "byl": {
-      "geonset": [
-        "6",
-        "8",
-        "9",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "sud": {
-      "geonset": [
-        "4",
-        "1",
-        "10",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "pem": {
-      "geonset": [
-        "6",
-        "1",
-        "10",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "dev": {
-      "geonset": [
-        "12",
-        "12",
-        "1",
-        "2"
-      ],
-      "mateCount": 0
-    },
-    "lur": {
-      "geonset": [
-        "10",
-        "2",
-        "10",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "def": {
-      "geonset": [
-        "1",
-        "1",
-        "12",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "bus": {
-      "geonset": [
-        "3",
-        "2",
-        "12",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "bep": {
-      "geonset": [
-        "8",
-        "1",
-        "14",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "run": {
-      "geonset": [
-        "8",
-        "5",
-        "14",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "mel": {
-      "geonset": [
-        "7",
-        "3",
-        "11",
-        "16"
-      ],
-      "mateCount": 0
-    },
-    "pex": {
-      "geonset": [
-        "4",
-        "8",
-        "14",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "dyt": {
-      "geonset": [
-        "7",
-        "2",
-        "11",
-        "16"
-      ],
-      "mateCount": 0
-    },
-    "byt": {
-      "geonset": [
-        "8",
-        "1",
-        "15",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "typ": {
-      "geonset": [
-        "3",
-        "2",
-        "15",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "lev": {
-      "geonset": [
-        "4",
-        "8",
-        "15",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "myl": {
-      "geonset": [
-        "2",
-        "1",
-        "16",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "wed": {
-      "geonset": [
-        "10",
-        "10",
-        "1",
-        "2"
-      ],
-      "mateCount": 0
-    },
-    "duc": {
-      "geonset": [
-        "3",
-        "5",
-        "16",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "fur": {
-      "geonset": [
-        "6",
-        "10",
-        "1",
-        "2"
-      ],
-      "mateCount": 0
-    },
-    "fex": {
-      "geonset": [
-        "11",
-        "5",
-        "16",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "nul": {
-      "geonset": [
-        "8",
-        "8",
-        "16",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "luc": {
-      "geonset": [
-        "10",
-        "8",
-        "16",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "len": {
-      "geonset": [
-        "10",
-        "8",
-        "16",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "ner": {
-      "geonset": [
-        "3",
-        "1",
-        "17",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "lex": {
-      "geonset": [
-        "9",
-        "1",
-        "17",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "rup": {
-      "geonset": [
-        "5",
-        "9",
-        "10",
-        "16"
-      ],
-      "mateCount": 0
-    },
-    "ned": {
-      "geonset": [
-        "1",
-        "9",
-        "10",
-        "16"
-      ],
-      "mateCount": 0
-    },
-    "lec": {
-      "geonset": [
-        "3",
-        "2",
-        "17",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "ryd": {
-      "geonset": [
-        "4",
-        "10",
-        "1",
-        "2"
-      ],
-      "mateCount": 0
-    },
-    "lyd": {
-      "geonset": [
-        "3",
-        "10",
-        "1",
-        "2"
-      ],
-      "mateCount": 0
-    },
-    "fen": {
-      "geonset": [
-        "2",
-        "10",
-        "1",
-        "2"
-      ],
-      "mateCount": 0
-    },
-    "wel": {
-      "geonset": [
-        "10",
-        "2",
-        "17",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "nyd": {
-      "geonset": [
-        "2",
-        "5",
-        "17",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "hus": {
-      "geonset": [
-        "16",
-        "8",
-        "17",
-        "4"
-      ],
-      "mateCount": 0
-    },
-    "rel": {
-      "geonset": [
-        "7",
-        "5",
-        "10",
-        "16"
-      ],
-      "mateCount": 0
-    },
-    "rud": {
-      "geonset": [
-        "1",
-        "1",
-        "0",
-        "5"
-      ],
-      "mateCount": 0
-    },
-    "nes": {
-      "geonset": [
-        "5",
-        "3",
-        "0",
-        "5"
-      ],
-      "mateCount": 0
-    },
-    "hes": {
-      "geonset": [
-        "7",
-        "2",
-        "10",
-        "16"
-      ],
-      "mateCount": 0
-    },
-    "fet": {
-      "geonset": [
-        "4",
-        "2",
-        "10",
-        "16"
-      ],
-      "mateCount": 0
-    },
-    "des": {
-      "geonset": [
-        "12",
-        "5",
-        "0",
-        "5"
-      ],
-      "mateCount": 0
-    },
-    "ret": {
-      "geonset": [
-        "4",
-        "9",
-        "0",
-        "5"
-      ],
-      "mateCount": 0
-    },
-    "dun": {
-      "geonset": [
-        "15",
-        "0",
-        "1",
-        "5"
-      ],
-      "mateCount": 0
-    },
-    "ler": {
-      "geonset": [
-        "8",
-        "8",
-        "1",
-        "2"
-      ],
-      "mateCount": 0
-    },
-    "nyr": {
-      "geonset": [
-        "9",
-        "3",
-        "1",
-        "5"
-      ],
-      "mateCount": 0
-    },
-    "seb": {
-      "geonset": [
-        "3",
-        "6",
-        "1",
-        "2"
-      ],
-      "mateCount": 0
-    },
-    "hul": {
-      "geonset": [
-        "16",
-        "7",
-        "1",
-        "5"
-      ],
-      "mateCount": 0
-    },
-    "ryl": {
-      "geonset": [
-        "10",
-        "4",
-        "1",
-        "2"
-      ],
-      "mateCount": 0
-    },
-    "lud": {
-      "geonset": [
-        "12",
-        "10",
-        "1",
-        "5"
-      ],
-      "mateCount": 0
-    },
-    "rem": {
-      "geonset": [
-        "10",
-        "11",
-        "1",
-        "5"
-      ],
-      "mateCount": 0
-    },
-    "lys": {
-      "geonset": [
-        "1",
-        "5",
-        "9",
-        "16"
-      ],
-      "mateCount": 0
-    },
-    "fyn": {
-      "geonset": [
-        "4",
-        "15",
-        "1",
-        "5"
-      ],
-      "mateCount": 0
-    },
-    "wer": {
-      "geonset": [
-        "4",
-        "17",
-        "1",
-        "5"
-      ],
-      "mateCount": 0
-    },
-    "ryc": {
-      "geonset": [
-        "14",
-        "17",
-        "1",
-        "5"
-      ],
-      "mateCount": 0
-    },
-    "sug": {
-      "geonset": [
-        "3",
-        "1",
-        "2",
-        "5"
-      ],
-      "mateCount": 0
-    },
-    "nys": {
-      "geonset": [
-        "5",
-        "4",
-        "1",
-        "2"
-      ],
-      "mateCount": 0
-    },
-    "nyl": {
-      "geonset": [
-        "12",
-        "5",
-        "2",
-        "5"
-      ],
-      "mateCount": 0
-    },
-    "lyn": {
-      "geonset": [
-        "14",
-        "5",
-        "2",
-        "5"
-      ],
-      "mateCount": 0
-    },
-    "dyn": {
-      "geonset": [
-        "5",
-        "9",
-        "2",
-        "5"
-      ],
-      "mateCount": 0
-    },
-    "dem": {
-      "geonset": [
-        "1",
-        "0",
-        "3",
-        "5"
-      ],
-      "mateCount": 0
-    },
-    "lux": {
-      "geonset": [
-        "8",
-        "0",
-        "3",
-        "5"
-      ],
-      "mateCount": 0
-    },
-    "fed": {
-      "geonset": [
-        "17",
-        "3",
-        "1",
-        "2"
-      ],
-      "mateCount": 0
-    },
-    "sed": {
-      "geonset": [
-        "4",
-        "1",
-        "3",
-        "5"
-      ],
-      "mateCount": 0
-    },
-    "bec": {
-      "geonset": [
-        "14",
-        "3",
-        "1",
-        "2"
-      ],
-      "mateCount": 0
-    },
-    "mun": {
-      "geonset": [
-        "11",
-        "1",
-        "3",
-        "5"
-      ],
-      "mateCount": 0
-    },
-    "lyr": {
-      "geonset": [
-        "17",
-        "1",
-        "3",
-        "5"
-      ],
-      "mateCount": 0
-    },
-    "tes": {
-      "geonset": [
-        "3",
-        "2",
-        "3",
-        "5"
-      ],
-      "mateCount": 0
-    },
-    "mud": {
-      "geonset": [
-        "6",
-        "3",
-        "1",
-        "2"
-      ],
-      "mateCount": 0
-    },
-    "nyt": {
-      "geonset": [
-        "14",
-        "2",
-        "3",
-        "5"
-      ],
-      "mateCount": 0
-    },
-    "byr": {
-      "geonset": [
-        "7",
-        "9",
-        "8",
-        "16"
-      ],
-      "mateCount": 0
-    },
-    "sen": {
-      "geonset": [
-        "1",
-        "9",
-        "8",
-        "16"
-      ],
-      "mateCount": 0
-    },
-    "weg": {
-      "geonset": [
-        "3",
-        "5",
-        "3",
-        "5"
-      ],
-      "mateCount": 0
-    },
-    "fyr": {
-      "geonset": [
-        "5",
-        "10",
-        "3",
-        "5"
-      ],
-      "mateCount": 0
-    },
-    "mur": {
-      "geonset": [
-        "4",
-        "5",
-        "8",
-        "16"
-      ],
-      "mateCount": 0
-    },
-    "tel": {
-      "geonset": [
-        "5",
-        "14",
-        "3",
-        "5"
-      ],
-      "mateCount": 0
-    },
-    "rep": {
-      "geonset": [
-        "2",
-        "16",
-        "3",
-        "5"
-      ],
-      "mateCount": 0
-    },
-    "teg": {
-      "geonset": [
-        "2",
-        "2",
-        "1",
-        "2"
-      ],
-      "mateCount": 0
-    },
-    "pec": {
-      "geonset": [
-        "7",
-        "3",
-        "8",
-        "16"
-      ],
-      "mateCount": 0
-    },
-    "nel": {
-      "geonset": [
-        "15",
-        "0",
-        "4",
-        "5"
-      ],
-      "mateCount": 0
-    },
-    "nev": {
-      "geonset": [
-        "9",
-        "1",
-        "1",
-        "2"
-      ],
-      "mateCount": 0
-    },
-    "fes": {
-      "geonset": [
-        "3",
-        "1",
         "1",
         "2"
       ],

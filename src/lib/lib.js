@@ -1,191 +1,288 @@
-import primes from 'prime-factors'
+import Graph from 'graphology'
+import chroma from 'chroma-js'
 
-const splitInt = val => compose(parseDec, binDec, barString)(val)
+const isObject = any => any && typeof any === 'object' && any.constructor === Object
 
-// Math
+const isString = any => typeof any === 'string' || any instanceof String
+
+const isNumber = any => typeof any === 'number' && isFinite(any)
+
+const isArray = any => Array.isArray(any)
+
+const isFunction = any => typeof any === 'function'
+
+const isNull = any => any === null
+
+const isUndefined = any => typeof any === 'undefined'
+
+const isDef = any => typeof any !== 'undefined'
+
+const isBoolean = any => typeof any === 'boolean'
+
+const isRegExp = any => any && typeof any === 'object' && any.constructor === RegExp
+
+const isError = any => any instanceof Error && typeof any.message !== 'undefined'
+
+const isDate = any => any instanceof Date
+
+const isSymbol = any => typeof any === 'symbol'
+
 const randInt = max => Math.floor(Math.random() * Math.floor(max))
-const factors = num => sequence(num).filter(i => num % i === 0)
-const randomBinaryOfLength = num => compose(decBin, randInt)(Math.pow(2, num) - 1)
 
-// Array
+// const factors = num => sequence(num).filter(i => num % i === 0)
 
-// Make an array of indexes of any length
 const sequence = num => Array.from(Array(num), (nada, i) => i)
 
-//
 const fromRight = arr => i => arr.slice(0, i)
 
-//
 const fromLeft = arr => i => arr.reverse().slice(0, i).reverse()
 
-//
+// does not work on arrays of integers
 const flatten = ([x, ...xs]) => x
   ? Array.isArray(x)
     ? [...flatten(x), ...flatten(xs)]
     : [x, ...flatten(xs)]
   : []
 
-//
-const filter = ([x, ...xs], f) => def(x)
-    ? f(x)
-        ? [x, ...filter(xs, f)]
-        : [...filter(xs, f)]
-    : []
-
-//
-const chunk = arr => mod => arr.reduce((acc, a, i) => {
+const chunk = (arr, mod) => arr.reduce((acc, a, i) => {
   const offset = Math.floor(i / mod)
   if(!acc[offset]) { acc[offset] = [] }
   acc[offset].push(a)
   return acc
 }, [])
 
-// recursive map
-const rmap = ([x, ...xs], f) => def(x)
-  ? [f(x), ...map(xs, f)]
-  : []
-
-// Array.prototype.map() as a pure function
-const map = (arr, f) => def(arr)
-  ? arr.map((item, i, array) => f(item, i, array))
-  : []
+const swap = (x, y, [...xs]) => xs.length > 1
+ ? ([xs[x], xs[y]] = [xs[y], xs[x]], xs)
+ : xs;
 
 const avg = arr => arr.reduce((a,b) => a + b, 0) / arr.length
 
-
-// const map = Array.prototype.map
-
-// Object
-const thread = obj => f => Object.entries(obj).reduce((acc, [k, v]) => (acc[k] = f(v), acc), {} )
-
-const through = a => a.reduce((acc, entry) => (acc[entry] = entry.toString(), acc), {} )
-
-
-
-// FP
 const compose = (...fns) => fns.reduce((f, g) => (...args) => f(g(...args)))
-
-
-// Util
-const def = a => typeof a !== 'undefined'
-
-
-
-// Type Coercion
-// String.prototype.split() as a pure function
-const split = s => delimiter => s.split(delimiter)
-// String.prototype.split() as a pure function
-// TODO only use one of these
-const splitLim = s => delimiter => lim =>  s.split(delimiter, lim)
-
-// String.prototype.match() as a pure function
-const match = s => r => s.match(r)
-
-// Converts a string '01...' to a binary array with leading 0 fill for 32 bits
-const stringBar = s => {
-  const fill = barString(sequence(32 - s.length).map(item => '0'))
-  return split(fill + s)('').map(a => parseDec(a))
-}
-
-// Converts a binary array ['0', '1', ...] to a single string '01...'
-const barString = arr => join(arr)('')
-
-// Object.prototype.toString() as a pure function
-const toString = a => a.toString()
-
-// Array.prototype.join() as a pure function
-const join = a => separator => a.join(separator)
-
-// Parse an input into base-10
-const parseDec = a => parseInt(a, 10)
-
-const replace = s => test => delimiter => s.replace(test, delimiter)
-
-// the english alphabet as an array
-const abc = 'abcdefghijklmnopqrstuvwxyz'.split('')
-
-const loadImage = src => {
-  return new Promise((resolve, reject) => {
-    const img = new Image()
-    img.onload = () => resolve(img)
-    img.onerror = err => reject(err)
-    img.src = src
-  })
-}
 
 const end = arr => arr[arr.length - 1]
 
-// Base Conversion
-// const binDec = s => parseInt(s, 2).toString(10)
-// const binHex = s => parseInt(s, 2).toString(16)
-// const decBin = s => parseInt(s, 10).toString(2)
-// const decHex = s => parseInt(s, 10).toString(16)
-// const hexBin = s => parseInt(s, 16).toString(2)
-// const hexDec = s => parseInt(s, 16).toString(10)
-// large binary conversion
-const { binDec, binHex, decBin, decHex, hexBin, hexDec } = thread({
-  binDec: [2, 10],
-  binHex: [2, 16],
-  decBin: [10, 2],
-  decHex: [10, 16],
-  hexBin: [16, 2],
-  hexDec: [16, 10],
-})(bases => {
-  const conversion = s => parseInt(s, bases[0]).toString(bases[1])
-  return s => conversion(s)
-})
+const endIdx = arr => arr.length - 1
 
-const callIfDef = f => (...args) => def(f)
-  ? f(...args)
-  : null
-
-
-const slice = arr => start => end => arr.slice(start, end)
-
-const numPages = (length, perPage) => Math.ceil(length / perPage)
-
-const getPage = arr => pageIndex => perPage => {
-  const start = pageIndex * perPage
-  const end = (pageIndex * perPage) + perPage
-  return 0 <= pageIndex && pageIndex <= numPages(arr.length, perPage)
-    ? slice(arr)(start)(end)
-    : []
-}
+const length = arr => arr.length
 
 const keys = obj => Object.keys(obj)
 
-const prop = key => obj => obj[key]
+const entries = obj => Object.entries(obj)
+
+const values = obj => Object.values(obj)
+
+const prop = (key, obj) => obj[key]
+
+const set = (key, obj, value) => obj[key] = value
+
+const getEdgeOfBelow = (matrix, r, c) => topEdge(getCellBelow(matrix, r, c))
+
+const getEdgeOfRight = (matrix, r, c) => leftEdge(getCellRight(matrix, r, c))
+
+const isMate = (a, b) => {
+  if (a === b) {
+    if (a === 'full') {
+      return true
+    }
+  } else {
+    return false
+  }
+}
+
+const topEdge = cell => cell.edgeMap[0]
+const rightEdge = cell => cell.edgeMap[1]
+const bottomEdge = cell => cell.edgeMap[2]
+const leftEdge = cell =>  cell.edgeMap[3]
+
+const getCellLeft = (matrix, rI, cI) => matrix[rI][cI - 1]
+const getCellRight = (matrix, rI, cI) => matrix[rI][cI + 1]
+const getCellAbove = (matrix, rI, cI) => matrix[rI - 1][cI]
+const getCellBelow = (matrix, rI, cI) => matrix[rI + 1][cI]
+
+const inBoundsX = (matrix, cI) => cI < matrix[0].length - 1
+const inBoundsY = (matrix, rI) => rI < matrix.length - 1
+
+const countMates = (geonset, glyphMap, width) => {
+  const reshaped = chunk(glyphMap, width)
+  const edges = reshaped.map(row => row.map(cell => geonset.geons[cell].edgeMap))
+  let acc = 0
+  edges.forEach((row, rowIndex) => row.forEach((cell, colIndex) => {
+    if (inBoundsX(edges, colIndex)) {
+      if (isMate(rightEdge(cell), getEdgeOfRight(edges, rowIndex, colIndex))) {
+        acc++
+      }
+    }
+    if (inBoundsY(edges, rowIndex)) {
+      if (isMate(bottomEdge(cell), getEdgeOfBelow(edges, rowIndex, colIndex))) {
+        acc++
+      }
+    }
+  }))
+  return acc
+}
+
+const numComparator = (a, b, key) => {
+  if (a[key] < b[key]) return -1
+  if (a[key] > b[key]) return 1
+  return 0
+}
+
+const concat = (arr, item) => arr.concat(item)
+
+const sort = (arr, comparator, key) => arr.sort((a, b) => comparator(a, b, key))
+
+const rotateArr = (a, n) => a.slice(n, a.length).concat(a.slice(0, n))
+
+const scan = m => {
+  return [
+       m[0][0], m[0][1], m[1][0], m[1][1],
+       m[0][2], m[0][3], m[1][2], m[1][3],
+       m[2][0], m[2][1], m[3][0], m[3][1],
+       m[2][2], m[2][3], m[3][2], m[3][3],
+  ]
+}
+
+const isEven = n => n % 2 === 0
+const isOdd = n => n % 2 !== 0
+
+
+const arrEq = (a, b) => a.length === b.length
+  ? a.every((v, i) => v === b[i])
+  : false
+
+const combinatoric = (method, geonset) => {
+  const all = method(geonset.readKeys(geonset), 4).toArray()
+
+  const withMateCount = all.map(geonmap => ({
+    geonmap,
+    mateCount: countMates(geonset, geonmap, 2),
+  }))
+
+  const sorted = sort(withMateCount, numComparator, 'mateCount').reverse()
+  return sorted
+}
+
+const graph = geonList => {
+  let graph = new Graph()
+
+  geonList.forEach((row, rI) => row.forEach((cell, cI) => graph.addNode(cell.index, {ref:cell})))
+
+  geonList.forEach((row, rI) => row.forEach((cell, cI) => {
+    if (inBoundsX(geonList, cI)) {
+      if (isMate(rightEdge(cell), getEdgeOfRight(geonList, rI, cI))) {
+        const properties = {
+          bond: rightEdge(cell),
+          dir: 'rightward',
+        }
+        graph.addEdge(cell.index, getCellRight(geonList, rI, cI).index, properties)
+      }
+    }
+    if (inBoundsY(geonList, rI)) {
+      if (isMate(bottomEdge(cell), getEdgeOfBelow(geonList, rI, cI))) {
+        const properties = {
+          bond: bottomEdge(cell),
+          dir: 'bottomward',
+        }
+        graph.addEdge(cell.index, getCellBelow(geonList, rI, cI).index, properties)
+      }
+    }
+  }))
+  return graph
+}
+
+const dedupe = mates => {
+  return mates.reduce((acc, mate) => {
+    if (!(mate.reverse() in acc)) {
+      return [...acc, mate]
+    }
+  }, [])
+}
+
+
+const subgraphs = graph => {
+
+}
+
+const palette = p => {
+  const charCodes = p.join('').split('').map(c => c.charCodeAt(0))
+
+  const xMax = 360;
+  const xMin = 0;
+
+  const yMax = 121;
+  const yMin = 97;
+
+  const inputY = charCodes[0]
+
+  const percent = (inputY - yMin) / (yMax - yMin)
+  const outputX = percent * (xMax - xMin) + xMin
+
+  // chroma.scale(['#4330FC','#2A4858'])
+  //   .mode('lch')
+  //   .colors(6)
+
+  return [
+    '#4330FC',
+    '#B1B1B1',
+    '#EB5757',
+  ]
+}
+
+const etch = (avatar, etchset) => {
+  // return avatar.geonList.map(geon => {
+  //   if (geon.name === 'coin') {
+  //     return () => etchset.dott({  })
+  //   } else {
+  //     return
+  //   }
+  // })
+
+}
+
+const quickHash = entropy => Math.random().toString(36).substr(2, entropy)
 
 
 export {
-  randomBinaryOfLength,
+  countMates,
   flatten,
   sequence,
-  filter,
-  factors,
-  thread,
-  through,
   chunk,
-  binDec,
-  binHex,
-  decBin,
-  decHex,
-  hexBin,
-  hexDec,
-  loadImage,
-  join,
-  split,
-  def,
-  callIfDef,
-  map,
-  abc,
-  match,
+  swap,
   randInt,
-  replace,
   end,
-  getPage,
-  numPages,
-  keys,
-  prop,
   compose,
+  sort,
+  prop,
+  set,
+  numComparator,
+  rotateArr,
+  scan,
+  isEven,
+  isOdd,
+  arrEq,
+  isObject,
+  isString,
+  isNumber,
+  isArray,
+  isFunction,
+  isNull,
+  isUndefined,
+  isBoolean,
+  isRegExp,
+  isError,
+  isDate,
+  isSymbol,
+  isDef,
+  values,
+  entries,
+  keys,
+  combinatoric,
+  endIdx,
+  length,
+  graph,
+  subgraphs,
+  dedupe,
+  palette,
+  etch,
+  quickHash,
 }

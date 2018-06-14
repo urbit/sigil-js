@@ -5,7 +5,7 @@ import { bigCombination, permutation, baseN } from 'js-combinatorics'
 import fileDownload from 'js-file-download'
 
 import { initCanvas } from './lib/lib.canvas'
-import { rectGrid } from './lib/lib.paper'
+import { rectGrid, group, pointText } from './lib/lib.paper'
 import { suffixes, prefixes, patp } from './lib/lib.urbit'
 import { base, baseState } from './lib/lib.firebase'
 import {
@@ -22,7 +22,7 @@ import {
   numComparator,
   rotateArr,
   objHasAnyPropInArr,
-  dePinwheel,
+  scan,
   isEven,
   isOdd,
   arrEq,
@@ -38,6 +38,7 @@ import {
 } from './lib/lib'
 
 import geonset from './geonsets/geonset_000'
+import sylmap from './sylmaps/sylmap_000.json'
 
 const constantAssignments = {
   'zod': [1, 2, 3, 4]
@@ -47,7 +48,7 @@ const constantAssignments = {
 const DB_GLYPHSET_KEY = 'a-v002'
 
 
-class Gen extends Component {
+class Sel extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -55,11 +56,17 @@ class Gen extends Component {
       debug: false,
       all: [],
       currentIndex: 0,
+      mode: 'syl',
+      sylmap: sylmap,
     }
   }
 
   componentDidMount = () => {
-    const { ctx, canvas } = initCanvas(this.sel_canvas, {x:600, y:600})
+    const size = {
+      x: window.innerWidth - 64,
+      y: 6512,
+    }
+    const { ctx, canvas } = initCanvas(this.sel_canvas, size)
     paper.setup(canvas)
     // const dupes = this.checkDupes(sylmap)
     // console.log(dupes)
@@ -74,73 +81,120 @@ class Gen extends Component {
     this.setState({ didInit: true })
   }
 
-  // getGlyphset = () => {
-  //   base.fetch(DB_GLYPHSET_KEY, {
-  //     context: this,
-  //     asArray: true
-  //   }).then(data => {
-  //     const dataWithLookup = {}
-  //     values(data).forEach((val, index) => {
-  //       const key = [...prefixes, ...suffixes][index]
-  //        dataWithLookup[key] = val.glyph
-  //     })
-  //     this.setState({ sylset: dataWithLookup })
-  //   }).catch(err => {
-  //     console.error(err)
-  //   })
-  // }
-  //
-  // pushGlyph = glyph => {
-  //   base.push(DB_GLYPHSET_KEY, {
-  //     data: { glyph }
-  //   }).then(() => {
-  //     console.log(glyph)
-  //     this.getGlyphset(DB_GLYPHSET_KEY)
-  //   }).catch(err => {
-  //     console.error(err)
-  //   })
-  // }
-
-
   draw = () => {
     paper.project.clear()
 
-    const { all, currentIndex } = this.state
-    const geonMap = all[currentIndex]
+    const geonsetLabel = pointText({
+      fillColor: 'white',
+      content: `geonset: ${geonset.name}`,
+      fontSize: 12,
+      position: {x: 120, y: 20},
+    })
 
-    if (isDef(geonMap)) this.drawGlyph(geonset, geonMap)
+    const sylsetLabel = pointText({
+      fillColor: 'white',
+      content: `sylmap: ${sylmap.name}`,
+      fontSize: 12,
+      position: {x: 256, y: 20},
+    })
+
+    const { all, currentIndex } = this.state
+    const geonmap = all[currentIndex]
+
+    if (isDef(geonmap) && this.state.mode === 'one') {
+      this.drawOneGlyph(sylmap, geonset, geonmap.geonmap)
+    }
+
+    if (this.state.mode === 'syl') {
+      this.drawAllGlyphs(sylmap, geonset)
+    }
+
+    if (this.state.mode === 'geon') {
+      this.drawAllGeons(geonset)
+    }
 
     paper.view.draw()
   }
 
+  drawAllGlyphs = (sylmap, geonset) => {
 
-
-
-  drawGlyph = (geonset, geonMap) => {
-
-    const grid = geonset.geonGrid()
-
-    const glyphRefs = geonMap.glyph.map((geonRef, geonIndex) => {
-      const params = {
-        fillColor: '#fff',
-        selected: this.state.debug,
-        insert: true,
-      }
-      const glyphRef = geonset.glyphs[geonRef].insert(params)
-      return glyphRef
+    const geonGrid = geonset.geonGrid()
+    const allGrid = rectGrid({ x:96, y:96 }, { x:96, y:96 }, { x:8, y:64 }, true)
+    const params = {
+      fillColor: '#fff',
+      selected: this.state.debug,
+      insert: true,
+    }
+    // render, change position and group
+    const allGlyphRefs = entries(sylmap.sylmap).map(([key, val], index) => {
+      const geonRefs = this.insertGlyph(geonset, val.geonmap, params)
+      const label = pointText({ fillColor: 'white', content: `${index+1} : ${key}`, fontSize: 48 })
+      const newGeonRefs = geonRefs.map((geon, index) => {
+        geon.position = geonGrid[index]
+        return geon
+      })
+      return group([...newGeonRefs, label])
     })
+
+    const newAllGlyphRefs = allGlyphRefs.map((glyphGroup, index) => {
+      glyphGroup.scaling = 0.25
+      glyphGroup.position = allGrid[index]
+    })
+    // const glyphRefs = this.insertGlyph(geonset, geonMap, params)
+    //
+    // // map to grid
+    // const newSylRefs = glyphRefs.map((geon, index) => {
+    //   geon.position = grid[index]
+    // })
+  }
+
+  drawOneGlyph = (sylmap, geonset, geonmap) => {
+    const grid = geonset.geonGrid()
+    const params = {
+      fillColor: '#fff',
+      selected: this.state.debug,
+      insert: true,
+    }
+
+    // const label = pointText({ fillColor: 'white', content: `${index+1} : ${key}`, fontSize: 48 })
+    const glyphRefs = this.insertGlyph(geonset, geonmap, params)
+
     // map to grid
     const newSylRefs = glyphRefs.map((geon, index) => {
       geon.position = grid[index]
     })
+    return newSylRefs
   }
 
+  drawAllGeons = geonset => {
+    const allGrid = rectGrid({ x:96, y:96 }, { x:96, y:96 }, { x:8, y:64 }, true)
+    const params = {
+      fillColor: '#fff',
+      selected: this.state.debug,
+      insert: true,
+    }
+
+    const allGeonRefs = entries(geonset.geons).map(([key, val], index) => {
+      const label = pointText({ fillColor: 'white', content: `${key} - ${val.name}`, fontSize: 24 })
+      const ref = val.insert(params)
+      return group([ref, label])
+    })
+
+    const newGeonRefs = allGeonRefs.map((geon, index) => {
+      geon.scaling = 0.5
+      geon.position = allGrid[index]
+    })
+
+  }
+
+  insertGlyph = (geonset, geonmap, params) => {
+    return geonmap.map(ref => geonset.geons[ref].insert(params))
+  }
 
   exportSVG = () => {
     const data = paper.project.exportSVG({asString: true})
     fileDownload(data, 'avatar.svg')
   }
-
 
   thisPage = index => this.setState({ currentIndex: index })
 
@@ -168,15 +222,20 @@ class Gen extends Component {
     return (
       <div>
         <nav>
-          <h2>Sel</h2>
           <span>
-            <Button
-              onClick={ () => this.toggleDebug() }
-              title={'debug'}
-              id={true}
-              keySelectedInPanel={this.state.debug} />
-            </span>
-
+          <button
+            onClick={ () => this.setState({ mode: 'syl'}) }>
+            {'Render Sylmap'}
+          </button>
+          <button
+            onClick={ () => this.setState({ mode: 'one'}) }>
+            {'Render Single'}
+          </button>
+          <button
+            onClick={ () => this.setState({ mode: 'geon'}) }>
+            {'Render Geonset'}
+          </button>
+          </span>
           <span>
             <button onClick={() => this.exportSVG()}>{'export SVG'}</button>
             <button
@@ -234,4 +293,4 @@ const Button = ({ keySelectedInPanel, title, onClick, id }) => {
 
 
 
-export default Gen
+export default Sel

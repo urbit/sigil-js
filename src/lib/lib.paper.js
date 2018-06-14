@@ -9,6 +9,7 @@ import {
   Size,
   Arc,
   CompoundPath,
+  PointText,
 } from 'paper'
 
 import {
@@ -39,6 +40,8 @@ const pathArc = (...params) => new Path.Arc(...params)
 
 const compoundPath = (...params) => new CompoundPath(...params)
 
+const pointText = (...params) => new PointText(...params)
+
 const path = (...params) => new Path(...params)
 
 const opPipe = arr => op => arr.reduce((acc, item) => acc[op](item), end(arr))
@@ -66,6 +69,7 @@ export {
   pathArc,
   compoundPath,
   path,
+  pointText,
   rectGrid,
   opPipe,
 }

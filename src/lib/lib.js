@@ -1,3 +1,6 @@
+import Graph from 'graphology'
+import chroma from 'chroma-js'
+
 const isObject = any => any && typeof any === 'object' && any.constructor === Object
 
 const isString = any => typeof any === 'string' || any instanceof String
@@ -34,6 +37,7 @@ const fromRight = arr => i => arr.slice(0, i)
 
 const fromLeft = arr => i => arr.reverse().slice(0, i).reverse()
 
+// does not work on arrays of integers
 const flatten = ([x, ...xs]) => x
   ? Array.isArray(x)
     ? [...flatten(x), ...flatten(xs)]
@@ -46,6 +50,10 @@ const chunk = (arr, mod) => arr.reduce((acc, a, i) => {
   acc[offset].push(a)
   return acc
 }, [])
+
+const swap = (x, y, [...xs]) => xs.length > 1
+ ? ([xs[x], xs[y]] = [xs[y], xs[x]], xs)
+ : xs;
 
 const avg = arr => arr.reduce((a,b) => a + b, 0) / arr.length
 
@@ -65,9 +73,7 @@ const values = obj => Object.values(obj)
 
 const prop = (key, obj) => obj[key]
 
-const getCellBelow = (matrix, row, col) => matrix[row + 1][col]
-
-const getCellRight = (matrix, row, col) => matrix[row][col + 1]
+const set = (key, obj, value) => obj[key] = value
 
 const getEdgeOfBelow = (matrix, r, c) => topEdge(getCellBelow(matrix, r, c))
 
@@ -83,17 +89,22 @@ const isMate = (a, b) => {
   }
 }
 
-const topEdge = cell => cell[0]
-const rightEdge = cell => cell[1]
-const bottomEdge = cell => cell[2]
-const leftEdge = cell => cell[3]
+const topEdge = cell => cell.edgeMap[0]
+const rightEdge = cell => cell.edgeMap[1]
+const bottomEdge = cell => cell.edgeMap[2]
+const leftEdge = cell =>  cell.edgeMap[3]
 
-const inBoundsX = (matrix, col) => col < matrix[0].length - 1
-const inBoundsY = (matrix, row) => row < matrix.length - 1
+const getCellLeft = (matrix, rI, cI) => matrix[rI][cI - 1]
+const getCellRight = (matrix, rI, cI) => matrix[rI][cI + 1]
+const getCellAbove = (matrix, rI, cI) => matrix[rI - 1][cI]
+const getCellBelow = (matrix, rI, cI) => matrix[rI + 1][cI]
 
-const countMates = (glyphset, glyphMap, width) => {
+const inBoundsX = (matrix, cI) => cI < matrix[0].length - 1
+const inBoundsY = (matrix, rI) => rI < matrix.length - 1
+
+const countMates = (geonset, glyphMap, width) => {
   const reshaped = chunk(glyphMap, width)
-  const edges = reshaped.map(row => row.map(cell => glyphset.glyphs[cell].edgeMap))
+  const edges = reshaped.map(row => row.map(cell => geonset.geons[cell].edgeMap))
   let acc = 0
   edges.forEach((row, rowIndex) => row.forEach((cell, colIndex) => {
     if (inBoundsX(edges, colIndex)) {
@@ -122,12 +133,14 @@ const sort = (arr, comparator, key) => arr.sort((a, b) => comparator(a, b, key))
 
 const rotateArr = (a, n) => a.slice(n, a.length).concat(a.slice(0, n))
 
-const dePinwheel = m => ([
-     m[0][0], m[0][1], m[1][0], m[1][1],
-     m[0][2], m[0][3], m[1][2], m[1][3],
-     m[2][0], m[2][1], m[3][0], m[3][1],
-     m[2][2], m[2][3], m[3][2], m[3][3],
-])
+const scan = m => {
+  return [
+       m[0][0], m[0][1], m[1][0], m[1][1],
+       m[0][2], m[0][3], m[1][2], m[1][3],
+       m[2][0], m[2][1], m[3][0], m[3][1],
+       m[2][2], m[2][3], m[3][2], m[3][3],
+  ]
+}
 
 const isEven = n => n % 2 === 0
 const isOdd = n => n % 2 !== 0
@@ -140,15 +153,93 @@ const arrEq = (a, b) => a.length === b.length
 const combinatoric = (method, geonset) => {
   const all = method(geonset.readKeys(geonset), 4).toArray()
 
-  const withMateCount = all.map(glyph => ({
-    glyph,
-    mateCount: countMates(geonset, glyph, 2),
+  const withMateCount = all.map(geonmap => ({
+    geonmap,
+    mateCount: countMates(geonset, geonmap, 2),
   }))
 
   const sorted = sort(withMateCount, numComparator, 'mateCount').reverse()
   return sorted
 }
 
+const graph = geonList => {
+  let graph = new Graph()
+
+  geonList.forEach((row, rI) => row.forEach((cell, cI) => graph.addNode(cell.index, {ref:cell})))
+
+  geonList.forEach((row, rI) => row.forEach((cell, cI) => {
+    if (inBoundsX(geonList, cI)) {
+      if (isMate(rightEdge(cell), getEdgeOfRight(geonList, rI, cI))) {
+        const properties = {
+          bond: rightEdge(cell),
+          dir: 'rightward',
+        }
+        graph.addEdge(cell.index, getCellRight(geonList, rI, cI).index, properties)
+      }
+    }
+    if (inBoundsY(geonList, rI)) {
+      if (isMate(bottomEdge(cell), getEdgeOfBelow(geonList, rI, cI))) {
+        const properties = {
+          bond: bottomEdge(cell),
+          dir: 'bottomward',
+        }
+        graph.addEdge(cell.index, getCellBelow(geonList, rI, cI).index, properties)
+      }
+    }
+  }))
+  return graph
+}
+
+const dedupe = mates => {
+  return mates.reduce((acc, mate) => {
+    if (!(mate.reverse() in acc)) {
+      return [...acc, mate]
+    }
+  }, [])
+}
+
+
+const subgraphs = graph => {
+
+}
+
+const palette = p => {
+  const charCodes = p.join('').split('').map(c => c.charCodeAt(0))
+
+  const xMax = 360;
+  const xMin = 0;
+
+  const yMax = 121;
+  const yMin = 97;
+
+  const inputY = charCodes[0]
+
+  const percent = (inputY - yMin) / (yMax - yMin)
+  const outputX = percent * (xMax - xMin) + xMin
+
+  // chroma.scale(['#4330FC','#2A4858'])
+  //   .mode('lch')
+  //   .colors(6)
+
+  return [
+    '#4330FC',
+    '#B1B1B1',
+    '#EB5757',
+  ]
+}
+
+const etch = (avatar, etchset) => {
+  // return avatar.geonList.map(geon => {
+  //   if (geon.name === 'coin') {
+  //     return () => etchset.dott({  })
+  //   } else {
+  //     return
+  //   }
+  // })
+
+}
+
+const quickHash = entropy => Math.random().toString(36).substr(2, entropy)
 
 
 export {
@@ -156,14 +247,16 @@ export {
   flatten,
   sequence,
   chunk,
+  swap,
   randInt,
   end,
   compose,
   sort,
   prop,
+  set,
   numComparator,
   rotateArr,
-  dePinwheel,
+  scan,
   isEven,
   isOdd,
   arrEq,
@@ -186,4 +279,10 @@ export {
   combinatoric,
   endIdx,
   length,
+  graph,
+  subgraphs,
+  dedupe,
+  palette,
+  etch,
+  quickHash,
 }

@@ -1,14 +1,17 @@
 import React, { Component } from 'react'
-// import chr from 'chroma-js'
+import chroma from 'chroma-js'
 import paper from 'paper'
 import { bigCombination, permutation, baseN } from 'js-combinatorics'
 import fileDownload from 'js-file-download'
+import { connectedComponents } from 'graphology-components'
 
 import { initCanvas } from './lib/lib.canvas'
-import { rectGrid } from './lib/lib.paper'
+import { rectGrid, pointText, group, pathRect } from './lib/lib.paper'
 import { suffixes, prefixes, patp } from './lib/lib.urbit'
 
 import geonset from './geonsets/geonset_000'
+import etchset from './etchsets/etchset_000'
+
 import sylmap from './sylmaps/sylmap_000.json'
 
 import {
@@ -22,23 +25,31 @@ import {
   compose,
   sort,
   prop,
+  set,
   numComparator,
   rotateArr,
   objHasAnyPropInArr,
-  dePinwheel,
+  scan,
   isEven,
   isOdd,
   arrEq,
   isObject,
+  isArray,
   isString,
   values,
   entries,
   keys,
+  swap,
+  graph,
+  subgraphs,
+  dedupe,
+  palette,
+  etch,
+  quickHash,
 } from './lib/lib'
 
 
 // import { base, baseState } from './lib/lib.firebase'
-
 
 class Gen extends Component {
   constructor(props) {
@@ -46,105 +57,121 @@ class Gen extends Component {
     this.state = {
       didInit: false,
       debug: false,
-      patpInput: '',
-      dupes: []
+      patpInput: 'ridlur-figbud',
+      dupes: [],
+      avatar: false,
     }
   }
 
   componentDidMount = () => {
+    const { ctx, canvas } = initCanvas(this.gen_canvas, { x:600, y:600 })
 
-    // const n = entries(sylmap).reduce((acc, [k, v]) => {
-    //   acc[k] = {
-    //     geonset: v,
-    //     mateCount: 0
-    //   }
-    //   return acc
-    // }, {})
-    //
-    // const updated = {
-    //   name: 'sylmap_002',
-    //   date: new Date(),
-    //   sylmap: {...n},
-    // }
-    //
-    // console.log(updated)
-    //
-    // this.exportJSON(updated, 'sylmap_002')
-
-
-    const { ctx, canvas } = initCanvas(this.gen_canvas, {x:600, y:600})
-    paper.setup(canvas)
-    // const dupes = this.checkDupes(sylmap)
     // paper is a globally scoped object and independant from the vDOM
+    paper.setup(canvas)
     this.setState({ didInit: true })
   }
 
 
-  draw = () => {
-    paper.view.draw()
-  }
-
-
-  drawGlyph = (geonset, sylmap, syllable) => {
-
-  }
-
-
-
-  drawAvatar = (geonset, sylmap, patp) => {
+  rend = avatar => {
     paper.project.clear()
-
-    if (isString(patp)) patp = patp.replace('~','').replace('-','').match(/.{1,3}/g)
 
     const grid = geonset.grid()
 
-    const sylRefs = patp.map((syllable, syllableIndex) => {
-      const geonmap = sylmap.sylmap[syllable].geonset
-      const glyphRefs = geonmap.map((geonRef, geonIndex) => {
-        const params = {
-          fillColor: '#fff',
-          selected: this.state.debug,
-          insert: true,
-        }
-        const glyphRef = geonset.glyphs[geonRef].insert(params)
-        return glyphRef
-      })
-      return glyphRefs
+    const bg = pathRect({from: [0,0], to: [600, 600], fillColor: avatar.palette[0]})
+
+    const refs = avatar.geonList.map((geonRef, geonIndex) => {
+
+      const params = {
+        fillColor: '#fff',
+        strokeColor: avatar.palette[0],
+        strokeWidth: 1,
+        selected: this.state.debug,
+        insert: true,
+      }
+
+      const glyphRef = geonRef.insert(params)
+
+      if (this.state.debug === true) {
+        const label = pointText({ fillColor: 'black', content: `idx:${geonIndex} / key:${geonRef.name}`, fontSize: 10 })
+        label.translate({x: 24, y: 64})
+        return group([glyphRef, label])
+      }
+
+      return group([glyphRef])
     })
 
-    // map to grid
-    const newSylRefs = dePinwheel(sylRefs).map((geon, index) => {
+    refs.map((geon, index) => {
       geon.position = grid[index]
     })
+
+    // avatar.etch.map()
 
     paper.view.draw()
   }
 
 
+  gen = (geonset, sylmap, p) => {
+    if (isString(p)) p = patp.arr(p)
+    // here is where @p validation could happen
+    // generate the geonset grid, a 2x2 arr of points
+    const geonsetGrid = geonset.grid()
+
+    // defaults
+    let avatar = {
+      patp: p,
+      glyphs: [],
+      geonList: [],
+      color: [],
+      // partition: [],
+      graph: null,
+    }
+
+    // turn quadrants into 1d array in correct order
+    set('geonList', avatar, scan(p.map(syl => {
+      return sylmap.sylmap[syl].geonmap.map(k => geonset.geons[k])
+    })))
+
+    // give each geon a set of new metadata
+    set('geonList', avatar, avatar.geonList.map((item, index) => {
+      return {
+        ...item,
+        hash: quickHash(4),
+        index,
+        ownOrigin: geonsetGrid[index]
+      }
+    }))
+
+    const avatar2dArr = chunk(avatar.geonList, 4)
+
+    // produce a graph representation of edgemates
+    set('graph', avatar, graph(avatar2dArr), geonset)
+
+    // produces subgraphs
+    set('subgraphs', avatar, connectedComponents(avatar.graph)
+      .map(sg => sg.map(idx => avatar.geonList[idx]))
+    )
+
+    // generates a deterministic color palette
+    set('palette', avatar, palette(p))
+
+    // matches parameterized etch templates to graph
+    set('etch', avatar, etch(avatar))
+    console.log(avatar.graph.export())
+    // paint(avatar)
+
+    return avatar
+  }
+
+
+  create = (geonset, sylmap, p) => {
+    const avatar = this.gen(geonset, sylmap, p)
+    console.log(avatar)
+    this.setState({ avatar })
+  }
 
   exportSVG = () => {
-    const data = paper.project.exportSVG({asString: true})
+    const data = paper.project.exportSVG({ asString: true })
     fileDownload(data, 'avatar.svg')
-  }
-
-  generateRandomSylmap = (geonset, syllables) => {
-
-    const combinations = this.combinatoric(permutation, geonset)
-
-    const newSylmap = syllables.reduce((acc, syllable) => {
-      const random = randInt(combinations.length - 1)
-      acc[syllable] = combinations[random]
-      return acc
-    }, {})
-
-    this.exportJSON(newSylmap, 'sylmap_')
-  }
-
-  combinatoric = (method, geonset) => {
-    const glyphs = prop('glyphs', geonset)
-    const iter = keys(glyphs)
-    const combinations = method(iter, 4).toArray()
-    return combinations
   }
 
   exportJSON = (data, filename) => {
@@ -153,46 +180,23 @@ class Gen extends Component {
 
   randomPatp = () => {
     const patpInput = patp.str(patp.random(4))
-    this.setState({ patpInput }, () => this.drawAvatar(geonset, sylmap, this.state.patpInput))
+    this.setState({ patpInput }, () => this.create(geonset, sylmap, patpInput))
   }
 
-  // checkDupes = sylmap => {
-  //   const geonmaps = values(sylmap)
-  //   console.log(geonmaps)
-  //   const dupes = geonmaps.geonmap.filter((geonmap, index, arr) => {
-  //     const dupeCount = geonmaps.geonmap.reduce((acc, item) => {
-  //       const test = arrEq(geonmaps.geonmap.glyph, item)
-  //       if (test === true) {
-  //         return acc + 1
-  //       }
-  //       return acc
-  //     }, 0)
-  //     return dupeCount > 1
-  //   })
-  //   return dupes
-  // }
-
   render = () => {
-    if (this.state.didInit) this.draw()
+    if (this.state.didInit && this.state.avatar !== false) {
+      this.rend(this.state.avatar)
+    }
     return (
       <div>
         <nav>
-          <h2>Gen</h2>
-          <span>
-            <Button
-              onClick={ () => this.toggleDebug() }
-              title={'debug'}
-              id={true}
-              keySelectedInPanel={this.state.debug} />
-            </span>
-
           <span>
             <button onClick={() => this.exportSVG()}>{'export SVG'}</button>
           </span>
 
           <input placeholder="@p" type="text" value={this.state.patpInput} onChange={e => this.setState({patpInput: e.target.value})} />
           <button
-            onClick={() => this.drawAvatar(geonset, sylmap, this.state.patpInput)}>
+            onClick={() => this.create(geonset, sylmap, this.state.patpInput)}>
             {'Generate'}
           </button>
           <button
@@ -208,13 +212,6 @@ class Gen extends Component {
       </div>
     )
   }
-}
-
-const Button = ({ keySelectedInPanel, title, onClick, id }) => {
-  const classes = keySelectedInPanel === id ? 'selected' : 'unselected'
-  return (
-    <button className={classes} onClick={onClick}>{title}</button>
-  )
 }
 
 

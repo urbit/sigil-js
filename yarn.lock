@@ -2636,6 +2636,10 @@ events@^1.0.0:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/events/-/events-1.1.1.tgz#9ebdb7635ad099c70dcc4c2a1f5004288e8bd924"
 
+events@~2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/events/-/events-2.0.0.tgz#cbbb56bf3ab1ac18d71c43bb32c86255062769f2"
+
 eventsource@0.1.6:
   version "0.1.6"
   resolved "https://registry.yarnpkg.com/eventsource/-/eventsource-0.1.6.tgz#0acede849ed7dd1ccc32c811bb11b944d4f29232"
@@ -3235,6 +3239,27 @@ got@^6.7.1:
 graceful-fs@^4.1.11, graceful-fs@^4.1.2, graceful-fs@^4.1.6, graceful-fs@^4.1.9:
   version "4.1.11"
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.1.11.tgz#0e8bdfe4d1ddb8854d64e04ea7c00e2a026e5658"
+
+graph-data-structure@^1.8.0:
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/graph-data-structure/-/graph-data-structure-1.8.0.tgz#193b7686a21398c70680cd7d53d80af8f1fe271b"
+
+graphology-components@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/graphology-components/-/graphology-components-0.1.0.tgz#3c1789a654c635907da965ba8ad634284db528a3"
+  dependencies:
+    graphology-utils "^1.1.1"
+
+graphology-utils@^1.1.1:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/graphology-utils/-/graphology-utils-1.3.0.tgz#b5b8a0a308455270ffab2637a3a605e8811f538b"
+
+graphology@^0.11.4:
+  version "0.11.4"
+  resolved "https://registry.yarnpkg.com/graphology/-/graphology-0.11.4.tgz#edea71c6e2062d0a6d788017868e0616added0a8"
+  dependencies:
+    events "~2.0.0"
+    obliterator "~1.3.0"
 
 growl@1.10.3:
   version "1.10.3"
@@ -5086,6 +5111,10 @@ object.pick@^1.3.0:
   resolved "https://registry.yarnpkg.com/object.pick/-/object.pick-1.3.0.tgz#87a10ac4c1694bd2e1cbf53591a66141fb5dd747"
   dependencies:
     isobject "^3.0.1"
+
+obliterator@~1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/obliterator/-/obliterator-1.3.0.tgz#54cbf790f2403b5c23bf562fbe5606f19b2721c8"
 
 obuf@^1.0.0, obuf@^1.1.1:
   version "1.1.2"

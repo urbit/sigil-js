@@ -46,16 +46,6 @@ const geons = {
   ],
 }
 
-
-// const mates = {
-//   // fulll
-//   a: [e.full],
-//   // nonee
-//   b: [e.none],
-//   // backf
-//   c: ['c', e.full],
-// }
-
 // edge types
 const e = {
   full: 'full',
@@ -63,26 +53,17 @@ const e = {
   none: 'none',
   half_top: 'half_top',
   half_bottom: 'half_bottom',
-  half_left: 'half_left',
+  half_left: 'half_leftå',
   half_right: 'half_right',
 }
 
-// const rank = {
-//   half: [
-//     []
-//   ],
-//   full: [
-//
-//   ]
-//   none: [
-//
-//   ]
-// }
-
-const glyphset = {
-  glyphs: {
+const geonset = {
+  name: 'geonset_000',
+  geons: {
     // circle
     0: {
+      name: 'coin',
+      ownKey: 0,
       insert: params => {
         return path({
           pathData: geons.coin,
@@ -93,6 +74,8 @@ const glyphset = {
     },
     // Quarter Circle, 0deg
     1: {
+      name: 'qoin',
+      ownKey: 1,
       insert: params => {
         return path({
           pathData: geons.qoin,
@@ -103,6 +86,8 @@ const glyphset = {
     },
     // Quarter Circle, 90deg
     2: {
+      name: 'qoin',
+      ownKey: 2,
       insert: params => {
         const p = path({
           pathData: geons.qoin,
@@ -115,6 +100,8 @@ const glyphset = {
     },
     // Quarter Circle, 180deg
     3: {
+      name: 'qoin',
+      ownKey: 3,
       insert: params => {
         const p = path({
           pathData: geons.qoin,
@@ -127,6 +114,8 @@ const glyphset = {
     },
     // Quarter Circle, 270deg
     4: {
+      name: 'qoin',
+      ownKey: 4,
       insert: params => {
         const p = path({
           pathData: geons.qoin,
@@ -139,6 +128,8 @@ const glyphset = {
     },
     // square
     5: {
+      name: 'blok',
+      ownKey: 5,
       insert: params => {
         const p = path({
           pathData: geons.blok,
@@ -151,6 +142,8 @@ const glyphset = {
     },
     // toomstone, 0deg
     6: {
+      name: 'toom',
+      ownKey: 6,
       insert: params => {
         return path({
           pathData: geons.toom,
@@ -161,6 +154,8 @@ const glyphset = {
     },
     // toomstone, 90deg
     7: {
+      name: 'toom',
+      ownKey: 7,
       insert: params => {
         const p = path({
           pathData: geons.toom,
@@ -173,6 +168,8 @@ const glyphset = {
     },
     // toomstone, 180deg
     8: {
+      name: 'toom',
+      ownKey: 8,
       insert: params => {
         const p = path({
           pathData: geons.toom,
@@ -185,6 +182,8 @@ const glyphset = {
     },
     // toomstone, 270deg
     9: {
+      name: 'toom',
+      ownKey: 9,
       insert: params => {
         const p = path({
           pathData: geons.toom,
@@ -197,6 +196,8 @@ const glyphset = {
     },
     // leef, 0deg
     10: {
+      name: 'leef',
+      ownKey: 10,
       insert: params => {
         return path({
           pathData: geons.leef,
@@ -207,6 +208,8 @@ const glyphset = {
     },
     // leef, 90deg
     11: {
+      name: 'leef',
+      ownKey: 11,
       insert: params => {
         const p = path({
           pathData: geons.leef,
@@ -219,6 +222,8 @@ const glyphset = {
     },
     // grap, 0deg
     12: {
+      name: 'grap',
+      ownKey: 12,
       insert: params => {
         return compoundPath({
           children: geons.grap.map(p => path(p)),
@@ -241,6 +246,8 @@ const glyphset = {
     // },
     // teer, 0deg
     14: {
+      name: 'teer',
+      ownKey: 14,
       insert: params => {
         return path({
           pathData: geons.teer,
@@ -251,6 +258,8 @@ const glyphset = {
     },
     // teer, 90deg
     15: {
+      name: 'teer',
+      ownKey: 15,
       insert: params => {
         const p = path({
           pathData: geons.teer,
@@ -263,6 +272,8 @@ const glyphset = {
     },
     // teer, 180deg
     16: {
+      name: 'teer',
+      ownKey: 16,
       insert: params => {
         const p = path({
           pathData: geons.teer,
@@ -275,6 +286,8 @@ const glyphset = {
     },
     // teer, 270deg
     17: {
+      name: 'teer',
+      ownKey: 17,
       insert: params => {
         const p = path({
           pathData: geons.teer,
@@ -311,6 +324,8 @@ const glyphset = {
     // },
     // bugg 0deg
     20: {
+      name: 'bugg',
+      ownKey: 20,
       insert: params => {
         const p = compoundPath({
           children: geons.bugg.map(p => path(p)),
@@ -323,6 +338,8 @@ const glyphset = {
     },
     // bugg 90deg
     21: {
+      name: 'bugg',
+      ownKey: 21,
       insert: params => {
         const p = compoundPath({
           children: geons.bugg.map(p => path(p)),
@@ -335,6 +352,8 @@ const glyphset = {
     },
     // bugg 180deg
     22: {
+      name: 'bugg',
+      ownKey: 22,
       insert: params => {
         const p = compoundPath({
           children: geons.bugg.map(p => path(p)),
@@ -347,6 +366,8 @@ const glyphset = {
     },
     // bugg 270deg
     23: {
+      name: 'bugg',
+      ownKey: 23,
       insert: params => {
         const p = compoundPath({
           children: geons.bugg.map(p => path(p)),
@@ -360,7 +381,7 @@ const glyphset = {
   },
   grid: () => rectGrid({ x:96, y:96 }, { x:128, y:128 }, { x:4, y:4 }, true),
   geonGrid: () => rectGrid({ x:96, y:96 }, { x:128, y:128 }, { x:2, y:2 }, true),
-  readKeys: geonset => keys(prop('glyphs', geonset)),
+  readKeys: geonset => keys(prop('geons', geonset)),
 }
 
-export default glyphset
+export default geonset

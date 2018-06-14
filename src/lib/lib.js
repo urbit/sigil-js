@@ -222,7 +222,7 @@ const palette = p => {
   //   .colors(6)
 
   return [
-    '#4330FC',
+    '#000',
     '#B1B1B1',
     '#EB5757',
   ]

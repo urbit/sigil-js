@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 
 import Sel from './Sel'
 import Gen from './Gen'
+import AvatarGenerator from './AvatarGenerator'
 
 class App extends Component {
   constructor(props) {
@@ -10,6 +11,7 @@ class App extends Component {
       route: 'gen',
     }
   }
+
   render() {
     let route
     if (this.state.route === 'gen') {
@@ -17,7 +19,7 @@ class App extends Component {
     } else if (this.state.route === 'sel') {
       route = <Sel />
     } else {
-
+      route = <AvatarGenerator patps={['~lashex-lonres', '~tipmyr-minsyr']} />
     }
     return (
       <div className="App">
@@ -25,6 +27,8 @@ class App extends Component {
         <span>
           <button onClick={() => this.setState({route: 'gen'})}>{'generate'}</button>
           <button onClick={() => this.setState({route: 'sel'})}>{'select'}</button>
+          <button onClick={() => this.setState({route: 'agen'})}>{'avatar generator'}</button>
+
         </span>
       </nav>
         { route }

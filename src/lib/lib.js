@@ -1,4 +1,6 @@
 import Graph from 'graphology'
+import { connectedComponents } from 'graphology-components'
+
 import chroma from 'chroma-js'
 
 const isObject = any => any && typeof any === 'object' && any.constructor === Object
@@ -164,9 +166,9 @@ const combinatoric = (method, geonset) => {
 
 const graph = geonList => {
   let graph = new Graph()
-
-  geonList.forEach((row, rI) => row.forEach((cell, cI) => graph.addNode(cell.index, {ref:cell})))
-
+  // create nodes
+  geonList.forEach((row, rI) => row.forEach((cell, cI) => graph.addNode(cell.index, { ref:cell })))
+  // create edges
   geonList.forEach((row, rI) => row.forEach((cell, cI) => {
     if (inBoundsX(geonList, cI)) {
       if (isMate(rightEdge(cell), getEdgeOfRight(geonList, rI, cI))) {
@@ -198,11 +200,6 @@ const dedupe = mates => {
   }, [])
 }
 
-
-const subgraphs = graph => {
-
-}
-
 const palette = p => {
   const charCodes = p.join('').split('').map(c => c.charCodeAt(0))
 
@@ -222,24 +219,69 @@ const palette = p => {
   //   .colors(6)
 
   return [
-    '#000',
+    '#4735F5',
     '#B1B1B1',
     '#EB5757',
   ]
 }
 
 const etch = (avatar, etchset) => {
-  // return avatar.geonList.map(geon => {
-  //   if (geon.name === 'coin') {
-  //     return () => etchset.dott({  })
-  //   } else {
-  //     return
-  //   }
+
+  // const validSites = avatar.subgraphs.filter(graph => {
+  //   const isMatch =
+  //   return isMatch === true
   // })
 
+  const etchProfile = {
+    hule: {
+      members: [
+        {
+          offset: 64,
+        },
+        {
+          offset: 128 + 32,
+        },
+      ]
+    },
+    dott: {
+      members: [
+        {
+          target: 2,
+          radius: 16,
+          // halo: (target, radius) => noop(),
+        },
+        {
+          target: 8,
+          radius: 32,
+          // halo: (target, radius) => noop(),
+        },
+      ]
+    },
+  }
+
+  // makes pre-filled functions for renderer
+  const prefill = entries(etchProfile).map(([k, v]) => {
+    return v.members.map(params => {
+      return () => etchset.etches[k].insert(params)
+    })
+  })
+
+  return prefill
 }
 
 const quickHash = entropy => Math.random().toString(36).substr(2, entropy)
+
+const subgraphs = avatar => {
+  const sgs = connectedComponents(avatar.graph)
+    .map(sg => {
+      let graph = new Graph()
+      console.log(sg)
+      return sg.forEach(idx => graph.addNode(idx))
+
+  })
+  return sgs
+}
+
 
 
 export {

@@ -3,10 +3,10 @@ import chroma from 'chroma-js'
 import paper from 'paper'
 import { bigCombination, permutation, baseN } from 'js-combinatorics'
 import fileDownload from 'js-file-download'
-import { connectedComponents } from 'graphology-components'
+import Graph from 'graphology'
 
 import { initCanvas } from './lib/lib.canvas'
-import { rectGrid, pointText, group, pathRect } from './lib/lib.paper'
+import { rectGrid, pointText, group, pathRect, pathCircle } from './lib/lib.paper'
 import { suffixes, prefixes, patp } from './lib/lib.urbit'
 
 import geonset from './geonsets/geonset_000'
@@ -50,6 +50,7 @@ import {
 
 
 // import { base, baseState } from './lib/lib.firebase'
+const SIZE = 600
 
 class Gen extends Component {
   constructor(props) {
@@ -64,9 +65,7 @@ class Gen extends Component {
   }
 
   componentDidMount = () => {
-    const { ctx, canvas } = initCanvas(this.gen_canvas, { x:600, y:600 })
-
-    // paper is a globally scoped object and independant from the vDOM
+    const { ctx, canvas } = initCanvas(this.gen_canvas, { x:SIZE, y:SIZE })
     paper.setup(canvas)
     this.setState({ didInit: true })
   }
@@ -77,14 +76,14 @@ class Gen extends Component {
 
     const grid = geonset.grid()
 
-    const bg = pathRect({from: [0,0], to: [600, 600], fillColor: avatar.palette[0]})
+    const bg = pathRect({from: [0,0], to: [SIZE, SIZE], fillColor: avatar.palette[0]})
 
     const refs = avatar.geonList.map((geonRef, geonIndex) => {
 
       const params = {
         fillColor: '#fff',
         strokeColor: avatar.palette[0],
-        strokeWidth: 1,
+        strokeWidth: 0,
         selected: this.state.debug,
         insert: true,
       }
@@ -92,8 +91,11 @@ class Gen extends Component {
       const glyphRef = geonRef.insert(params)
 
       if (this.state.debug === true) {
-        const label = pointText({ fillColor: 'black', content: `idx:${geonIndex} / key:${geonRef.name}`, fontSize: 10 })
-        label.translate({x: 24, y: 64})
+        const label = pointText({ fillColor: '#239CE8', content: `idx:${geonIndex} / key:${geonRef.name}`, fontSize: 10 })
+        label.translate({x: 24, y: 256})
+
+        etchset.grid().map(point => pathCircle({center: point, radius: 2, fillColor: 'red'}))
+
         return group([glyphRef, label])
       }
 
@@ -104,7 +106,7 @@ class Gen extends Component {
       geon.position = grid[index]
     })
 
-    // avatar.etch.map()
+    const etchRefs = avatar.etch.map(members => members.map(insert => insert()))
 
     paper.view.draw()
   }
@@ -125,6 +127,8 @@ class Gen extends Component {
       // partition: [],
       graph: null,
     }
+
+    set('charCodes', avatar, p.join('').split('').map(c => c.charCodeAt(0)))
 
     // turn quadrants into 1d array in correct order
     set('geonList', avatar, scan(p.map(syl => {
@@ -147,25 +151,27 @@ class Gen extends Component {
     set('graph', avatar, graph(avatar2dArr), geonset)
 
     // produces subgraphs
-    set('subgraphs', avatar, connectedComponents(avatar.graph)
-      .map(sg => sg.map(idx => avatar.geonList[idx]))
-    )
+    // set('subgraphs', avatar, connectedComponents(avatar.graph)
+    //   .map(sg => sg.map(idx => avatar.geonList[idx]))
+    // )
+
+    // this was hard
+    set('subgraphs', avatar, subgraphs(avatar))
 
     // generates a deterministic color palette
     set('palette', avatar, palette(p))
 
     // matches parameterized etch templates to graph
-    set('etch', avatar, etch(avatar))
-    console.log(avatar.graph.export())
+    set('etch', avatar, etch(avatar, etchset))
+    // console.log(avatar.graph.export())
     // paint(avatar)
-
+    console.log(avatar.subgraphs)
     return avatar
   }
 
 
   create = (geonset, sylmap, p) => {
     const avatar = this.gen(geonset, sylmap, p)
-    console.log(avatar)
     this.setState({ avatar })
   }
 

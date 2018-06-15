@@ -77,9 +77,9 @@ const prop = (key, obj) => obj[key]
 
 const set = (key, obj, value) => obj[key] = value
 
-const getEdgeOfBelow = (matrix, r, c) => topEdge(getCellBelow(matrix, r, c))
+const getEdgeOfBelow = (matrix, r, c) => getTopEdge(getCellBelow(matrix, r, c))
 
-const getEdgeOfRight = (matrix, r, c) => leftEdge(getCellRight(matrix, r, c))
+const getEdgeOfRight = (matrix, r, c) => getLeftEdge(getCellRight(matrix, r, c))
 
 const isMate = (a, b) => {
   if (a === b) {
@@ -91,31 +91,31 @@ const isMate = (a, b) => {
   }
 }
 
-const topEdge = cell => cell.edgeMap[0]
-const rightEdge = cell => cell.edgeMap[1]
-const bottomEdge = cell => cell.edgeMap[2]
-const leftEdge = cell =>  cell.edgeMap[3]
+const getTopEdge = cell => cell.edgeMap[0]
+const getRightEdge = cell => cell.edgeMap[1]
+const getBottomEdge = cell => cell.edgeMap[2]
+const getLeftEdge = cell =>  cell.edgeMap[3]
 
 const getCellLeft = (matrix, rI, cI) => matrix[rI][cI - 1]
 const getCellRight = (matrix, rI, cI) => matrix[rI][cI + 1]
 const getCellAbove = (matrix, rI, cI) => matrix[rI - 1][cI]
 const getCellBelow = (matrix, rI, cI) => matrix[rI + 1][cI]
 
-const inBoundsX = (matrix, cI) => cI < matrix[0].length - 1
-const inBoundsY = (matrix, rI) => rI < matrix.length - 1
+const isInBoundsX = (matrix, cI) => cI < matrix[0].length - 1
+const isInBoundsY = (matrix, rI) => rI < matrix.length - 1
 
 const countMates = (geonset, glyphMap, width) => {
   const reshaped = chunk(glyphMap, width)
   const edges = reshaped.map(row => row.map(cell => geonset.geons[cell].edgeMap))
   let acc = 0
   edges.forEach((row, rowIndex) => row.forEach((cell, colIndex) => {
-    if (inBoundsX(edges, colIndex)) {
-      if (isMate(rightEdge(cell), getEdgeOfRight(edges, rowIndex, colIndex))) {
+    if (isInBoundsX(edges, colIndex)) {
+      if (isMate(getRightEdge(cell), getEdgeOfRight(edges, rowIndex, colIndex))) {
         acc++
       }
     }
-    if (inBoundsY(edges, rowIndex)) {
-      if (isMate(bottomEdge(cell), getEdgeOfBelow(edges, rowIndex, colIndex))) {
+    if (isInBoundsY(edges, rowIndex)) {
+      if (isMate(getBottomEdge(cell), getEdgeOfBelow(edges, rowIndex, colIndex))) {
         acc++
       }
     }
@@ -170,24 +170,43 @@ const graph = geonList => {
   geonList.forEach((row, rI) => row.forEach((cell, cI) => graph.addNode(cell.index, { ref:cell })))
   // create edges
   geonList.forEach((row, rI) => row.forEach((cell, cI) => {
-    if (inBoundsX(geonList, cI)) {
-      if (isMate(rightEdge(cell), getEdgeOfRight(geonList, rI, cI))) {
+
+    if (isInBoundsX(geonList, cI)) {
+      const edgeOfRight = getEdgeOfRight(geonList, rI, cI)
+      const rightEdge = getRightEdge(cell)
+      if (isMate(rightEdge, edgeOfRight)) {
+        const cellRight = getCellRight(geonList, rI, cI)
         const properties = {
-          bond: rightEdge(cell),
+          bond: rightEdge,
           dir: 'rightward',
         }
-        graph.addEdge(cell.index, getCellRight(geonList, rI, cI).index, properties)
+        graph.addUndirectedEdgeWithKey(
+          `${cell.index}-${cellRight.index}`,
+          cell.index,
+          cellRight.index,
+          properties
+        )
       }
     }
-    if (inBoundsY(geonList, rI)) {
-      if (isMate(bottomEdge(cell), getEdgeOfBelow(geonList, rI, cI))) {
+
+    if (isInBoundsY(geonList, rI)) {
+      const edgeOfRight = getEdgeOfBelow(geonList, rI, cI)
+      const bottomEdge = getBottomEdge(cell)
+      if (isMate(bottomEdge, edgeOfRight)) {
+        const cellBelow = getCellBelow(geonList, rI, cI)
         const properties = {
-          bond: bottomEdge(cell),
+          bond: bottomEdge,
           dir: 'bottomward',
         }
-        graph.addEdge(cell.index, getCellBelow(geonList, rI, cI).index, properties)
+        graph.addUndirectedEdgeWithKey(
+          `${cell.index}-${cellBelow.index}`,
+          cell.index,
+          cellBelow.index,
+          properties
+        )
       }
     }
+
   }))
   return graph
 }
@@ -272,11 +291,18 @@ const etch = (avatar, etchset) => {
 const quickHash = entropy => Math.random().toString(36).substr(2, entropy)
 
 const subgraphs = avatar => {
-  const sgs = connectedComponents(avatar.graph)
-    .map(sg => {
+  console.log(avatar.graph.edges())
+  const sgs = connectedComponents(avatar.graph).map(sg => {
       let graph = new Graph()
-      console.log(sg)
-      return sg.forEach(idx => graph.addNode(idx))
+      const nodes = sg.forEach(idx => {
+        graph.addNode(`${idx}`, {...avatar.graph.getNodeAttributes(idx)})
+      })
+      const edges = sg.forEach(idx => {
+
+
+      })
+
+      return nodes
 
   })
   return sgs

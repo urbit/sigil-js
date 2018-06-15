@@ -64,7 +64,7 @@ class Gen extends Component {
     }
   }
 
-  componentDidMount = () => {
+  componentDidMount(){
     const { ctx, canvas } = initCanvas(this.gen_canvas, { x:SIZE, y:SIZE })
     paper.setup(canvas)
     this.setState({ didInit: true })
@@ -126,6 +126,7 @@ class Gen extends Component {
       color: [],
       // partition: [],
       graph: null,
+      renderList: [],
     }
 
     set('charCodes', avatar, p.join('').split('').map(c => c.charCodeAt(0)))

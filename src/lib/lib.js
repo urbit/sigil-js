@@ -1,5 +1,7 @@
 import Graph from 'graphology'
 import { connectedComponents } from 'graphology-components'
+import _ from 'lodash'
+
 
 import chroma from 'chroma-js'
 
@@ -39,7 +41,7 @@ const fromRight = arr => i => arr.slice(0, i)
 
 const fromLeft = arr => i => arr.reverse().slice(0, i).reverse()
 
-// does not work on arrays of integers
+// does not work on arrays of integers for some reason
 const flatten = ([x, ...xs]) => x
   ? Array.isArray(x)
     ? [...flatten(x), ...flatten(xs)]
@@ -105,22 +107,22 @@ const isInBoundsX = (matrix, cI) => cI < matrix[0].length - 1
 const isInBoundsY = (matrix, rI) => rI < matrix.length - 1
 
 const countMates = (geonset, glyphMap, width) => {
-  const reshaped = chunk(glyphMap, width)
-  const edges = reshaped.map(row => row.map(cell => geonset.geons[cell].edgeMap))
-  let acc = 0
-  edges.forEach((row, rowIndex) => row.forEach((cell, colIndex) => {
-    if (isInBoundsX(edges, colIndex)) {
-      if (isMate(getRightEdge(cell), getEdgeOfRight(edges, rowIndex, colIndex))) {
-        acc++
-      }
-    }
-    if (isInBoundsY(edges, rowIndex)) {
-      if (isMate(getBottomEdge(cell), getEdgeOfBelow(edges, rowIndex, colIndex))) {
-        acc++
-      }
-    }
-  }))
-  return acc
+  // const reshaped = chunk(glyphMap, width)
+  // const edges = reshaped.map(row => row.map(cell => geonset.geons[cell].edgeMap))
+  // let acc = 0
+  // edges.forEach((row, rowIndex) => row.forEach((cell, colIndex) => {
+  //   if (isInBoundsX(edges, colIndex)) {
+  //     if (isMate(getRightEdge(cell), getEdgeOfRight(edges, rowIndex, colIndex))) {
+  //       acc++
+  //     }
+  //   }
+  //   if (isInBoundsY(edges, rowIndex)) {
+  //     if (isMate(getBottomEdge(cell), getEdgeOfBelow(edges, rowIndex, colIndex))) {
+  //       acc++
+  //     }
+  //   }
+  // }))
+  // return acc
 }
 
 const numComparator = (a, b, key) => {
@@ -308,6 +310,23 @@ const subgraphs = avatar => {
   return sgs
 }
 
+const mergeUpdates = (updates, originalElement) => {
+  return updates.reduce((acc, update) => {
+    const { action, payload, path} = update
+    const existingValue = _.get(acc, path)
+    const method = mergeMethods[action]
+    const newValue = method(existingValue, payload)
+    _.set(acc, path, newValue)
+    return acc
+  }, {...originalElement})
+
+}
+
+const mergeMethods = {
+  concat: (existingValue, payload) => existingValue.concat(payload),
+  replace: (existingValue, payload) => ({...existingValue, ...payload}),
+}
+
 
 
 export {
@@ -353,4 +372,6 @@ export {
   palette,
   etch,
   quickHash,
+  mergeUpdates,
+  updateMethods,
 }

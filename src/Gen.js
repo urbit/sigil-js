@@ -57,8 +57,8 @@ class Gen extends Component {
     super(props)
     this.state = {
       didInit: false,
-      debug: false,
-      patpInput: 'ridlur-figbud',
+      debug: true,
+      patpInput: 'monnum-rocdeg',
       dupes: [],
       avatar: false,
     }
@@ -93,7 +93,7 @@ class Gen extends Component {
       const glyphRef = geonRef.insert(params)
 
       if (this.state.debug === true) {
-        const label = pointText({ fillColor: 'black', content: `idx:${geonIndex} / key:${geonRef.name}`, fontSize: 10 })
+        const label = pointText({ fillColor: 'black', content: `${geonRef.hash}`, fontSize: 10 })
         label.translate({x: 24, y: 64})
         return group([glyphRef, label])
       }
@@ -147,6 +147,7 @@ class Gen extends Component {
     set('matrix', avatar, matrix.map((row, iR) => row.map((cell, iC) => ({...cell, origin: [iR, iC] }))), geonset)
 
     set('partition', avatar, partition(avatar))
+    console.log(avatar.partition)
 
 
     // produce a graph representation of edgemates

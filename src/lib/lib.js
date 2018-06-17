@@ -109,75 +109,43 @@ const mmap = (arr, callback) => arr.map((row, rI, wholeMatrix) => row.map((cell,
 
 const transpose = matrix => matrix[0].map((x,i) => matrix.map(x => x[i]))
 
+const isFirstIdx = i => i === 0
 
-
+const isLastIdx = (arr, i) => i === arr.length - 1
 
 
 const partition = avatar => {
-  horizontalGrainPartition(avatar.matrix)
+  const horizontal = grainPartition(avatar.matrix)
+  const vertical = grainPartition(transpose(avatar.matrix))
+  return {
+    horizontal,
+    vertical,
+  }
 }
-//~monnum-rocdeg
-const horizontalGrainPartition = matrix => {
-  let acc = []
+
+const grainPartition = matrix => {
+  let sequences = []
   matrix.forEach((row, rI) => {
-    let cycleAcc = []
+    let rowBreaks = []
     row.forEach((cell, cI) => {
-
-      // console.log('cycle: ', cycleAcc)
-
+      // append the start idx at the start of each row loop
+      if (isFirstIdx(cI)) rowBreaks = [...rowBreaks, 0]
       if (inBoundsX(matrix, cI)) {
-
-        const rightEdge = getRightEdge(cell)
-        const leftEdge = getEdgeToRight(matrix, rI, cI)
-
-        // console.log('---> idx: ', rI, cI)
-        // console.log('n: ', cell.name, 'k: ', cell.ownKey, 'r: ', rightEdge, 'l: ', leftEdge)
-
-        if (isMate(rightEdge, leftEdge)) {
-
-          const cellRight = getCellRight(matrix, rI, cI)
-
-          if (cI === 0) {
-            cycleAcc = [...cycleAcc, cell, cellRight]
-          } else {
-            cycleAcc = [...cycleAcc, cellRight]
-          }
-
-
-        } else {
-          // if there was a break in continuity
-          // if there is no mate, than we need to append single item to acc as a cycleAcc
-          if (cycleAcc.length > 0) {
-            acc = [...acc, cycleAcc]
-          }
-          cycleAcc = []
-
+        const cellRight = getCellRight(matrix, rI, cI)
+        const thisRightEdge = getRightEdge(cell)
+        const thatLeftEdge = getLeftEdge(cellRight)
+        if (!isMate(thisRightEdge, thatLeftEdge)) {
+          // append the start index of the next mate sequence
+          rowBreaks = [...rowBreaks, cI + 1]
         }
-
-
-      } else {
-        // if we are at the last col index
-        if (cycleAcc.length > 0) {
-          acc = [...acc, cycleAcc]
-        }
-        cycleAcc = []
       }
-
-
-      // if (cI === lastIndex(row)) {
-      //   rowAcc = rowAcc.concat(cycleAcc)
-      //   cycleAcc = []
-      // }
-      // console.log('row: ', rowAcc)
+    })
+    sequences = [...sequences, multisplice(row, rowBreaks)]
   })
-})
-console.log(acc)
-
+  return sequences
 }
 
-
-
-
+const multisplice = (arr, indices) => indices.map((startI, i) => arr.slice(startI, indices[i + 1]))
 
 
 const countMates = (geonset, glyphMap, width) => {

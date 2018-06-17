@@ -150,8 +150,9 @@ const geonset = {
           ...params,
         })
       },
-      edgeMap: [e.full,e.half_top,e.round,e.half_top]
+      edgeMap: [e.half_top,e.round,e.half_top,e.full]
     },
+    // NOTE: edgemap need fix toom-90 to toom-270
     // toomstone, 90deg
     7: {
       name: 'toom',

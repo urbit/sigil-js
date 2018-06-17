@@ -1,3 +1,4 @@
+
 import Graph from 'graphology'
 import chroma from 'chroma-js'
 
@@ -75,9 +76,9 @@ const prop = (key, obj) => obj[key]
 
 const set = (key, obj, value) => obj[key] = value
 
-const getEdgeOfBelow = (matrix, r, c) => topEdge(getCellBelow(matrix, r, c))
+const getEdgeToBelow = (matrix, r, c) => getTopEdge(getCellBelow(matrix, r, c))
 
-const getEdgeOfRight = (matrix, r, c) => leftEdge(getCellRight(matrix, r, c))
+const getEdgeToRight = (matrix, r, c) => getLeftEdge(getCellRight(matrix, r, c))
 
 const isMate = (a, b) => {
   if (a === b) {
@@ -89,31 +90,108 @@ const isMate = (a, b) => {
   }
 }
 
-const topEdge = cell => cell.edgeMap[0]
-const rightEdge = cell => cell.edgeMap[1]
-const bottomEdge = cell => cell.edgeMap[2]
-const leftEdge = cell =>  cell.edgeMap[3]
+const lastIndex = arr => arr.length - 1
+
+const getTopEdge = cell => cell.edgeMap[0]
+const getRightEdge = cell => cell.edgeMap[1]
+const getBottomEdge = cell => cell.edgeMap[2]
+const getLeftEdge = cell =>  cell.edgeMap[3]
 
 const getCellLeft = (matrix, rI, cI) => matrix[rI][cI - 1]
 const getCellRight = (matrix, rI, cI) => matrix[rI][cI + 1]
 const getCellAbove = (matrix, rI, cI) => matrix[rI - 1][cI]
 const getCellBelow = (matrix, rI, cI) => matrix[rI + 1][cI]
 
-const inBoundsX = (matrix, cI) => cI < matrix[0].length - 1
-const inBoundsY = (matrix, rI) => rI < matrix.length - 1
+const inBoundsX = (matrix, cI) => cI < lastIndex(matrix[0])
+const inBoundsY = (matrix, rI) => rI < lastIndex(matrix)
+
+const mmap = (arr, callback) => arr.map((row, rI, wholeMatrix) => row.map((cell, cI, wholeRow) => callback(cell, [rI, cI], wholeMatrix)))
+
+const transpose = matrix => matrix[0].map((x,i) => matrix.map(x => x[i]))
+
+
+
+
+
+const partition = avatar => {
+  horizontalGrainPartition(avatar.matrix)
+}
+//~monnum-rocdeg
+const horizontalGrainPartition = matrix => {
+  let acc = []
+  matrix.forEach((row, rI) => {
+    let cycleAcc = []
+    row.forEach((cell, cI) => {
+
+      // console.log('cycle: ', cycleAcc)
+
+      if (inBoundsX(matrix, cI)) {
+
+        const rightEdge = getRightEdge(cell)
+        const leftEdge = getEdgeToRight(matrix, rI, cI)
+
+        // console.log('---> idx: ', rI, cI)
+        // console.log('n: ', cell.name, 'k: ', cell.ownKey, 'r: ', rightEdge, 'l: ', leftEdge)
+
+        if (isMate(rightEdge, leftEdge)) {
+
+          const cellRight = getCellRight(matrix, rI, cI)
+
+          if (cI === 0) {
+            cycleAcc = [...cycleAcc, cell, cellRight]
+          } else {
+            cycleAcc = [...cycleAcc, cellRight]
+          }
+
+
+        } else {
+          // if there was a break in continuity
+          // if there is no mate, than we need to append single item to acc as a cycleAcc
+          if (cycleAcc.length > 0) {
+            acc = [...acc, cycleAcc]
+          }
+          cycleAcc = []
+
+        }
+
+
+      } else {
+        // if we are at the last col index
+        if (cycleAcc.length > 0) {
+          acc = [...acc, cycleAcc]
+        }
+        cycleAcc = []
+      }
+
+
+      // if (cI === lastIndex(row)) {
+      //   rowAcc = rowAcc.concat(cycleAcc)
+      //   cycleAcc = []
+      // }
+      // console.log('row: ', rowAcc)
+  })
+})
+console.log(acc)
+
+}
+
+
+
+
+
 
 const countMates = (geonset, glyphMap, width) => {
   const reshaped = chunk(glyphMap, width)
   const edges = reshaped.map(row => row.map(cell => geonset.geons[cell].edgeMap))
   let acc = 0
-  edges.forEach((row, rowIndex) => row.forEach((cell, colIndex) => {
-    if (inBoundsX(edges, colIndex)) {
-      if (isMate(rightEdge(cell), getEdgeOfRight(edges, rowIndex, colIndex))) {
+  edges.forEach((row, rI) => row.forEach((cell, cI) => {
+    if (inBoundsX(edges, cI)) {
+      if (isMate(getRightEdge(cell), getEdgeToRight(edges, rI, cI))) {
         acc++
       }
     }
-    if (inBoundsY(edges, rowIndex)) {
-      if (isMate(bottomEdge(cell), getEdgeOfBelow(edges, rowIndex, colIndex))) {
+    if (inBoundsY(edges, rI)) {
+      if (isMate(getBottomEdge(cell), getEdgeToBelow(edges, rI, cI))) {
         acc++
       }
     }
@@ -169,24 +247,25 @@ const graph = geonList => {
 
   geonList.forEach((row, rI) => row.forEach((cell, cI) => {
     if (inBoundsX(geonList, cI)) {
-      if (isMate(rightEdge(cell), getEdgeOfRight(geonList, rI, cI))) {
+      if (isMate(getRightEdge(cell), getEdgeToRight(geonList, rI, cI))) {
         const properties = {
-          bond: rightEdge(cell),
+          bond: getRightEdge(cell),
           dir: 'rightward',
         }
         graph.addEdge(cell.index, getCellRight(geonList, rI, cI).index, properties)
       }
     }
     if (inBoundsY(geonList, rI)) {
-      if (isMate(bottomEdge(cell), getEdgeOfBelow(geonList, rI, cI))) {
+      if (isMate(getBottomEdge(cell), getEdgeToBelow(geonList, rI, cI))) {
         const properties = {
-          bond: bottomEdge(cell),
+          bond: getBottomEdge(cell),
           dir: 'bottomward',
         }
         graph.addEdge(cell.index, getCellBelow(geonList, rI, cI).index, properties)
       }
     }
   }))
+  console.log(graph)
   return graph
 }
 
@@ -285,4 +364,5 @@ export {
   palette,
   etch,
   quickHash,
+  partition,
 }

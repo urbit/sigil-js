@@ -46,6 +46,7 @@ import {
   palette,
   etch,
   quickHash,
+  partition,
 } from './lib/lib'
 
 
@@ -137,14 +138,19 @@ class Gen extends Component {
         ...item,
         hash: quickHash(4),
         index,
-        ownOrigin: geonsetGrid[index]
+        // ownOrigin: geonsetGrid[index]
       }
     }))
 
-    const avatar2dArr = chunk(avatar.geonList, 4)
+    const matrix = chunk(avatar.geonList, 4)
+
+    set('matrix', avatar, matrix.map((row, iR) => row.map((cell, iC) => ({...cell, origin: [iR, iC] }))), geonset)
+
+    set('partition', avatar, partition(avatar))
+
 
     // produce a graph representation of edgemates
-    set('graph', avatar, graph(avatar2dArr), geonset)
+    set('graph', avatar, graph(matrix), geonset)
 
     // produces subgraphs
     set('subgraphs', avatar, connectedComponents(avatar.graph)
@@ -156,7 +162,6 @@ class Gen extends Component {
 
     // matches parameterized etch templates to graph
     set('etch', avatar, etch(avatar))
-    console.log(avatar.graph.export())
     // paint(avatar)
 
     return avatar
@@ -165,7 +170,6 @@ class Gen extends Component {
 
   create = (geonset, sylmap, p) => {
     const avatar = this.gen(geonset, sylmap, p)
-    console.log(avatar)
     this.setState({ avatar })
   }
 

@@ -46,6 +46,7 @@ import {
   palette,
   etch,
   quickHash,
+  partition,
 } from './lib/lib'
 
 
@@ -57,8 +58,8 @@ class Gen extends Component {
     super(props)
     this.state = {
       didInit: false,
-      debug: false,
-      patpInput: 'ridlur-figbud',
+      debug: true,
+      patpInput: 'monnum-rocdeg',
       dupes: [],
       avatar: false,
     }
@@ -91,11 +92,8 @@ class Gen extends Component {
       const glyphRef = geonRef.insert(params)
 
       if (this.state.debug === true) {
-        const label = pointText({ fillColor: '#239CE8', content: `idx:${geonIndex} / key:${geonRef.name}`, fontSize: 10 })
-        label.translate({x: 24, y: 256})
-
-        etchset.grid().map(point => pathCircle({center: point, radius: 2, fillColor: 'red'}))
-
+        const label = pointText({ fillColor: 'black', content: `${geonRef.hash}`, fontSize: 10 })
+        label.translate({x: 24, y: 64})
         return group([glyphRef, label])
       }
 
@@ -142,14 +140,20 @@ class Gen extends Component {
         ...item,
         hash: quickHash(4),
         index,
-        ownOrigin: geonsetGrid[index]
+        // ownOrigin: geonsetGrid[index]
       }
     }))
 
-    const avatar2dArr = chunk(avatar.geonList, 4)
+    const matrix = chunk(avatar.geonList, 4)
+
+    set('matrix', avatar, matrix.map((row, iR) => row.map((cell, iC) => ({...cell, origin: [iR, iC] }))), geonset)
+
+    set('partition', avatar, partition(avatar))
+    console.log(avatar.partition)
+
 
     // produce a graph representation of edgemates
-    set('graph', avatar, graph(avatar2dArr), geonset)
+    // set('graph', avatar, graph(matrix), geonset)
 
     // produces subgraphs
     // set('subgraphs', avatar, connectedComponents(avatar.graph)
@@ -157,7 +161,7 @@ class Gen extends Component {
     // )
 
     // this was hard
-    set('subgraphs', avatar, subgraphs(avatar))
+    // set('subgraphs', avatar, subgraphs(avatar))
 
     // generates a deterministic color palette
     set('palette', avatar, palette(p))

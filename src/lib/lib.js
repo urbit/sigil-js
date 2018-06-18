@@ -1,3 +1,4 @@
+
 import Graph from 'graphology'
 import { connectedComponents } from 'graphology-components'
 import _ from 'lodash'
@@ -79,9 +80,9 @@ const prop = (key, obj) => obj[key]
 
 const set = (key, obj, value) => obj[key] = value
 
-const getEdgeOfBelow = (matrix, r, c) => getTopEdge(getCellBelow(matrix, r, c))
+const getEdgeToBelow = (matrix, r, c) => getTopEdge(getCellBelow(matrix, r, c))
 
-const getEdgeOfRight = (matrix, r, c) => getLeftEdge(getCellRight(matrix, r, c))
+const getEdgeToRight = (matrix, r, c) => getLeftEdge(getCellRight(matrix, r, c))
 
 const isMate = (a, b) => {
   if (a === b) {
@@ -93,6 +94,8 @@ const isMate = (a, b) => {
   }
 }
 
+const lastIndex = arr => arr.length - 1
+
 const getTopEdge = cell => cell.edgeMap[0]
 const getRightEdge = cell => cell.edgeMap[1]
 const getBottomEdge = cell => cell.edgeMap[2]
@@ -103,26 +106,69 @@ const getCellRight = (matrix, rI, cI) => matrix[rI][cI + 1]
 const getCellAbove = (matrix, rI, cI) => matrix[rI - 1][cI]
 const getCellBelow = (matrix, rI, cI) => matrix[rI + 1][cI]
 
-const isInBoundsX = (matrix, cI) => cI < matrix[0].length - 1
-const isInBoundsY = (matrix, rI) => rI < matrix.length - 1
+const inBoundsX = (matrix, cI) => cI < lastIndex(matrix[0])
+const inBoundsY = (matrix, rI) => rI < lastIndex(matrix)
+
+const mmap = (arr, callback) => arr.map((row, rI, wholeMatrix) => row.map((cell, cI, wholeRow) => callback(cell, [rI, cI], wholeMatrix)))
+
+const transpose = matrix => matrix[0].map((x,i) => matrix.map(x => x[i]))
+
+const isFirstIdx = i => i === 0
+
+const isLastIdx = (arr, i) => i === arr.length - 1
+
+
+const partition = avatar => {
+  const horizontal = grainPartition(avatar.matrix)
+  const vertical = grainPartition(transpose(avatar.matrix))
+  return {
+    horizontal,
+    vertical,
+  }
+}
+
+const grainPartition = matrix => {
+  let sequences = []
+  matrix.forEach((row, rI) => {
+    let rowBreaks = []
+    row.forEach((cell, cI) => {
+      // append the start idx at the start of each row loop
+      if (isFirstIdx(cI)) rowBreaks = [...rowBreaks, 0]
+      if (inBoundsX(matrix, cI)) {
+        const cellToRight = getCellRight(matrix, rI, cI)
+        const thisRightEdge = getRightEdge(cell)
+        const thatLeftEdge = getLeftEdge(cellToRight)
+        if (!isMate(thisRightEdge, thatLeftEdge)) {
+          // append the start index of the next mate sequence
+          rowBreaks = [...rowBreaks, cI + 1]
+        }
+      }
+    })
+    sequences = [...sequences, multisplice(row, rowBreaks)]
+  })
+  return sequences
+}
+
+const multisplice = (arr, indices) => indices.map((startI, i) => arr.slice(startI, indices[i + 1]))
+
 
 const countMates = (geonset, glyphMap, width) => {
-  // const reshaped = chunk(glyphMap, width)
-  // const edges = reshaped.map(row => row.map(cell => geonset.geons[cell].edgeMap))
-  // let acc = 0
-  // edges.forEach((row, rowIndex) => row.forEach((cell, colIndex) => {
-  //   if (isInBoundsX(edges, colIndex)) {
-  //     if (isMate(getRightEdge(cell), getEdgeOfRight(edges, rowIndex, colIndex))) {
-  //       acc++
-  //     }
-  //   }
-  //   if (isInBoundsY(edges, rowIndex)) {
-  //     if (isMate(getBottomEdge(cell), getEdgeOfBelow(edges, rowIndex, colIndex))) {
-  //       acc++
-  //     }
-  //   }
-  // }))
-  // return acc
+  const reshaped = chunk(glyphMap, width)
+  const edges = reshaped.map(row => row.map(cell => geonset.geons[cell].edgeMap))
+  let acc = 0
+  edges.forEach((row, rI) => row.forEach((cell, cI) => {
+    if (inBoundsX(edges, cI)) {
+      if (isMate(getRightEdge(cell), getEdgeToRight(edges, rI, cI))) {
+        acc++
+      }
+    }
+    if (inBoundsY(edges, rI)) {
+      if (isMate(getBottomEdge(cell), getEdgeToBelow(edges, rI, cI))) {
+        acc++
+      }
+    }
+  }))
+  return acc
 }
 
 const numComparator = (a, b, key) => {
@@ -172,44 +218,37 @@ const graph = geonList => {
   geonList.forEach((row, rI) => row.forEach((cell, cI) => graph.addNode(cell.index, { ref:cell })))
   // create edges
   geonList.forEach((row, rI) => row.forEach((cell, cI) => {
-
-    if (isInBoundsX(geonList, cI)) {
-      const edgeOfRight = getEdgeOfRight(geonList, rI, cI)
-      const rightEdge = getRightEdge(cell)
-      if (isMate(rightEdge, edgeOfRight)) {
-        const cellRight = getCellRight(geonList, rI, cI)
+    if (inBoundsX(geonList, cI)) {
+      if (isMate(getRightEdge(cell), getEdgeToRight(geonList, rI, cI))) {
         const properties = {
-          bond: rightEdge,
+          bond: getRightEdge(cell),
           dir: 'rightward',
         }
         graph.addUndirectedEdgeWithKey(
-          `${cell.index}-${cellRight.index}`,
-          cell.index,
-          cellRight.index,
-          properties
+          // `${cell.index}-${cellToRight.index}`,
+          // cell.index,
+          // cellToRight.index,
+          // ...properties
         )
       }
     }
-
-    if (isInBoundsY(geonList, rI)) {
-      const edgeOfRight = getEdgeOfBelow(geonList, rI, cI)
-      const bottomEdge = getBottomEdge(cell)
-      if (isMate(bottomEdge, edgeOfRight)) {
-        const cellBelow = getCellBelow(geonList, rI, cI)
+    if (inBoundsY(geonList, rI)) {
+      if (isMate(getBottomEdge(cell), getEdgeToBelow(geonList, rI, cI))) {
         const properties = {
-          bond: bottomEdge,
+          bond: getBottomEdge(cell),
           dir: 'bottomward',
         }
         graph.addUndirectedEdgeWithKey(
-          `${cell.index}-${cellBelow.index}`,
-          cell.index,
-          cellBelow.index,
-          properties
+          // `${cell.index}-${cellToBelow.index}`,
+          // cell.index,
+          // cellToBelow.index,
+          // ...properties
         )
       }
     }
 
   }))
+  console.log(graph)
   return graph
 }
 
@@ -372,6 +411,7 @@ export {
   palette,
   etch,
   quickHash,
+  partition,
   mergeUpdates,
-  updateMethods,
+  mergeMethods,
 }

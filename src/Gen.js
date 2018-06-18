@@ -57,7 +57,7 @@ class Gen extends Component {
     super(props)
     this.state = {
       didInit: false,
-      debug: true,
+      debug: false,
       patpInput: 'monnum-rocdeg',
       dupes: [],
       avatar: false,

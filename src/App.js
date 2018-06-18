@@ -27,7 +27,7 @@ class App extends Component {
         <span>
           <button onClick={() => this.setState({route: 'gen'})}>{'generate'}</button>
           <button onClick={() => this.setState({route: 'sel'})}>{'select'}</button>
-          <button onClick={() => this.setState({route: 'agen'})}>{'avatar generator'}</button>
+          <button onClick={() => this.setState({route: 'agen'})}>{'avatarRendererComponent'}</button>
 
         </span>
       </nav>

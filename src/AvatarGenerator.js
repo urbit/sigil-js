@@ -7,7 +7,7 @@ import { initCanvas } from './lib/lib.canvas'
 import { rectGrid, pointText, group, pathRect } from './lib/lib.paper'
 import { suffixes, prefixes, patp } from './lib/lib.urbit'
 
-import geonset from './geonsets/geonset_000'
+import geonset from './geonsets/geonset_001'
 import etchset from './etchsets/etchset_000'
 import sylmap from './sylmaps/sylmap_000.json'
 
@@ -59,8 +59,8 @@ class AvatarGenerator extends Component {
   }
 
   componentDidMount = () => {
-    const { ctx, canvas } = initCanvas(this.gen_canvas, { x:SIZE, y:SIZE })
-    paper.setup(canvas)
+    // const { ctx, canvas } = initCanvas(this.gen_canvas, { x:SIZE, y:SIZE })
+    // paper.setup(canvas)
     const svgs = this.pipeRender(this.props.patps)
     console.log(svgs)
   }
@@ -104,6 +104,10 @@ class AvatarGenerator extends Component {
   //   return svg
   // }
 
+  ren = avatar => {
+    console.log(avatar.render)
+  }
+
 
   gen = p => {
     if (isString(p)) p = patp.arr(p)
@@ -119,6 +123,7 @@ class AvatarGenerator extends Component {
       color: [],
       // partition: [],
       graph: null,
+      render: [],
     }
 
     // turn quadrants into 1d array in correct order
@@ -150,12 +155,18 @@ class AvatarGenerator extends Component {
     set('matrix', avatar, matrix.map((row, iR) => row.map((cell, iC) => ({...cell, origin: [iR, iC] }))), geonset)
 
     set('partition', avatar, partition(avatar))
-    console.log(avatar.partition)
+    // console.log(avatar.partition)
     set('palette', avatar, palette(p))
 
     set('etch', avatar, etch(avatar, etchset))
 
     // paint(avatar)
+
+
+    set('render', avatar, avatar.geonList.map(geon => {
+      const updates = []
+      return geon.svg(updates)
+    }))
 
     return avatar
   }
@@ -165,20 +176,36 @@ class AvatarGenerator extends Component {
   //   // fileDownload(data, 'avatar.svg')
   // }
 
-  // pipeRender = patps => patps.map(p => this.rend(this.gen(p)))
-  pipeRender = patps => patps.map(p => this.gen(p))
+  pipeRender = patps => patps.map(p => this.ren(this.gen(p)))
 
   render = () => {
     return (
-      <canvas
-        ref={ gen_canvas => this.gen_canvas = gen_canvas }
-        data-paper-resize
-        id={`gen_canvas`} />
+      <svg height={600} width={600}>
+
+
+      </svg>
+      // <canvas
+      //   ref={ gen_canvas => this.gen_canvas = gen_canvas }
+      //   data-paper-resize
+      //   id={`gen_canvas`} />
     )
   }
 }
 
+// item is an object that represents an SVG
+const assignComponent = (item, components) => {
+  const tag = item.tag
+  if (tag === 'g') {
 
+  }
+  return components[tag]
+}
+
+const tags = {
+  circle: p => <circle cx={p.cx} cy={p.cy} r={p.r} fill={p.fill} />,
+  path: p => <path d={p.d} />,
+  g: p => <g stroke={p.stroke}>{p.children.map()}</g>,
+}
 
 
 export default AvatarGenerator

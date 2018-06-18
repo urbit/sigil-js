@@ -57,7 +57,7 @@ const e = {
   none: 'none',
   half_top: 'half_top',
   half_bottom: 'half_bottom',
-  half_left: 'half_leftå',
+  half_left: 'half_left',
   half_right: 'half_right',
 }
 
@@ -125,7 +125,7 @@ const geonset = {
     3: {
       name: 'qoin',
       ownKey: 3,
-      edgeMap: [e.full,e.none,e.none,e.full],
+      edgeMap: [e.full, e.none, e.none, e.full],
       svg: updates => mergeUpdates(updates, {
           tag: 'g',
           attr: [

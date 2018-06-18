@@ -1,5 +1,9 @@
 
 import Graph from 'graphology'
+import { connectedComponents } from 'graphology-components'
+import _ from 'lodash'
+
+
 import chroma from 'chroma-js'
 
 const isObject = any => any && typeof any === 'object' && any.constructor === Object
@@ -38,7 +42,7 @@ const fromRight = arr => i => arr.slice(0, i)
 
 const fromLeft = arr => i => arr.reverse().slice(0, i).reverse()
 
-// does not work on arrays of integers
+// does not work on arrays of integers for some reason
 const flatten = ([x, ...xs]) => x
   ? Array.isArray(x)
     ? [...flatten(x), ...flatten(xs)]
@@ -131,9 +135,9 @@ const grainPartition = matrix => {
       // append the start idx at the start of each row loop
       if (isFirstIdx(cI)) rowBreaks = [...rowBreaks, 0]
       if (inBoundsX(matrix, cI)) {
-        const cellRight = getCellRight(matrix, rI, cI)
+        const cellToRight = getCellRight(matrix, rI, cI)
         const thisRightEdge = getRightEdge(cell)
-        const thatLeftEdge = getLeftEdge(cellRight)
+        const thatLeftEdge = getLeftEdge(cellToRight)
         if (!isMate(thisRightEdge, thatLeftEdge)) {
           // append the start index of the next mate sequence
           rowBreaks = [...rowBreaks, cI + 1]
@@ -210,9 +214,9 @@ const combinatoric = (method, geonset) => {
 
 const graph = geonList => {
   let graph = new Graph()
-
-  geonList.forEach((row, rI) => row.forEach((cell, cI) => graph.addNode(cell.index, {ref:cell})))
-
+  // create nodes
+  geonList.forEach((row, rI) => row.forEach((cell, cI) => graph.addNode(cell.index, { ref:cell })))
+  // create edges
   geonList.forEach((row, rI) => row.forEach((cell, cI) => {
     if (inBoundsX(geonList, cI)) {
       if (isMate(getRightEdge(cell), getEdgeToRight(geonList, rI, cI))) {
@@ -220,7 +224,12 @@ const graph = geonList => {
           bond: getRightEdge(cell),
           dir: 'rightward',
         }
-        graph.addEdge(cell.index, getCellRight(geonList, rI, cI).index, properties)
+        graph.addUndirectedEdgeWithKey(
+          // `${cell.index}-${cellToRight.index}`,
+          // cell.index,
+          // cellToRight.index,
+          // ...properties
+        )
       }
     }
     if (inBoundsY(geonList, rI)) {
@@ -229,9 +238,15 @@ const graph = geonList => {
           bond: getBottomEdge(cell),
           dir: 'bottomward',
         }
-        graph.addEdge(cell.index, getCellBelow(geonList, rI, cI).index, properties)
+        graph.addUndirectedEdgeWithKey(
+          // `${cell.index}-${cellToBelow.index}`,
+          // cell.index,
+          // cellToBelow.index,
+          // ...properties
+        )
       }
     }
+
   }))
   console.log(graph)
   return graph
@@ -243,11 +258,6 @@ const dedupe = mates => {
       return [...acc, mate]
     }
   }, [])
-}
-
-
-const subgraphs = graph => {
-
 }
 
 const palette = p => {
@@ -269,24 +279,93 @@ const palette = p => {
   //   .colors(6)
 
   return [
-    '#000',
+    '#4735F5',
     '#B1B1B1',
     '#EB5757',
   ]
 }
 
 const etch = (avatar, etchset) => {
-  // return avatar.geonList.map(geon => {
-  //   if (geon.name === 'coin') {
-  //     return () => etchset.dott({  })
-  //   } else {
-  //     return
-  //   }
+
+  // const validSites = avatar.subgraphs.filter(graph => {
+  //   const isMatch =
+  //   return isMatch === true
   // })
 
+  const etchProfile = {
+    hule: {
+      members: [
+        {
+          offset: 64,
+        },
+        {
+          offset: 128 + 32,
+        },
+      ]
+    },
+    dott: {
+      members: [
+        {
+          target: 2,
+          radius: 16,
+          // halo: (target, radius) => noop(),
+        },
+        {
+          target: 8,
+          radius: 32,
+          // halo: (target, radius) => noop(),
+        },
+      ]
+    },
+  }
+
+  // makes pre-filled functions for renderer
+  const prefill = entries(etchProfile).map(([k, v]) => {
+    return v.members.map(params => {
+      return () => etchset.etches[k].insert(params)
+    })
+  })
+
+  return prefill
 }
 
 const quickHash = entropy => Math.random().toString(36).substr(2, entropy)
+
+const subgraphs = avatar => {
+  console.log(avatar.graph.edges())
+  const sgs = connectedComponents(avatar.graph).map(sg => {
+      let graph = new Graph()
+      const nodes = sg.forEach(idx => {
+        graph.addNode(`${idx}`, {...avatar.graph.getNodeAttributes(idx)})
+      })
+      const edges = sg.forEach(idx => {
+
+
+      })
+
+      return nodes
+
+  })
+  return sgs
+}
+
+const mergeUpdates = (updates, originalElement) => {
+  return updates.reduce((acc, update) => {
+    const { action, payload, path} = update
+    const existingValue = _.get(acc, path)
+    const method = mergeMethods[action]
+    const newValue = method(existingValue, payload)
+    _.set(acc, path, newValue)
+    return acc
+  }, {...originalElement})
+
+}
+
+const mergeMethods = {
+  concat: (existingValue, payload) => existingValue.concat(payload),
+  replace: (existingValue, payload) => ({...existingValue, ...payload}),
+}
+
 
 
 export {
@@ -333,4 +412,6 @@ export {
   etch,
   quickHash,
   partition,
+  mergeUpdates,
+  mergeMethods,
 }

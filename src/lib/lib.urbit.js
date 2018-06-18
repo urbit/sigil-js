@@ -56,8 +56,8 @@ const patp = {
     : `${acc}${syl}`
   , ''),
   random: l => sequence(l).map(i => isEven(i)
-    ? prefixes[randInt(255)]
-    : suffixes[randInt(255)]
+    ? prefixes[randInt(prefixes.length-1)]
+    : suffixes[randInt(suffixes.length-1)]
   ),
 }
 

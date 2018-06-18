@@ -9,7 +9,7 @@ import { initCanvas } from './lib/lib.canvas'
 import { rectGrid, pointText, group, pathRect, pathCircle } from './lib/lib.paper'
 import { suffixes, prefixes, patp } from './lib/lib.urbit'
 
-import geonset from './geonsets/geonset_000'
+import geonset from './geonsets/geonset_001'
 import etchset from './etchsets/etchset_000'
 
 import sylmap from './sylmaps/sylmap_000.json'
@@ -138,7 +138,6 @@ class Gen extends Component {
     set('geonList', avatar, avatar.geonList.map((item, index) => {
       return {
         ...item,
-        hash: quickHash(4),
         index,
         // ownOrigin: geonsetGrid[index]
       }
@@ -170,7 +169,7 @@ class Gen extends Component {
     set('etch', avatar, etch(avatar, etchset))
     // console.log(avatar.graph.export())
     // paint(avatar)
-    console.log(avatar.subgraphs)
+    console.log(avatar)
     return avatar
   }
 

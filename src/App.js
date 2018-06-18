@@ -8,7 +8,7 @@ class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      route: 'gen',
+      route: 'agen',
     }
   }
 
@@ -19,7 +19,7 @@ class App extends Component {
     } else if (this.state.route === 'sel') {
       route = <Sel />
     } else {
-      route = <AvatarGenerator patps={['~lashex-lonres', '~tipmyr-minsyr']} />
+      route = <AvatarGenerator patps={['monnum-rocdeg']} />
     }
     return (
       <div className="App">

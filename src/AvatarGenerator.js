@@ -43,6 +43,7 @@ import {
   palette,
   etch,
   quickHash,
+  partition
 } from './lib/lib'
 
 
@@ -65,50 +66,50 @@ class AvatarGenerator extends Component {
   }
 
 
-  rend = avatar => {
-    paper.project.clear()
-
-    const grid = geonset.grid()
-
-    const bg = pathRect({from: [0,0], to: [SIZE, SIZE], fillColor: avatar.palette[0]})
-
-    const refs = avatar.geonList.map((geonRef, geonIndex) => {
-
-      const params = {
-        fillColor: '#fff',
-        strokeColor: avatar.palette[0],
-        strokeWidth: 1,
-        selected: this.state.debug,
-        insert: true,
-      }
-
-      const glyphRef = geonRef.insert(params)
-
-      if (this.state.debug === true) {
-        const label = pointText({ fillColor: 'black', content: `idx:${geonIndex} / key:${geonRef.name}`, fontSize: 10 })
-        label.translate({x: 24, y: 64})
-        return group([glyphRef, label])
-      }
-
-      return group([glyphRef])
-    })
-
-    refs.map((geon, index) => {
-      geon.position = grid[index]
-    })
-
-    // avatar.etch.map()
-    const svg = paper.project.exportSVG({ asString: true })
-    paper.view.draw()
-    return svg
-  }
+  // rend = avatar => {
+  //   paper.project.clear()
+  //
+  //   const grid = geonset.grid()
+  //
+  //   const bg = pathRect({from: [0,0], to: [SIZE, SIZE], fillColor: avatar.palette[0]})
+  //
+  //   const refs = avatar.geonList.map((geonRef, geonIndex) => {
+  //
+  //     const params = {
+  //       fillColor: '#fff',
+  //       strokeColor: avatar.palette[0],
+  //       strokeWidth: 1,
+  //       selected: this.state.debug,
+  //       insert: true,
+  //     }
+  //
+  //     const glyphRef = geonRef.insert(params)
+  //
+  //     if (this.state.debug === true) {
+  //       const label = pointText({ fillColor: 'black', content: `idx:${geonIndex} / key:${geonRef.name}`, fontSize: 10 })
+  //       label.translate({x: 24, y: 64})
+  //       return group([glyphRef, label])
+  //     }
+  //
+  //     return group([glyphRef])
+  //   })
+  //
+  //   refs.map((geon, index) => {
+  //     geon.position = grid[index]
+  //   })
+  //
+  //   // avatar.etch.map()
+  //   const svg = paper.project.exportSVG({ asString: true })
+  //   paper.view.draw()
+  //   return svg
+  // }
 
 
   gen = p => {
     if (isString(p)) p = patp.arr(p)
     // here is where @p validation could happen
     // generate the geonset grid, a 2x2 arr of points
-    const geonsetGrid = geonset.grid()
+    // const geonsetGrid = geonset.grid()
 
     // defaults
     let avatar = {
@@ -131,25 +132,29 @@ class AvatarGenerator extends Component {
         ...item,
         hash: quickHash(4),
         index,
-        ownOrigin: geonsetGrid[index]
       }
     }))
 
-    const avatar2dArr = chunk(avatar.geonList, 4)
+    const matrix = chunk(avatar.geonList, 4)
+
+
 
     // produce a graph representation of edgemates
-    set('graph', avatar, graph(avatar2dArr), geonset)
+    // set('graph', avatar, graph(avatar2dArr), geonset)
+    //
+    // // produces subgraphs
+    // set('subgraphs', avatar, connectedComponents(avatar.graph)
+    //   .map(sg => sg.map(idx => avatar.geonList[idx]))
+    // )
 
-    // produces subgraphs
-    set('subgraphs', avatar, connectedComponents(avatar.graph)
-      .map(sg => sg.map(idx => avatar.geonList[idx]))
-    )
+    set('matrix', avatar, matrix.map((row, iR) => row.map((cell, iC) => ({...cell, origin: [iR, iC] }))), geonset)
 
-    // generates a deterministic color palette
+    set('partition', avatar, partition(avatar))
+    console.log(avatar.partition)
     set('palette', avatar, palette(p))
 
-    // matches parameterized etch templates to graph
-    set('etch', avatar, etch(avatar))
+    set('etch', avatar, etch(avatar, etchset))
+
     // paint(avatar)
 
     return avatar
@@ -160,7 +165,8 @@ class AvatarGenerator extends Component {
   //   // fileDownload(data, 'avatar.svg')
   // }
 
-  pipeRender = patps => patps.map(p => this.rend(this.gen(p)))
+  // pipeRender = patps => patps.map(p => this.rend(this.gen(p)))
+  pipeRender = patps => patps.map(p => this.gen(p))
 
   render = () => {
     return (

@@ -120,14 +120,20 @@ const isLastIdx = (arr, i) => i === arr.length - 1
 
 const partition = avatar => {
   const horizontal = grainPartition(avatar.matrix)
+  // const twoByTwos = horizontal.forEach((row, rI) => {
+  // })
+
   const vertical = grainPartition(transpose(avatar.matrix))
+
   return {
     horizontal,
     vertical,
   }
 }
 
+
 const grainPartition = matrix => {
+
   let sequences = []
   matrix.forEach((row, rI) => {
     let rowBreaks = []
@@ -280,7 +286,7 @@ const palette = p => {
 
   return [
     '#4735F5',
-    '#B1B1B1',
+    '#C4C4C4',
     '#EB5757',
   ]
 }

@@ -64,12 +64,11 @@ const e = {
 const geonset = {
   name: 'geonset_000',
   geons: {
-    // circle
     0: {
       name: 'coin',
       ownKey: 0,
       edgeMap: [e.round, e.round, e.round, e.round],
-      svg: params => ({
+      svg: updates => mergeUpdates(updates, {
           tag: 'g',
           attr: [],
           children: [
@@ -77,17 +76,11 @@ const geonset = {
               tag: 'path',
               attr: [
                 { d: geons.coin },
-              ]
-            }
-          ],
-        })
-      },
+            ]
+          }
+        ],
+      })
     },
-
-
-    // Quarter Circle, 0deg
-
-
     1: {
       name: 'qoin',
       ownKey: 1,
@@ -101,160 +94,230 @@ const geonset = {
             {
               tag: 'path',
               attr: [
-                { d: geons.coin },
-              ]
-            }
-          ],
-        })
-      },
+                { d: geons.qoin },
+            ]
+          }
+        ],
+      })
     },
-    // Quarter Circle, 90deg
     2: {
       name: 'qoin',
       ownKey: 2,
-      insert: params => {
-        const p = path({
-          pathData: geons.qoin,
-          ...params,
-        })
-        p.rotate(90)
-        return p
-      },
-      edgeMap: [e.none,e.none,e.full,e.full]
+      edgeMap: [e.none,e.none,e.full,e.full],
+      svg: updates => mergeUpdates(updates, {
+          tag: 'g',
+          attr: [
+            { transform: 'rotate(90)' }
+          ],
+          children: [
+            {
+              tag: 'path',
+              attr: [
+                { d: geons.qoin },
+            ]
+          }
+        ],
+      })
     },
+
+
     // Quarter Circle, 180deg
     3: {
       name: 'qoin',
       ownKey: 3,
-      insert: params => {
-        const p = path({
-          pathData: geons.qoin,
-          ...params,
-        })
-        p.rotate(180)
-        return p
-      },
-      edgeMap: [e.full,e.none,e.none,e.full]
+      edgeMap: [e.full,e.none,e.none,e.full],
+      svg: updates => mergeUpdates(updates, {
+          tag: 'g',
+          attr: [
+            { transform: 'rotate(180)' }
+          ],
+          children: [
+            {
+              tag: 'path',
+              attr: [
+                { d: geons.qoin },
+            ]
+          }
+        ],
+      })
     },
     // Quarter Circle, 270deg
     4: {
       name: 'qoin',
       ownKey: 4,
-      insert: params => {
-        const p = path({
-          pathData: geons.qoin,
-          ...params,
-        })
-        p.rotate(270)
-        return p
-      },
-      edgeMap: [e.full,e.full,e.none,e.none]
+      edgeMap: [e.full,e.full,e.none,e.none],
+      svg: updates => mergeUpdates(updates, {
+          tag: 'g',
+          attr: [
+            { transform: 'rotate(270)' }
+          ],
+          children: [
+            {
+              tag: 'path',
+              attr: [
+                { d: geons.qoin },
+            ]
+          }
+        ],
+      })
     },
     // square
     5: {
       name: 'blok',
       ownKey: 5,
-      insert: params => {
-        const p = path({
-          pathData: geons.blok,
-          ...params,
-        })
-        p.rotate(270)
-        return p
-      },
-      edgeMap: [e.full,e.full,e.full,e.full]
+      edgeMap: [e.full,e.full,e.full,e.full],
+      svg: updates => mergeUpdates(updates, {
+          tag: 'g',
+          attr: [],
+          children: [
+            {
+              tag: 'path',
+              attr: [
+                { d: geons.blok },
+            ]
+          }
+        ],
+      })
     },
     // toomstone, 0deg
     6: {
       name: 'toom',
       ownKey: 6,
-      insert: params => {
-        return path({
-          pathData: geons.toom,
-          ...params,
-        })
-      },
-      edgeMap: [e.full,e.half_top,e.round,e.half_top]
+      edgeMap: [e.full,e.half_top,e.round,e.half_top],
+      svg: updates => mergeUpdates(updates, {
+          tag: 'g',
+          attr: [
+            { transform: 'rotate(0)' }
+          ],
+          children: [
+            {
+              tag: 'path',
+              attr: [
+                { d: geons.toom },
+            ]
+          }
+        ],
+      })
     },
     // toomstone, 90deg
     7: {
       name: 'toom',
       ownKey: 7,
-      insert: params => {
-        const p = path({
-          pathData: geons.toom,
-          ...params,
-        })
-        p.rotate(90)
-        return p
-      },
-      edgeMap: [e.half_left,e.full,e.half_left,e.round]
+      edgeMap: [e.half_left,e.full,e.half_left,e.round],
+      svg: updates => mergeUpdates(updates, {
+          tag: 'g',
+          attr: [
+            { transform: 'rotate(90)' }
+          ],
+          children: [
+            {
+              tag: 'path',
+              attr: [
+                { d: geons.toom },
+            ]
+          }
+        ],
+      })
     },
     // toomstone, 180deg
     8: {
       name: 'toom',
       ownKey: 8,
-      insert: params => {
-        const p = path({
-          pathData: geons.toom,
-          ...params,
-        })
-        p.rotate(180)
-        return p
-      },
-      edgeMap: [e.round,e.half_bottom,e.full,e.half_bottom]
+      edgeMap: [e.round,e.half_bottom,e.full,e.half_bottom],
+      svg: updates => mergeUpdates(updates, {
+          tag: 'g',
+          attr: [
+            { transform: 'rotate(180)' }
+          ],
+          children: [
+            {
+              tag: 'path',
+              attr: [
+                { d: geons.toom },
+            ]
+          }
+        ],
+      })
     },
     // toomstone, 270deg
     9: {
       name: 'toom',
       ownKey: 9,
-      insert: params => {
-        const p = path({
-          pathData: geons.toom,
-          ...params,
-        })
-        p.rotate(270)
-        return p
-      },
-      edgeMap: [e.half_right,e.round,e.half_right,e.full]
+      edgeMap: [e.half_right,e.round,e.half_right,e.full],
+      svg: updates => mergeUpdates(updates, {
+          tag: 'g',
+          attr: [
+            { transform: 'rotate(270)' }
+          ],
+          children: [
+            {
+              tag: 'path',
+              attr: [
+                { d: geons.toom },
+            ]
+          }
+        ],
+      })
     },
     // leef, 0deg
     10: {
       name: 'leef',
       ownKey: 10,
-      insert: params => {
-        return path({
-          pathData: geons.leef,
-          ...params,
-        })
-      },
-      edgeMap: [e.half_left,e.half_bottom,e.half_right,e.half_top]
+      edgeMap: [e.half_left,e.half_bottom,e.half_right,e.half_top],
+      svg: updates => mergeUpdates(updates, {
+          tag: 'g',
+          attr: [
+            { transform: 'rotate(0)' }
+          ],
+          children: [
+            {
+              tag: 'path',
+              attr: [
+                { d: geons.leef },
+            ]
+          }
+        ],
+      })
     },
     // leef, 90deg
     11: {
       name: 'leef',
       ownKey: 11,
-      insert: params => {
-        const p = path({
-          pathData: geons.leef,
-          ...params,
-        })
-        p.rotate(90)
-        return p
-      },
-      edgeMap: [e.half_right, e.half_top, e.half_left, e.half_bottom]
+      edgeMap: [e.half_right, e.half_top, e.half_left, e.half_bottom],
+      svg: updates => mergeUpdates(updates, {
+          tag: 'g',
+          attr: [
+            { transform: 'rotate(90)' }
+          ],
+          children: [
+            {
+              tag: 'path',
+              attr: [
+                { d: geons.leef },
+            ]
+          }
+        ],
+      })
     },
     // grap, 0deg
     12: {
       name: 'grap',
       ownKey: 12,
-      insert: params => {
-        return compoundPath({
-          children: geons.grap.map(p => path(p)),
-          ...params,
-        })
-      },
-      edgeMap: [e.none,e.none,e.none,e.none]
+      edgeMap: [e.none,e.none,e.none,e.none],
+      svg: updates => mergeUpdates(updates, {
+          tag: 'g',
+          attr: [
+            { transform: 'rotate(0)' }
+          ],
+          children: [
+            {
+              tag: 'path',
+              attr: [
+                { d: geons.grap },
+            ]
+          }
+        ],
+      })
     },
     // fatt, 0deg
     // 13: {
@@ -272,139 +335,170 @@ const geonset = {
     14: {
       name: 'teer',
       ownKey: 14,
-      insert: params => {
-        return path({
-          pathData: geons.teer,
-          ...params,
-        })
-      },
-      edgeMap: [e.half_left,e.round,e.round,e.half_top]
+      edgeMap: [e.half_left,e.round,e.round,e.half_top],
+      svg: updates => mergeUpdates(updates, {
+          tag: 'g',
+          attr: [
+            { transform: 'rotate(0)' }
+          ],
+          children: [
+            {
+              tag: 'path',
+              attr: [
+                { d: geons.teer },
+            ]
+          }
+        ],
+      })
     },
     // teer, 90deg
     15: {
       name: 'teer',
       ownKey: 15,
-      insert: params => {
-        const p = path({
-          pathData: geons.teer,
-          ...params,
-        })
-        p.rotate(90)
-        return p
-      },
-      edgeMap: [e.half_right,e.half_top,e.round,e.round]
+      edgeMap: [e.half_right,e.half_top,e.round,e.round],
+      svg: updates => mergeUpdates(updates, {
+          tag: 'g',
+          attr: [
+            { transform: 'rotate(90)' }
+          ],
+          children: [
+            {
+              tag: 'path',
+              attr: [
+                { d: geons.teer },
+            ]
+          }
+        ],
+      })
     },
     // teer, 180deg
     16: {
       name: 'teer',
       ownKey: 16,
-      insert: params => {
-        const p = path({
-          pathData: geons.teer,
-          ...params,
-        })
-        p.rotate(180)
-        return p
-      },
-      edgeMap: [e.round,e.half_bottom,e.half_right,e.round]
+      edgeMap: [e.round,e.half_bottom,e.half_right,e.round],
+      svg: updates => mergeUpdates(updates, {
+          tag: 'g',
+          attr: [
+            { transform: 'rotate(180)' }
+          ],
+          children: [
+            {
+              tag: 'path',
+              attr: [
+                { d: geons.teer },
+            ]
+          }
+        ],
+      })
     },
     // teer, 270deg
     17: {
       name: 'teer',
       ownKey: 17,
-      insert: params => {
-        const p = path({
-          pathData: geons.teer,
-          ...params,
-        })
-        p.rotate(270)
-        return p
-      },
-      edgeMap: [e.round,e.round,e.half_left,e.half_bottom]
+      edgeMap: [e.round,e.round,e.half_left,e.half_bottom],
+      svg: updates => mergeUpdates(updates, {
+          tag: 'g',
+          attr: [
+            { transform: 'rotate(270)' }
+          ],
+          children: [
+            {
+              tag: 'path',
+              attr: [
+                { d: geons.teer },
+            ]
+          }
+        ],
+      })
     },
-    // // fatt
-    // 18: {
-    //   insert: params => {
-    //     const p = compoundPath({
-    //       children: geons.fatt.map(p => path(p)),
-    //       ...params,
-    //     })
-    //     p.rotate(0)
-    //     return p
-    //   },
-    //   edgeMap: [e.none,e.full,e.none,e.full]
-    // },
-    // // fatt, 90deg
-    // 19: {
-    //   insert: params => {
-    //     const p = compoundPath({
-    //       children: geons.fatt.map(p => path(p)),
-    //       ...params,
-    //     })
-    //     p.rotate(90)
-    //     return p
-    //   },
-    //   edgeMap: [e.full,e.none,e.full,e.none]
-    // },
-    // bugg 0deg
+    18: {
+      // reserved
+    },
+    19: {
+      // reserved
+    },
     20: {
       name: 'bugg',
       ownKey: 20,
-      insert: params => {
-        const p = compoundPath({
-          children: geons.bugg.map(p => path(p)),
-          ...params,
-        })
-        p.rotate(0)
-        return p
-      },
-      edgeMap: [e.none,e.none,e.full,e.none]
+      edgeMap: [e.none,e.none,e.full,e.none],
+      svg: updates => mergeUpdates(updates, {
+          tag: 'g',
+          attr: [
+            { transform: 'rotate(0)' }
+          ],
+          children: [
+            {
+              tag: 'path',
+              attr: [
+                { d: geons.bugg },
+            ]
+          }
+        ],
+      })
     },
     // bugg 90deg
     21: {
       name: 'bugg',
       ownKey: 21,
-      insert: params => {
-        const p = compoundPath({
-          children: geons.bugg.map(p => path(p)),
-          ...params,
-        })
-        p.rotate(90)
-        return p
-      },
-      edgeMap: [e.none,e.none,e.none,e.full]
+      edgeMap: [e.none,e.none,e.none,e.full],
+      svg: updates => mergeUpdates(updates, {
+          tag: 'g',
+          attr: [
+            { transform: 'rotate(90)' }
+          ],
+          children: [
+            {
+              tag: 'path',
+              attr: [
+                { d: geons.bugg },
+            ]
+          }
+        ],
+      })
     },
     // bugg 180deg
     22: {
       name: 'bugg',
       ownKey: 22,
-      insert: params => {
-        const p = compoundPath({
-          children: geons.bugg.map(p => path(p)),
-          ...params,
-        })
-        p.rotate(180)
-        return p
-      },
-      edgeMap: [e.full,e.none,e.none,e.none]
+      edgeMap: [e.full,e.none,e.none,e.none],
+      svg: updates => mergeUpdates(updates, {
+          tag: 'g',
+          attr: [
+            { transform: 'rotate(180)' }
+          ],
+          children: [
+            {
+              tag: 'path',
+              attr: [
+                { d: geons.bugg },
+            ]
+          }
+        ],
+      })
     },
     // bugg 270deg
     23: {
       name: 'bugg',
       ownKey: 23,
-      insert: params => {
-        const p = compoundPath({
-          children: geons.bugg.map(p => path(p)),
-          ...params,
-        })
-        p.rotate(270)
-        return p
-      },
-      edgeMap: [e.none,e.full,e.none,e.none]
+      edgeMap: [e.none,e.full,e.none,e.none],
+      svg: updates => mergeUpdates(updates, {
+          tag: 'g',
+          attr: [
+            { transform: 'rotate(270)' }
+          ],
+          children: [
+            {
+              tag: 'path',
+              attr: [
+                { d: geons.bugg },
+            ]
+          }
+        ],
+      })
     },
   },
-  grid: () => rectGrid({ x:96, y:96 }, { x:128, y:128 }, { x:4, y:4 }, true),
-  geonGrid: () => rectGrid({ x:96, y:96 }, { x:128, y:128 }, { x:2, y:2 }, true),
+  // grid: () => rectGrid({ x:96, y:96 }, { x:128, y:128 }, { x:4, y:4 }, true),
+  // geonGrid: () => rectGrid({ x:96, y:96 }, { x:128, y:128 }, { x:2, y:2 }, true),
   readKeys: geonset => keys(prop('geons', geonset)),
 }
 

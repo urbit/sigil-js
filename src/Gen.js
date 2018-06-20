@@ -83,7 +83,7 @@ class Gen extends Component {
 
       const params = {
         fillColor: '#fff',
-        strokeColor: avatar.palette[0],
+        // strokeColor: avatar.palette[0],
         strokeWidth: 0,
         selected: this.state.debug,
         insert: true,

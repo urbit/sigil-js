@@ -1,88 +1,25 @@
-
-import Graph from 'graphology'
-import { connectedComponents } from 'graphology-components'
 import _ from 'lodash'
 
 
-import chroma from 'chroma-js'
-
-const isObject = any => any && typeof any === 'object' && any.constructor === Object
-
-const isString = any => typeof any === 'string' || any instanceof String
-
-const isNumber = any => typeof any === 'number' && isFinite(any)
-
-const isArray = any => Array.isArray(any)
-
-const isFunction = any => typeof any === 'function'
-
-const isNull = any => any === null
-
-const isUndefined = any => typeof any === 'undefined'
-
-const isDef = any => typeof any !== 'undefined'
-
-const isBoolean = any => typeof any === 'boolean'
-
-const isRegExp = any => any && typeof any === 'object' && any.constructor === RegExp
-
-const isError = any => any instanceof Error && typeof any.message !== 'undefined'
-
-const isDate = any => any instanceof Date
-
-const isSymbol = any => typeof any === 'symbol'
-
 const randInt = max => Math.floor(Math.random() * Math.floor(max))
 
-// const factors = num => sequence(num).filter(i => num % i === 0)
 
-const sequence = num => Array.from(Array(num), (nada, i) => i)
-
-const fromRight = arr => i => arr.slice(0, i)
-
-const fromLeft = arr => i => arr.reverse().slice(0, i).reverse()
-
-// does not work on arrays of integers for some reason
-const flatten = ([x, ...xs]) => x
-  ? Array.isArray(x)
-    ? [...flatten(x), ...flatten(xs)]
-    : [x, ...flatten(xs)]
-  : []
-
-const chunk = (arr, mod) => arr.reduce((acc, a, i) => {
-  const offset = Math.floor(i / mod)
-  if(!acc[offset]) { acc[offset] = [] }
-  acc[offset].push(a)
-  return acc
-}, [])
-
-const swap = (x, y, [...xs]) => xs.length > 1
- ? ([xs[x], xs[y]] = [xs[y], xs[x]], xs)
- : xs;
 
 const avg = arr => arr.reduce((a,b) => a + b, 0) / arr.length
 
-const compose = (...fns) => fns.reduce((f, g) => (...args) => f(g(...args)))
 
-const end = arr => arr[arr.length - 1]
-
-const endIdx = arr => arr.length - 1
-
-const length = arr => arr.length
 
 const keys = obj => Object.keys(obj)
 
+
+
 const entries = obj => Object.entries(obj)
+
+
 
 const values = obj => Object.values(obj)
 
-const prop = (key, obj) => obj[key]
 
-const set = (key, obj, value) => obj[key] = value
-
-const getEdgeToBelow = (matrix, r, c) => getTopEdge(getCellBelow(matrix, r, c))
-
-const getEdgeToRight = (matrix, r, c) => getLeftEdge(getCellRight(matrix, r, c))
 
 const isMate = (a, b) => {
   if (a === b) {
@@ -94,88 +31,51 @@ const isMate = (a, b) => {
   }
 }
 
-const lastIndex = arr => arr.length - 1
 
-const getTopEdge = cell => cell.edgeMap[0]
-const getRightEdge = cell => cell.edgeMap[1]
-const getBottomEdge = cell => cell.edgeMap[2]
-const getLeftEdge = cell =>  cell.edgeMap[3]
-
-const getCellLeft = (matrix, rI, cI) => matrix[rI][cI - 1]
-const getCellRight = (matrix, rI, cI) => matrix[rI][cI + 1]
-const getCellAbove = (matrix, rI, cI) => matrix[rI - 1][cI]
-const getCellBelow = (matrix, rI, cI) => matrix[rI + 1][cI]
-
-const inBoundsX = (matrix, cI) => cI < lastIndex(matrix[0])
-const inBoundsY = (matrix, rI) => rI < lastIndex(matrix)
-
-const mmap = (arr, callback) => arr.map((row, rI, wholeMatrix) => row.map((cell, cI, wholeRow) => callback(cell, [rI, cI], wholeMatrix)))
-
-const transpose = matrix => matrix[0].map((x,i) => matrix.map(x => x[i]))
-
-const isFirstIdx = i => i === 0
-
-const isLastIdx = (arr, i) => i === arr.length - 1
-
-
-const partition = avatar => {
-  const horizontal = grainPartition(avatar.matrix)
-  // const twoByTwos = horizontal.forEach((row, rI) => {
-  // })
-
-  const vertical = grainPartition(transpose(avatar.matrix))
-
-  return {
-    horizontal,
-    vertical,
+const randomShip = type => {
+  let byteLength = 8
+  switch (type) {
+    case 'comet':
+      byteLength = 128
+      break
+    case 'moon':
+      byteLength = 64
+      break
+    case 'planet':
+      byteLength = 32
+      break
+    case 'star':
+      byteLength = 16
+      break
+    case 'galaxy':
+      byteLength = 8
+      break
+    default: byteLength = 8
   }
+  return randInt(Math.pow(2, byteLength))
 }
 
 
-const grainPartition = matrix => {
-
-  let sequences = []
-  matrix.forEach((row, rI) => {
-    let rowBreaks = []
-    row.forEach((cell, cI) => {
-      // append the start idx at the start of each row loop
-      if (isFirstIdx(cI)) rowBreaks = [...rowBreaks, 0]
-      if (inBoundsX(matrix, cI)) {
-        const cellToRight = getCellRight(matrix, rI, cI)
-        const thisRightEdge = getRightEdge(cell)
-        const thatLeftEdge = getLeftEdge(cellToRight)
-        if (!isMate(thisRightEdge, thatLeftEdge)) {
-          // append the start index of the next mate sequence
-          rowBreaks = [...rowBreaks, cI + 1]
-        }
-      }
-    })
-    sequences = [...sequences, multisplice(row, rowBreaks)]
-  })
-  return sequences
-}
-
-const multisplice = (arr, indices) => indices.map((startI, i) => arr.slice(startI, indices[i + 1]))
+// const countMates = (geonset, glyphMap, width) => {
+//   const reshaped = _.chunk(glyphMap, width)
+//   const edges = reshaped.map(row => row.map(cell => geonset.geons[cell].edgeMap))
+//   let acc = 0
+//   edges.forEach((row, rI) => row.forEach((cell, cI) => {
+//     if (inBoundsX(edges, cI)) {
+//       if (isMate(getRightEdge(cell), getEdgeToRight(edges, rI, cI))) {
+//         acc++
+//       }
+//     }
+//     if (inBoundsY(edges, rI)) {
+//       if (isMate(getBottomEdge(cell), getEdgeToBelow(edges, rI, cI))) {
+//         acc++
+//       }
+//     }
+//   }))
+//   return acc
+// }
 
 
-const countMates = (geonset, glyphMap, width) => {
-  const reshaped = chunk(glyphMap, width)
-  const edges = reshaped.map(row => row.map(cell => geonset.geons[cell].edgeMap))
-  let acc = 0
-  edges.forEach((row, rI) => row.forEach((cell, cI) => {
-    if (inBoundsX(edges, cI)) {
-      if (isMate(getRightEdge(cell), getEdgeToRight(edges, rI, cI))) {
-        acc++
-      }
-    }
-    if (inBoundsY(edges, rI)) {
-      if (isMate(getBottomEdge(cell), getEdgeToBelow(edges, rI, cI))) {
-        acc++
-      }
-    }
-  }))
-  return acc
-}
 
 const numComparator = (a, b, key) => {
   if (a[key] < b[key]) return -1
@@ -183,241 +83,103 @@ const numComparator = (a, b, key) => {
   return 0
 }
 
-const concat = (arr, item) => arr.concat(item)
 
-const sort = (arr, comparator, key) => arr.sort((a, b) => comparator(a, b, key))
-
-const rotateArr = (a, n) => a.slice(n, a.length).concat(a.slice(0, n))
-
-const scan = m => {
-  return [
-       m[0][0], m[0][1], m[1][0], m[1][1],
-       m[0][2], m[0][3], m[1][2], m[1][3],
-       m[2][0], m[2][1], m[3][0], m[3][1],
-       m[2][2], m[2][3], m[3][2], m[3][3],
-  ]
-}
 
 const isEven = n => n % 2 === 0
+
+
+
 const isOdd = n => n % 2 !== 0
 
 
-const arrEq = (a, b) => a.length === b.length
-  ? a.every((v, i) => v === b[i])
-  : false
 
-const combinatoric = (method, geonset) => {
-  const all = method(geonset.readKeys(geonset), 4).toArray()
+// const combinatoric = (method, geonset) => {
+//   const all = method(geonset.readKeys(geonset), 4).toArray()
+//
+//   const withMateCount = all.map(geonmap => ({
+//     geonmap,
+//     mateCount: countMates(geonset, geonmap, 2),
+//   }))
+//
+//   const sorted = sort(withMateCount, numComparator, 'mateCount').reverse()
+//   return sorted
+// }
 
-  const withMateCount = all.map(geonmap => ({
-    geonmap,
-    mateCount: countMates(geonset, geonmap, 2),
-  }))
 
-  const sorted = sort(withMateCount, numComparator, 'mateCount').reverse()
-  return sorted
-}
-
-const graph = geonList => {
-  let graph = new Graph()
-  // create nodes
-  geonList.forEach((row, rI) => row.forEach((cell, cI) => graph.addNode(cell.index, { ref:cell })))
-  // create edges
-  geonList.forEach((row, rI) => row.forEach((cell, cI) => {
-    if (inBoundsX(geonList, cI)) {
-      if (isMate(getRightEdge(cell), getEdgeToRight(geonList, rI, cI))) {
-        const properties = {
-          bond: getRightEdge(cell),
-          dir: 'rightward',
-        }
-        graph.addUndirectedEdgeWithKey(
-          // `${cell.index}-${cellToRight.index}`,
-          // cell.index,
-          // cellToRight.index,
-          // ...properties
-        )
-      }
-    }
-    if (inBoundsY(geonList, rI)) {
-      if (isMate(getBottomEdge(cell), getEdgeToBelow(geonList, rI, cI))) {
-        const properties = {
-          bond: getBottomEdge(cell),
-          dir: 'bottomward',
-        }
-        graph.addUndirectedEdgeWithKey(
-          // `${cell.index}-${cellToBelow.index}`,
-          // cell.index,
-          // cellToBelow.index,
-          // ...properties
-        )
-      }
-    }
-
-  }))
-  console.log(graph)
-  return graph
-}
-
-const dedupe = mates => {
-  return mates.reduce((acc, mate) => {
-    if (!(mate.reverse() in acc)) {
-      return [...acc, mate]
-    }
-  }, [])
-}
-
-const palette = p => {
-  const charCodes = p.join('').split('').map(c => c.charCodeAt(0))
-
-  const xMax = 360;
-  const xMin = 0;
-
-  const yMax = 121;
-  const yMin = 97;
-
-  const inputY = charCodes[0]
-
-  const percent = (inputY - yMin) / (yMax - yMin)
-  const outputX = percent * (xMax - xMin) + xMin
-
-  // chroma.scale(['#4330FC','#2A4858'])
-  //   .mode('lch')
-  //   .colors(6)
-
-  return [
-    '#4735F5',
-    '#C4C4C4',
-    '#EB5757',
-  ]
-}
-
-const etch = (avatar, etchset) => {
-
-  // const validSites = avatar.subgraphs.filter(graph => {
-  //   const isMatch =
-  //   return isMatch === true
-  // })
-
-  const etchProfile = {
-    hule: {
-      members: [
-        {
-          offset: 64,
-        },
-        {
-          offset: 128 + 32,
-        },
-      ]
-    },
-    dott: {
-      members: [
-        {
-          target: 2,
-          radius: 16,
-          // halo: (target, radius) => noop(),
-        },
-        {
-          target: 8,
-          radius: 32,
-          // halo: (target, radius) => noop(),
-        },
-      ]
-    },
-  }
-
-  // makes pre-filled functions for renderer
-  const prefill = entries(etchProfile).map(([k, v]) => {
-    return v.members.map(params => {
-      return () => etchset.etches[k].insert(params)
-    })
-  })
-
-  return prefill
-}
 
 const quickHash = entropy => Math.random().toString(36).substr(2, entropy)
 
-const subgraphs = avatar => {
-  console.log(avatar.graph.edges())
-  const sgs = connectedComponents(avatar.graph).map(sg => {
-      let graph = new Graph()
-      const nodes = sg.forEach(idx => {
-        graph.addNode(`${idx}`, {...avatar.graph.getNodeAttributes(idx)})
-      })
-      const edges = sg.forEach(idx => {
 
-
-      })
-
-      return nodes
-
-  })
-  return sgs
-}
 
 const mergeUpdates = (updates, originalElement) => {
-  return updates.reduce((acc, update) => {
-    const { action, payload, path} = update
-    const existingValue = _.get(acc, path)
-    const method = mergeMethods[action]
-    const newValue = method(existingValue, payload)
-    _.set(acc, path, newValue)
-    return acc
-  }, {...originalElement})
 
+  return updates.reduce((acc, update) => {
+
+    const { action, payload, path} = update
+
+    const existingValue = _.get(acc, path)
+
+    const method = mergeMethods[action]
+
+    const newValue = method(existingValue, payload)
+
+    _.set(acc, path, newValue)
+
+    return acc
+
+  }, {...originalElement})
 }
+
+
 
 const mergeMethods = {
   concat: (existingValue, payload) => existingValue.concat(payload),
-  replace: (existingValue, payload) => ({...existingValue, ...payload}),
+  replace: (existingValue, payload) => ({...payload}),
+  append: (existingValue, payload) => ({...existingValue, ...payload}),
+  concatStr: (existingValue, payload) => `${existingValue} ${payload}`
 }
+
+
+
+
+
+const patpArrToStr = p => {
+  return p.reduce((acc, syl, i) => isEven(i)
+    ? i === 0
+      ? `~${acc}${syl}`
+        ? i === 16
+        : `${acc}^${syl}`
+      : `${acc}-${syl}`
+    : `${acc}${syl}`
+  , '')
+}
+
+
+
+const patpStrToArr = p => p.replace(/[\^~-]/g,'').match(/.{1,3}/g)
+
 
 
 
 export {
-  countMates,
-  flatten,
-  sequence,
-  chunk,
-  swap,
   randInt,
-  end,
-  compose,
-  sort,
-  prop,
-  set,
   numComparator,
-  rotateArr,
-  scan,
   isEven,
   isOdd,
-  arrEq,
-  isObject,
-  isString,
-  isNumber,
-  isArray,
-  isFunction,
-  isNull,
-  isUndefined,
-  isBoolean,
-  isRegExp,
-  isError,
-  isDate,
-  isSymbol,
-  isDef,
+
   values,
   entries,
   keys,
-  combinatoric,
-  endIdx,
-  length,
-  graph,
-  subgraphs,
-  dedupe,
-  palette,
-  etch,
+
   quickHash,
-  partition,
   mergeUpdates,
   mergeMethods,
+  isMate,
+
+  randomShip,
+  patpArrToStr,
+  patpStrToArr,
+
+  // traverse,
+
 }

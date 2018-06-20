@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-
-import Sel from './Sel'
-import Gen from './Gen'
+// 
+// import Sel from './Sel'
+// import Gen from './Gen'
 import AvatarGenerator from './AvatarGenerator'
 
 class App extends Component {
@@ -15,9 +15,9 @@ class App extends Component {
   render() {
     let route
     if (this.state.route === 'gen') {
-      route = <Gen />
+      // route = <Gen />
     } else if (this.state.route === 'sel') {
-      route = <Sel />
+      // route = <Sel />
     } else {
       route = <AvatarGenerator patps={['monnum-rocdeg']} />
     }

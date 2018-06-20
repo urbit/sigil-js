@@ -10,6 +10,7 @@ import {
   randomShip,
   patpArrToStr,
   patpStrToArr,
+  updaters,
 } from '../lib/lib'
 
 import {
@@ -72,7 +73,6 @@ const pour = (p, geonset, etchset, sylmap) => {
       return {
         ...cell,
         origin: [iR, iC],
-        index: iR + iC,
       }
     })
   })
@@ -95,14 +95,20 @@ const pour = (p, geonset, etchset, sylmap) => {
   _.set(seal, 'model', {
     tag: 'svg',
     attr: [],
-    children: _.map(seal.geonList, geon => {
-      const updates = []
+    children: _.map(_.flatten(seal.geonMatrix), geon => {
+      const updates = [{
+        action: 'concatStr',
+        payload:`translate(${seal.grid[geon.index].x}, ${seal.grid[geon.index].y})`,
+        path: 'attr.transform',
+      }]
       const model = geon.svg(updates)
       return model
     }),
   })
 
-  console.log(seal.model)
+  // console.log(seal.model)
+
+  noll(seal.model)
 
 
 
@@ -110,9 +116,12 @@ const pour = (p, geonset, etchset, sylmap) => {
   return seal
 }
 
+
 // as in knolling
 const noll = model => {
-  model.children.map()
+  // model.children.map(child => {
+  //   updaters.
+  // })
 }
 
 

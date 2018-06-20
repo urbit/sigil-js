@@ -27,6 +27,7 @@ class SealGenerator extends Component {
 
   componentDidMount = () => {
     const randomPlanet = ob.toPlanetName(randomShip('planet'))
+    const constantPlanet = '~ridlur-figbud'
     const seals = multiPour([randomPlanet], geonset, etchset, sylmap)
     this.setState({ seals })
   }
@@ -84,7 +85,7 @@ const tags = {
   },
   path: p => {
     return (
-      <path {...p.attr} stroke={'white'} strokeWidth={'1'}>
+      <path {...p.attr} fill={'white'}>
         { p.children.map(child => tags[child.tag](child)) }
       </path>
     )

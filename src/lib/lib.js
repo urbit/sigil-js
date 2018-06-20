@@ -119,7 +119,7 @@ const mergeUpdates = (updates, originalElement) => {
 
     const existingValue = _.get(acc, path)
 
-    const method = mergeMethods[action]
+    const method = updaters[action]
 
     const newValue = method(existingValue, payload)
 
@@ -132,11 +132,11 @@ const mergeUpdates = (updates, originalElement) => {
 
 
 
-const mergeMethods = {
+const updaters = {
   concat: (existingValue, payload) => existingValue.concat(payload),
   replace: (existingValue, payload) => ({...payload}),
   append: (existingValue, payload) => ({...existingValue, ...payload}),
-  concatStr: (existingValue, payload) => `${existingValue} ${payload}`
+  concatStr: (existingValue, payload) => `${payload} ${existingValue}`
 }
 
 
@@ -173,13 +173,13 @@ export {
 
   quickHash,
   mergeUpdates,
-  mergeMethods,
   isMate,
 
   randomShip,
   patpArrToStr,
   patpStrToArr,
 
+  updaters
   // traverse,
 
 }

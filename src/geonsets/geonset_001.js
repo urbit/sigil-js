@@ -53,7 +53,8 @@ const geonset = {
       edgeMap: [e.round, e.round, e.round, e.round],
       svg: updates => mergeUpdates(updates, {
           tag: 'g',
-          attr: {},
+          typeKey: 'GEON',
+          attr: { transform: 'rotate(0, 64, 64)' },
           children: [
             {
               tag: 'path',
@@ -69,7 +70,8 @@ const geonset = {
       edgeMap: [e.none,e.full,e.full,e.none],
       svg: updates => mergeUpdates(updates, {
           tag: 'g',
-          attr: { transform: 'rotate(0)' },
+          typeKey: 'GEON',
+          attr: { transform: 'rotate(0, 64, 64)' },
           children: [
             {
               tag: 'path',
@@ -85,7 +87,8 @@ const geonset = {
       edgeMap: [e.none,e.none,e.full,e.full],
       svg: updates => mergeUpdates(updates, {
           tag: 'g',
-          attr: { transform: 'rotate(90)' },
+          typeKey: 'GEON',
+          attr: { transform: 'rotate(90, 64, 64)' },
           children: [
             {
               tag: 'path',
@@ -104,7 +107,8 @@ const geonset = {
       edgeMap: [e.full, e.none, e.none, e.full],
       svg: updates => mergeUpdates(updates, {
           tag: 'g',
-          attr: { transform: 'rotate(180)' },
+          typeKey: 'GEON',
+          attr: { transform: 'rotate(180, 64, 64)' },
           children: [
             {
               tag: 'path',
@@ -121,7 +125,8 @@ const geonset = {
       edgeMap: [e.full,e.full,e.none,e.none],
       svg: updates => mergeUpdates(updates, {
           tag: 'g',
-          attr: { transform: 'rotate(270)' },
+          typeKey: 'GEON',
+          attr: { transform: 'rotate(270, 64, 64)' },
           children: [
             {
               tag: 'path',
@@ -138,7 +143,8 @@ const geonset = {
       edgeMap: [e.full,e.full,e.full,e.full],
       svg: updates => mergeUpdates(updates, {
           tag: 'g',
-          attr: {},
+          typeKey: 'GEON',
+          attr: { transform: 'rotate(0, 64, 64)' },
           children: [
             {
               tag: 'path',
@@ -155,7 +161,8 @@ const geonset = {
       edgeMap: [e.full,e.half_top,e.round,e.half_top],
       svg: updates => mergeUpdates(updates, {
           tag: 'g',
-          attr: { transform: 'rotate(0)' },
+          typeKey: 'GEON',
+          attr: { transform: 'rotate(0, 64, 64)' },
           children: [
             {
               tag: 'path',
@@ -172,7 +179,8 @@ const geonset = {
       edgeMap: [e.half_left,e.full,e.half_left,e.round],
       svg: updates => mergeUpdates(updates, {
           tag: 'g',
-          attr: { transform: 'rotate(90)' },
+          typeKey: 'GEON',
+          attr: { transform: 'rotate(90, 64, 64)' },
           children: [
             {
               tag: 'path',
@@ -189,7 +197,8 @@ const geonset = {
       edgeMap: [e.round,e.half_bottom,e.full,e.half_bottom],
       svg: updates => mergeUpdates(updates, {
           tag: 'g',
-          attr: { transform: 'rotate(180)' },
+          typeKey: 'GEON',
+          attr: { transform: 'rotate(180, 64, 64)' },
           children: [
             {
               tag: 'path',
@@ -206,7 +215,8 @@ const geonset = {
       edgeMap: [e.half_right,e.round,e.half_right,e.full],
       svg: updates => mergeUpdates(updates, {
           tag: 'g',
-          attr: { transform: 'rotate(270)' },
+          typeKey: 'GEON',
+          attr: { transform: 'rotate(270, 64, 64)' },
           children: [
             {
               tag: 'path',
@@ -223,6 +233,7 @@ const geonset = {
       edgeMap: [e.half_left,e.half_bottom,e.half_right,e.half_top],
       svg: updates => mergeUpdates(updates, {
           tag: 'g',
+          typeKey: 'GEON',
           attr: { transform: 'rotate(0)' },
           children: [
             {
@@ -240,7 +251,8 @@ const geonset = {
       edgeMap: [e.half_right, e.half_top, e.half_left, e.half_bottom],
       svg: updates => mergeUpdates(updates, {
           tag: 'g',
-          attr: { transform: 'rotate(90)' },
+          typeKey: 'GEON',
+          attr: { transform: 'rotate(90, 64, 64)' },
           children: [
             {
               tag: 'path',
@@ -257,14 +269,15 @@ const geonset = {
       edgeMap: [e.none,e.none,e.none,e.none],
       svg: updates => mergeUpdates(updates, {
           tag: 'g',
+          typeKey: 'GEON',
           attr: { transform: 'rotate(0)' },
-          children: [
-            {
-              tag: 'path',
-              attr: { d: geons.grap },
-              children: [],
-          }
-        ],
+          children: _.map(geons.grap, d => {
+            return {
+                tag: 'path',
+                attr: { d },
+                children: [],
+            }
+          })
       })
     },
     // fatt, 0deg
@@ -286,6 +299,7 @@ const geonset = {
       edgeMap: [e.half_left,e.round,e.round,e.half_top],
       svg: updates => mergeUpdates(updates, {
           tag: 'g',
+          typeKey: 'GEON',
           attr: { transform: 'rotate(0)' },
           children: [
             {
@@ -303,7 +317,8 @@ const geonset = {
       edgeMap: [e.half_right,e.half_top,e.round,e.round],
       svg: updates => mergeUpdates(updates, {
           tag: 'g',
-          attr: { transform: 'rotate(90)' },
+          typeKey: 'GEON',
+          attr: { transform: 'rotate(90, 64, 64)' },
           children: [
             {
               tag: 'path',
@@ -320,7 +335,8 @@ const geonset = {
       edgeMap: [e.round,e.half_bottom,e.half_right,e.round],
       svg: updates => mergeUpdates(updates, {
           tag: 'g',
-          attr: { transform: 'rotate(180)' },
+          typeKey: 'GEON',
+          attr: { transform: 'rotate(180, 64, 64)' },
           children: [
             {
               tag: 'path',
@@ -337,7 +353,8 @@ const geonset = {
       edgeMap: [e.round,e.round,e.half_left,e.half_bottom],
       svg: updates => mergeUpdates(updates, {
           tag: 'g',
-          attr: { transform: 'rotate(270)' },
+          typeKey: 'GEON',
+          attr: { transform: 'rotate(270, 64, 64)' },
           children: [
             {
               tag: 'path',
@@ -359,12 +376,15 @@ const geonset = {
       edgeMap: [ e.none, e.none, e.full, e.none ],
       svg: updates => mergeUpdates(updates, {
           tag: 'g',
-          attr: { transform: 'rotate(0)' },
-          children: _.map(geons.bugg, d => ({
-              tag: 'path',
-              attr: { d },
-              children: [],
-          }))
+          typeKey: 'GEON',
+          attr: { transform: 'rotate(0, 64, 64)' },
+          children: _.map(geons.bugg, d => {
+            return {
+                tag: 'path',
+                attr: { d },
+                children: [],
+            }
+          })
       })
     },
     // bugg 90deg
@@ -374,12 +394,15 @@ const geonset = {
       edgeMap: [e.none,e.none,e.none,e.full],
       svg: updates => mergeUpdates(updates, {
           tag: 'g',
-          attr: { transform: 'rotate(90)' },
-          children: _.map(geons.bugg, d => ({
-              tag: 'path',
-              attr: { d },
-              children: [],
-          }))
+          typeKey: 'GEON',
+          attr: { transform: 'rotate(90, 64, 64)' },
+          children: _.map(geons.bugg, d => {
+            return {
+                tag: 'path',
+                attr: { d },
+                children: [],
+            }
+          })
       })
     },
     // bugg 180deg
@@ -389,12 +412,15 @@ const geonset = {
       edgeMap: [e.full,e.none,e.none,e.none],
       svg: updates => mergeUpdates(updates, {
           tag: 'g',
-          attr: { transform: 'rotate(180)' },
-          children: _.map(geons.bugg, d => ({
-              tag: 'path',
-              attr: { d },
-              children: [],
-          }))
+          typeKey: 'GEON',
+          attr: { transform: 'rotate(180, 64, 64)' },
+          children: _.map(geons.bugg, d => {
+            return {
+                tag: 'path',
+                attr: { d },
+                children: [],
+            }
+          })
       })
     },
     // bugg 270deg
@@ -404,12 +430,15 @@ const geonset = {
       edgeMap: [e.none, e.full, e.none, e.none],
       svg: updates => mergeUpdates(updates, {
           tag: 'g',
-          attr: { transform: 'rotate(270)' },
-          children: _.map(geons.bugg, d => ({
-              tag: 'path',
-              attr: { d },
-              children: [],
-          }))
+          typeKey: 'GEON',
+          attr: { transform: 'rotate(270, 64, 64)' },
+          children: _.map(geons.bugg, d => {
+            return {
+                tag: 'path',
+                attr: { d },
+                children: [],
+            }
+          })
       })
     },
   },

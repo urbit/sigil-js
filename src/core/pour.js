@@ -46,7 +46,7 @@ const pour = (p, geonset, etchset, sylmap) => {
     flat: true,
   }))
 
-  console.log(seal.grid)
+  // console.log(seal.grid)
 
 
   // give each geon a set of new metadata
@@ -97,7 +97,7 @@ const pour = (p, geonset, etchset, sylmap) => {
     attr: [],
     children: _.map(_.flatten(seal.geonMatrix), geon => {
       const updates = [{
-        action: 'concatStr',
+        action: 'prependStr',
         payload:`translate(${seal.grid[geon.index].x}, ${seal.grid[geon.index].y})`,
         path: 'attr.transform',
       }]

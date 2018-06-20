@@ -136,7 +136,9 @@ const updaters = {
   concat: (existingValue, payload) => existingValue.concat(payload),
   replace: (existingValue, payload) => ({...payload}),
   append: (existingValue, payload) => ({...existingValue, ...payload}),
-  concatStr: (existingValue, payload) => `${payload} ${existingValue}`
+  prependStr: (existingValue, payload) => `${payload} ${existingValue}`,
+  concatStr: (existingValue, payload) => `${existingValue} ${payload}`
+
 }
 
 

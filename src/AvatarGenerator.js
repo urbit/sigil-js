@@ -13,8 +13,6 @@ import {
 
 import { pour, multiPour } from './core/pour'
 
-
-// import { base, baseState } from './lib/lib.firebase'
 const SIZE = 600
 
 class SealGenerator extends Component {
@@ -62,7 +60,6 @@ const insert = seal => tags.svg(seal.model)
 
 const tags = {
   svg: p => {
-    // console.log(p.children)
     return (
       <svg height={SIZE} width={SIZE} version={'1.1'} xmlns={'http://www.w3.org/2000/svg'}>
         { p.children.map(child => tags[child.tag](child)) }
@@ -76,11 +73,11 @@ const tags = {
       </circle>
     )
   },
-  rectangle: p => {
+  rect: p => {
     return (
-      <rectangle {...p.attr}>
+      <rect {...p.attr}>
         { p.children.map(child => tags[child.tag](child)) }
-      </rectangle>
+      </rect>
     )
   },
   path: p => {
@@ -91,13 +88,33 @@ const tags = {
     )
   },
   g: p => {
-    // console.log(p)
     return (
       <g {...p.attr}>
         { p.children.map(child => tags[child.tag](child)) }
       </g>
     )
   },
+  polygon: p => {
+    return (
+      <polygon {...p.attr}>
+        { p.children.map(child => tags[child.tag](child)) }
+      </polygon>
+    )
+  },
+  line: p => {
+    return (
+      <line {...p.attr}>
+        { p.children.map(child => tags[child.tag](child)) }
+      </line>
+    )
+  },
+  polyline: p => {
+    return (
+      <polyline {...p.attr}>
+        { p.children.map(child => tags[child.tag](child)) }
+      </polyline>
+    )
+  }
 }
 
 

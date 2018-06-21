@@ -1,11 +1,11 @@
-import _ from 'lodash'
+import { get, set, reduce, size } from 'lodash'
 
 
 const randInt = max => Math.floor(Math.random() * Math.floor(max))
 
 
 
-const avg = arr => arr.reduce((a,b) => a + b, 0) / arr.length
+const avg = arr => reduce(arr, (a,b) => a + b, 0) / size(arr)
 
 
 
@@ -113,17 +113,17 @@ const quickHash = entropy => Math.random().toString(36).substr(2, entropy)
 
 const mergeUpdates = (updates, originalElement) => {
 
-  return updates.reduce((acc, update) => {
+  return reduce(updates, (acc, update) => {
 
     const { action, payload, path} = update
 
-    const existingValue = _.get(acc, path)
+    const existingValue = get(acc, path)
 
     const method = updaters[action]
 
     const newValue = method(existingValue, payload)
 
-    _.set(acc, path, newValue)
+    set(acc, path, newValue)
 
     return acc
 
@@ -133,7 +133,7 @@ const mergeUpdates = (updates, originalElement) => {
 
 
 const updaters = {
-  concat: (existingValue, payload) => existingValue.concat(payload),
+  concat: (existingValue, payload) => [...existingValue, payload],
   replace: (existingValue, payload) => ({...payload}),
   append: (existingValue, payload) => ({...existingValue, ...payload}),
   prependStr: (existingValue, payload) => `${payload} ${existingValue}`,
@@ -146,7 +146,7 @@ const updaters = {
 
 
 const patpArrToStr = p => {
-  return p.reduce((acc, syl, i) => isEven(i)
+  return reduce(p, (acc, syl, i) => isEven(i)
     ? i === 0
       ? `~${acc}${syl}`
         ? i === 16

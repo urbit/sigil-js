@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 // import fileDownload from 'js-file-download'
 import _ from 'lodash'
-import ob from 'urbit-ob'
+import { toPlanetName } from 'urbit-ob'
 
 import geonset from './geonsets/geonset_001'
 import etchset from './etchsets/etchset_000'
@@ -24,7 +24,7 @@ class SealGenerator extends Component {
   }
 
   componentDidMount = () => {
-    const randomPlanet = ob.toPlanetName(randomShip('planet'))
+    const randomPlanet = toPlanetName(randomShip('planet'))
     const constantPlanet = '~ridlur-figbud'
     const seals = multiPour([randomPlanet], geonset, etchset, sylmap)
     this.setState({ seals })

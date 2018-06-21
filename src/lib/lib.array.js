@@ -1,4 +1,4 @@
-import _ from 'lodash'
+import { flatten, size, map } from 'lodash'
 
 import {
   isMate,
@@ -10,7 +10,7 @@ const sequence = num => Array.from(Array(num), (nada, i) => i)
 
 
 
-const swap = (x, y, [...xs]) => xs.length > 1
+const swap = (x, y, [...xs]) => size(xs) > 1
  ? ([xs[x], xs[y]] = [xs[y], xs[x]], xs)
  : xs;
 
@@ -20,30 +20,26 @@ const rectGrid = params => {
   const { origin, cellSize, extents, flat } = params
   const x = sequence(extents.x)
   const y = sequence(extents.y)
-  const nestedGrid = y.map(iY => x.map(iX => ({
+  const nestedGrid = map(y, iY => map(x, iX => ({
     x: origin.x + (cellSize.x * iX),
     y: origin.y + (cellSize.y * iY),
   })
   ))
-  if (flat) return _.flatten(nestedGrid)
+  if (flat) return flatten(nestedGrid)
   return nestedGrid
 }
 
 
 
-const end = arr => arr[arr.length - 1]
+const end = arr => arr[size(arr) - 1]
 
 
 
-const endIdx = arr => arr.length - 1
+const length = arr => size(arr)
 
 
 
-const length = arr => arr.length
-
-
-
-const lastIndex = arr => arr.length - 1
+const lastIndex = arr => size(arr) - 1
 
 
 
@@ -73,8 +69,8 @@ const isInBounds = {
 
 
 const mmap = (arr, callback) => {
-  return arr.map((row, rI, wholeMatrix) => {
-    return row.map((cell, cI, wholeRow) => {
+  return map(arr, (row, rI, wholeMatrix) => {
+    return map(row, (cell, cI, wholeRow) => {
       return callback(cell, [rI, cI], wholeMatrix)
     })
   })
@@ -82,7 +78,7 @@ const mmap = (arr, callback) => {
 
 
 
-const transpose = matrix => matrix[0].map((x,i) => matrix.map(x => x[i]))
+const transpose = matrix => map(matrix[0], (x,i) => map(matrix, x => x[i]))
 
 
 
@@ -109,11 +105,8 @@ const partition = avatar => {
 
 
 
-const multisplice = (arr, indices) => indices.map((startI, i) => arr.slice(startI, indices[i + 1]))
+const multisplice = (arr, indices) => map(indices, (startI, i) => arr.slice(startI, indices[i + 1]))
 
-
-
-const concat = (arr, item) => arr.concat(item)
 
 
 
@@ -121,7 +114,7 @@ const sort = (arr, comparator, key) => arr.sort((a, b) => comparator(a, b, key))
 
 
 
-const rotate = (a, n) => a.slice(n, a.length).concat(a.slice(0, n))
+const rotate = (a, n) => [...a.slice(n, size(a)), a.slice(0, n)]
 
 
 
@@ -136,7 +129,7 @@ const scan = m => {
 
 
 
-const arrEq = (a, b) => a.length === b.length
+const arrEq = (a, b) => size(a) === size(b)
   ? a.every((v, i) => v === b[i])
   : false
 
@@ -172,7 +165,6 @@ export {
   sequence,
   swap,
   end,
-  endIdx,
   length,
   lastIndex,
   getEdge,
@@ -184,7 +176,6 @@ export {
   isLastIdx,
   partition,
   multisplice,
-  concat,
   sort,
   rotate,
   scan,

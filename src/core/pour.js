@@ -1,9 +1,9 @@
-import _ from 'lodash'
-import ob from 'urbit-ob'
+import { set, map, isString, get, chunk, flatten } from 'lodash'
+import { toAddress } from 'urbit-ob'
 // import { patp } from '../lib/lib.urbit'
-import chroma from 'chroma-js'
-import Graph from 'graphology'
-import { connectedComponents } from 'graphology-components'
+// import chroma from 'chroma-js'
+// import Graph from 'graphology'
+// import { connectedComponents } from 'graphology-components'
 
 import {
   quickHash,
@@ -21,15 +21,11 @@ import {
 } from '../lib/lib.array'
 
 
-
 const pour = (p, geonset, etchset, sylmap) => {
-
-  if (_.isString(p)) p = patpStrToArr(p)
-
 
   // defaults
   let seal = {
-    patp: p,
+    patp: [],
     geonArray: [],
     geonMatrix: [],
     color: [],
@@ -39,7 +35,14 @@ const pour = (p, geonset, etchset, sylmap) => {
     model: [],
   }
 
-  _.set(seal, 'grid', rectGrid({
+  set(seal, 'address', toAddress(p))
+
+  if (isString(p)) p = patpStrToArr(p)
+
+  set(seal, 'patp', p)
+
+
+  set(seal, 'grid', rectGrid({
     origin: { x: 0, y: 0 },
     cellSize: { x:128, y:128 },
     extents: { x: 4, y: 4 },
@@ -50,7 +53,7 @@ const pour = (p, geonset, etchset, sylmap) => {
 
 
   // give each geon a set of new metadata
-  _.set(seal, 'geonList', scan(pull(p, sylmap, geonset)).map((item, index) => {
+  set(seal, 'geonList', scan(pull(p, sylmap, geonset)).map((item, index) => {
     return {
       ...item,
       hash: quickHash(4),
@@ -68,8 +71,8 @@ const pour = (p, geonset, etchset, sylmap) => {
   // )
 
 
-  _.set(seal, 'geonMatrix', _.chunk(seal.geonList, 4).map((row, iR) => {
-    return row.map((cell, iC) => {
+  set(seal, 'geonMatrix', map(chunk(get(seal, 'geonList'), 4), (row, iR) => {
+    return map(row, (cell, iC) => {
       return {
         ...cell,
         origin: [iR, iC],
@@ -78,24 +81,16 @@ const pour = (p, geonset, etchset, sylmap) => {
   })
   )
 
-  _.set(seal, 'part', part(seal))
+  set(seal, 'part', part(seal))
 
-  _.set(seal, 'dyes', dyes(p))
+  set(seal, 'dyes', dyes(p))
 
-  _.set(seal, 'etch', etch(seal, etchset))
+  set(seal, 'etch', etch(seal, etchset))
 
-
-
-
-
-
-
-
-
-  _.set(seal, 'model', {
+  set(seal, 'model', {
     tag: 'svg',
     attr: [],
-    children: _.map(_.flatten(seal.geonMatrix), geon => {
+    children: map(flatten(seal.geonMatrix), geon => {
       const updates = [{
         action: 'prependStr',
         payload:`translate(${seal.grid[geon.index].x}, ${seal.grid[geon.index].y})`,
@@ -106,7 +101,7 @@ const pour = (p, geonset, etchset, sylmap) => {
     }),
   })
 
-  // console.log(seal.model)
+  console.log(seal)
 
   noll(seal.model)
 
@@ -148,14 +143,11 @@ const etch = () => {
 
 }
 
-const pull = (p, sylmap, geonset) => {
-  const realGeons = _.map(p, syl => {
-    const geonmapOfSyl = _.get(sylmap, ['sylmap', syl, 'geonmap'])
-    const geons = _.map(geonmapOfSyl, key => _.get(geonset.geons, key))
+const pull = (p, sylmap, geonset) => map(p, syl => {
+    const geonmap = get(sylmap, ['sylmap', syl, 'geonmap'])
+    const geons = map(geonmap, key => get(geonset.geons, key))
     return geons
   })
-  return realGeons
-}
 
 // const graph = geonList => {
 //   let graph = new Graph()

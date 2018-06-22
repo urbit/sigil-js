@@ -45,6 +45,9 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 const suffixes = suf.match(/.{1,3}/g)
 const prefixes = pre.match(/.{1,3}/g)
 
+const eachLSuf = suf.split('')
+const eachLPre = pre.split('')
+
 const patp = {
   // suffixes,
   // prefixes,
@@ -64,6 +67,10 @@ const patp = {
 
 export {
   patp,
+  suf,
+  pre,
+  eachLSuf,
+  eachLPre,
   suffixes,
   prefixes,
 }

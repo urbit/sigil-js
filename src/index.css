@@ -11,7 +11,7 @@ body {
 }
 
 .App {
-  text-align: center;
+  /* text-align: center; */
 }
 
 .App-header {
@@ -34,9 +34,14 @@ nav {
   display: flex;
   align-items: center;
   background-color: black;
+  border-bottom: 1px solid white;
   /* position: fixed;
   top: 0;
   left: 0; */
+}
+
+nav.top {
+  align-items: flex-end;
 }
 
 .row {
@@ -64,14 +69,14 @@ button {
   margin-right: 0.25rem;
 }
 
-button.selected {
+/* button.selected {
   color: white;
   background-color: #4330FC;
 
-}
+} */
 
 button:hover {
-  opacity: 0.6;
+  /* opacity: 0.6; */
   cursor: pointer;
 }
 
@@ -84,6 +89,12 @@ input {
   height: 2rem;
   border: none;
   outline: none;
+}
+
+p {
+  font-family: "San Francisco", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: 400;
+
 }
 
 nav p {
@@ -105,5 +116,97 @@ nav span {
   display: flex;
   margin: 0 1rem;
   align-items: center;
+}
 
+.radio {
+  display: flex;
+  align-items: center;
+  margin-left: 1rem;
+}
+
+.radio button {
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 999px;
+  background-color: black;
+  border: 1px solid white;
+  margin-right: 0.5rem;
+  position: relative;
+}
+
+.radio button.selected{
+  /* background-color: #4330FC; */
+  border: 1px solid #4330FC;
+}
+
+.radio button.selected:before{
+  content: '';
+  background-color: #4330FC;
+  display: block;
+  width: calc(1.75rem - 6px);
+  height: calc(1.75rem - 6px);
+  border-radius: 999px;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+}
+
+.tab button {
+  border: 1px solid white;
+  border-bottom: none;
+  transform: translateY(1px);
+
+  background-color: white;
+  color: black;
+}
+
+.tab button.selected {
+  border: 1px solid white;
+  border-bottom: none;
+  background-color: black;
+  color: white;
+}
+
+
+ol {
+
+}
+
+li {
+  display: flex;
+  width: 20rem;
+}
+
+li .label {
+  padding: 0.25rem;
+  width: 2rem;
+}
+
+.table {
+  display: flex;
+}
+
+.col {
+  display: inline-block;
+}
+
+.bar {
+  content: '';
+  display: block;
+  border-bottom: 1px solid black;
+}
+
+hr {
+  border: none;
+  border-bottom: 1px solid white;
+  background-color: white;
+}
+
+.white-bg {
+  background-color: #4330FC;
+  opacity: 0.75;
+}
+
+.blue-bg {
+  background-color: #4330FC;
 }

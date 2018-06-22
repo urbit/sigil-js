@@ -15,7 +15,7 @@ import { pour, multiPour } from './core/pour'
 
 const SIZE = 600
 
-class SealGenerator extends Component {
+class Pour extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -118,4 +118,4 @@ const tags = {
 }
 
 
-export default SealGenerator
+export default Pour

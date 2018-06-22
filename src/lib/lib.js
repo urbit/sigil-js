@@ -134,6 +134,7 @@ const mergeUpdates = (updates, originalElement) => {
 
 const updaters = {
   concat: (existingValue, payload) => [...existingValue, payload],
+  prepend: (existingValue, payload) => [payload, ...existingValue],
   replace: (existingValue, payload) => ({...payload}),
   append: (existingValue, payload) => ({...existingValue, ...payload}),
   prependStr: (existingValue, payload) => `${payload} ${existingValue}`,

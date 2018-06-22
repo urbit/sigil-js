@@ -44,11 +44,11 @@ nav.top {
   align-items: flex-end;
 }
 
-.row {
+/* .row {
   display: flex;
   justify-content: space-between;
   border-bottom: 1px solid white;
-}
+} */
 
 .row pre {
   padding: 0.1rem;
@@ -169,7 +169,8 @@ nav span {
 
 
 ol {
-
+  margin-left: 0.25rem;
+  padding-left: 0.25rem;
 }
 
 li {
@@ -209,4 +210,46 @@ hr {
 
 .blue-bg {
   background-color: #4330FC;
+}
+
+.graph {
+  margin-left: 2rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.graph .row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* width: 512px; */
+  /* height: 256px; */
+}
+
+.row div {
+  height: 150px;
+  width: 150px;
+  font-size: 1rem;
+  padding: 1rem;
+  border: 1px solid white;
+  margin: 0;
+}
+
+.row p {
+  font-family: 'Source Code Pro', monospace !important;
+
+}
+
+.flex {
+  max-width: 100vw;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.syl ol {
+  width: 3rem;
+}
+
+main {
+  padding: 4rem;
 }

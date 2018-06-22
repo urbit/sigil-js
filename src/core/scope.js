@@ -1,4 +1,4 @@
-import { set, map, isString, get, chunk, flatten, reduce, filter } from 'lodash'
+import { set, map, isString, get, chunk, flatten, reduce, filter, sort, groupBy } from 'lodash'
 
 
 import {
@@ -8,6 +8,7 @@ import {
   patpStrToArr,
   updaters,
   entries,
+  comparator,
 } from '../lib/lib'
 
 import {
@@ -22,6 +23,8 @@ import {
   suf,
   eachLPre,
   eachLSuf,
+  suffixes,
+  prefixes,
 } from '../lib/lib.urbit'
 
 
@@ -74,12 +77,6 @@ const zippedAll = map(alphabet, (letter, index) => {
   })
 })
 
-console.log(zippedAll)
-
-// const zippedDist = map(totalDist, (count, index) => ({
-//   letter: alphabet[index],
-//   frequency: count,
-// }))
 
 const isZero = a => a === 0
 const nonZero = a => !isZero(a)
@@ -88,7 +85,16 @@ const neverPre = filter(zippedPre, item => isZero(item.frequency))
 const neverSuf = filter(zippedSuf, item => isZero(item.frequency))
 const neverDist = filter(zippedAll, item => isZero(item.frequency))
 
-
+const reverseStr = s => {
+  // console.log(s)
+  return s.split('').reverse().join('')
+}
+// const suffixesSorted = suffixes.sort((a, b) => comparator(reverseStr(a), reverseStr(b)))
+//
+// const prefixesSorted = prefixes.sort((a, b) => comparator(reverseStr(a), reverseStr(b)))
+//
+const suffixesSorted = groupBy(suffixes, syl => syl.slice(-2))
+const prefixesSorted = groupBy(prefixes, syl => syl.slice(-2))
 
 export {
   alphabet,
@@ -100,4 +106,6 @@ export {
   neverPre,
   neverSuf,
   neverDist,
+  suffixesSorted,
+  prefixesSorted,
 }

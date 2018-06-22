@@ -83,6 +83,12 @@ const numComparator = (a, b, key) => {
   return 0
 }
 
+const comparator = (a, b) => {
+  if (a < b) return -1
+  if (a > b) return 1
+  return 0
+}
+
 
 
 const isEven = n => n % 2 === 0
@@ -182,7 +188,8 @@ export {
   patpArrToStr,
   patpStrToArr,
 
-  updaters
+  updaters,
+  comparator,
   // traverse,
 
 }

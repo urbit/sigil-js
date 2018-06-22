@@ -1,13 +1,14 @@
 import React, { Component } from 'react'
 // import chr from 'chroma-js'
 import fileDownload from 'js-file-download'
-import { map } from 'lodash'
+import { map, filter } from 'lodash'
 
 // import { base, baseState } from './lib/lib.firebase'
 import {
   entries,
   values,
   numComparator,
+  keys,
 } from './lib/lib'
 
 import {
@@ -17,6 +18,11 @@ import {
   neverPre,
   neverSuf,
   neverDist,
+  alphabet,
+  vowels,
+  consonants,
+  prefixesSorted,
+  suffixesSorted,
 } from './core/scope'
 
 import {
@@ -53,16 +59,22 @@ class Scope extends Component {
       sufList = sufList.sort((va, vb) => numComparator(va, vb, 'frequency')).reverse()
       allList = allList.sort((va, vb) => numComparator(va, vb, 'frequency')).reverse()
 
-    } else {
-
     }
+
+    const prefixVowels = filter(preList, item => item.frequency !== 0 && vowels.includes(item.letter))
+    const prefixConsonants = filter(preList, item => item.frequency !== 0 && consonants.includes(item.letter))
+
+    const suffixVowels = filter(sufList, item => item.frequency !== 0 && vowels.includes(item.letter))
+    const suffixConsonants = filter(sufList, item => item.frequency !== 0 && consonants.includes(item.letter))
 
     return (
       <div>
         <nav>
-          <button onClick={() => this.setState({sort: !this.state.sort})}>{'Sort'}</button>
         </nav>
+        <main>
         <p>PATP DISTRIBUTION</p>
+        <button onClick={() => this.setState({sort: !this.state.sort})}>{'Sort'}</button>
+
         <div className={'table'}>
 
           <ol>
@@ -128,11 +140,63 @@ class Scope extends Component {
             }
           </ol>
 
+          <div className={'graph'}>
+            <div className={'row'}>
+              <div>
+                <p>v: {map(prefixVowels, l => `${l.letter}, `)}</p>
+                <p>c: {map(prefixConsonants, l => `${l.letter}, `)}</p>
+              </div>
+              <div>
+                <p>v: {map(suffixVowels, l => `${l.letter}, `)}</p>
+                <p>c: {map(suffixConsonants, l => `${l.letter}, `)}</p>
+              </div>
+            </div>
+            <div className={'row'}>
+            <div>
+              <p>v: {map(prefixVowels, l => `${l.letter}, `)}</p>
+              <p>c: {map(prefixConsonants, l => `${l.letter}, `)}</p>
+            </div>
+            <div>
+              <p>v: {map(suffixVowels, l => `${l.letter}, `)}</p>
+              <p>c: {map(suffixConsonants, l => `${l.letter}, `)}</p>
+            </div>
+            </div>
+          </div>
+
 
         </div>
+        <h2>{`suffixesSorted: ${keys(suffixesSorted).length}`}</h2>
+
+        <section className={'flex syl'}>
+        {
+          map(entries(suffixesSorted), ([k, v]) => {
+            return (
+              <ol>
+                <h3>{`-${k}`}</h3>
+                <hr/>
+                {map(v, syl => <li>{syl}</li>)}
+              </ol>
+            )
+          })
+        }
+        </section>
+        <h2>{`prefixesSorted: ${keys(prefixesSorted).length}`}</h2>
+        <section className={'flex syl'}>
+        {
+          map(entries(prefixesSorted), ([k, v]) => {
+            return (
+              <ol>
+                <h3>{`-${k}`}</h3>
+                <hr/>
+                {map(v, syl => <li>{syl}</li>)}
+              </ol>
+            )
+          })
+        }
+        </section>
 
 
-
+      </main>
       </div>
     )
   }

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 // import chr from 'chroma-js'
 import fileDownload from 'js-file-download'
-import { map, filter } from 'lodash'
+import { map, filter, sort, isUndefined, reduce } from 'lodash'
 
 // import { base, baseState } from './lib/lib.firebase'
 import {
@@ -23,6 +23,9 @@ import {
   consonants,
   prefixesSorted,
   suffixesSorted,
+  sharedConsonants,
+  sharedVowels,
+  phonetics,
 } from './core/scope'
 
 import {
@@ -41,7 +44,8 @@ class Scope extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      sort: false,
+      sortLetter: false,
+      sortEnds: 'qty',
     }
   }
 
@@ -53,13 +57,21 @@ class Scope extends Component {
     let sufList = [...zippedSuf]
     let allList = [...zippedAll]
 
-    if (this.state.sort === true) {
 
+    let ps = [...prefixesSorted].sort((va, vb) => numComparator(va, vb, this.state.sortEnds))
+    let ss = [...suffixesSorted].sort((va, vb) => numComparator(va, vb, this.state.sortEnds))
+
+    // console.log(JSON.stringify(ss.map(item => item.key), null, 2))
+    // console.log(ps)
+
+    if (this.state.sortLetter === true) {
       preList = preList.sort((va, vb) => numComparator(va, vb, 'frequency')).reverse()
       sufList = sufList.sort((va, vb) => numComparator(va, vb, 'frequency')).reverse()
       allList = allList.sort((va, vb) => numComparator(va, vb, 'frequency')).reverse()
-
     }
+
+    // ps = ps.sort((va, vb) => numComparator(va, vb, 'qty')).reverse()
+    // ss = ss.sort((va, vb) => numComparator(va, vb, 'qty')).reverse()
 
     const prefixVowels = filter(preList, item => item.frequency !== 0 && vowels.includes(item.letter))
     const prefixConsonants = filter(preList, item => item.frequency !== 0 && consonants.includes(item.letter))
@@ -69,11 +81,10 @@ class Scope extends Component {
 
     return (
       <div>
-        <nav>
-        </nav>
         <main>
-        <p>PATP DISTRIBUTION</p>
-        <button onClick={() => this.setState({sort: !this.state.sort})}>{'Sort'}</button>
+        <h1>Scope</h1>
+        <h2>@p Character Distribution</h2>
+        <button onClick={() => this.setState({sortLetter: !this.state.sortLetter})}>{'Sort'}</button>
 
         <div className={'table'}>
 
@@ -141,59 +152,118 @@ class Scope extends Component {
           </ol>
 
           <div className={'graph'}>
-            <div className={'row'}>
-              <div>
-                <p>v: {map(prefixVowels, l => `${l.letter}, `)}</p>
-                <p>c: {map(prefixConsonants, l => `${l.letter}, `)}</p>
-              </div>
-              <div>
-                <p>v: {map(suffixVowels, l => `${l.letter}, `)}</p>
-                <p>c: {map(suffixConsonants, l => `${l.letter}, `)}</p>
-              </div>
-            </div>
-            <div className={'row'}>
-            <div>
-              <p>v: {map(prefixVowels, l => `${l.letter}, `)}</p>
-              <p>c: {map(prefixConsonants, l => `${l.letter}, `)}</p>
-            </div>
-            <div>
-              <p>v: {map(suffixVowels, l => `${l.letter}, `)}</p>
-              <p>c: {map(suffixConsonants, l => `${l.letter}, `)}</p>
-            </div>
-            </div>
+          <h4>{'Shared'}</h4>
+            <table>
+              <tbody>
+                <tr>
+                  <th>Consontants</th>
+                  <th>Vowels</th>
+                </tr>
+                <tr>
+                  <td>{
+                    sharedConsonants
+                  }</td>
+                  <td>{
+                    sharedVowels
+                  }</td>
+                </tr>
+
+              </tbody>
+            </table>
+            <h4>{'Unique'}</h4>
+            <table>
+              <tbody>
+                <tr>
+                  <th></th>
+                  <th>Consontants</th>
+                  <th>Vowels</th>
+                </tr>
+                <tr>
+                  <td>Prefix</td>
+                  <td>{
+                    filter(alphabet, letter => !map([...neverPre], l => l.letter).includes(letter) && !vowels.includes(letter) && !sharedConsonants.includes(letter))
+                  }</td>
+                  <td>{
+                    filter(alphabet, letter => !map([...neverPre], l => l.letter).includes(letter) && vowels.includes(letter) && !sharedVowels.includes(letter))
+                  }</td>
+
+                </tr>
+                <tr>
+                  <td>Suffix</td>
+                  <td>{
+                    filter(alphabet, letter => !map([...neverSuf], l => l.letter).includes(letter) && !vowels.includes(letter) && !sharedConsonants.includes(letter))
+                  }</td>
+                  <td>{
+                    filter(alphabet, letter => !map([...neverSuf], l => l.letter).includes(letter) && vowels.includes(letter) && !sharedVowels.includes(letter))
+                  }</td>
+                </tr>
+              </tbody>
+            </table>
+
+
+
           </div>
 
 
         </div>
-        <h2>{`suffixesSorted: ${keys(suffixesSorted).length}`}</h2>
+        <hr />
+        <h2>Phonetic Sort</h2>
+        <button onClick={() => this.setState({sortEnds: 'll'})}>{'last letter'}</button>
+        <button onClick={() => this.setState({sortEnds: 'vo'})}>{'vowel'}</button>
+        <button onClick={() => this.setState({sortEnds: 'qty'})}>{'qty'}</button>
+        <button onClick={() => this.setState({sortEnds: 'pn'})}>{'phonetics'}</button>
 
+
+        <h2>{`prefix ends: ${keys(prefixesSorted).length}`}</h2>
         <section className={'flex syl'}>
         {
-          map(entries(suffixesSorted), ([k, v]) => {
-            return (
+          map(ps, (item, index) => {
+
+            const key = this.state.sortEnds
+            let cn = 'hidden'
+            if (!isUndefined(ps[index - 1])) {
+              if (ps[index - 1][key] !== item[key]) {
+                cn = 'vr'
+              }
+            } else if (index === 0) {
+              cn = 'vr'
+            }
+            return [
+              <div className={cn}><p>{item[key]}</p></div>,
               <ol>
-                <h3>{`-${k}`}</h3>
-                <hr/>
-                {map(v, syl => <li>{syl}</li>)}
+                <h3>{`-${item.key}`}</h3>
+                {map(item.members, syl => <li>{syl}</li>)}
               </ol>
-            )
+            ]
           })
         }
         </section>
-        <h2>{`prefixesSorted: ${keys(prefixesSorted).length}`}</h2>
+
+        <h2>{`suffix ends: ${keys(suffixesSorted).length}`}</h2>
         <section className={'flex syl'}>
         {
-          map(entries(prefixesSorted), ([k, v]) => {
-            return (
+          map(ss, (item, index) => {
+            const key = this.state.sortEnds
+            let cn = 'hidden'
+            if (!isUndefined(ss[index - 1])) {
+              if (ss[index - 1][key] !== item[key] || index === 0) {
+                cn = 'vr'
+              }
+            } else if (index === 0) {
+              cn = 'vr'
+            }
+            return [
+              <div className={cn}><p>{item[key]}</p></div>,
               <ol>
-                <h3>{`-${k}`}</h3>
-                <hr/>
-                {map(v, syl => <li>{syl}</li>)}
+                <h3>{`-${item.key}`}</h3>
+                { map(item.members, syl => <li>{syl}</li>) }
               </ol>
-            )
+            ]
+
           })
         }
         </section>
+
 
 
       </main>

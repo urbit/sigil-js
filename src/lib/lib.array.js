@@ -114,9 +114,11 @@ const sort = (arr, comparator, key) => arr.sort((a, b) => comparator(a, b, key))
 
 
 
-const rotate = (a, n) => [...a.slice(n, size(a)), a.slice(0, n)]
 
-
+const rotate = (arr, n) => {
+  var L = arr.length;
+  return arr.slice(L - n).concat(arr.slice(0, L - n));
+};
 
 const scan = m => {
   return [

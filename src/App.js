@@ -8,7 +8,7 @@ class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      route: 'scope',
+      route: 'lung',
     }
   }
 
@@ -32,15 +32,15 @@ class App extends Component {
               title={'Scope'}
               id={'scope'} />
             <TabButton
-              onClick={() => this.setState({route: 'pour'})}
-              keySelectedInPanel={this.state.route === 'pour'}
-              title={'Pour'}
-              id={'pour'} />
-            <TabButton
               onClick={() => this.setState({route: 'lung'})}
               keySelectedInPanel={this.state.route === 'lung'}
               title={'Lung'}
               id={'lung'} />
+            <TabButton
+              onClick={() => this.setState({route: 'pour'})}
+              keySelectedInPanel={this.state.route === 'pour'}
+              title={'Pour'}
+              id={'pour'} />
           </span>
         </nav>
         { route }
@@ -61,7 +61,6 @@ const TabButton = ({ keySelectedInPanel, title, onClick, id }) => {
   return (
     <div className={classes}>
       <button className={classes} onClick={onClick}>{title}</button>
-
     </div>
   )
 }

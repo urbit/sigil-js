@@ -81,11 +81,11 @@ const pour = (p, geonset, etchset, sylmap) => {
   })
   )
 
-  set(seal, 'part', part(seal))
+  // set(seal, 'part', part(seal))
 
   set(seal, 'dyes', dyes(p))
 
-  set(seal, 'etch', etch(seal, etchset))
+  // set(seal, 'etch', etch(seal, etchset))
 
   set(seal, 'model', {
     tag: 'svg',
@@ -103,7 +103,7 @@ const pour = (p, geonset, etchset, sylmap) => {
 
   console.log(seal)
 
-  noll(seal.model)
+  // noll(seal.model)
 
 
 

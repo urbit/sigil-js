@@ -1,3 +1,6 @@
+:root {
+  font-size: 16px;
+}
 
 html {
   background-color: black;
@@ -38,6 +41,21 @@ nav {
   /* position: fixed;
   top: 0;
   left: 0; */
+}
+
+nav button {
+  height: 1.5rem;
+  margin-right: 1px;
+}
+
+nav button:hover {
+  /* background-color: #4330FC !important;
+  color: white; */
+  opacity: 0.66;
+}
+
+nav input {
+  height: 1.5rem;
 }
 
 nav.top {
@@ -136,12 +154,12 @@ nav span {
 
 .radio button.selected{
   /* background-color: #4330FC; */
-  border: 1px solid #4330FC;
+  border: 1px solid #fff;
 }
 
 .radio button.selected:before{
   content: '';
-  background-color: #4330FC;
+  background-color: #fff;
   display: block;
   width: calc(1.75rem - 6px);
   height: calc(1.75rem - 6px);
@@ -198,18 +216,19 @@ li .label {
 }
 
 hr {
+  width: 100%;
   border: none;
   border-bottom: 1px solid white;
-  background-color: white;
+  /* background-color: white; */
 }
 
 .white-bg {
-  background-color: #4330FC;
-  opacity: 0.75;
+  background-color: #fff;
+  margin-left: 1px;
 }
 
 .blue-bg {
-  background-color: #4330FC;
+  background-color: #fff;
 }
 
 .graph {
@@ -252,4 +271,44 @@ hr {
 
 main {
   padding: 4rem;
+}
+
+table {
+  border-left: 1px solid white;
+  border-top: 1px solid white;
+  border-spacing: 0px
+}
+
+td, th {
+  border-right: 1px solid white;
+  border-bottom: 1px solid white;
+  padding: 0.5rem;
+  margin: 0;
+}
+
+.hidden {
+  visibility: hidden;
+  width: 0px;
+}
+
+.vr {
+  border-right: 1px solid white;
+  margin-left: 0.5rem;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.vr p {
+  position: absolute;
+  background-color: white;
+  color: black;
+  border: 1px solid white;
+  padding: 0.25rem;
+  top: -1rem;
+}
+
+svg {
+  /* border: 1px solid #4330FC; */
+  background-color: grey;
+  margin-right: 4px;
 }

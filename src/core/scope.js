@@ -32,6 +32,27 @@ const alphabet = 'abcdefghijklmnopqrstuvxyz'.split('')
 
 const vowels = 'aeiouy'.split('')
 
+// const stops = 'tdn'.split('')
+//
+// const fricatives = 'sfvz'.split('')
+//
+// const approximants = 'wjrl'.split('')
+//
+// const bilabial = 'pbm'.split('')
+//
+// const velar = 'kgcx'.split('')
+//
+// const glottal = 'h'.split('')
+
+const phonetics = [
+  { cat: 'stops', members:'tdn'.split('') },
+  { cat: 'fricatives', members:'sfvz'.split('') },
+  { cat: 'approximants', members:'wjrl'.split('') },
+  { cat: 'bilabial', members:'pbm'.split('') },
+  { cat: 'velar', members:'kgcx'.split('') },
+  { cat: 'glottal', members:'h'.split('') },
+]
+
 const consonants = alphabet.filter(l => !vowels.includes(l))
 
 // a = prefixes
@@ -93,8 +114,48 @@ const reverseStr = s => {
 //
 // const prefixesSorted = prefixes.sort((a, b) => comparator(reverseStr(a), reverseStr(b)))
 //
-const suffixesSorted = groupBy(suffixes, syl => syl.slice(-2))
-const prefixesSorted = groupBy(prefixes, syl => syl.slice(-2))
+let suffixesSorted = map(entries(groupBy(suffixes, syl => syl.slice(-2))), ([k, v]) => ({key: k, members:v, qty:v.length}))
+
+let prefixesSorted = map(entries(groupBy(prefixes, syl => syl.slice(-2))), ([k, v]) => ({key: k, members:v, qty:v.length}))
+
+const sharedConsonants = filter(alphabet, letter => !map([...neverSuf, ...neverPre], l => l.letter).includes(letter) && !vowels.includes(letter) )
+
+const sharedVowels = filter(alphabet, letter => !map([...neverSuf, ...neverPre], l => l.letter).includes(letter) && vowels.includes(letter) )
+
+
+prefixesSorted = map(prefixesSorted, item => {
+  const targetConsonant = item.key[1]
+  const phoneticMembership = reduce(entries(phonetics), (acc, [kb, vb]) => {
+    if (vb.members.includes(targetConsonant)) {
+      return vb.cat
+    } else {
+      return acc
+    }
+  }, '')
+  return {
+    ...item,
+    vo: item.key[0],
+    ll: item.key[1],
+    pn: phoneticMembership,
+  }
+})
+
+suffixesSorted = map(suffixesSorted, item => {
+  const targetConsonant = item.key[1]
+  const phoneticMembership = reduce(entries(phonetics), (acc, [kb, vb]) => {
+    if (vb.members.includes(targetConsonant)) {
+      return vb.cat
+    } else {
+      return acc
+    }
+  }, '')
+  return {
+    ...item,
+    vo: item.key[0],
+    ll: item.key[1],
+    pn: phoneticMembership,
+  }
+})
 
 export {
   alphabet,
@@ -108,4 +169,7 @@ export {
   neverDist,
   suffixesSorted,
   prefixesSorted,
+  sharedConsonants,
+  sharedVowels,
+  phonetics,
 }

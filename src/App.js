@@ -1,25 +1,26 @@
 import React, { Component } from 'react'
-//
-import Lung from './Lung'
+
+import Foundry from './Foundry'
 import Scope from './Scope'
-import Pour from './Pour'
+// import Pour from './Pour'
+import { TabButton } from './components/components'
 
 class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      route: 'lung',
+      route: 'Foundry',
     }
   }
 
   render() {
     let route
-    if (this.state.route === 'lung') {
-      route = <Lung />
+    if (this.state.route === 'Foundry') {
+      route = <Foundry />
     } else if (this.state.route === 'scope') {
       route = <Scope />
     } else {
-      route = <Pour patps={['monnum-rocdeg']} />
+      // route = <Pour patps={['monnum-rocdeg']} />
     }
 
     return (
@@ -32,10 +33,10 @@ class App extends Component {
               title={'Scope'}
               id={'scope'} />
             <TabButton
-              onClick={() => this.setState({route: 'lung'})}
-              keySelectedInPanel={this.state.route === 'lung'}
-              title={'Lung'}
-              id={'lung'} />
+              onClick={() => this.setState({route: 'Foundry'})}
+              keySelectedInPanel={this.state.route === 'Foundry'}
+              title={'Foundry'}
+              id={'Foundry'} />
             <TabButton
               onClick={() => this.setState({route: 'pour'})}
               keySelectedInPanel={this.state.route === 'pour'}
@@ -49,30 +50,6 @@ class App extends Component {
   }
 }
 
-// const Button = ({ keySelectedInPanel, title, onClick, id }) => {
-//   const classes = keySelectedInPanel === id ? 'selected button' : 'unselected button'
-//   return (
-//     <button className={classes} onClick={onClick}>{title}</button>
-//   )
-// }
-//
-const TabButton = ({ keySelectedInPanel, title, onClick, id }) => {
-  const classes = keySelectedInPanel ? 'selected tab' : 'unselected tab'
-  return (
-    <div className={classes}>
-      <button className={classes} onClick={onClick}>{title}</button>
-    </div>
-  )
-}
 
-const RadioButton = ({ keySelectedInPanel, title, onClick, id }) => {
-  const classes = keySelectedInPanel ? 'selected radio' : 'unselected radio'
-  return (
-    <div className={classes}>
-      <button className={classes} onClick={onClick} />
-      {title}
-    </div>
-  )
-}
 
 export default App

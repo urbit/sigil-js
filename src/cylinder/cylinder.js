@@ -1,4 +1,6 @@
-import { map, get, set, filter, reduce, isUndefined, forEach } from 'lodash'
+import { map, get, set, filter, reduce, isUndefined, forEach, flatten } from 'lodash'
+
+import { compose } from '../lib/lib'
 
 import * as Figma from '../figma/build/main/index'
 
@@ -15,13 +17,18 @@ import { sequence, rotate } from '../lib/lib.array'
 
 const TOKEN = '1952-9da74b1b-551c-4acf-83b4-23b31743ab51'
 
-const DEFAULT_COLOR = '#8000FF'
+const D_COLOR = '#8000FF'
+
+const FG_COLOR = '#fff'
+
+const BG_COLOR = '#4330FC'
 
 const client = Figma.Client({ personalAccessToken: TOKEN })
 
-const inhale = callback => {
+const cast = callback => {
+  console.log('Calling Figma')
   client.file('BegaVM3GXXhSsi3dTVbdvsGy', { geometry: 'paths' })
-    .then(({ data }) => callback(permute(normalize(transform(data)))))
+    .then(({ data }) => compose(callback, turn, transform)(data))
     .catch(err => console.error('Inhale() choked: ', err))
 }
 
@@ -30,131 +37,231 @@ const inhale = callback => {
 // Translate Figma data object into SVG/JSON structure
 //
 const transform = data => {
-  const rawFrames = get(data, ['document', 'children', 0, 'children'])
+  // The GET endpoint returns a full document. Here we get all child elements of
+  // a page in a document
+  const docEls = get(data, ['document', 'children', 0, 'children'])
 
-   // console.log(groups)
-  //
-  const newGroups = map(rawFrames, group => {
+  // Return a POJO of transformed Figma elements by key
+  const cylinder = reduce(docEls, (acc, docEl) => {
 
-    // Get info out of csv title field
-    const td = titleParser(get(group, 'name', ''))
-    if (td.t === 'line') console.log(group)
-    // Outer Group
-    return makeTag({
-      tag: 'g',
+    // Extra metadata is store in the title field of the figma object. We
+    // retrieve it here.
+    const csv = titleParser(get(docEl, 'name', ''))
+
+    // We make a key for the object that reduce forms. This key stores
+    // permutation data as a way to refer to a specific permutation, which are
+    // made later. 'key.degreesRotation.fillStyle.strokeStyle'
+    const key = `${get(csv, 'k', 'zz')}.0.fg.n`
+
+    // make a tag from each Figma frame element
+    const tag = makeTag({
+      tag: get(figmaTypeTags, docEl.type),
       meta: {
-        wall: get(td, 'm', 'dddd'),
-        perm: {
-          r: parseInt(get(td, 'r', '1')),
-        },
-        type: get(td, 't', false),
-        id: get(group, 'id', false),
+        wall: get(csv, 'm', 'dddd'),
+        perm: {r: parseInt(get(csv, 'r', '1')) },
+        style: 0,
+        type: get(csv, 't', false),
+        id: get(docEl, 'id', false),
+        key: key,
       },
-      attr: {},
-      children: map(get(group, 'children'), child => makeTag({
-          tag: get(figTags, child.type),
-          attr: getAttr(child),
-          meta: { type: get(child, 'name')},
-          children: [],
-        })
-      ),
+      attr: {rotate:0},
+      children: map(get(docEl, 'children'), child => makeTag({
+        tag: get(figmaTypeTags, child.type),
+        attr: getAttr(child),
+        meta: { type: get(child, 'name') },
+        children: [],
+      })),
     })
-  })
-  return newGroups
+
+    // Append to accumulator with a key
+    acc[key] = tag
+    return acc
+  }, {})
+
+  return cylinder
 }
 
-const normalize = groups => {
-  return map(groups, group => {
-    // TODO: need to normalize line here
-    if (group.meta.type === 'line') {
-      return {
-        ...group,
-        children: map(group.children, child => {
-          const childCopy = deepClone(child)
-          set(childCopy, ['attr', 'fill'], DEFAULT_COLOR)
-          set(childCopy, ['attr', 'fillOpacity'], 0)
-          set(childCopy, ['attr', 'strokeWidth'], 1)
-          set(childCopy, ['attr', 'stroke'], DEFAULT_COLOR)
-          // set(childCopy, ['attr','strokeAlignment'], 'inside')
-          return childCopy
-        })
-      }
-    }
-    return {
-      ...group,
-      children: map(group.children, child => {
-        const childCopy = deepClone(child)
-        set(childCopy, ['attr', 'fill'], DEFAULT_COLOR)
-        set(childCopy, ['attr', 'fillOpacity'], 1)
-        set(childCopy, ['attr', 'strokeWidth'], 0)
-        set(childCopy, ['attr', 'stroke'], DEFAULT_COLOR)
-        // set(childCopy, ['attr','strokeAlignment'], 'inside')
-        return childCopy
-      })
-    }
-  })
-}
 
-// Make any programmatic permutations of transformed Figma output
+
+// take deco types and make fill=false / stroke=BG_COLOR
 //
-const permute = data => {
-  let accA = []
-  let accB = []
+const a = base => reduce(base, (acc, group) => {
+    const type = group.meta.type
+    if (type === 'deco' || type === 'dot') {
 
-  // Make rotation permutations
-  //
-  forEach(data, group => {
-    const numRotations = group.meta.perm.r
-    if (numRotations !== false) {
-      forEach(sequence(numRotations), index => {
-        const deg = numRotations === 2
-          ? index === 0
-            ? 0
-            : 90
-          : (360 / numRotations) * index
-        const groupCopy = deepClone(group)
-        set(groupCopy, ['attr', 'rotate'], deg)
-        const rotatedEdgemap = rotate(get(groupCopy, ['meta', 'wall'] ).split(''), index).join('')
-        set(groupCopy, ['meta', 'wall'], rotatedEdgemap)
-        accA = accA.concat(groupCopy)
+      // update the reference key
+      const splitKey = group.meta.key.split('.')
+      splitKey[2] = 'n'
+      splitKey[3] = 'bg'
+      const newKey = splitKey.join('.')
+
+      const clone = deepClone(group)
+
+      clone.children = map(clone.children, child => {
+        const c = deepClone(child)
+        set(c, ['attr', 'fill'], D_COLOR)
+        set(c, ['attr', 'fillOpacity'], 0)
+        set(c, ['attr', 'strokeWidth'], 1)
+        set(c, ['attr', 'stroke'], BG_COLOR)
+        return c
       })
+
+      set(clone, ['meta', 'key'], newKey)
+      acc[newKey] = clone
     }
-  })
+    return acc
 
-  // Make filled / stroke permutations
+}, base)
 
-  forEach(accA, group => {
-    if (group.meta.type === 'geon' || group.meta.type === 'dot' || group.meta.type === 'deco') {
-      const copy = deepClone(group)
-      copy.children = map(copy.children, child => {
-        const childCopy = deepClone(child)
-        set(childCopy, ['attr', 'fill'], 'rgb(255,255,255)')
-        set(childCopy, ['attr', 'fillOpacity'], 0)
-        set(childCopy, ['attr', 'strokeWidth'], 1)
-        set(childCopy, ['attr', 'stroke'], '#000')
-        return childCopy
+
+// take deco types and make fill=FG_COLOR / stroke=BG_COLOR
+//
+const b = base => reduce(base, (acc, group) => {
+    const type = group.meta.type
+    if (type === 'deco') {
+
+      // update the reference key
+      const splitKey = group.meta.key.split('.')
+      splitKey[2] = 'bg'
+      splitKey[3] = 'fg'
+      const newKey = splitKey.join('.')
+
+      const clone = deepClone(group)
+
+      clone.children = map(clone.children, child => {
+        const c = deepClone(child)
+        set(c, ['attr', 'fill'], BG_COLOR)
+        set(c, ['attr', 'fillOpacity'], 1)
+        set(c, ['attr', 'strokeWidth'], 1)
+        set(c, ['attr', 'stroke'], FG_COLOR)
+        return c
       })
-      accB = accB.concat(copy)
-    }
-  })
 
-  return [...accA, ...accB]
+      set(clone, ['meta', 'key'], newKey)
+      acc[newKey] = clone
+
+    }
+
+    return acc
+
+}, base)
+
+// no fill, stroke FG_COLOR
+const c = base => reduce(base, (acc, group) => {
+    const type = group.meta.type
+    if (type === 'deco' || type === 'dot') {
+
+      // update the reference key
+      const splitKey = group.meta.key.split('.')
+      splitKey[2] = 'fg'
+      splitKey[3] = 'n'
+      const newKey = splitKey.join('.')
+
+      const clone = deepClone(group)
+
+      clone.children = map(clone.children, child => {
+        const c = deepClone(child)
+        set(c, ['attr', 'fill'], D_COLOR)
+        set(c, ['attr', 'fillOpacity'], 0)
+        set(c, ['attr', 'strokeWidth'], 1)
+        set(c, ['attr', 'stroke'], FG_COLOR)
+        return c
+      })
+
+      set(clone, ['meta', 'key'], newKey)
+      acc[newKey] = clone
+    }
+    return acc
+
+}, base)
+
+
+const d = base => reduce(base, (acc, group) => {
+    const type = group.meta.type
+    if (type === 'deco' || type === 'dot' || type === 'line') {
+
+      const numRotations = group.meta.perm.r
+      const rotations = reduce(sequence(numRotations), (smallAcc, index) => {
+
+          if (index !== 0) {
+
+            const clone = deepClone(group)
+            const deg = numRotations === 2 ? index === 0 ? 0 : 90 : (360 / numRotations) * index
+            const rotatedEdgemap = rotate(get(clone, ['meta', 'wall'] ).split(''), index).join('')
+
+            const splitKey = group.meta.key.split('.')
+            splitKey[1] = deg
+            const newKey = splitKey.join('.')
+
+            set(clone, ['attr', 'rotate'], deg)
+            set(clone, ['meta', 'wall'], rotatedEdgemap)
+            set(clone, ['meta', 'key'], newKey)
+
+            smallAcc[newKey] = clone
+            return smallAcc
+
+          }
+          return smallAcc
+        }, {})
+
+        acc = {...acc, ...rotations}
+
+      }
+      return acc
+
+
+}, base)
+
+// line types/ dot types:  fill=BG_COLOR / stroke=NONE
+//
+const e = base => reduce(base, (acc, group) => {
+    const type = group.meta.type
+    if (type === 'line' || type === 'dot') {
+
+      // update the reference key
+      const splitKey = group.meta.key.split('.')
+      splitKey[2] = 'bg'
+      splitKey[3] = 'n'
+      const newKey = splitKey.join('.')
+
+      const clone = deepClone(group)
+
+      clone.children = map(clone.children, child => {
+        const c = deepClone(child)
+        set(c, ['attr', 'fill'], BG_COLOR)
+        set(c, ['attr', 'fillOpacity'], 1)
+        set(c, ['attr', 'strokeWidth'], 0)
+        set(c, ['attr', 'stroke'], BG_COLOR)
+        return c
+      })
+
+      set(clone, ['meta', 'key'], newKey)
+      acc[newKey] = clone
+    }
+    return acc
+
+}, base)
+
+
+const turn = groups => {
+  // never append copies of the originals
+  // composes functions that append a stage of permutations to the cylinder
+
+  return compose(a, b, c, e, d)(groups)
 }
+
 
 // take what we can transform and get the value at the address of a node
 //
-const getAttr = node => {
-  const nodeAttr = reduce(entries(figAttrTranformer), (acc, [attrName, getVal]) => {
+const getAttr = node => reduce(entries(figPropGetters), (acc, [n, get]) => {
     return {
       ...acc,
-      ...attrBindings[attrName](getVal(node))
+      ...propBindings[n](get(node)),
     }
-
   }, {})
-  return nodeAttr
-}
 
-const t = {
+
+const svgTagTypes = {
   g: 'g',
   rect: 'rect',
   circle: 'circle',
@@ -164,58 +271,43 @@ const t = {
   svg: 'svg',
   path: 'path',
   line: 'line',
-  metadata: 'metadata'
+  metadata: 'metadata',
 }
 
-const figTags = {
-  VECTOR: t.path,
-  RECTANGLE: t.path,
-  ELLIPSE: t.path,
-  LINE: t.path,
-  FRAME: t.g,
+
+const figmaTypeTags = {
+  VECTOR: svgTagTypes.path,
+  RECTANGLE: svgTagTypes.path,
+  ELLIPSE: svgTagTypes.path,
+  LINE: svgTagTypes.path,
+  FRAME: svgTagTypes.g,
 }
 
-const figPaths = {
-  fill: ['fills', 0, 'color'],
-  strokeGeometry: ['strokeGeometry', 0, 'path'],
-  fillGeometry: ['fillGeometry', 0, 'path'],
-  stroke: ['strokes', 0, 'color'],
-  strokeWidth: ['strokeWeight'],
-  relativeTransform: ['relativeTransform'],
-}
 
-const rgba = obj => `rgba(${obj.r}, ${obj.g}, ${obj.b}, ${obj.a})`
+// const rgb = obj => `rgb(${obj.r}, ${obj.g}, ${obj.b})`
 
-const rgb = obj => `rgb(${obj.r}, ${obj.g}, ${obj.b})`
 
 const titleParser = str => reduce(str.split(','), (acc, data) => {
   const kv = data.split(':')
   const key = kv[0]
-  if (validCSVTags.includes(key)) {
-    acc[key] = isUndefined(kv[1])
-      ? false
-      : kv[1]
+  if ('mrtk'.split('').includes(key)) {
+    acc[key] = isUndefined(kv[1]) ? false : kv[1]
     return acc
   }
   return acc
 }, {})
 
 
-const validCSVTags = 'mrt'.split('')
-
-const figAttrTranformer = {
-  fill: node => rgba(get(node, figPaths.fill, DEFAULT_COLOR)),
-  fillOpacity: node => get(node, figPaths.fill[3], 0),
-  d: node =>  {
-    const fillGeo = get(node, figPaths.fillGeometry, [])
-    const strokeGeo = get(node, figPaths.strokeGeometry, [])
-    if (fillGeo.length === 0) return strokeGeo
-    return strokeGeo
-  },
-  stroke: node => get(node, figPaths.stroke, 'none'),
-  strokeWidth: node => get(node, figPaths.strokeWidth, 0),
-  relativeTransform: node => get(node, figPaths.relativeTransform),
+// set default values
+const figPropGetters = {
+  fill: node => FG_COLOR,
+  fillOpacity: node => get(node, 1, 1),
+  d: node =>  get(node, ['fillGeometry', 0, 'path']),
+  stroke: node => BG_COLOR,
+  strokeWidth: node => 0,
+  relativeTransform: node => get(node, ['relativeTransform']),
 }
+
 
 const makeTag = params => ({
   ...params,
@@ -225,7 +317,8 @@ const makeTag = params => ({
   children: params.children,
 })
 
-const attrBindings = {
+
+const propBindings = {
   fill: color => ({ fill: color }),
   stroke: color => ({ stroke: color }),
   strokeWidth: num => ({ strokeWidth: num }),
@@ -234,15 +327,12 @@ const attrBindings = {
   r: num => ({ r: num }),
   d: str => ({ d: str }),
   fillOpacity: float => ({ fillOpacity: float}),
-  relativeTransform: a => {
-    const prop = `matrix(${a[0][0]} ${a[1][0]} ${a[0][1]} ${a[1][1]} ${a[0][2]} ${a[1][2]})`
-    return { transform: prop }
-  }
+  relativeTransform: a => ({transform: `matrix(${a[0][0]} ${a[1][0]} ${a[0][1]} ${a[1][1]} ${a[0][2]} ${a[1][2]})` })
 }
 
 
 
 export {
-  inhale,
+  cast,
   makeTag,
 }

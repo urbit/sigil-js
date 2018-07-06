@@ -27,6 +27,11 @@ const includes = (arr, val) => arr.includes(val)
 
 
 
+
+const compose = (...fs) => fs.reduceRight((pF, nF) => (...args) => nF(pF(...args)), v => v)
+
+
+
 const isMate = (a, b) => {
   if (a === b) {
     if (a === 'full') {
@@ -178,6 +183,7 @@ export {
   updaters,
   comparator,
   deepClone,
+  compose,
   // traverse,
 
 }

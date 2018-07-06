@@ -26,7 +26,7 @@ body {
 
 canvas {
   /* border: 1px solid white; */
-  background-color: black;
+  background-color: #4330FC;
   margin-top: 2.5rem;
 }
 
@@ -265,6 +265,13 @@ hr {
   flex-wrap: wrap;
 }
 
+.flex-center-all {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .syl ol {
   width: 3rem;
 }
@@ -308,7 +315,16 @@ td, th {
 }
 
 svg {
-  /* border: 1px solid #4330FC; */
-  background-color: grey;
-  margin-right: 4px;
+  /* border: 5px solid #4330FC; */
+  background-color:  #4330FC;
+  /* background-color: grey; */
+  margin: 4px;
+}
+
+.blue_bg {
+  background-color: #4330FC !important
+}
+
+section {
+  min-height: 500px;
 }

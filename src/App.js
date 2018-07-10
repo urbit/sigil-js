@@ -25,16 +25,6 @@ class App extends Component {
 
     return (
       <div className="App">
-<<<<<<< HEAD
-      <nav>
-        <span>
-          <button onClick={() => this.setState({route: 'gen'})}>{'generate'}</button>
-          <button onClick={() => this.setState({route: 'sel'})}>{'select'}</button>
-          <button onClick={() => this.setState({route: 'agen'})}>{'avatarRendererComponent'}</button>
-
-        </span>
-      </nav>
-=======
         <nav className={'top'}>
           <span>
             <TabButton
@@ -54,7 +44,6 @@ class App extends Component {
               id={'pour'} />
           </span>
         </nav>
->>>>>>> d0293f4830ba6b804f19b17ad86a8f5b3a0e7de0
         { route }
       </div>
     )

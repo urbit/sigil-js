@@ -28,7 +28,7 @@ import {
 
 import { ToggleButton } from './components/components'
 
-import { pour } from './core/pour'
+import pour from './core/pour'
 
 import {
   ReactSVGComponents,

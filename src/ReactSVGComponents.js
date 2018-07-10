@@ -32,7 +32,6 @@ const ReactSVGComponents = {
     )
   },
   g: p => {
-    // console.log(p)
     return (
       <g {...p.attr}>
         { map(get(p, 'children', []), child => ReactSVGComponents[child.tag](child)) }

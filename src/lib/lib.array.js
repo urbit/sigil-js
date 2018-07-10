@@ -1,19 +1,7 @@
 import { flatten, size, map, isUndefined } from 'lodash'
 
-import {
-  isMate,
-} from './lib'
-
-
 
 const seq = num => Array.from(Array(num), (nada, i) => i)
-
-
-
-const swap = (x, y, [...xs]) => size(xs) > 1
- ? ([xs[x], xs[y]] = [xs[y], xs[x]], xs)
- : xs;
-
 
 // makes a 2D array of points parameters
 const lat = params => {
@@ -46,29 +34,22 @@ const lat = params => {
   return matrix
 }
 
-
-
-const end = arr => arr[size(arr) - 1]
-
+// gets last item in array
+const last = arr => arr[size(arr) - 1]
 
 const isAtEnd = (length, index) => index < length ? false : true
 
-
 const isAtStart = (length, index) => index === 0 ? true : false
-
-
-const length = arr => size(arr)
 
 const len = arr => size(arr)
 
+const sq = l => ({x: l, y: l})
+
 const isEmpty = arr => isUndefined(arr)
   ? true
-  : arr.length === 0
-
+  : len(arr) === 0
 
 const lastIndex = arr => size(arr) - 1
-
-
 
 const getEdge = {
   top:    cell => cell.edgeMap[0],
@@ -77,8 +58,6 @@ const getEdge = {
   left:   cell => cell.edgeMap[3],
 }
 
-
-
 const getCellTo = {
   left:   (matrix, rI, cI) => matrix[rI][cI - 1],
   right:  (matrix, rI, cI) => matrix[rI][cI + 1],
@@ -86,131 +65,51 @@ const getCellTo = {
   below:  (matrix, rI, cI) => matrix[rI + 1][cI],
 }
 
-
-
 const isInBounds = {
   x:  (matrix, cI) => cI < lastIndex(matrix[0]),
   y: (matrix, rI) => rI < lastIndex(matrix),
 }
 
-
-
-const mmap = (arr, callback) => {
-  return map(arr, (row, rI, wholeMatrix) => {
-    return map(row, (cell, cI, wholeRow) => {
-      return callback(cell, [rI, cI], wholeMatrix)
-    })
-  })
-}
-
-
+// const mmap = (arr, callback) => {
+//   return map(arr, (row, rI, wholeMatrix) => {
+//     return map(row, (cell, cI, wholeRow) => {
+//       return callback(cell, [rI, cI], wholeMatrix)
+//     })
+//   })
+// }
 
 const transpose = matrix => map(matrix[0], (x,i) => map(matrix, x => x[i]))
 
-
-
 const isFirstIdx = i => i === 0
-
-
 
 const isLastIdx = (arr, i) => i === lastIndex(arr)
 
+// const multisplice = (arr, indices) => map(indices, (startI, i) => arr.slice(startI, indices[i + 1]))
 
-
-const partition = avatar => {
-  const horizontal = grainPartition(avatar.matrix)
-  // const twoByTwos = horizontal.forEach((row, rI) => {
-  // })
-
-  const vertical = grainPartition(transpose(avatar.matrix))
-
-  return {
-    horizontal,
-    vertical,
-  }
-}
-
-
-
-const multisplice = (arr, indices) => map(indices, (startI, i) => arr.slice(startI, indices[i + 1]))
-
-
-
-
-const sort = (arr, comparator, key) => arr.sort((a, b) => comparator(a, b, key))
-
-
-
+// const sort = (arr, comparator, key) => arr.sort((a, b) => comparator(a, b, key))
 
 const rotate = (arr, n) => {
-  var L = arr.length;
-  return arr.slice(L - n).concat(arr.slice(0, L - n));
-};
-
-const scan = m => {
-  return [
-       m[0][0], m[0][1], m[1][0], m[1][1],
-       m[0][2], m[0][3], m[1][2], m[1][3],
-       m[2][0], m[2][1], m[3][0], m[3][1],
-       m[2][2], m[2][3], m[3][2], m[3][3],
-  ]
+  const l = len(arr)
+  return arr.slice(l - n).concat(arr.slice(0, l - n))
 }
 
-
-const arrEq = (a, b) => size(a) === size(b)
-  ? a.every((v, i) => v === b[i])
-  : false
-
-
-// this could use reduce or just a for loop
-const grainPartition = matrix => {
-  let sequences = []
-  matrix.forEach((row, rI) => {
-
-    let rowBreaks = []
-    row.forEach((cell, cI) => {
-
-      // append the start idx at the start of each row loop
-      if (isFirstIdx(cI)) rowBreaks = [...rowBreaks, 0]
-      if (isInBounds.x(matrix, cI)) {
-        const cellToRight = getCellTo.right(matrix, rI, cI)
-        const thisRightEdge = getEdge.right(cell)
-        const thatLeftEdge = getEdge.left(cellToRight)
-        if (!isMate(thisRightEdge, thatLeftEdge)) {
-          // append the start index of the next mate seq
-          rowBreaks = [...rowBreaks, cI + 1]
-        }
-      }
-    })
-
-    sequences = [...sequences, multisplice(row, rowBreaks)]
-  })
-
-  return sequences
-}
 
 export {
   seq,
-  swap,
-  end,
+  last,
   lastIndex,
   getEdge,
   getCellTo,
   isInBounds,
-  mmap,
   transpose,
   isFirstIdx,
   isLastIdx,
-  partition,
-  multisplice,
-  sort,
+  // sort,
   rotate,
-  scan,
-  arrEq,
-  grainPartition,
   lat,
   isAtEnd,
   isAtStart,
   isEmpty,
   len,
+  sq
 }

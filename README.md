@@ -26,9 +26,9 @@ The library is designed to have 1 + n parts, where n are renderers that produce 
 
 ### Consuming the pour() lib
  1. install deps
- - run `npm run build`
- - the build pour() library will be in `build/static/js`
- - you will need to write your own renderer based on `src/ReactSVGComponents.js`
+ 2. run `npm run build`
+ 3. the build pour() library will be in `build/static/js`
+ 4. you will need to write your own renderer based on `src/ReactSVGComponents.js`
 
 #### Example Usage
 
@@ -46,4 +46,4 @@ The library is designed to have 1 + n parts, where n are renderers that produce 
 
 ### Designing symbols
   1. `npm run start`
-  - Use Lung to generate combinations of geons, which are imported from Figma
+  2. Use Lung to generate combinations of geons, which are imported from Figma

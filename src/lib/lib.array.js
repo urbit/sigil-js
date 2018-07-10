@@ -1,4 +1,4 @@
-import { flatten, size, map } from 'lodash'
+import { flatten, size, map, isUndefined } from 'lodash'
 
 import {
   isMate,
@@ -6,7 +6,7 @@ import {
 
 
 
-const sequence = num => Array.from(Array(num), (nada, i) => i)
+const seq = num => Array.from(Array(num), (nada, i) => i)
 
 
 
@@ -15,18 +15,35 @@ const swap = (x, y, [...xs]) => size(xs) > 1
  : xs;
 
 
+// makes a 2D array of points parameters
+const lat = params => {
 
-const rectGrid = params => {
-  const { origin, cellSize, extents, flat } = params
-  const x = sequence(extents.x)
-  const y = sequence(extents.y)
-  const nestedGrid = map(y, iY => map(x, iX => ({
-    x: origin.x + (cellSize.x * iX),
-    y: origin.y + (cellSize.y * iY),
-  })
-  ))
-  if (flat) return flatten(nestedGrid)
-  return nestedGrid
+  // margin, size, pointCount, isFlat or not
+  const { m, s, p, flat } = params
+
+  // Make blank arrays from point count
+  const n = { x: seq(p.x), y: seq(p.y), }
+
+  // Inner grid sizing, x: width, y: height
+  const i = { x: s.x - (m.x * 2), y: s.y - (m.y * 2), }
+
+  // Cell sizing, x: width, y: height
+  const c = { x: i.x / p.x, y: i.y / p.y, }
+
+  // make a matrix where each item is a {x, y} with real coordinates
+  const matrix = map(n.y, y => map(n.x, x => {
+    const res = {
+      x: (x * c.x) + m.x + (x),
+      y: (y * c.y) + m.y + (y),
+    }
+    // console.log((x * c.x) + (m.x * 2))
+    return res
+  }
+))
+
+  // flatten the matrix if param set
+  if (flat) return flatten(matrix)
+  return matrix
 }
 
 
@@ -34,9 +51,19 @@ const rectGrid = params => {
 const end = arr => arr[size(arr) - 1]
 
 
+const isAtEnd = (length, index) => index < length ? false : true
+
+
+const isAtStart = (length, index) => index === 0 ? true : false
+
 
 const length = arr => size(arr)
 
+const len = arr => size(arr)
+
+const isEmpty = arr => isUndefined(arr)
+  ? true
+  : arr.length === 0
 
 
 const lastIndex = arr => size(arr) - 1
@@ -130,7 +157,6 @@ const scan = m => {
 }
 
 
-
 const arrEq = (a, b) => size(a) === size(b)
   ? a.every((v, i) => v === b[i])
   : false
@@ -151,7 +177,7 @@ const grainPartition = matrix => {
         const thisRightEdge = getEdge.right(cell)
         const thatLeftEdge = getEdge.left(cellToRight)
         if (!isMate(thisRightEdge, thatLeftEdge)) {
-          // append the start index of the next mate sequence
+          // append the start index of the next mate seq
           rowBreaks = [...rowBreaks, cI + 1]
         }
       }
@@ -164,10 +190,9 @@ const grainPartition = matrix => {
 }
 
 export {
-  sequence,
+  seq,
   swap,
   end,
-  length,
   lastIndex,
   getEdge,
   getCellTo,
@@ -183,5 +208,9 @@ export {
   scan,
   arrEq,
   grainPartition,
-  rectGrid,
+  lat,
+  isAtEnd,
+  isAtStart,
+  isEmpty,
+  len,
 }

@@ -48,7 +48,7 @@
     "resolve": "1.6.0",
     "style-loader": "0.19.0",
     "sw-precache-webpack-plugin": "0.11.4",
-    "transformation-matrix-js": "^2.7.5",
+    "transformation-matrix": "^1.11.0",
     "urbit-ob": "^1.0.0",
     "url-loader": "0.6.2",
     "webpack": "3.8.1",

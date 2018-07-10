@@ -4,7 +4,7 @@ import { get, map } from 'lodash'
 const ReactSVGComponents = {
   svg: p => {
     return (
-      <svg {...p.attr} height={128} width={128} version={'1.1'} xmlns={'http://www.w3.org/2000/svg'}>
+      <svg {...p.attr} version={'1.1'} xmlns={'http://www.w3.org/2000/svg'}>
       { map(get(p, 'children', []), child => ReactSVGComponents[child.tag](child)) }
       </svg>
     )
@@ -34,7 +34,7 @@ const ReactSVGComponents = {
   g: p => {
     // console.log(p)
     return (
-      <g {...p.attr} transform={`rotate(${get(p, ['attr', 'rotate'], 0)}, 64, 64)`}>
+      <g {...p.attr}>
         { map(get(p, 'children', []), child => ReactSVGComponents[child.tag](child)) }
       </g>
     )
@@ -63,4 +63,22 @@ const ReactSVGComponents = {
 }
 
 
-export default ReactSVGComponents
+const insert = group => {
+  const model = {
+    tag: 'svg',
+    meta: {},
+    attr: {},
+    children: [group],
+  }
+  return ReactSVGComponents.svg(model)
+}
+
+
+const mapInsert = arr => map(arr, group => insert(group))
+
+
+export {
+  ReactSVGComponents,
+  insert,
+  mapInsert,
+}

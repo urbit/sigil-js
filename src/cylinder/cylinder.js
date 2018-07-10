@@ -13,7 +13,7 @@ import {
   deepClone,
 } from '../lib/lib'
 
-import { sequence, rotate } from '../lib/lib.array'
+import { seq, rotate } from '../lib/lib.array'
 
 const TOKEN = '1952-9da74b1b-551c-4acf-83b4-23b31743ab51'
 
@@ -181,7 +181,7 @@ const d = base => reduce(base, (acc, group) => {
     if (type === 'deco' || type === 'dot' || type === 'line') {
 
       const numRotations = group.meta.perm.r
-      const rotations = reduce(sequence(numRotations), (smallAcc, index) => {
+      const rotations = reduce(seq(numRotations), (smallAcc, index) => {
 
           if (index !== 0) {
 

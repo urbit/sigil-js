@@ -37,7 +37,7 @@ nav {
   display: flex;
   align-items: center;
   background-color: black;
-  border-bottom: 1px solid white;
+  /* border-bottom: 1px solid white; */
   /* position: fixed;
   top: 0;
   left: 0; */
@@ -107,6 +107,7 @@ input {
   height: 2rem;
   border: none;
   outline: none;
+  max-width: 60px;
 }
 
 p {
@@ -326,5 +327,119 @@ svg {
 }
 
 section {
-  min-height: 500px;
+  min-height: 300px;
+  /* padding: 0rem 2rem; */
+  margin: 1rem 4rem;
+
+}
+
+button.selected {
+  background-color: #4330FC;
+  color: white;
+}
+
+.blue-stroke {
+  border: 1px solid #4330FC;
+}
+
+.white-stroke {
+  border: 1px solid #fff;
+}
+
+.blue-fill {
+  background-color: #4330FC;
+  color: white;
+}
+
+.white-fill {
+  background-color: #fff;
+  color: #000;
+}
+/* .tab {
+  background-color: #4330FC;
+  color: white;
+} */
+
+.tab p {
+  margin: 0.0rem;
+  padding: 0.25rem 0rem;
+  margin-left: 2rem;
+}
+
+.tab:hover {
+  cursor: pointer;
+  opacity: .66;
+}
+
+span p {
+  font-family: "San Francisco", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: 500;
+  font-size: 0.75rem;
+  /* line-height: 0.0rem; */
+  padding: 0rem 0.75rem;
+  height: 1.5rem;
+  border: none;
+  outline: none;
+  background-color: white !important;
+  color: black !important;
+}
+
+section .content {
+  padding: 2rem;
+}
+
+.warn-fill {
+  background-color: #FF4C25;
+  color: white;
+}
+
+.arrow {
+  width: 100%;
+  display: flex;
+  padding: 0;
+  justify-content: center;
+}
+
+h1.arrow {
+  margin: 0;
+  padding: 0;
+  line-height: 0;
+}
+
+.tiny {
+  transform: scale(0.2);
+  transform-origin: top left;
+}
+
+.fill-idle {
+  background-color: #fff;
+}
+
+.fill-error {
+  background-color: #FF4C25;
+}
+
+.fill-success {
+  background-color: #74DC7C;
+}
+
+.circle {
+  width: 1.5rem;
+  height: 1.5rem;
+  display: block;
+  border-radius: 999px;
+  transition: background-color 100ms;
+  margin-right: 1px;
+}
+
+.fakeseal {
+  width: 257px;
+}
+
+.fakeseal svg {
+  padding:0;
+  margin:0;
+  /* width: 256px;
+  height: 256px; */
+  /* border: 16px solid #4330FC; */
 }

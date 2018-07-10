@@ -1,35 +1,26 @@
 import { get, set, reduce, size } from 'lodash'
-
 import Combinatorics from 'js-combinatorics'
 
 
 const randInt = max => Math.floor(Math.random() * Math.floor(max))
 
 
-
 const avg = arr => reduce(arr, (a,b) => a + b, 0) / size(arr)
-
 
 
 const keys = obj => Object.keys(obj)
 
 
-
 const entries = obj => Object.entries(obj)
-
 
 
 const values = obj => Object.values(obj)
 
 
-
 const includes = (arr, val) => arr.includes(val)
 
 
-
-
 const compose = (...fs) => fs.reduceRight((pF, nF) => (...args) => nF(pF(...args)), v => v)
-
 
 
 const isMate = (a, b) => {
@@ -102,9 +93,7 @@ const collider = (array, method, qty) => {
 }
 
 
-
 const quickHash = entropy => Math.random().toString(36).substr(2, entropy)
-
 
 
 const mergeUpdates = (updates, originalElement) => {
@@ -127,7 +116,6 @@ const mergeUpdates = (updates, originalElement) => {
 }
 
 
-
 const updaters = {
   concat: (existingValue, payload) => [...existingValue, payload],
   prepend: (existingValue, payload) => [payload, ...existingValue],
@@ -136,9 +124,6 @@ const updaters = {
   prependStr: (existingValue, payload) => `${payload} ${existingValue}`,
   concatStr: (existingValue, payload) => `${existingValue} ${payload}`
 }
-
-
-
 
 
 const patpArrToStr = p => {
@@ -153,8 +138,8 @@ const patpArrToStr = p => {
 }
 
 
-
 const patpStrToArr = p => p.replace(/[\^~-]/g,'').match(/.{1,3}/g)
+
 
 const deepClone = any => JSON.parse(JSON.stringify(any))
 
@@ -184,6 +169,5 @@ export {
   comparator,
   deepClone,
   compose,
-  // traverse,
 
 }

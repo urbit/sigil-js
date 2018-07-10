@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 
-const TabButton = ({ keySelectedInPanel, title, onClick, id }) => {
-  const classes = keySelectedInPanel ? 'selected tab' : 'unselected tab'
+const TabButton = ({ isSelected, title, onClick, id }) => {
+  const classes = isSelected ? 'selected tab' : 'unselected tab'
   return (
     <div className={classes}>
       <button className={classes} onClick={onClick}>{title}</button>
@@ -9,8 +9,8 @@ const TabButton = ({ keySelectedInPanel, title, onClick, id }) => {
   )
 }
 
-const RadioButton = ({ keySelectedInPanel, title, onClick, id }) => {
-  const classes = keySelectedInPanel ? 'selected radio' : 'unselected radio'
+const RadioButton = ({ isSelected, title, onClick, id }) => {
+  const classes = isSelected ? 'selected radio' : 'unselected radio'
   return (
     <div className={classes}>
       <button className={classes} onClick={onClick} />
@@ -19,7 +19,15 @@ const RadioButton = ({ keySelectedInPanel, title, onClick, id }) => {
   )
 }
 
+const ToggleButton = ({ isSelected, title, onClick, id }) => {
+  const classes = isSelected ? 'selected' : 'unselected'
+  return (
+    <button className={classes} onClick={onClick}>{title}</button>
+  )
+}
+
 export {
   TabButton,
+  ToggleButton,
   RadioButton,
 }

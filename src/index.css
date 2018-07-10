@@ -1,3 +1,6 @@
+:root {
+  font-size: 16px;
+}
 
 html {
   background-color: black;
@@ -11,7 +14,7 @@ body {
 }
 
 .App {
-  text-align: center;
+  /* text-align: center; */
 }
 
 .App-header {
@@ -23,7 +26,7 @@ body {
 
 canvas {
   /* border: 1px solid white; */
-  background-color: black;
+  background-color: #4330FC;
   margin-top: 2.5rem;
 }
 
@@ -34,16 +37,36 @@ nav {
   display: flex;
   align-items: center;
   background-color: black;
+  /* border-bottom: 1px solid white; */
   /* position: fixed;
   top: 0;
   left: 0; */
 }
 
-.row {
+nav button {
+  height: 1.5rem;
+  margin-right: 1px;
+}
+
+nav button:hover {
+  /* background-color: #4330FC !important;
+  color: white; */
+  opacity: 0.66;
+}
+
+nav input {
+  height: 1.5rem;
+}
+
+nav.top {
+  align-items: flex-end;
+}
+
+/* .row {
   display: flex;
   justify-content: space-between;
   border-bottom: 1px solid white;
-}
+} */
 
 .row pre {
   padding: 0.1rem;
@@ -64,14 +87,14 @@ button {
   margin-right: 0.25rem;
 }
 
-button.selected {
+/* button.selected {
   color: white;
   background-color: #4330FC;
 
-}
+} */
 
 button:hover {
-  opacity: 0.6;
+  /* opacity: 0.6; */
   cursor: pointer;
 }
 
@@ -84,6 +107,13 @@ input {
   height: 2rem;
   border: none;
   outline: none;
+  max-width: 60px;
+}
+
+p {
+  font-family: "San Francisco", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: 400;
+
 }
 
 nav p {
@@ -105,5 +135,311 @@ nav span {
   display: flex;
   margin: 0 1rem;
   align-items: center;
+}
 
+.radio {
+  display: flex;
+  align-items: center;
+  margin-left: 1rem;
+}
+
+.radio button {
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 999px;
+  background-color: black;
+  border: 1px solid white;
+  margin-right: 0.5rem;
+  position: relative;
+}
+
+.radio button.selected{
+  /* background-color: #4330FC; */
+  border: 1px solid #fff;
+}
+
+.radio button.selected:before{
+  content: '';
+  background-color: #fff;
+  display: block;
+  width: calc(1.75rem - 6px);
+  height: calc(1.75rem - 6px);
+  border-radius: 999px;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+}
+
+.tab button {
+  border: 1px solid white;
+  border-bottom: none;
+  transform: translateY(1px);
+
+  background-color: white;
+  color: black;
+}
+
+.tab button.selected {
+  border: 1px solid white;
+  border-bottom: none;
+  background-color: black;
+  color: white;
+}
+
+
+ol {
+  margin-left: 0.25rem;
+  padding-left: 0.25rem;
+}
+
+li {
+  display: flex;
+  width: 20rem;
+}
+
+li .label {
+  padding: 0.25rem;
+  width: 2rem;
+}
+
+.table {
+  display: flex;
+}
+
+.col {
+  display: inline-block;
+}
+
+.bar {
+  content: '';
+  display: block;
+  border-bottom: 1px solid black;
+}
+
+hr {
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid white;
+  /* background-color: white; */
+}
+
+.white-bg {
+  background-color: #fff;
+  margin-left: 1px;
+}
+
+.blue-bg {
+  background-color: #fff;
+}
+
+.graph {
+  margin-left: 2rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.graph .row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* width: 512px; */
+  /* height: 256px; */
+}
+
+.row div {
+  height: 150px;
+  width: 150px;
+  font-size: 1rem;
+  padding: 1rem;
+  border: 1px solid white;
+  margin: 0;
+}
+
+.row p {
+  font-family: 'Source Code Pro', monospace !important;
+
+}
+
+.flex {
+  max-width: 100vw;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.flex-center-all {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.syl ol {
+  width: 3rem;
+}
+
+main {
+  padding: 4rem;
+}
+
+table {
+  border-left: 1px solid white;
+  border-top: 1px solid white;
+  border-spacing: 0px
+}
+
+td, th {
+  border-right: 1px solid white;
+  border-bottom: 1px solid white;
+  padding: 0.5rem;
+  margin: 0;
+}
+
+.hidden {
+  visibility: hidden;
+  width: 0px;
+}
+
+.vr {
+  border-right: 1px solid white;
+  margin-left: 0.5rem;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.vr p {
+  position: absolute;
+  background-color: white;
+  color: black;
+  border: 1px solid white;
+  padding: 0.25rem;
+  top: -1rem;
+}
+
+svg {
+  /* border: 5px solid #4330FC; */
+  background-color:  #4330FC;
+  /* background-color: grey; */
+  margin: 4px;
+}
+
+.blue_bg {
+  background-color: #4330FC !important
+}
+
+section {
+  min-height: 300px;
+  /* padding: 0rem 2rem; */
+  margin: 1rem 4rem;
+
+}
+
+button.selected {
+  background-color: #4330FC;
+  color: white;
+}
+
+.blue-stroke {
+  border: 1px solid #4330FC;
+}
+
+.white-stroke {
+  border: 1px solid #fff;
+}
+
+.blue-fill {
+  background-color: #4330FC;
+  color: white;
+}
+
+.white-fill {
+  background-color: #fff;
+  color: #000;
+}
+/* .tab {
+  background-color: #4330FC;
+  color: white;
+} */
+
+.tab p {
+  margin: 0.0rem;
+  padding: 0.25rem 0rem;
+  margin-left: 2rem;
+}
+
+.tab:hover {
+  cursor: pointer;
+  opacity: .66;
+}
+
+span p {
+  font-family: "San Francisco", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: 500;
+  font-size: 0.75rem;
+  /* line-height: 0.0rem; */
+  padding: 0rem 0.75rem;
+  height: 1.5rem;
+  border: none;
+  outline: none;
+  background-color: white !important;
+  color: black !important;
+}
+
+section .content {
+  padding: 2rem;
+}
+
+.warn-fill {
+  background-color: #FF4C25;
+  color: white;
+}
+
+.arrow {
+  width: 100%;
+  display: flex;
+  padding: 0;
+  justify-content: center;
+}
+
+h1.arrow {
+  margin: 0;
+  padding: 0;
+  line-height: 0;
+}
+
+.tiny {
+  transform: scale(0.2);
+  transform-origin: top left;
+}
+
+.fill-idle {
+  background-color: #fff;
+}
+
+.fill-error {
+  background-color: #FF4C25;
+}
+
+.fill-success {
+  background-color: #74DC7C;
+}
+
+.circle {
+  width: 1.5rem;
+  height: 1.5rem;
+  display: block;
+  border-radius: 999px;
+  transition: background-color 100ms;
+  margin-right: 1px;
+}
+
+.fakeseal {
+  width: 257px;
+}
+
+.fakeseal svg {
+  padding:0;
+  margin:0;
+  /* width: 256px;
+  height: 256px; */
+  /* border: 16px solid #4330FC; */
 }

@@ -45,25 +45,17 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 const suffixes = suf.match(/.{1,3}/g)
 const prefixes = pre.match(/.{1,3}/g)
 
-const patp = {
-  suffixes,
-  prefixes,
-  arr: p => p.replace(/[\^~-]/g,'').match(/.{1,3}/g),
-  str: p => p.reduce((acc, syl, i) => isEven(i)
-    ? i === 0
-      ? `~${acc}${syl}`
-      : `${acc}-${syl}`
-    : `${acc}${syl}`
-  , ''),
-  random: l => sequence(l).map(i => isEven(i)
-    ? prefixes[randInt(255)]
-    : suffixes[randInt(255)]
-  ),
-}
+const eachLSuf = suf.split('')
+const eachLPre = pre.split('')
+
+
 
 
 export {
-  patp,
+  suf,
+  pre,
+  eachLSuf,
+  eachLPre,
   suffixes,
   prefixes,
 }

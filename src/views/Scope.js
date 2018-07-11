@@ -9,7 +9,7 @@ import {
   values,
   numComparator,
   keys,
-} from './lib/lib'
+} from '../lib/lib'
 
 import {
   zippedPre,
@@ -26,14 +26,14 @@ import {
   sharedConsonants,
   sharedVowels,
   phonetics,
-} from './core/scope'
+} from '../lib/scope'
 
 import {
   suf,
   pre,
   suffixes,
   prefixes,
-} from './lib/lib.urbit'
+} from '../lib/lib.urbit'
 
 
 

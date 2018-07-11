@@ -3,14 +3,14 @@ import { map, filter, forEach, reduce } from 'lodash'
 import fileDownload from 'js-file-download'
 import { toPlanetName } from 'urbit-ob'
 
-import { cast, makeTag } from './cylinder/cylinder'
-import { base, baseState } from './lib/lib.firebase'
+import { cast, makeTag } from '../lib/lung'
+import { base, baseState } from '../lib/lib.firebase'
 import {
   collider,
   deepClone,
   randInt,
   randomShip,
-} from './lib/lib'
+} from '../lib/lib'
 
 import {
   lastIndex,
@@ -19,24 +19,24 @@ import {
   isAtStart,
   seq,
   isEmpty,
-} from './lib/lib.array'
+} from '../lib/lib.array'
 
 import {
   suffixes,
   prefixes,
-} from './lib/lib.urbit'
+} from '../lib/lib.urbit'
 
-import { ToggleButton } from './components/components'
+import { ToggleButton } from '../components/UI'
 
-import pour from './core/pour'
+import pour from '../lib/pour'
 
 import {
   ReactSVGComponents,
   insert,
   mapInsert,
-} from './ReactSVGComponents'
+} from '../renderers/ReactSVGComponents'
 
-import { SVGStringComponents } from './SVGStringComponents'
+import { SVGStringComponents } from '../renderers/SVGStringComponents'
 
 const DB_PASS_ONE_KEY = 'c000'
 const DB_PASS_TWO_KEY = 'c001'
@@ -50,7 +50,7 @@ class Lung extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      cylinder: null,
+      lung: null,
       geons: [],
       currentIndex: 0,
       colliderMethod: 'bigCombination',
@@ -66,11 +66,11 @@ class Lung extends Component {
 
 
   componentDidMount = () => {
-    cast((cylinder) => {
+    cast((lung) => {
 
-      const geons = filter(cylinder, member => member.meta.type === 'geon')
+      const geons = filter(lung, member => member.meta.type === 'geon')
 
-      const decorators = filter(cylinder, member => {
+      const decorators = filter(lung, member => {
         const key = member.meta.key.split('.')
         return member.meta.type !== 'geon' && key[2] !== 'fg' && key[2] !== 'n'
        })
@@ -120,7 +120,7 @@ class Lung extends Component {
       })
 
 
-      this.setState({ cylinder, geons, laminationZero, })
+      this.setState({ lung, geons, laminationZero, })
 
     })
   }

@@ -2943,8 +2943,8 @@ fbjs@^0.8.16:
     ua-parser-js "^0.7.9"
 
 figma-js@^1.3.4:
-  version "1.3.4"
-  resolved "https://registry.yarnpkg.com/figma-js/-/figma-js-1.3.4.tgz#588d3795a15815eefdb1e8e8b084a4529513ada7"
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/figma-js/-/figma-js-1.4.0.tgz#98ab74eef5ae296cdf1bfcf19c827cc27634ebd4"
   dependencies:
     axios "^0.18.0"
 
@@ -3091,8 +3091,8 @@ follow-redirects@^1.0.0:
     debug "^3.1.0"
 
 follow-redirects@^1.3.0:
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.5.0.tgz#234f49cf770b7f35b40e790f636ceba0c3a0ab77"
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.5.1.tgz#67a8f14f5a1f67f962c2c46469c79eaec0a90291"
   dependencies:
     debug "^3.1.0"
 

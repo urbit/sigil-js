@@ -1,8 +1,6 @@
 import { map, get, set, filter, reduce, isUndefined, forEach, flatten } from 'lodash'
-
-import { compose } from '../lib/lib'
-
-import * as Figma from '../figma/build/main/index'
+import Combinatorics from 'js-combinatorics'
+import * as Figma from 'figma-js'
 
 import {
   mergeUpdates,
@@ -11,6 +9,7 @@ import {
   includes,
   keys,
   deepClone,
+  compose,
 } from '../lib/lib'
 
 import { seq, rotate } from '../lib/lib.array'
@@ -331,8 +330,22 @@ const propBindings = {
 }
 
 
+const collider = (array, method, qty) => {
+  const all = Combinatorics[method](array, qty).toArray()
+
+  // const withMateCount = all.map(geonmap => ({
+  //   geonmap,
+  //   // mateCount: countMates(geonset, geonmap, 2),
+  // }))
+
+  // const sorted = sort(withMateCount, numComparator, 'mateCount').reverse()
+  return all
+}
+
+
 
 export {
   cast,
   makeTag,
+  collider,
 }

@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 
-import Lung from './Lung'
-import Scope from './Scope'
+import Lung from './views/Lung'
+import Scope from './views/Scope'
 // import Pour from './Pour'
-import { TabButton } from './components/components'
+import { TabButton } from './components/UI'
 
 class App extends Component {
   constructor(props) {
@@ -37,11 +37,6 @@ class App extends Component {
               keySelectedInPanel={this.state.route === 'Lung'}
               title={'Lung'}
               id={'Lung'} />
-            <TabButton
-              onClick={() => this.setState({route: 'pour'})}
-              keySelectedInPanel={this.state.route === 'pour'}
-              title={'Pour'}
-              id={'pour'} />
           </span>
         </nav>
         { route }

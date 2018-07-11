@@ -3,16 +3,16 @@ import React, { Component } from 'react'
 import _ from 'lodash'
 import { toPlanetName } from 'urbit-ob'
 
-import geonset from './geonsets/geonset_001'
-import sylmap from './sylmaps/sylmap_000.json'
+import geonset from '../geonsets/geonset_001'
+import sylmap from '../sylmaps/sylmap_000.json'
 
 import {
   randomShip,
-} from './lib/lib'
+} from '../lib/lib'
 
-import { pour, multiPour } from './core/pour'
+import { pour } from '../lib/pour'
 
-import ReactSVGComponents from './ReactSVGComponents'
+import ReactSVGComponents from '../renderers/ReactSVGComponents'
 
 const SIZE = 600
 

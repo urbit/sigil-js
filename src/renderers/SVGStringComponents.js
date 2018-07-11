@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { get, map, reduce, isUndefined } from 'lodash'
-import { entries } from './lib/lib'
+import { entries } from '../lib/lib'
 
 const propToString = obj => {
   if (!isUndefined(obj)) {

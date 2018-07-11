@@ -7,7 +7,7 @@ A JS slate, non-pinniped, untyped visual representation of @P
 |Commands              | Description                                   |
 | -------------------- | --------------------------------------------- |
 |`$ yarn start`        | Start development server                      |
-|`$ yarn build`        | Create a build of the pour() lib              |
+|`$ yarn build`        | Create a build of the `pour()` lib              |
 
 ## How this works
 The library is designed to have 1 + *n* parts, where *n* are renderers that produce outputs from a POJO representation of an SVG. The universal part is a function called pour().
@@ -24,7 +24,7 @@ The library is designed to have 1 + *n* parts, where *n* are renderers that prod
 
 ## Using this Repo
 
-### Consuming the pour() lib
+### Consuming the `pour()` lib
  1. install deps
  2. run `npm run build`
  3. the built `pour()`` library will be in `build/static/js`

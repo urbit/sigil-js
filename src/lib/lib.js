@@ -1,5 +1,4 @@
 import { get, set, reduce, size } from 'lodash'
-import Combinatorics from 'js-combinatorics'
 
 
 const randInt = max => Math.floor(Math.random() * Math.floor(max))
@@ -80,19 +79,6 @@ const isOdd = n => n % 2 !== 0
 
 
 
-const collider = (array, method, qty) => {
-  const all = Combinatorics[method](array, qty).toArray()
-
-  // const withMateCount = all.map(geonmap => ({
-  //   geonmap,
-  //   // mateCount: countMates(geonset, geonmap, 2),
-  // }))
-
-  // const sorted = sort(withMateCount, numComparator, 'mateCount').reverse()
-  return all
-}
-
-
 const quickHash = entropy => Math.random().toString(36).substr(2, entropy)
 
 
@@ -162,8 +148,6 @@ export {
   randomShip,
   patpArrToStr,
   patpStrToArr,
-
-  collider,
 
   updaters,
   comparator,

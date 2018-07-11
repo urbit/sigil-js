@@ -1,3 +1,3 @@
-import { pour } from '../core/pour'
+import { pour } from '../lib/pour'
 
 export { pour }

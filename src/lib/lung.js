@@ -27,7 +27,10 @@ const client = Figma.Client({ personalAccessToken: TOKEN })
 const cast = callback => {
   console.log('Calling Figma')
   client.file('BegaVM3GXXhSsi3dTVbdvsGy', { geometry: 'paths' })
-    .then(({ data }) => compose(callback, turn, transform)(data))
+    .then(({ data }) => {
+      console.log(get(data, ['document', 'children', 0, 'children']))
+      return compose(callback, turn, transform)(data)
+    })
     .catch(err => console.error('Inhale() choked: ', err))
 }
 
@@ -80,7 +83,10 @@ const transform = data => {
   return cylinder
 }
 
-
+// fillMode: {
+//   stroke: 'BG' || 'FG' || 'NO',
+//   fill: 'BG' || 'FG' || 'NO',
+// }
 
 // take deco types and make fill=false / stroke=BG_COLOR
 //
@@ -106,6 +112,8 @@ const a = base => reduce(base, (acc, group) => {
       })
 
       set(clone, ['meta', 'key'], newKey)
+      set(clone, ['meta', 'styleMode'], {stroke: 'BG', fill: 'NO'})
+
       acc[newKey] = clone
     }
     return acc
@@ -137,6 +145,8 @@ const b = base => reduce(base, (acc, group) => {
       })
 
       set(clone, ['meta', 'key'], newKey)
+      set(clone, ['meta', 'styleMode'], {stroke: 'FG', fill: 'BG'})
+
       acc[newKey] = clone
 
     }
@@ -168,6 +178,8 @@ const c = base => reduce(base, (acc, group) => {
       })
 
       set(clone, ['meta', 'key'], newKey)
+      set(clone, ['meta', 'styleMode'], {stroke: 'FG', fill: 'NO'})
+
       acc[newKey] = clone
     }
     return acc
@@ -235,6 +247,8 @@ const e = base => reduce(base, (acc, group) => {
       })
 
       set(clone, ['meta', 'key'], newKey)
+      set(clone, ['meta', 'styleMode'], {stroke: 'BG', fill: 'BG'})
+
       acc[newKey] = clone
     }
     return acc
@@ -280,6 +294,8 @@ const figmaTypeTags = {
   ELLIPSE: svgTagTypes.path,
   LINE: svgTagTypes.path,
   FRAME: svgTagTypes.g,
+  COMPONENT: svgTagTypes.g,
+  INSTANCE: svgTagTypes.g,
 }
 
 

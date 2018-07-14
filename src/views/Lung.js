@@ -3,7 +3,7 @@ import { map, filter, forEach, reduce } from 'lodash'
 import fileDownload from 'js-file-download'
 import { toPlanetName } from 'urbit-ob'
 
-import { cast, makeTag } from '../lib/lung'
+import { inhale, walk } from '../lib/lung2'
 import { base, baseState } from '../lib/lib.firebase'
 import {
   collider,
@@ -66,63 +66,66 @@ class Lung extends Component {
 
 
   componentDidMount = () => {
-    cast((lung) => {
 
-      const geons = filter(lung, member => member.meta.type === 'geon')
+    inhale((reference) => {console.log(reference)})
 
-      const decorators = filter(lung, member => {
-        const key = member.meta.key.split('.')
-        return member.meta.type !== 'geon' && key[2] !== 'fg' && key[2] !== 'n'
-       })
-
-       let laminationZero = []
-       forEach(geons, geon => forEach(decorators, otherMember => {
-         laminationZero.push({
-           ...geon,
-           children: [...geon.children, otherMember],
-         })
-        }))
-
-      this.pullFromFireBase(DB_PASS_ONE_KEY, data => {
-
-        const laminationOne = map(data, item => item.group)
-        this.setState({approvedOne: laminationOne})
-        let laminationTwo = []
-        forEach(laminationOne, group => forEach(decorators, otherMember => {
-          laminationTwo.push({
-            ...group,
-            children: [...group.children, otherMember],
-          })
-         }))
-
-
-         this.setState({laminationTwo, laminationOne})
-
-      })
-
-
-
-
-      this.pullFromFireBase(DB_PASS_TWO_KEY, data => {
-        // const laminationTwo = map(data, item => item.group)
-        this.setState({approvedTwo: data})
-        let laminationThree = []
-        forEach(data, group => forEach(decorators, otherMember => {
-          laminationThree.push({
-            ...group,
-            children: [...group.children, otherMember],
-          })
-         }))
-
-
-         this.setState({ laminationThree })
-
-      })
-
-
-      this.setState({ lung, geons, laminationZero, })
-
-    })
+    // cast((lung) => {
+    //
+    //   const geons = filter(lung, member => member.meta.type === 'geon')
+    //
+    //   const decorators = filter(lung, member => {
+    //     const key = member.meta.key.split('.')
+    //     return member.meta.type !== 'geon' && key[2] !== 'fg' && key[2] !== 'n'
+    //    })
+    //
+    //    let laminationZero = []
+    //    forEach(geons, geon => forEach(decorators, otherMember => {
+    //      laminationZero.push({
+    //        ...geon,
+    //        children: [...geon.children, otherMember],
+    //      })
+    //     }))
+    //
+    //   this.pullFromFireBase(DB_PASS_ONE_KEY, data => {
+    //
+    //     const laminationOne = map(data, item => item.group)
+    //     this.setState({approvedOne: laminationOne})
+    //     let laminationTwo = []
+    //     forEach(laminationOne, group => forEach(decorators, otherMember => {
+    //       laminationTwo.push({
+    //         ...group,
+    //         children: [...group.children, otherMember],
+    //       })
+    //      }))
+    //
+    //
+    //      this.setState({laminationTwo, laminationOne})
+    //
+    //   })
+    //
+    //
+    //
+    //
+    //   this.pullFromFireBase(DB_PASS_TWO_KEY, data => {
+    //     // const laminationTwo = map(data, item => item.group)
+    //     this.setState({approvedTwo: data})
+    //     let laminationThree = []
+    //     forEach(data, group => forEach(decorators, otherMember => {
+    //       laminationThree.push({
+    //         ...group,
+    //         children: [...group.children, otherMember],
+    //       })
+    //      }))
+    //
+    //
+    //      this.setState({ laminationThree })
+    //
+    //   })
+    //
+    //
+    //   this.setState({ lung, geons, laminationZero, })
+    //
+    // })
   }
 
 
@@ -207,7 +210,7 @@ const moveGeonToBack = group => {
 }
 
 
-const group = children => makeTag({
+const group = children => walk({
   tag: 'g',
   meta: {},
   attr: {},
@@ -387,13 +390,13 @@ class RandomGrid extends Component {
             })
           )}>{'Export SVG'}</button>
 
-        <div className={'fakeseal'}>
+        <div>
           {
             pour({
-              patp: patp,
-              sylmap: undefined,
+              patp: 'marzod',
+              sylmap: sylmap,
               renderer: ReactSVGComponents,
-              size: 128,
+              size: 256,
             })
           }
         </div>

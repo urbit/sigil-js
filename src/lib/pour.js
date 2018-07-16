@@ -4,6 +4,8 @@ import {
   isString,
   get,
   isUndefined,
+  last,
+  has,
 } from 'lodash'
 
 // import { toAddress } from 'urbit-ob'
@@ -22,53 +24,107 @@ import {
 
 import { len, lat, sq } from '../lib/lib.array'
 
-const dye = address => ['#4330FC']
+const dye = (model, addr) => {
+  const swatches = ['white', '#4330FC', 'purple']
+  return dip(model, swatches)
+}
+
+const applyColor = (p, swatches) => {
+  switch(p) {
+    case 'FG': return swatches[0]
+    case 'BG': return swatches[1]
+    default: return last(swatches)
+  }
+}
+
+const applyFillOpacity = p => {
+  switch(p) {
+    case 'FG': return 1
+    case 'BG': return 1
+    default: return 0
+  }
+}
+
+const applyStrokeWidth = p => {
+  switch(p) {
+    case 'FG': return 1
+    case 'BG': return 1
+    default: return 0
+  }
+}
+
+const stir = (attr, style, swatches) => {
+  const { fill, stroke } = style
+  return {
+    ...attr,
+    fill: applyColor(fill, swatches),
+    stroke: applyColor(stroke, swatches),
+    strokeWidth: applyStrokeWidth(stroke),
+    fillOpacity: applyFillOpacity(fill),
+  }
+}
+
+
+const dip = (node, swatches) => {
+  const style = get(node, ['meta', 'style'], false)
+  if (style !== false) {
+    return {
+      ...node,
+      attr: stir(get(node, 'attr', {}), style, swatches),
+      children: map(get(node, 'children', []), child => dip(child, swatches)),
+    }
+  }
+  return {
+    ...node,
+    children: map(get(node, 'children', []), child => dip(child, swatches)),
+  }
+}
+
+
 
 const defaultSymbol = {
   tag: 'g',
   attr: {},
-  children: [
-    {
+  children: [{
       tag: 'path',
+      meta: {style: {fill: 'FG', stroke: 'NO'}},
       attr: {
-        fill: 'white',
         d: 'M64 128C99.3462 128 128 99.3462 128 64C128 28.6538 99.3462 0 64 0C28.6538 0 0 28.6538 0 64C0 99.3462 28.6538 128 64 128ZM81.2255 35.9706L92.5392 47.2843L75.5686 64.2549L92.5392 81.2253L81.2255 92.5391L64.2549 75.5685L47.2843 92.5391L35.9706 81.2253L52.9412 64.2549L35.9706 47.2843L47.2843 35.9706L64.2549 52.9412L81.2255 35.9706Z',
       }
-    }
-  ]
+  }]
 }
 
+
 const createGrid = (p, bw, size) => {
-  let grid
   const ctr = (0.5 * bw) + (0.25 * size)
   switch (len(p)) {
-    case 1: grid = lat({
+    case 1: return lat({
         m: sq(ctr),
         s: sq(size),
         p: {x: 1, y: 1},
         flat: true,
       })
       break
-    case 2: grid = lat({
+    case 2: return lat({
         m: { x: bw, y: ctr },
         s: sq(size),
         p: {x: 2, y: 1},
         flat: true,
       })
       break
-    default: grid = lat({
+    default: return lat({
         m: sq(bw),
         s: sq(size),
         p: sq(len(p) / 2),
         flat: true,
       })
   }
-  return grid
 }
 
 
 const pour = ({ patp, sylmap, renderer, size }) => {
-  const UNIT = 256
+  // The size of each svg as drawn in Figma
+  const UNIT = 128 * 2
 
   // renderer and @P are not optional
   if (isUndefined(patp)) throw Error('Missing @P')
@@ -121,22 +177,23 @@ const pour = ({ patp, sylmap, renderer, size }) => {
   // make a background rectangle
   const bg = {
     tag: 'rect',
+    meta: { style: { fill: 'BG', stroke: 'NO' } },
     attr: {
       width: size,
       height: size,
       x: 0,
       y: 0,
-      fill: palette[0],
     }
   }
 
-  // insert symbol groups into SVG model
-  const model = {
+  // insert symbol groups into SVG model, and apply color style
+  const model = dye({
     tag: 'svg',
     meta: {},
     attr: { width: size, height: size },
     children: [bg, ...knolled],
-  }
+  })
+
 
   // return a full POJO svg representation
   return renderer.svg(model)

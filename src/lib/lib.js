@@ -22,6 +22,9 @@ const includes = (arr, val) => arr.includes(val)
 const compose = (...fs) => fs.reduceRight((pF, nF) => (...args) => nF(pF(...args)), v => v)
 
 
+const remap = (n, iMax, iMin, oMax, oMin) => (n - iMin) * (oMax - oMin) / (iMax - iMin) + oMin
+
+
 const isMate = (a, b) => {
   if (a === b) {
     if (a === 'full') {
@@ -153,5 +156,7 @@ export {
   comparator,
   deepClone,
   compose,
+
+  remap,
 
 }

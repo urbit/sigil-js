@@ -10,6 +10,7 @@ import {
   deepClone,
   randInt,
   randomShip,
+  entries,
 } from '../lib/lib'
 
 import {
@@ -60,14 +61,85 @@ class Lung extends Component {
       approvedTwo: [],
       approvedOne: [],
       selectedFiche: 'B',
-
+      lam: [],
     }
   }
 
 
   componentDidMount = () => {
 
-    inhale((reference) => {console.log(reference)})
+    inhale((reference) => {
+
+      const lamination = []
+      forEach(entries(reference.links), ([geonKey, decoKeys]) => {
+        forEach(decoKeys, decoKey => {
+          const a = reference.symbols[geonKey]
+          a.children = map(a.children, child => {
+            return {
+              ...child,
+              meta: {
+                ...child.meta,
+                style: { fill: 'FG', stroke: 'NO' }
+              },
+              attr: {
+                ...child.attr,
+                fill: 'white',
+                fillOpacity: 1,
+                strokeWidth: 0,
+                stroke: '#fff',
+              },
+            }
+          })
+
+          const b = reference.symbols[decoKey]
+          b.children = map(b.children, child => {
+            return {
+              ...child,
+              meta: {
+                ...child.meta,
+                style: { fill: 'BG', stroke: 'NO' }
+              },
+              attr: {
+                ...child.attr,
+                fill: '#4330FC',
+                // strokeWidth: 0,
+                // stroke: '#fff',
+                fillRule: 'evenodd',
+                fillOpacity: 1,
+              },
+            }
+          })
+
+          const o = deepClone(reference.symbols[geonKey])
+          o.children = map(o.children, child => {
+            return {
+              ...child,
+              meta: {
+                ...child.meta,
+                style: { fill: 'NO', stroke: 'FG' }
+              },
+              attr: {
+                ...child.attr,
+                fill: 'white',
+                fillOpacity: 0,
+                strokeWidth: 1,
+                stroke: '#fff',
+              },
+            }
+          })
+
+          const group = {
+            tag: 'g',
+            meta: {},
+            attr: {},
+            children: [a, b],
+          }
+          console.log(group)
+          lamination.push(group)
+        })
+      })
+      this.setState({lam: lamination})
+    })
 
     // cast((lung) => {
     //
@@ -78,13 +150,13 @@ class Lung extends Component {
     //     return member.meta.type !== 'geon' && key[2] !== 'fg' && key[2] !== 'n'
     //    })
     //
-    //    let laminationZero = []
-    //    forEach(geons, geon => forEach(decorators, otherMember => {
-    //      laminationZero.push({
-    //        ...geon,
-    //        children: [...geon.children, otherMember],
-    //      })
-    //     }))
+       // let laminationZero = []
+       // forEach(geons, geon => forEach(decorators, otherMember => {
+       //   laminationZero.push({
+       //     ...geon,
+       //     children: [...geon.children, otherMember],
+       //   })
+       //  }))
     //
     //   this.pullFromFireBase(DB_PASS_ONE_KEY, data => {
     //
@@ -156,10 +228,20 @@ class Lung extends Component {
       approvedTwo,
       approvedOne,
       geons,
+      lam,
     } = this.state
 
     return (
       <div>
+      <Fiche
+        page={lam}
+        pageLength={len(lam)}
+        isFocussed={selectedFiche === '1'}
+        switchStages={() => this.setState({ selectedFiche: '1' })}
+        fbk={'c000'}
+        title={'Lamination'}
+        id={'1'} />
+
         <Fiche
           page={laminationZero}
           pageLength={len(laminationZero)}

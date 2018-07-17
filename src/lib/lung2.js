@@ -40,13 +40,13 @@ const transform = doc => {
   // get the artboards that serve as containers for geons and their valid decorators
   const containers = filter(artboards, artboard => artboard.name !== 'SYMBOLS')
 
-  // get the symbol board
-  const symbols = filter(artboards, artboard => artboard.name === 'SYMBOLS')
+  // get the symbol board, and there should be only one
+  const symbols = filter(artboards, artboard => artboard.name === 'SYMBOLS')[0]
 
   // make the reference object
   const reference = {
     links: link(containers),
-    symbols: reduce(symbols[0].children, (acc, child) => {
+    symbols: reduce(symbols.children, (acc, child) => {
       acc[child.name] = walk(child)
       return acc
     }, {} ),
@@ -58,7 +58,7 @@ const transform = doc => {
 
 // Each geon is put in an artboard with instances of decorators that it can
 // accept. This function makes a structured reference from geon to valid
-// decorators.
+// decorators per geon.
 const link = containers => {
 
   // map each child name to a parent key/val pair
@@ -66,7 +66,7 @@ const link = containers => {
     const { children, name } = container
 
     // don't map if the child name === parent name
-    acc[name] = filter(children, child => child.name !== name)
+    acc[name] = map(filter(children, child => child.name !== name), item => item.name)
     return acc
   }, {} )
 }
@@ -84,7 +84,7 @@ const walk = child => ({
 
 
 // gets attributes from Figma data for a node/child. Group types are used for
-// positioning and and don't get any of their figma attributes passed
+// positioning and so their styling attributes are not passed.
 const getAttrs = node => {
   let { type } = node
 
@@ -105,7 +105,7 @@ const getAttrs = node => {
 const metaKeys = ['type', 'axel', 'key', 'edge']
 
 
-// Figma object types that are transformed into groups.
+// Figma object types that are transformed into groups by this transformer.
 const groupTypes = ['FRAME', 'COMPONENT', 'INSTANCE']
 
 

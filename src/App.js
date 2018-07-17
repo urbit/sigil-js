@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 
 import Lung from './views/Lung'
 import Scope from './views/Scope'
-// import Pour from './Pour'
+import Pour from './views/Pour'
 import { TabButton } from './components/UI'
 
 class App extends Component {
@@ -20,7 +20,7 @@ class App extends Component {
     } else if (this.state.route === 'scope') {
       route = <Scope />
     } else {
-      // route = <Pour patps={['monnum-rocdeg']} />
+      route = <Pour />
     }
 
     return (
@@ -37,6 +37,11 @@ class App extends Component {
               keySelectedInPanel={this.state.route === 'Lung'}
               title={'Lung'}
               id={'Lung'} />
+            <TabButton
+              onClick={() => this.setState({route: 'Pour'})}
+              keySelectedInPanel={this.state.route === 'Pour'}
+              title={'Pour'}
+              id={'Pour'} />
           </span>
         </nav>
         { route }

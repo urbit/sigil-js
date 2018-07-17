@@ -3,16 +3,16 @@ import React, { Component } from 'react'
 import _ from 'lodash'
 import { toPlanetName } from 'urbit-ob'
 
-import geonset from '../geonsets/geonset_001'
-import sylmap from '../sylmaps/sylmap_000.json'
+// import geonset from '../geonsets/geonset_001'
+// import sylmap from '../sylmaps/sylmap_000.json'
 
 import {
   randomShip,
 } from '../lib/lib'
 
-import { pour } from '../lib/pour'
+import pour from '../lib/pour'
 
-import ReactSVGComponents from '../renderers/ReactSVGComponents'
+import {ReactSVGComponents} from '../renderers/ReactSVGComponents'
 
 const SIZE = 600
 
@@ -20,15 +20,16 @@ class Pour extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      seals: false
+      seals: false,
+      patp: '~ridlur-figbud',
     }
   }
 
   componentDidMount = () => {
-    const randomPlanet = toPlanetName(randomShip('planet'))
-    const constantPlanet = '~ridlur-figbud'
-    const seals = multiPour([randomPlanet], geonset, sylmap)
-    this.setState({ seals })
+    // const randomPlanet = toPlanetName(randomShip('planet'))
+    // const constantPlanet = '~ridlur-figbud'
+    // // const seals = multiPour([randomPlanet], geonset, sylmap)
+    this.setState({ patp: toPlanetName(randomShip('planet')) })
   }
 
 
@@ -41,16 +42,22 @@ class Pour extends Component {
   render = () => {
     return (
       <div>
+        <button onClick={() => this.setState({ patp: toPlanetName(randomShip('planet')) })}>
+        {'Random @P'}
+        </button>
         {
-          this.state.seals
-            ? insert(this.state.seals[0])
-            : () => {}
+          pour({
+            patp: this.state.patp,
+            sylmap: undefined,
+            renderer: ReactSVGComponents,
+            size: 512,
+          })
         }
+        <p>{this.state.patp}</p>
       </div>
     )
   }
 }
-
 
 
 

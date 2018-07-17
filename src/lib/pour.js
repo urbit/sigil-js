@@ -6,6 +6,7 @@ import {
   isUndefined,
   last,
   has,
+  reduce,
 } from 'lodash'
 
 // import { toAddress } from 'urbit-ob'
@@ -19,21 +20,58 @@ import {
   patpArrToStr,
   patpStrToArr,
   isEven,
+  isOdd,
   deepClone,
+  remap,
 } from '../lib/lib'
 
 import { len, lat, sq } from '../lib/lib.array'
 
-const dye = (model, addr) => {
-  const swatches = ['white', '#4330FC', 'purple']
-  return dip(model, swatches)
+import { suffixes, prefixes, } from '../lib/lib.urbit'
+
+const errC = 'purple'
+
+const colorways = [
+  ['#fff', '#000000'],
+  ['#fff', '#4330FC'],
+  ['#fff', '#372284'],
+  ['#fff', '#129485'],
+  ['#fff', '#928472'],
+]
+
+
+const prism = (patp, colorways) => {
+
+  const firstSyl = patp[0]
+
+  const idxOfFirstSyl = len(patp) === 1
+    ? suffixes.indexOf(firstSyl)
+    : prefixes.indexOf(firstSyl)
+
+  const iMax = 512 - 1
+  const iMin = 0
+  const oMax = len(colorways)
+  const oMin = 0
+
+  const index = Math.floor(remap(idxOfFirstSyl, iMax, iMin, oMax, oMin))
+
+  return colorways[index]
 }
 
-const applyColor = (p, swatches) => {
+
+const dye = (model, patp, monotonal) => {
+  // if the monotal param is true, return a black and white seal
+  if (monotonal === true) return dip(model, ['white', 'black'])
+
+  // apply a color to the model
+  return dip(model, prism(patp, colorways))
+}
+
+const applyColor = (p, colorway) => {
   switch(p) {
-    case 'FG': return swatches[0]
-    case 'BG': return swatches[1]
-    default: return last(swatches)
+    case 'FG': return colorway[0]
+    case 'BG': return colorway[1]
+    default: return last(colorway)
   }
 }
 
@@ -53,24 +91,25 @@ const applyStrokeWidth = p => {
   }
 }
 
-const stir = (attr, style, swatches) => {
+// apply style attributes to a tag
+const applyStyle = (attr, style, colorway) => {
   const { fill, stroke } = style
   return {
     ...attr,
-    fill: applyColor(fill, swatches),
-    stroke: applyColor(stroke, swatches),
+    fill: applyColor(fill, colorway),
+    stroke: applyColor(stroke, colorway),
     strokeWidth: applyStrokeWidth(stroke),
     fillOpacity: applyFillOpacity(fill),
   }
 }
 
-
+// Only apply styling to nodes that have a style meta property
 const dip = (node, swatches) => {
   const style = get(node, ['meta', 'style'], false)
   if (style !== false) {
     return {
       ...node,
-      attr: stir(get(node, 'attr', {}), style, swatches),
+      attr: applyStyle(get(node, 'attr', {}), style, swatches),
       children: map(get(node, 'children', []), child => dip(child, swatches)),
     }
   }
@@ -104,14 +143,12 @@ const createGrid = (p, bw, size) => {
         p: {x: 1, y: 1},
         flat: true,
       })
-      break
     case 2: return lat({
         m: { x: bw, y: ctr },
         s: sq(size),
         p: {x: 2, y: 1},
         flat: true,
       })
-      break
     default: return lat({
         m: sq(bw),
         s: sq(size),
@@ -122,7 +159,7 @@ const createGrid = (p, bw, size) => {
 }
 
 
-const pour = ({ patp, sylmap, renderer, size }) => {
+const pour = ({ patp, sylmap, renderer, size, monotonal }) => {
   // The size of each svg as drawn in Figma
   const UNIT = 128 * 2
 
@@ -142,8 +179,6 @@ const pour = ({ patp, sylmap, renderer, size }) => {
   // calculate a border width
   const bw = size / 16
 
-  // make a color palette from ship address
-  const palette = dye()
 
   // make a grid suited to ship class
   const grid = createGrid(patp, bw, size)
@@ -192,7 +227,7 @@ const pour = ({ patp, sylmap, renderer, size }) => {
     meta: {},
     attr: { width: size, height: size },
     children: [bg, ...knolled],
-  })
+  }, patp, monotonal)
 
 
   // return a full POJO svg representation

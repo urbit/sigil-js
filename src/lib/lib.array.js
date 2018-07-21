@@ -88,7 +88,7 @@ const isLastIdx = (arr, i) => i === lastIndex(arr)
 
 // const sort = (arr, comparator, key) => arr.sort((a, b) => comparator(a, b, key))
 
-const rotate = (arr, n) => {
+const rotateArray = (arr, n) => {
   const l = len(arr)
   return arr.slice(l - n).concat(arr.slice(0, l - n))
 }
@@ -105,7 +105,7 @@ export {
   isFirstIdx,
   isLastIdx,
   // sort,
-  rotate,
+  rotateArray,
   lat,
   isAtEnd,
   isAtStart,

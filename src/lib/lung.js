@@ -346,22 +346,22 @@ const propBindings = {
 }
 
 
-const collider = (array, method, qty) => {
-  const all = Combinatorics[method](array, qty).toArray()
-
-  // const withMateCount = all.map(geonmap => ({
-  //   geonmap,
-  //   // mateCount: countMates(geonset, geonmap, 2),
-  // }))
-
-  // const sorted = sort(withMateCount, numComparator, 'mateCount').reverse()
-  return all
-}
+// const collider = (array, method, qty) => {
+//   const all = Combinatorics[method](array, qty).toArray()
+//
+//   // const withMateCount = all.map(geonmap => ({
+//   //   geonmap,
+//   //   // mateCount: countMates(geonset, geonmap, 2),
+//   // }))
+//
+//   // const sorted = sort(withMateCount, numComparator, 'mateCount').reverse()
+//   return all
+// }
 
 
 
 export {
   cast,
   makeTag,
-  collider,
+  // collider,
 }

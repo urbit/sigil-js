@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
-import { map, filter, forEach, reduce } from 'lodash'
+import { map, filter, forEach, reduce, chunk,shuffle } from 'lodash'
 import fileDownload from 'js-file-download'
 import { toPlanetName } from 'urbit-ob'
 
-import { inhale, walk } from '../lib/lung2'
+import { inhale, walk, permute, wedge } from '../lib/lung2'
 import { base, baseState } from '../lib/lib.firebase'
 import {
   collider,
@@ -29,7 +29,7 @@ import {
 
 import { ToggleButton } from '../components/UI'
 
-import pour from '../lib/pour'
+import { pourject } from '../lib/pourject'
 
 import {
   ReactSVGComponents,
@@ -69,135 +69,9 @@ class Lung extends Component {
   componentDidMount = () => {
 
     inhale((reference) => {
-
-      const lamination = []
-      forEach(entries(reference.links), ([geonKey, decoKeys]) => {
-        forEach(decoKeys, decoKey => {
-          const a = reference.symbols[geonKey]
-          a.children = map(a.children, child => {
-            return {
-              ...child,
-              meta: {
-                ...child.meta,
-                style: { fill: 'FG', stroke: 'NO' }
-              },
-              attr: {
-                ...child.attr,
-                fill: 'white',
-                fillOpacity: 1,
-                strokeWidth: 0,
-                stroke: '#fff',
-              },
-            }
-          })
-
-          const b = reference.symbols[decoKey]
-          b.children = map(b.children, child => {
-            return {
-              ...child,
-              meta: {
-                ...child.meta,
-                style: { fill: 'BG', stroke: 'NO' }
-              },
-              attr: {
-                ...child.attr,
-                fill: '#4330FC',
-                // strokeWidth: 0,
-                // stroke: '#fff',
-                fillRule: 'evenodd',
-                fillOpacity: 1,
-              },
-            }
-          })
-
-          const o = deepClone(reference.symbols[geonKey])
-          o.children = map(o.children, child => {
-            return {
-              ...child,
-              meta: {
-                ...child.meta,
-                style: { fill: 'NO', stroke: 'FG' }
-              },
-              attr: {
-                ...child.attr,
-                fill: 'white',
-                fillOpacity: 0,
-                strokeWidth: 1,
-                stroke: '#fff',
-              },
-            }
-          })
-
-          const group = {
-            tag: 'g',
-            meta: {},
-            attr: {},
-            children: [a, b],
-          }
-          console.log(group)
-          lamination.push(group)
-        })
-      })
-      this.setState({lam: lamination})
+      this.setState({ reference, lam: permute(reference) })
     })
 
-    // cast((lung) => {
-    //
-    //   const geons = filter(lung, member => member.meta.type === 'geon')
-    //
-    //   const decorators = filter(lung, member => {
-    //     const key = member.meta.key.split('.')
-    //     return member.meta.type !== 'geon' && key[2] !== 'fg' && key[2] !== 'n'
-    //    })
-    //
-       // let laminationZero = []
-       // forEach(geons, geon => forEach(decorators, otherMember => {
-       //   laminationZero.push({
-       //     ...geon,
-       //     children: [...geon.children, otherMember],
-       //   })
-       //  }))
-    //
-    //   this.pullFromFireBase(DB_PASS_ONE_KEY, data => {
-    //
-    //     const laminationOne = map(data, item => item.group)
-    //     this.setState({approvedOne: laminationOne})
-    //     let laminationTwo = []
-    //     forEach(laminationOne, group => forEach(decorators, otherMember => {
-    //       laminationTwo.push({
-    //         ...group,
-    //         children: [...group.children, otherMember],
-    //       })
-    //      }))
-    //
-    //
-    //      this.setState({laminationTwo, laminationOne})
-    //
-    //   })
-    //
-    //
-    //
-    //
-    //   this.pullFromFireBase(DB_PASS_TWO_KEY, data => {
-    //     // const laminationTwo = map(data, item => item.group)
-    //     this.setState({approvedTwo: data})
-    //     let laminationThree = []
-    //     forEach(data, group => forEach(decorators, otherMember => {
-    //       laminationThree.push({
-    //         ...group,
-    //         children: [...group.children, otherMember],
-    //       })
-    //      }))
-    //
-    //
-    //      this.setState({ laminationThree })
-    //
-    //   })
-    //
-    //
-    //   this.setState({ lung, geons, laminationZero, })
-    //
-    // })
   }
 
 
@@ -210,12 +84,12 @@ class Lung extends Component {
 
 
   pushToFirebase = key => {
-    const { comb, currentIndex } = this.state
-    base.push(key, {
-      data: { group: group(comb[currentIndex])}
-    }).then(() => {
-      console.log('success')
-    })
+    // const { comb, currentIndex } = this.state
+    // base.push(key, {
+    //   data: { group: group(comb[currentIndex])}
+    // }).then(() => {
+    //   console.log('success')
+    // })
   }
 
   render = () => {
@@ -242,62 +116,55 @@ class Lung extends Component {
         title={'Lamination'}
         id={'1'} />
 
-        <Fiche
-          page={laminationZero}
-          pageLength={len(laminationZero)}
-          isFocussed={selectedFiche === 'A'}
-          switchStages={() => this.setState({ selectedFiche: 'A' })}
-          fbk={'c000'}
-          title={'Lamination A'}
-          id={'A'} />
+      <RandomGrid page={this.state.lam} />
 
-        <h1 className={'arrow'}>{'↓'}</h1>
+      <FicheList page={this.state.lam} />
+        {
 
-        <Fiche
-          page={laminationTwo}
-          pageLength={len(laminationTwo)}
-          isFocussed={selectedFiche === 'B'}
-          switchStages={() => this.setState({ selectedFiche: 'B' })}
-          fbk={'c001'}
-          title={'Lamination B'}
-          id={'B'} />
 
-        <h1 className={'arrow'}>{'↓'}</h1>
+        // <Fiche
+        //   page={laminationZero}
+        //   pageLength={len(laminationZero)}
+        //   isFocussed={selectedFiche === 'A'}
+        //   switchStages={() => this.setState({ selectedFiche: 'A' })}
+        //   fbk={'c000'}
+        //   title={'Lamination A'}
+        //   id={'A'} />
+        //
+        // <h1 className={'arrow'}>{'↓'}</h1>
+        //
+        // <Fiche
+        //   page={laminationTwo}
+        //   pageLength={len(laminationTwo)}
+        //   isFocussed={selectedFiche === 'B'}
+        //   switchStages={() => this.setState({ selectedFiche: 'B' })}
+        //   fbk={'c001'}
+        //   title={'Lamination B'}
+        //   id={'B'} />
+        //
+        // <h1 className={'arrow'}>{'↓'}</h1>
+        //
+        // <Fiche
+        //   page={laminationThree}
+        //   pageLength={len(laminationThree)}
+        //   isFocussed={selectedFiche === 'C'}
+        //   switchStages={() => this.setState({ selectedFiche: 'C' })}
+        //   fbk={'c002'}
+        //   title={'Lamination C'}
+        //   id={'C'} />
+        //
+        // <div className={'flex'}>
+        //
+        //   <RandomGrid page={[...geons, ...approvedOne, ...approvedTwo]} num={4} />
+        //
+        // </div>
 
-        <Fiche
-          page={laminationThree}
-          pageLength={len(laminationThree)}
-          isFocussed={selectedFiche === 'C'}
-          switchStages={() => this.setState({ selectedFiche: 'C' })}
-          fbk={'c002'}
-          title={'Lamination C'}
-          id={'C'} />
-
-        <div className={'flex'}>
-
-          <RandomGrid page={[...geons, ...approvedOne, ...approvedTwo]} num={4} />
-
-        </div>
+        }
 
       </div>
     )
   }
 }
-
-const moveGeonToBack = group => {
-  const noGeons = filter(group.children, child => child.meta.type !== 'geon')
-  const geons = filter(group.children, child => child.meta.type === 'geon')
-  group.children = [...geons, ...noGeons]
-  return group
-}
-
-
-const group = children => walk({
-  tag: 'g',
-  meta: {},
-  attr: {},
-  children,
-})
 
 
 class Fiche extends Component {
@@ -325,7 +192,6 @@ class Fiche extends Component {
 
   nextPage = pageLength => {
     if (!isAtEnd(pageLength, this.state.index)) {
-      console.log('ok')
       this.setState({ index: parseInt(this.state.index) + 1 })
     }
   }
@@ -423,16 +289,24 @@ class Fiche extends Component {
 
 const FicheList = ({page}) => {
   if (!isEmpty(page)) {
-    return (
-      <section className={'tiny'}>
+    return [
+      <h2>{len(page)}</h2>,
+      <section className={'w100'}>
       {
         len(page) === 0
         ? <div><p>{'Zero Length Array'}</p></div>
-        : <div> {mapInsert(page)} </div>
+        : <div className={'biggify'}> {map(page, symbol => {
+            return pourject({
+              symbols: [symbol],
+              renderer: ReactSVGComponents,
+              size: 128,
+              colorway: ['black', '#fff'],
+            })
+        })} </div>
       }
       </section>
 
-    )
+    ]
   }
   return <div><p>{'LOADING'}</p></div>
 }
@@ -442,7 +316,23 @@ class RandomGrid extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      patp: 'ridlur-figbud'
+      patp: 'ridlur-figbud',
+      index: 0,
+    }
+  }
+
+
+  thisPage = index => this.setState({ currentIndex: index })
+
+  nextPage = pageLength => {
+    if (!isAtEnd(pageLength, this.state.index)) {
+      this.setState({ index: parseInt(this.state.index) + 1 })
+    }
+  }
+
+  prevPage = pageLength => {
+    if (!isAtStart(pageLength, this.state.index)) {
+      this.setState({ index: parseInt(this.state.index) - 1 })
     }
   }
 
@@ -453,38 +343,29 @@ class RandomGrid extends Component {
 
   render = () => {
     const { page } = this.props
-    const { patp } = this.state
-
-    if (len(page) > 512) {
-
-      const sylmap = reduce([...prefixes, ...suffixes], (acc, syl, index) => {
-        acc[syl] = page[index]
-        return acc
-      },{})
-
-      return (
-        <div>
-          <button onClick={() => this.setState({patp: toPlanetName(randomShip('planet')) }) }>{'regen'}</button>
-          <button onClick={() => this.exportSVG(pour({
-              patp: patp,
-              sylmap: sylmap,
-              renderer: SVGStringComponents,
-            })
-          )}>{'Export SVG'}</button>
-
-        <div>
-          {
-            pour({
-              patp: 'marzod',
-              sylmap: sylmap,
-              renderer: ReactSVGComponents,
-              size: 256,
-            })
-          }
-        </div>
-        </div>
-      )
-    }
+      if (len(page) > 0) {
+        const symbols = chunk(page, 4)
+        const pageLength = len(symbols)
+        return (
+          <div>
+            <button onClick={() => this.setState({patp: toPlanetName(randomShip('planet')) }) }>{'random @P'}</button>
+            <button onClick={() => this.setState({index: 0})}>{'Zero'}</button>
+            <button onClick={() => this.prevPage(pageLength)}>{'←'}</button>
+            <button onClick={() => this.nextPage(pageLength)}>{'→'}</button>
+            <button onClick={() => this.setState({index: lastIndex(page)})}>{'Max'}</button>
+            <div>
+              {
+                pourject({
+                  symbols: symbols[this.state.index],
+                  renderer: ReactSVGComponents,
+                  size: 365,
+                  colorway: ['#000', '#fff'],
+                })
+              }
+            </div>
+          </div>
+        )
+      }
 
     return <div><p>{'LOADING'}</p></div>
   }

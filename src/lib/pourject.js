@@ -11,7 +11,7 @@ import {
 
 // import { toAddress } from 'urbit-ob'
 
-import { scale, translate, transform, toSVG, rotateDEG } from 'transformation-matrix'
+import { scale, translate, transform, toSVG, fromString, rotateDEG } from 'transformation-matrix'
 // import chroma from 'chroma-js'
 
 import {
@@ -39,35 +39,18 @@ const cw = [
 ]
 
 
-const prism = (patp, colorways) => {
-
-  const firstSyl = patp[0]
-
-  const idxOfFirstSyl = len(patp) === 1
-    ? suffixes.indexOf(firstSyl)
-    : prefixes.indexOf(firstSyl)
-
-  const iMax = 512 - 1
-  const iMin = 0
-  const oMax = len(colorways)
-  const oMin = 0
-
-  const index = Math.floor(remap(idxOfFirstSyl, iMax, iMin, oMax, oMin))
-
-  return colorways[index]
-}
 
 
-const dye = (model, patp, colorway) => {
+const dye = (model, colorway) => {
 
   // if the monotoneColorway param is true, return a black and white seal
-  if (!isUndefined(colorway)) return dip(model, colorway)
+  return dip(model, colorway)
 
   // pick a colorscheme from patp contents
-  colorway = prism(patp, cw)
+  // colorway = prism(patp, cw)
 
   // apply a color to the model
-  return dip(model, colorway)
+  // return dip(model, colorway)
 }
 
 const apply = {
@@ -168,16 +151,11 @@ const createGrid = (p, bw, size) => {
 }
 
 
-const pour = ({ patp, sylmap, renderer, size, colorway, returnElem }) => {
+const pourject = ({ symbols, renderer, size, colorway }) => {
   // The size of each svg as drawn in Figma
   const UNIT = 128
 
-  // renderer and @P are not optional
-  if (isUndefined(patp)) throw Error('Missing @P')
-
-  // if string recieved, convert to array, where each syllable is a string in the array.
-  if (isString(patp)) patp = patpStrToArr(patp)
-  if (!isEven(len(patp) && len(patp !== 1))) throw Error('@Ps are always of even length')
+  if (isUndefined(renderer)) throw Error('Missing Renderer')
 
   // if needed, set a size default param
   size = isUndefined(size)
@@ -189,41 +167,28 @@ const pour = ({ patp, sylmap, renderer, size, colorway, returnElem }) => {
 
 
   // make a grid suited to ship class
-  const grid = createGrid(patp, bw, size)
+  const grid = createGrid(symbols, bw, size)
 
-  // get svg objects from sylmap. If there is no sylmap, or if the syllable
-  // symbol cannot be found, return a default symbol instead.
-  const symbols = isUndefined(sylmap)
-    ? map(patp, syllable => defaultSymbol)
-    : map(patp, syllable => get(sylmap, syllable, defaultSymbol))
 
   // transform symbols into position on grid
-  const knolled = map(symbols, (symbol, index) => {
-    // We are mutating an object in this loop. In order to keep the sylmap pure,
-    // we deepClone the item.
-    const clone = deepClone(symbol)
+  const knolled = map(symbols, (item, index) => {
+
+    // clone the entire reference to the current symbol to a new obj
+    const clone = deepClone(item)
 
     // get point coordinates from grid at symbol index
     const { x, y } = grid[index]
 
-    // calculate scale factor relative to border width and default unit size.
-    // This also corrects an offset.
-    const scl = (size - bw * 2) + 2 / (UNIT * 2)
+    // calculate scale factor, where 256 is the unit measurement
+    const scl = (size - (bw * 2) - 2) / (UNIT * 2)
 
-    // get the rotational angle of the symbol in degrees from the meta prop
+
     const deg = get(clone, ['meta', 'rotation'], 0)
+    const center = UNIT / 2
+    // make an affine transformation matrix with x/y translation and uniform scaling
+    const affineMatrix = transform(translate(x, y), scale(scl, scl), rotateDEG(deg, center, center))
 
-    // caluclate the centerpoint of the symbol to center the rotation transform
-    const c = UNIT / 2
-
-    // make an affine transformation matrix with x/y translation, uniform
-    // scaling and rotation. NOTE: Transformation application order matters.
-    const affineMatrix = transform(
-      translate(x, y),
-      scale(scl, scl),
-      rotateDEG(deg, c, c)
-    )
-
+    // console.log(affineMatrix)
     // set the transform attr on the clone with the new affine matrix
     set(clone, ['attr', 'transform'], toSVG(affineMatrix))
 
@@ -249,14 +214,11 @@ const pour = ({ patp, sylmap, renderer, size, colorway, returnElem }) => {
     meta: {},
     attr: { width: size, height: size },
     children: [bg, ...knolled],
-  }, patp, colorway)
+  }, colorway)
 
-
-  // Return the rendered object or the object itself.
-  return isUndefined(renderer)
-    ? model
-    : renderer.svg(model)
+  // return a full POJO svg representation
+  return renderer.svg(model)
 }
 
 
-export { pour, dye }
+export { pourject, dye }

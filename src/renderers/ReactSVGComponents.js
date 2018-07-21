@@ -5,7 +5,7 @@ const ReactSVGComponents = {
   svg: p => {
     return (
       <svg {...p.attr} version={'1.1'} xmlns={'http://www.w3.org/2000/svg'}>
-      { map(get(p, 'children', []), child => ReactSVGComponents[child.tag](child)) }
+r      { map(get(p, 'children', []), child => ReactSVGComponents[child.tag](child)) }
       </svg>
     )
   },
@@ -24,7 +24,6 @@ const ReactSVGComponents = {
     )
   },
   path: p => {
-    // console.log(p)
     return (
       <path {...p.attr}>
       { map(get(p, 'children', []), child => ReactSVGComponents[child.tag](child)) }
@@ -66,7 +65,7 @@ const insert = group => {
   const model = {
     tag: 'svg',
     meta: {},
-    attr: {},
+    attr: {width: 128, height: 128},
     children: [group],
   }
   return ReactSVGComponents.svg(model)

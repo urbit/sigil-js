@@ -443,3 +443,12 @@ h1.arrow {
   height: 256px; */
   /* border: 16px solid #4330FC; */
 }
+
+/* .biggify {
+  transform: scale(4);
+  transform-origin: top left;
+} */
+
+.w100 {
+  width: 100%;
+}

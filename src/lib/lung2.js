@@ -2,6 +2,8 @@ import { map, get, set, filter, reduce, isUndefined, forEach, flatten } from 'lo
 import Combinatorics from 'js-combinatorics'
 import * as Figma from 'figma-js'
 
+import { scale, translate, transform, toSVG, rotateDEG } from 'transformation-matrix'
+
 import {
   mergeUpdates,
   updaters,
@@ -12,7 +14,9 @@ import {
   compose,
 } from '../lib/lib'
 
-import { seq, rotate } from '../lib/lib.array'
+import { seq, rotateArray, len } from '../lib/lib.array'
+
+import { dye } from '../lib/pour'
 
 const TOKEN = '1952-9da74b1b-551c-4acf-83b4-23b31743ab51'
 const DOC_KEY = 'Qto2VhnBg0PJVNGskZfLH95i'
@@ -26,33 +30,44 @@ const client = Figma.Client({ personalAccessToken: TOKEN })
 const inhale = callback => {
   // Call figma api, transform data and callback
   client.file(DOC_KEY, { geometry: 'paths' })
-    .then(({ data }) => callback(transform(data)))
+    .then(({ data }) => {
+      callback(makeReference(data))
+    })
     .catch(err => console.error('inhale() choked: ', err))
 }
 
 
 // Translates Figma data into a geon reference object.
-const transform = doc => {
+const makeReference = doc => {
 
   // get the all artboards from the 1st page of the figma doc
   const artboards = get(doc, ['document', 'children', 0, 'children'])
 
   // get the artboards that serve as containers for geons and their valid decorators
-  const containers = filter(artboards, artboard => artboard.name !== 'SYMBOLS')
+  const geonContainers = filter(artboards, artboard =>
+    artboard.name !== 'SYMBOLS' && artboard.name.split('.')[0] === 'g')
+
+  // get the artboards that serve as containers for decorators and their valid decorators
+  const decoContainers = filter(artboards, artboard =>
+    artboard.name !== 'SYMBOLS' && artboard.name.split('.')[0] === 'd')
 
   // get the symbol board, and there should be only one
   const symbols = filter(artboards, artboard => artboard.name === 'SYMBOLS')[0]
 
   // make the reference object
   const reference = {
-    links: link(containers),
+    geonLinks: link(geonContainers),
+    decoLinks: link(decoContainers),
     symbols: reduce(symbols.children, (acc, child) => {
       acc[child.name] = walk(child)
       return acc
     }, {} ),
   }
+
   return reference
 }
+
+
 
 
 
@@ -73,27 +88,62 @@ const link = containers => {
 
 
 
+
 // recurse through children and add metadata and attributes
 const walk = child => ({
   attr: getAttrs(child),
-  children: map(get(child, 'children', []), child => walk(child)),
+  children: unfurl(child),
   meta: getMetas(child),
   tag: get(figTypeMap, child.type),
 })
 
 
 
-// gets attributes from Figma data for a node/child. Group types are used for
+
+
+// unfurl handles unnesting fillGeometry paths into real path nodes along walk()
+const unfurl = parent => {
+
+  const children = get(parent, 'children', [])
+
+  return reduce(children, (acc, child) => {
+
+    const { fillGeometry } = child
+
+    if (!isUndefined(fillGeometry)) {
+
+      const paths = map(fillGeometry, path => ({
+        tag: svg.path,
+        attr: { ...getAttrs(child), d: path.path, fillRule: path.windingRule },
+        children: [],
+        meta: getMetas(parent).type === 'g'
+          ? { style: { fill: 'FG', stroke: 'NO' } }
+          : { style: { fill: 'BG', stroke: 'NO' } },
+      }))
+
+      return [...acc, ...paths]
+
+    } else {
+
+      return walk(child)
+
+    }
+  }, [])
+
+}
+
+
+// gets attributes from Figma data for a child. Group types are used for
 // positioning and so their styling attributes are not passed.
-const getAttrs = node => {
-  let { type } = node
+const getAttrs = child => {
+  let { type } = child
 
   if (groupTypes.includes(type)) {
     return {}
   } else {
     return reduce(entries(attrGetters), (a, [n, get]) => ({
       ...a,
-      ...attrMap[n](get(node)),
+      ...attrMap[n](get(child)),
     }), {})
   }
 }
@@ -102,27 +152,31 @@ const getAttrs = node => {
 
 // keys for meta properties stored in figma frame/component/instance name field.
 // Stored by index that matches index in a split Figma name field
-const metaKeys = ['type', 'axel', 'key', 'edge']
+const metaKeys = ['type', 'key', 'axel', 'edge']
+
 
 
 // Figma object types that are transformed into groups by this transformer.
 const groupTypes = ['FRAME', 'COMPONENT', 'INSTANCE']
 
 
+
 // get meta properties from figma frame/component/instance name field
-const getMetas = node => {
-  const { type } = node
-
+const getMetas = child => {
+  const { type } = child
   // set default meta property
-  let meta = { style: {fill: 'NO', stroke: 'NO'} }
-
-  // if the node type should be a high-level symbol wrapping group, append meta k/v
+  let meta = {}
+  // if the child type should be a high-level symbol wrapping group, append meta k/v
   if (groupTypes.includes(type)) {
-    meta = reduce(get(node, 'name', '').split('.'), (a, v, i) => {
-      metaKeys[i] = v
+    meta = reduce(get(child, 'name', '').split('.'), (a, v, i) => {
+      a[metaKeys[i]] = v
       return a
     }, meta )
   }
+
+  meta = meta.type === 'g' && child.tag !== 'g'
+    ? {...meta, style: { fill: 'FG', stroke: 'NO' } }
+    : {...meta, style: { fill: 'BG', stroke: 'NO' } }
 
   return meta
 }
@@ -131,29 +185,19 @@ const getMetas = node => {
 
 // functions that get properties of from figma object, or set a default value
 const attrGetters = {
-  fill: node => 'none',
-  fillOpacity: node => get(node, 1, 1),
-  d: node =>  get(node, ['fillGeometry', 0, 'path']),
-  stroke: node => BG_COLOR,
-  strokeWidth: node => 0,
-  relativeTransform: node => get(node, ['relativeTransform']),
+  relativeTransform: child => get(child, ['relativeTransform']),
 }
 
 
 
 // mappings between attribute names and final values
 const attrMap = {
-  fill: color => ({ fill: color }),
-  stroke: color => ({ stroke: color }),
-  strokeWidth: num => ({ strokeWidth: num }),
-  cx: num => ({ cx: num }),
-  cx: num => ({ cy: num }),
-  r: num => ({ r: num }),
-  d: str => ({ d: str }),
-  fillOpacity: float => ({ fillOpacity: float}),
-  relativeTransform: a => ({transform: `matrix(${a[0][0]} ${a[1][0]} ${a[0][1]} ${a[1][1]} ${a[0][2]} ${a[1][2]})` })
+  relativeTransform: a => ({ transform: matrix2DOMString(a) })
 }
 
+
+
+const matrix2DOMString = m => `matrix(${m[0][0]} ${m[1][0]} ${m[0][1]} ${m[1][1]} ${m[0][2]} ${m[1][2]})`
 
 
 // consistant SVG tag names
@@ -184,7 +228,97 @@ const figTypeMap = {
 }
 
 
+const pRotate = (acc, symbol, f) => {
+  const perms =
+  return f([...acc, ...perms],
+}
+
+const branch = reference => {
+  const { symbols, decoLinks, geonLinks } = reference
+  const geonSymbols = filter(symbols, symbol => symbol.meta.type === 'g')
+  const decoSymbols = filter(symbols, symbol => symbol.meta.type === 'd')
+
+  reduce(geonSymbols, (acc, g) => {
+    return pRotate(acc, g, (acc, r) => {
+      return pDeco(acc, g, (acc, d) => {
+        return pRotate(acc, d, (acc, ))
+      })
+    })})
+}
+
+const fan = a => {}
+
+const permute = reference => {
+  const { symbols, decoLinks, geonLinks } = reference
+
+  const geonSymbols = filter(symbols, symbol => symbol.meta.type === 'g')
+  const decoSymbols = filter(symbols, symbol => symbol.meta.type === 'd')
+
+  const accumulator = []
+
+  forEach(entries(geonLinks), ([geonKey, decoKeys]) => {
+    forEach(decoKeys, decoKey => {
+      const combination = group([
+        symbols[geonKey],
+        symbols[decoKey],
+      ])
+
+      accumulator.push(combination)
+
+      })
+    })
+
+    return accumulator
+}
+
+const group = (children) => {
+  return {
+    tag: svg.g,
+    children,
+    attr: {},
+    meta: {},
+  }
+}
+
+
+
+const axel2Deg = (total, idx) => {
+  if (idx === 0) return 0
+  if (idx === 1) return 90
+  return (360 / total) * idx
+}
+
+
+
+// const permute = symbols => {
+//   return reduce(symbols, (acc, symbol) => {
+//     const numRotations = parseInt(get(symbol.children[0], 'meta.axel', 0), 10)
+//     const rotations = map(seq(numRotations), (rotationAcc, index) => {
+//
+//       const clone = deepClone(symbol)
+//       const deg = axel2Deg(numRotations, index)
+//       // console.log(deg)
+//       // const rotatedEdgemap = rotateArray(get(clone, ['meta', 'edge'] ).split(''), index).join('')
+//       // console.log(deg)
+//
+//       // const splitKey = k.split('.')
+//       // splitKey[2] = deg
+//       // const newKey = splitKey.join('.')
+//       // console.log(deg)
+//       set(clone, ['meta', 'rotation'], deg)
+//       // set(clone, ['meta', 'wall'], rotatedEdgemap)
+//       // set(clone, ['meta', 'key'], newKey)
+//       return clone
+//     })
+//     return [...acc, ...rotations]
+//   }, [])
+//
+//   return symbols
+// }
+
+
 export {
   inhale,
   walk,
+  permute,
 }

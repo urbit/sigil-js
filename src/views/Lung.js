@@ -3,7 +3,7 @@ import { map, filter, forEach, reduce, chunk,shuffle } from 'lodash'
 import fileDownload from 'js-file-download'
 import { toPlanetName } from 'urbit-ob'
 
-import { inhale, walk, permute, wedge } from '../lib/lung2'
+import { inhale, walk, wedge, fan } from '../lib/lung2'
 import { base, baseState } from '../lib/lib.firebase'
 import {
   collider,
@@ -69,7 +69,8 @@ class Lung extends Component {
   componentDidMount = () => {
 
     inhale((reference) => {
-      this.setState({ reference, lam: permute(reference) })
+      // fan(reference)
+      this.setState({ reference, lam: fan(reference) })
     })
 
   }

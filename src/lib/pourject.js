@@ -182,8 +182,9 @@ const pourject = ({ symbols, renderer, size, colorway }) => {
     // calculate scale factor, where 256 is the unit measurement
     const scl = (size - (bw * 2) - 2) / (UNIT * 2)
 
-
+    console.log(clone)
     const deg = get(clone, ['meta', 'rotation'], 0)
+    // console.log(deg)
     const center = UNIT / 2
     // make an affine transformation matrix with x/y translation and uniform scaling
     const affineMatrix = transform(translate(x, y), scale(scl, scl), rotateDEG(deg, center, center))

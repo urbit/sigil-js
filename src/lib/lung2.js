@@ -59,7 +59,8 @@ const makeReference = doc => {
     geonLinks: link(geonContainers),
     decoLinks: link(decoContainers),
     symbols: reduce(symbols.children, (acc, child) => {
-      acc[child.name] = walk(child)
+      const key = child.name.split('.')[1]
+      acc[key] = walk(child)
       return acc
     }, {} ),
   }
@@ -80,8 +81,10 @@ const link = containers => {
   return reduce(containers, (acc, container) => {
     const { children, name } = container
 
+    const key = name.split('.')[1]
+
     // don't map if the child name === parent name
-    acc[name] = map(filter(children, child => child.name !== name), item => item.name)
+    acc[key] = map(filter(children, child => child.name !== name), item => item.name.split('.')[1])
     return acc
   }, {} )
 }
@@ -228,59 +231,131 @@ const figTypeMap = {
 }
 
 
-const pRotate = (acc, symbol, f) => {
-  const perms =
-  return f([...acc, ...perms],
+// const pRotate = (acc, item, f) => {
+//
+//   const iterable = a2d(item.meta.axel)
+//   const iterations = map(iterable, angle => {
+//     const clone = deepClone(item)
+//     set(clone, ['meta', 'rotation'], angle)
+//   })
+//   return f([...acc, iterations])
+//   // return f([...acc, ...perms])
+// }
+
+
+const spin = item => {
+  const iterable = a2d(item.meta.axel)
+  const iterations = map(iterable, angle => {
+    const clone = deepClone(item)
+    set(clone, ['meta', 'rotation'], angle)
+    return clone
+  })
+  return iterations
 }
 
-const branch = reference => {
+const paste = (item, reference) => {
+  const { geonLinks, symbols } = reference
+  const decorators = geonLinks[item.meta.key]
+  const clone = deepClone(item)
+
+  const iterations = map(decorators, key => group({
+    children: [
+      clone,
+      symbols[key],
+    ],
+    attr: clone.attr,
+    meta: clone.meta
+  }))
+  return iterations
+}
+
+const pDeco = (acc, item, f) => {
+  return []
+}
+
+
+
+// expand applies a function against each element in an array and concats the
+// result to an accumulator
+const expand = (a, f) => reduce(a, (acc, item) => [...acc, ...f(item)], [...a])
+
+
+
+// fan creates a large array of iterations
+const fan = reference => {
   const { symbols, decoLinks, geonLinks } = reference
+
   const geonSymbols = filter(symbols, symbol => symbol.meta.type === 'g')
   const decoSymbols = filter(symbols, symbol => symbol.meta.type === 'd')
 
-  reduce(geonSymbols, (acc, g) => {
-    return pRotate(acc, g, (acc, r) => {
-      return pDeco(acc, g, (acc, d) => {
-        return pRotate(acc, d, (acc, ))
-      })
-    })})
-}
+  const expansion = expand(geonSymbols, a => {
 
-const fan = a => {}
+    return expand(spin(a), b => {
 
-const permute = reference => {
-  const { symbols, decoLinks, geonLinks } = reference
+      return paste(b, reference)
 
-  const geonSymbols = filter(symbols, symbol => symbol.meta.type === 'g')
-  const decoSymbols = filter(symbols, symbol => symbol.meta.type === 'd')
-
-  const accumulator = []
-
-  forEach(entries(geonLinks), ([geonKey, decoKeys]) => {
-    forEach(decoKeys, decoKey => {
-      const combination = group([
-        symbols[geonKey],
-        symbols[decoKey],
-      ])
-
-      accumulator.push(combination)
-
-      })
     })
+  })
 
-    return accumulator
+  console.log(expansion)
+  return expansion
 }
 
-const group = (children) => {
+
+// const fan = reference => {
+//
+//   forEach(geonSymbols, geon => {
+//
+//   })
+//
+// }
+
+// const fan = a => {}
+
+// const permute = reference => {
+//   const { symbols, decoLinks, geonLinks } = reference
+//
+//   const geonSymbols = filter(symbols, symbol => symbol.meta.type === 'g')
+//   const decoSymbols = filter(symbols, symbol => symbol.meta.type === 'd')
+//
+//   const accumulator = []
+//
+//   forEach(entries(geonLinks), ([geonKey, decoKeys]) => {
+//     forEach(decoKeys, decoKey => {
+//       const combination = group({
+//         children:[
+//           symbols[geonKey],
+//           symbols[decoKey],
+//         ],
+//         meta: {
+//           rotation:
+//         }
+//       })
+//
+//       accumulator.push(combination)
+//
+//       })
+//     })
+//
+//     return accumulator
+// }
+
+const group = ({children, attr, meta}) => {
   return {
     tag: svg.g,
     children,
-    attr: {},
-    meta: {},
+    attr,
+    meta,
   }
 }
 
-
+const a2d = axel => {
+  return map(seq(parseInt(axel)), index => {
+    if (index === 0) return 0
+    if (index === 1) return 90
+    return (360 / axel) * index
+  })
+}
 
 const axel2Deg = (total, idx) => {
   if (idx === 0) return 0
@@ -319,6 +394,6 @@ const axel2Deg = (total, idx) => {
 
 export {
   inhale,
+  fan,
   walk,
-  permute,
 }

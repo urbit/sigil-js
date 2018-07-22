@@ -231,20 +231,12 @@ const figTypeMap = {
 }
 
 
-// const pRotate = (acc, item, f) => {
-//
-//   const iterable = a2d(item.meta.axel)
-//   const iterations = map(iterable, angle => {
-//     const clone = deepClone(item)
-//     set(clone, ['meta', 'rotation'], angle)
-//   })
-//   return f([...acc, iterations])
-//   // return f([...acc, ...perms])
-// }
 
-
+// spin returns an array of iterations of a symbol based on the axel param
 const spin = item => {
+  // get an array of angles from axel
   const iterable = a2d(item.meta.axel)
+  // produce array of rotation iterations
   const iterations = map(iterable, angle => {
     const clone = deepClone(item)
     set(clone, ['meta', 'rotation'], angle)
@@ -252,6 +244,8 @@ const spin = item => {
   })
   return iterations
 }
+
+
 
 const paste = (item, reference) => {
   const { geonLinks, symbols } = reference
@@ -302,43 +296,7 @@ const fan = reference => {
 }
 
 
-// const fan = reference => {
-//
-//   forEach(geonSymbols, geon => {
-//
-//   })
-//
-// }
 
-// const fan = a => {}
-
-// const permute = reference => {
-//   const { symbols, decoLinks, geonLinks } = reference
-//
-//   const geonSymbols = filter(symbols, symbol => symbol.meta.type === 'g')
-//   const decoSymbols = filter(symbols, symbol => symbol.meta.type === 'd')
-//
-//   const accumulator = []
-//
-//   forEach(entries(geonLinks), ([geonKey, decoKeys]) => {
-//     forEach(decoKeys, decoKey => {
-//       const combination = group({
-//         children:[
-//           symbols[geonKey],
-//           symbols[decoKey],
-//         ],
-//         meta: {
-//           rotation:
-//         }
-//       })
-//
-//       accumulator.push(combination)
-//
-//       })
-//     })
-//
-//     return accumulator
-// }
 
 const group = ({children, attr, meta}) => {
   return {
@@ -356,40 +314,6 @@ const a2d = axel => {
     return (360 / axel) * index
   })
 }
-
-const axel2Deg = (total, idx) => {
-  if (idx === 0) return 0
-  if (idx === 1) return 90
-  return (360 / total) * idx
-}
-
-
-
-// const permute = symbols => {
-//   return reduce(symbols, (acc, symbol) => {
-//     const numRotations = parseInt(get(symbol.children[0], 'meta.axel', 0), 10)
-//     const rotations = map(seq(numRotations), (rotationAcc, index) => {
-//
-//       const clone = deepClone(symbol)
-//       const deg = axel2Deg(numRotations, index)
-//       // console.log(deg)
-//       // const rotatedEdgemap = rotateArray(get(clone, ['meta', 'edge'] ).split(''), index).join('')
-//       // console.log(deg)
-//
-//       // const splitKey = k.split('.')
-//       // splitKey[2] = deg
-//       // const newKey = splitKey.join('.')
-//       // console.log(deg)
-//       set(clone, ['meta', 'rotation'], deg)
-//       // set(clone, ['meta', 'wall'], rotatedEdgemap)
-//       // set(clone, ['meta', 'key'], newKey)
-//       return clone
-//     })
-//     return [...acc, ...rotations]
-//   }, [])
-//
-//   return symbols
-// }
 
 
 export {

@@ -43,6 +43,8 @@ const isAtStart = (length, index) => index === 0 ? true : false
 
 const len = arr => size(arr)
 
+const lid = arr => len(arr) - 1
+
 const sq = l => ({x: l, y: l})
 
 const isEmpty = arr => isUndefined(arr)
@@ -111,5 +113,6 @@ export {
   isAtStart,
   isEmpty,
   len,
-  sq
+  sq,
+  lid
 }

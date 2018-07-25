@@ -25,7 +25,7 @@ import {
   remap,
 } from '../lib/lib'
 
-import { len, lat, sq } from '../lib/lib.array'
+import { len, lat, sq, lid } from '../lib/lib.array'
 
 import { suffixes, prefixes, } from '../lib/lib.urbit'
 
@@ -83,15 +83,14 @@ const applyStyle = (style, colorway) => {
   const { fill, stroke } = style
   return {
     fill: apply.color(fill, colorway),
-    stroke: apply.color(stroke, colorway),
-    strokeWidth: apply.strokeWidth(stroke),
+    // stroke: apply.color(stroke, colorway),
+    // strokeWidth: apply.strokeWidth(stroke),
     fillOpacity: apply.fillOpacity(fill),
   }
 }
 
 // Only apply styling to nodes that have a style meta property
 const dip = (node, colorway) => {
-
   const style = get(node, ['meta', 'style'], false)
   const children = get(node, 'children', [])
   const attr = get(node, 'attr', {})
@@ -179,15 +178,18 @@ const pourject = ({ symbols, renderer, size, colorway }) => {
     // get point coordinates from grid at symbol index
     const { x, y } = grid[index]
 
-    // calculate scale factor, where 256 is the unit measurement
-    const scl = (size - (bw * 2) - 2) / (UNIT * 2)
+    // For some reason this is nessecary to control the gap bewteen symbols
+    const fudge = 2
 
-    console.log(clone)
-    const deg = get(clone, ['meta', 'rotation'], 0)
-    // console.log(deg)
+    // calculate scale factor, where 256 is the unit measurement
+    const scaleFactor = (size - (bw * 2) + fudge) / (UNIT * 2)
+
+    const deg = get(clone, ['meta', 'rotate'], 0)
+
+    // console.log(clone.children[lid(clone.children)])
     const center = UNIT / 2
     // make an affine transformation matrix with x/y translation and uniform scaling
-    const affineMatrix = transform(translate(x, y), scale(scl, scl), rotateDEG(deg, center, center))
+    const affineMatrix = transform(translate(x, y), scale(scaleFactor, scaleFactor), rotateDEG(deg, center, center))
 
     // console.log(affineMatrix)
     // set the transform attr on the clone with the new affine matrix
@@ -220,6 +222,19 @@ const pourject = ({ symbols, renderer, size, colorway }) => {
   // return a full POJO svg representation
   return renderer.svg(model)
 }
+
+
+// const spinThru = child => {
+//   const deg = get(child, ['meta', 'rotation'], 0)
+//   const center = UNIT / 2
+//   const affineMatrix = transform(translate(x, y), scale(scl, scl), rotateDEG(deg, center, center))
+//
+//   return {
+//     ...child,
+//     attr: {...child.attr, transform: toSVG(affineMatrix)},
+//     children: chi
+//   }
+// }
 
 
 export { pourject, dye }

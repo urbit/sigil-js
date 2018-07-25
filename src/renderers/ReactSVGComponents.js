@@ -5,7 +5,7 @@ const ReactSVGComponents = {
   svg: p => {
     return (
       <svg {...p.attr} version={'1.1'} xmlns={'http://www.w3.org/2000/svg'}>
-r      { map(get(p, 'children', []), child => ReactSVGComponents[child.tag](child)) }
+       { map(get(p, 'children', []), child => ReactSVGComponents[child.tag](child)) }
       </svg>
     )
   },

@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { map, filter, forEach, reduce, chunk,shuffle } from 'lodash'
 import fileDownload from 'js-file-download'
 import { toPlanetName } from 'urbit-ob'
+import ReactDOMServer from 'react-dom/server'
 
 import { inhale, walk, wedge, fan } from '../lib/lung2'
 import { base, baseState } from '../lib/lib.firebase'
@@ -37,7 +38,6 @@ import {
   mapInsert,
 } from '../renderers/ReactSVGComponents'
 
-import { SVGStringComponents } from '../renderers/SVGStringComponents'
 
 const DB_PASS_ONE_KEY = 'c000'
 const DB_PASS_TWO_KEY = 'c001'
@@ -117,7 +117,7 @@ class Lung extends Component {
         title={'Lamination'}
         id={'1'} />
 
-      <RandomGrid page={this.state.lam} />
+      <RandomGrid page={shuffle(this.state.lam)} />
 
       <FicheList page={this.state.lam} />
         {
@@ -338,8 +338,8 @@ class RandomGrid extends Component {
   }
 
 
-  exportSVG = model => {
-    fileDownload(model.replace(/\n/g, ''), 'seal_svg.svg')
+  exportSVG = data => {
+    fileDownload(ReactDOMServer.renderToString(data), 'seal_svg.svg')
   }
 
   render = () => {
@@ -354,12 +354,21 @@ class RandomGrid extends Component {
             <button onClick={() => this.prevPage(pageLength)}>{'←'}</button>
             <button onClick={() => this.nextPage(pageLength)}>{'→'}</button>
             <button onClick={() => this.setState({index: lastIndex(page)})}>{'Max'}</button>
+            <button onClick={() => this.exportSVG(pourject({
+
+                symbols: symbols[this.state.index],
+                renderer: ReactSVGComponents,
+                size: 300,
+                colorway: ['#000', '#fff'],
+
+            }))}>{'Export'}</button>
+
             <div>
               {
                 pourject({
                   symbols: symbols[this.state.index],
                   renderer: ReactSVGComponents,
-                  size: 365,
+                  size: 300,
                   colorway: ['#000', '#fff'],
                 })
               }

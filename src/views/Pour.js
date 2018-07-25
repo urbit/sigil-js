@@ -1,18 +1,13 @@
 import React, { Component } from 'react'
-// import fileDownload from 'js-file-download'
-import _ from 'lodash'
 import { toPlanetName } from 'urbit-ob'
-
-// import geonset from '../geonsets/geonset_001'
-// import sylmap from '../sylmaps/sylmap_000.json'
 
 import {
   randomShip,
 } from '../lib/lib'
 
-import pour from '../lib/pour'
+import { pour } from '../lib/pour'
 
-import {ReactSVGComponents} from '../renderers/ReactSVGComponents'
+import { ReactSVGComponents } from '../renderers/ReactSVGComponents'
 
 const SIZE = 600
 
@@ -26,9 +21,6 @@ class Pour extends Component {
   }
 
   componentDidMount = () => {
-    // const randomPlanet = toPlanetName(randomShip('planet'))
-    // const constantPlanet = '~ridlur-figbud'
-    // // const seals = multiPour([randomPlanet], geonset, sylmap)
     this.setState({ patp: toPlanetName(randomShip('planet')) })
   }
 
@@ -43,7 +35,7 @@ class Pour extends Component {
     return (
       <div>
         <button onClick={() => this.setState({ patp: toPlanetName(randomShip('planet')) })}>
-        {'Random @P'}
+          {'Random @P'}
         </button>
         {
           pour({
@@ -58,11 +50,6 @@ class Pour extends Component {
     )
   }
 }
-
-
-
-const insert = seal => ReactSVGComponents.svg(seal.model)
-
 
 
 export default Pour

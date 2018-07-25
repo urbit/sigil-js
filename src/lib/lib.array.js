@@ -43,6 +43,8 @@ const isAtStart = (length, index) => index === 0 ? true : false
 
 const len = arr => size(arr)
 
+const lid = arr => len(arr) - 1
+
 const sq = l => ({x: l, y: l})
 
 const isEmpty = arr => isUndefined(arr)
@@ -88,7 +90,7 @@ const isLastIdx = (arr, i) => i === lastIndex(arr)
 
 // const sort = (arr, comparator, key) => arr.sort((a, b) => comparator(a, b, key))
 
-const rotate = (arr, n) => {
+const rotateArray = (arr, n) => {
   const l = len(arr)
   return arr.slice(l - n).concat(arr.slice(0, l - n))
 }
@@ -105,11 +107,12 @@ export {
   isFirstIdx,
   isLastIdx,
   // sort,
-  rotate,
+  rotateArray,
   lat,
   isAtEnd,
   isAtStart,
   isEmpty,
   len,
-  sq
+  sq,
+  lid
 }

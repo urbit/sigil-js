@@ -9,6 +9,7 @@ import {
   updaters,
   entries,
   comparator,
+  comparatorWithKey,
 } from '../lib/lib'
 
 import {
@@ -157,6 +158,17 @@ suffixesSorted = map(suffixesSorted, item => {
   }
 })
 
+const sylSort = (toSort) => {
+  const sortedByPn = toSort.sort((a, b) => comparatorWithKey(a, b, 'pn'))
+  const withSortedMembers = map(sortedByPn, item => {
+    return {
+      ...item,
+      members: item.members.sort((a, b) => comparator(a, b))
+    }
+  })
+  return withSortedMembers
+}
+
 export {
   alphabet,
   vowels,
@@ -172,4 +184,5 @@ export {
   sharedConsonants,
   sharedVowels,
   phonetics,
+  sylSort,
 }

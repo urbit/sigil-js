@@ -64,9 +64,6 @@ const makeReference = doc => {
       return acc
     }, {} ),
   }
-
-  console.log(reference)
-
   return reference
 }
 
@@ -202,9 +199,9 @@ const getMetas = child => {
       : meta
   }
 
-  if (child.tag === 'g') {
-    meta = {...meta, style: {}}
-  }
+  // if (child.tag === 'g') {
+  //   meta = {...meta, style: {}}
+  // }
 
 
   return meta
@@ -275,7 +272,12 @@ const spin = item => {
     return {
       ...clone,
       attr: {},
-      meta: { ...clone.meta, permType: 'rotation', rotate: angle },
+      meta: {
+        ...clone.meta,
+        permType: 'rotation',
+        rotate: angle,
+        edge: rotateArray(clone.meta.edge.split('')).join('')
+      },
     }
   })
   return iterations
@@ -286,37 +288,47 @@ const spin = item => {
 
 const paste = (item, reference, linkPath) => {
   const links = get(reference, linkPath)
-  const symbols = reference.symbols
+  const { symbols } = reference
 
   const decals = links[last(item.children).meta.key]
 
   if (isUndefined(decals)) return []
 
-  const rootType = head(item.children).meta.type
-  const rootKey = head(item.children).meta.key
-  if (rootType !== 'g') throw Error('root element must always be geon')
+  if (head(item.children).meta.type !== 'g') throw Error('root element must always be geon')
 
-
-
-  // console.log(rootKey)
 
   const iterations = reduce(decals, (acc, key) => {
 
-    if (reference.geonLinks[rootKey].includes(key)) {
+    if (isNewSymbolCompatible(item, key, reference)) {
       const clone = deepClone(item)
-      const iteration = {
+      return [...acc, {
         ...clone,
         children: [...clone.children, deepClone(symbols[key])],
         // attr: clone.attr,
         attr: {},
         meta: { ...clone.meta, permType: 'ndeco' }
-      }
-      return [...acc, iteration]
+      }]
     }
+
     return acc
 
   }, [])
   return iterations
+}
+
+
+
+
+// check all children for symbol compatability
+const isNewSymbolCompatible = (item, key, reference) => {
+  const allLinks = {...reference.decoLinks, ...reference.geonLinks}
+  const validityMap = map(item.children, child => {
+    const target = allLinks[child.meta.key]
+    return isUndefined(target)
+      ? false
+      : target.includes(key)
+  })
+  return !validityMap.includes(false)
 }
 
 
@@ -339,7 +351,7 @@ const expand = (a, f) => reduce(a, (acc, item) => [...acc, ...f(item)], [...a])
 
 // fan creates a large array of iterations based on links
 const fan = reference => {
-  const { symbols, decoLinks, geonLinks } = reference
+  const { symbols } = reference
   const geons = filter(symbols, symbol => isGeon(symbol))
 
   const regrouped = map(geons, g => group({
@@ -347,17 +359,18 @@ const fan = reference => {
     attr: g.attr,
     meta: g.meta,
   }))
+
   const all = expand(regrouped, a => {
     return expand(spin(a), b => {
       return expand(paste(b, reference, 'geonLinks'), c => {
         return expand(paste(c, reference, 'decoLinks'), d => {
-          return expand(paste(d, reference, 'decoLinks'), e => e)
+          return paste(d, reference, 'decoLinks')
         })
       })
     })
   })
-
-  return cap(all, symbols)
+  return all
+  // return cap(all, symbols)
 }
 
 

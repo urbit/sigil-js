@@ -60,7 +60,7 @@ const randomShip = type => {
 }
 
 
-const numComparator = (a, b, key) => {
+const comparatorWithKey = (a, b, key) => {
   if (a[key] < b[key]) return -1
   if (a[key] > b[key]) return 1
   return 0
@@ -135,7 +135,7 @@ const deepClone = any => JSON.parse(JSON.stringify(any))
 
 export {
   randInt,
-  numComparator,
+  comparatorWithKey,
   isEven,
   isOdd,
 

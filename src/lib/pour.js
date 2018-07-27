@@ -36,6 +36,26 @@ const cw = [
   ['#fff', '#372284'],
   ['#fff', '#129485'],
   ['#fff', '#928472'],
+  ['#fff', '#FC5000'],
+  ['#fff', '#0A23FA'],
+  ['#fff', '#2474D3'],
+  ['#fff', '#A2C8D1'],
+  ['#fff', '#203433'],
+  ['#fff', '#FAA916'],
+  ['#fff', '#00B49D'],
+  ['#fff', '#852E46'],
+  ['#fff', '#AE2B27'],
+  ['#fff', '#E74E19'],
+  ['#fff', '#00482F'],
+  // ['#fff', ''],
+  // ['#fff', ''],
+  // ['#fff', ''],
+  // ['#fff', ''],
+  // ['#fff', ''],
+  // ['#fff', ''],
+  // ['#fff', ''],
+  // ['#fff', ''],
+
 ]
 
 
@@ -100,8 +120,8 @@ const applyStyle = (style, colorway) => {
   const { fill, stroke } = style
   return {
     fill: apply.color(fill, colorway),
-    stroke: apply.color(stroke, colorway),
-    strokeWidth: apply.strokeWidth(stroke),
+    // stroke: apply.color(stroke, colorway),
+    // strokeWidth: apply.strokeWidth(stroke),
     fillOpacity: apply.fillOpacity(fill),
   }
 }
@@ -202,13 +222,14 @@ const pour = ({ patp, sylmap, renderer, size, colorway, returnElem }) => {
     // We are mutating an object in this loop. In order to keep the sylmap pure,
     // we deepClone the item.
     const clone = deepClone(symbol)
-
+    // For some reason this is necessary to control the gap bewteen symbols
+    const fudge = -2
     // get point coordinates from grid at symbol index
     const { x, y } = grid[index]
 
     // calculate scale factor relative to border width and default unit size.
     // This also corrects an offset.
-    const scl = (size - bw * 2) + 2 / (UNIT * 2)
+    const scl = (size - bw * 2) + fudge / (UNIT * 2)
 
     // get the rotational angle of the symbol in degrees from the meta prop
     const deg = get(clone, ['meta', 'rotation'], 0)

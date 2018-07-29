@@ -522,3 +522,7 @@ section.b {
 .bb {
   border-bottom: 1px solid white;
 }
+
+.inputBox input {
+  min-width: 400px;
+}

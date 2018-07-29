@@ -127,20 +127,19 @@ const applyStyle = (style, colorway) => {
 }
 
 // Only apply styling to nodes that have a style meta property
+// Only apply styling to nodes that have a style meta property
 const dip = (node, colorway) => {
-
   const style = get(node, ['meta', 'style'], false)
   const children = get(node, 'children', [])
   const attr = get(node, 'attr', {})
-
   // if there is a style attribute set, apply style attributes based on meta.style
-    return {
-      ...node,
-      attr: style !== false
-        ? {...attr, ...applyStyle(style, colorway)}
-        : {...attr},
-      children: map(children, child => dip(child, colorway)),
-    }
+  return {
+    ...node,
+    attr: style !== false
+      ? {...attr, ...applyStyle(style, colorway)}
+      : {...attr},
+    children: map(children, child => dip(child, colorway)),
+  }
 
 }
 
@@ -227,24 +226,17 @@ const pour = ({ patp, sylmap, renderer, size, colorway, returnElem }) => {
     // get point coordinates from grid at symbol index
     const { x, y } = grid[index]
 
-    // calculate scale factor relative to border width and default unit size.
-    // This also corrects an offset.
-    const scl = (size - bw * 2) + fudge / (UNIT * 2)
+    // calculate scale factor, where 256 is the unit measurement
+    const scaleFactor = (size - (bw * 2) + fudge) / (UNIT * 2)
 
-    // get the rotational angle of the symbol in degrees from the meta prop
-    const deg = get(clone, ['meta', 'rotation'], 0)
+    const deg = get(clone, ['meta', 'rotate'], 0)
 
-    // caluclate the centerpoint of the symbol to center the rotation transform
-    const c = UNIT / 2
+    // console.log(clone.children[lid(clone.children)])
+    const center = UNIT / 2
+    // make an affine transformation matrix with x/y translation and uniform scaling
+    const affineMatrix = transform(translate(x, y), scale(scaleFactor, scaleFactor), rotateDEG(deg, center, center))
 
-    // make an affine transformation matrix with x/y translation, uniform
-    // scaling and rotation. NOTE: Transformation application order matters.
-    const affineMatrix = transform(
-      translate(x, y),
-      scale(scl, scl),
-      rotateDEG(deg, c, c)
-    )
-
+    // console.log(affineMatrix)
     // set the transform attr on the clone with the new affine matrix
     set(clone, ['attr', 'transform'], toSVG(affineMatrix))
 

@@ -4,7 +4,8 @@ import { ReactSVGComponents } from '../renderers/ReactSVGComponents'
 import { spill } from '../lib/spill'
 import { inhale, fan } from '../lib/lung2'
 import { map, filter, forEach, reduce, chunk,shuffle, isString } from 'lodash'
-
+import fileDownload from 'js-file-download'
+import omitEmpty from 'omit-empty'
 import {
   lastIndex,
   len,
@@ -21,9 +22,12 @@ import {
   sylSort,
 } from '../lib/scope'
 
+import { suffixes, prefixes } from '../lib/lib.urbit'
+
 import {
   values,
   keys,
+  entries,
 } from '../lib/lib'
 
 class Link extends Component {
@@ -55,14 +59,72 @@ class Link extends Component {
     }, [])
 
     inhale((reference) => {
+      const lam = fan(reference)
       this.setState({
         pairedSymbolIndexes: map(filter(values(localStorage), item => isString(item)), s => parseInt(s)),
         pairedSyllableNames: filter(keys(localStorage), item => item !== 'length'),
         dictionary,
         flat,
         reference,
-        lam: fan(reference) })
+        lam: lam })
+
+
+
+        const ls = {...localStorage}
+
+        // delete ls.length
+
+        console.log(ls)
+
+        console.log(len(keys(ls)))
+
+
+
+
+        delete ls.nada
+
+        ls.bic = '7'
+        ls.fal = '8'
+
+        const missingKeys = filter([...suffixes, ...prefixes], syl => !keys(ls).includes(syl))
+
+        var ks = Object.keys(ls);
+        var dupe = false;
+
+        for(var i=0;i<ks.length;i++){
+         for(var j=i+1;j<ks.length;j++){
+           if(ls[ks[i]] === ls[ks[j]]){
+             dupe = true;
+             break;
+           }
+         }
+         if(dupe){ console.log("dupe value is there..", ls[ks[i]], i); break; }
+        }
+
+        let arr = keys(ls)
+        var cache = {};
+        var results = [];
+        for (var i = 0, length = arr.length; i < length; i++) {
+          if(cache[arr[i]] === true){
+              results.push(arr[i]);
+           }else{
+               cache[arr[i]] = true;
+           }
+
+        }
+
+        console.log(missingKeys, ls.nada, ls.length, results )
+        console.log(ls)
+        const reRef = reduce(entries(ls), (acc, [key, value]) => {
+          console.log(key, value)
+          acc[key] = lam[value]
+          return acc
+        }, {})
+
+        console.log(reRef)
+        fileDownload(JSON.stringify(omitEmpty({...reRef})), 'sylmap.json')
     })
+
 
 
   }

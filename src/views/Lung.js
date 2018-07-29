@@ -30,7 +30,7 @@ import {
 
 import { ToggleButton } from '../components/UI'
 
-import { pourject } from '../lib/pourject'
+import { spill } from '../lib/spill'
 
 import {
   ReactSVGComponents,
@@ -297,7 +297,7 @@ const FicheList = ({page}) => {
         len(page) === 0
         ? <div><p>{'Zero Length Array'}</p></div>
         : <div className={'biggify'}> {map(page, symbol => {
-            return pourject({
+            return spill({
               symbols: [symbol],
               renderer: ReactSVGComponents,
               size: 128,
@@ -354,7 +354,7 @@ class RandomGrid extends Component {
             <button onClick={() => this.prevPage(pageLength)}>{'←'}</button>
             <button onClick={() => this.nextPage(pageLength)}>{'→'}</button>
             <button onClick={() => this.setState({index: lastIndex(page)})}>{'Max'}</button>
-            <button onClick={() => this.exportSVG(pourject({
+            <button onClick={() => this.exportSVG(spill({
 
                 symbols: symbols[this.state.index],
                 renderer: ReactSVGComponents,
@@ -365,7 +365,7 @@ class RandomGrid extends Component {
 
             <div>
               {
-                pourject({
+                spill({
                   symbols: symbols[this.state.index],
                   renderer: ReactSVGComponents,
                   size: 300,

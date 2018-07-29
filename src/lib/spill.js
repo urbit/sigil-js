@@ -94,15 +94,14 @@ const dip = (node, colorway) => {
   const style = get(node, ['meta', 'style'], false)
   const children = get(node, 'children', [])
   const attr = get(node, 'attr', {})
-
   // if there is a style attribute set, apply style attributes based on meta.style
-    return {
-      ...node,
-      attr: style !== false
-        ? {...attr, ...applyStyle(style, colorway)}
-        : {...attr},
-      children: map(children, child => dip(child, colorway)),
-    }
+  return {
+    ...node,
+    attr: style !== false
+      ? {...attr, ...applyStyle(style, colorway)}
+      : {...attr},
+    children: map(children, child => dip(child, colorway)),
+  }
 
 }
 
@@ -150,7 +149,7 @@ const createGrid = (p, bw, size) => {
 }
 
 
-const pourject = ({ symbols, renderer, size, colorway }) => {
+const spill = ({ symbols, renderer, size, colorway }) => {
   // The size of each svg as drawn in Figma
   const UNIT = 128
 
@@ -178,8 +177,8 @@ const pourject = ({ symbols, renderer, size, colorway }) => {
     // get point coordinates from grid at symbol index
     const { x, y } = grid[index]
 
-    // For some reason this is nessecary to control the gap bewteen symbols
-    const fudge = 2
+    // For some reason this is necessary to control the gap bewteen symbols
+    const fudge = -2
 
     // calculate scale factor, where 256 is the unit measurement
     const scaleFactor = (size - (bw * 2) + fudge) / (UNIT * 2)
@@ -237,4 +236,4 @@ const pourject = ({ symbols, renderer, size, colorway }) => {
 // }
 
 
-export { pourject, dye }
+export { spill, dye }

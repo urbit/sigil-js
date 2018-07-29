@@ -2,6 +2,10 @@
   font-size: 16px;
 }
 
+* {
+  box-sizing: border-box;
+}
+
 html {
   background-color: black;
   color: white;
@@ -60,6 +64,7 @@ nav input {
 
 nav.top {
   align-items: flex-end;
+  margin-bottom: 2rem;
 }
 
 /* .row {
@@ -261,7 +266,7 @@ hr {
 }
 
 .flex {
-  max-width: 100vw;
+  /* max-width: 100vw; */
   display: flex;
   flex-wrap: wrap;
 }
@@ -319,7 +324,8 @@ svg {
   /* border: 5px solid #4330FC; */
   background-color:  #4330FC;
   /* background-color: grey; */
-  margin: 4px;
+  margin: 0;
+  margin-bottom: -4px;
 }
 
 .blue_bg {
@@ -329,7 +335,7 @@ svg {
 section {
   min-height: 300px;
   /* padding: 0rem 2rem; */
-  margin: 1rem 4rem;
+  /* margin: 1rem 4rem; */
 
 }
 
@@ -339,15 +345,34 @@ button.selected {
 }
 
 .blue-stroke {
-  border: 1px solid #4330FC;
+  border: 4px solid #4330FC;
+}
+
+.black-stroke {
+  border: 4px solid black;
 }
 
 .white-stroke {
-  border: 1px solid #fff;
+  border: 4px solid #fff;
+}
+
+.orange-stroke {
+  border: 4px solid #FF4C25;
+}
+
+
+.orange-fill {
+  background-color: #FF4C25;
+  color: white;
 }
 
 .blue-fill {
   background-color: #4330FC;
+  color: white;
+}
+
+.black-fill {
+  background-color: #000;
   color: white;
 }
 
@@ -449,6 +474,55 @@ h1.arrow {
   transform-origin: top left;
 } */
 
+.grid {
+  display: grid;
+  grid-template-columns: 2rem 2fr 1fr 2rem;
+}
+
+section.a {
+  grid-column-start: 2;
+  max-height: 100vh;
+  overflow-y: scroll;
+
+}
+
+section.b {
+  grid-column-start: 3;
+  max-height: 100vh;
+  overflow-y: scroll;
+
+}
+
 .w100 {
   width: 100%;
+  padding: 2rem;
+}
+
+.w75 {
+  width: 75%;
+}
+
+.hp:hover {
+  cursor: pointer;
+  opacity: 0.8;
+}
+
+.ml-2 {
+  margin-left: 2rem;
+}
+
+.mt-1 {
+  margin-top: 1rem;
+}
+
+.mono {
+  font-family: monospace;
+}
+
+.bb {
+  border-bottom: 1px solid white;
+}
+
+.inputBox input {
+  min-width: 400px;
 }

@@ -354,7 +354,7 @@ const propBindings = {
 //   //   // mateCount: countMates(geonset, geonmap, 2),
 //   // }))
 //
-//   // const sorted = sort(withMateCount, numComparator, 'mateCount').reverse()
+//   // const sorted = sort(withMateCount, comparatorWithKey, 'mateCount').reverse()
 //   return all
 // }
 

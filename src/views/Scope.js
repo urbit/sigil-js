@@ -7,7 +7,7 @@ import { map, filter, sort, isUndefined, reduce } from 'lodash'
 import {
   entries,
   values,
-  numComparator,
+  comparatorWithKey,
   keys,
 } from '../lib/lib'
 
@@ -58,20 +58,20 @@ class Scope extends Component {
     let allList = [...zippedAll]
 
 
-    let ps = [...prefixesSorted].sort((va, vb) => numComparator(va, vb, this.state.sortEnds))
-    let ss = [...suffixesSorted].sort((va, vb) => numComparator(va, vb, this.state.sortEnds))
+    let ps = [...prefixesSorted].sort((va, vb) => comparatorWithKey(va, vb, this.state.sortEnds))
+    let ss = [...suffixesSorted].sort((va, vb) => comparatorWithKey(va, vb, this.state.sortEnds))
 
     // console.log(JSON.stringify(ss.map(item => item.key), null, 2))
     // console.log(ps)
 
     if (this.state.sortLetter === true) {
-      preList = preList.sort((va, vb) => numComparator(va, vb, 'frequency')).reverse()
-      sufList = sufList.sort((va, vb) => numComparator(va, vb, 'frequency')).reverse()
-      allList = allList.sort((va, vb) => numComparator(va, vb, 'frequency')).reverse()
+      preList = preList.sort((va, vb) => comparatorWithKey(va, vb, 'frequency')).reverse()
+      sufList = sufList.sort((va, vb) => comparatorWithKey(va, vb, 'frequency')).reverse()
+      allList = allList.sort((va, vb) => comparatorWithKey(va, vb, 'frequency')).reverse()
     }
 
-    // ps = ps.sort((va, vb) => numComparator(va, vb, 'qty')).reverse()
-    // ss = ss.sort((va, vb) => numComparator(va, vb, 'qty')).reverse()
+    // ps = ps.sort((va, vb) => comparatorWithKey(va, vb, 'qty')).reverse()
+    // ss = ss.sort((va, vb) => comparatorWithKey(va, vb, 'qty')).reverse()
 
     const prefixVowels = filter(preList, item => item.frequency !== 0 && vowels.includes(item.letter))
     const prefixConsonants = filter(preList, item => item.frequency !== 0 && consonants.includes(item.letter))

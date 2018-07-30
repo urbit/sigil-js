@@ -7,8 +7,8 @@
 }
 
 html {
-  background-color: black;
-  color: white;
+  background-color: white;
+  color: black;
 }
 
 body {
@@ -278,6 +278,11 @@ hr {
   justify-content: center;
 }
 
+.flex-c {
+    display: flex;
+    flex-direction: column;
+}
+
 .syl ol {
   width: 3rem;
 }
@@ -349,7 +354,7 @@ button.selected {
 }
 
 .black-stroke {
-  border: 4px solid black;
+  border: 1px solid black;
 }
 
 .white-stroke {
@@ -525,4 +530,26 @@ section.b {
 
 .inputBox input {
   min-width: 400px;
+}
+.pba {
+  page-break-after: avoid;
+  display: inline-block;
+}
+
+.breakAfter {
+  page-break-after: always;
+}
+
+.ib {
+  display: block;
+}
+
+.tssub {
+  font-size: 12px;
+  font-family:'SF Mono', monospace;
+  margin-bottom: 2px;
+}
+
+.nob {
+  border: none;
 }

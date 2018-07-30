@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 // import chr from 'chroma-js'
-import fileDownload from 'js-file-download'
-import { map, filter, sort, isUndefined, reduce } from 'lodash'
+import { map, filter, isUndefined } from 'lodash'
 
 // import { base, baseState } from './lib/lib.firebase'
 import {
@@ -147,7 +146,7 @@ class Scope extends Component {
             <hr/>
             excludes:
             {
-              map(neverDist, item => `${item.letter}, `)
+              map( neverDist, item => `${item.letter}, `)
             }
           </ol>
 

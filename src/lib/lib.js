@@ -1,10 +1,10 @@
-import { get, set, reduce, size, omitBy } from 'lodash'
+import { get, set, reduce } from 'lodash'
 
 
 const randInt = max => Math.floor(Math.random() * Math.floor(max))
 
 
-const avg = arr => reduce(arr, (a,b) => a + b, 0) / size(arr)
+// const avg = arr => reduce(arr, (a,b) => a + b, 0) / size(arr)
 
 
 const keys = obj => Object.keys(obj)
@@ -85,34 +85,26 @@ const isOdd = n => n % 2 !== 0
 const quickHash = entropy => Math.random().toString(36).substr(2, entropy)
 
 
-const mergeUpdates = (updates, originalElement) => {
-
-  return reduce(updates, (acc, update) => {
-
-    const { action, payload, path} = update
-
-    const existingValue = get(acc, path)
-
-    const method = updaters[action]
-
-    const newValue = method(existingValue, payload)
-
-    set(acc, path, newValue)
-
-    return acc
-
-  }, {...originalElement})
-}
+// const mergeUpdates = (updates, originalElement) => {
+//   return reduce(updates, (acc, update) => {
+//     const { action, payload, path} = update
+//     const existingValue = get(acc, path)
+//     const method = updaters[action]
+//     const newValue = method(existingValue, payload)
+//     set(acc, path, newValue)
+//     return acc
+//   }, {...originalElement})
+// }
 
 
-const updaters = {
-  concat: (existingValue, payload) => [...existingValue, payload],
-  prepend: (existingValue, payload) => [payload, ...existingValue],
-  replace: (existingValue, payload) => ({...payload}),
-  append: (existingValue, payload) => ({...existingValue, ...payload}),
-  prependStr: (existingValue, payload) => `${payload} ${existingValue}`,
-  concatStr: (existingValue, payload) => `${existingValue} ${payload}`
-}
+// const updaters = {
+//   concat: (existingValue, payload) => [...existingValue, payload],
+//   prepend: (existingValue, payload) => [payload, ...existingValue],
+//   replace: (existingValue, payload) => ({...payload}),
+//   append: (existingValue, payload) => ({...existingValue, ...payload}),
+//   prependStr: (existingValue, payload) => `${payload} ${existingValue}`,
+//   concatStr: (existingValue, payload) => `${existingValue} ${payload}`
+// }
 
 
 const patpArrToStr = p => {
@@ -133,49 +125,6 @@ const patpStrToArr = p => p.replace(/[\^~-]/g,'').match(/.{1,3}/g)
 const deepClone = any => JSON.parse(JSON.stringify(any))
 
 
-// const cull = (obj) => {
-//   return omitBy(obj, v => isEmpty(v))
-// };
-//
-// const isEmpty = val => {
-//   console.log(val.length)
-//     // test resultsa
-//     //---------------
-//     // []        true, empty array
-//     // {}        true, empty object
-//     // null      true
-//     // undefined true
-//     // ""        true, empty string
-//     // ''        true, empty string
-//     // 0         false, number
-//     // true      false, boolean
-//     // false     false, boolean
-//     // Date      false
-//     // function  false
-//
-//     if (val === undefined)
-//         return true;
-//
-//     if (typeof (val) == 'function' || typeof (val) == 'number' || typeof (val) == 'boolean' || Object.prototype.toString.call(val) === '[object Date]')
-//         return false;
-//
-//     if (val == null || val.length === 0)        // null or 0 length array
-//         return true;
-//
-//     if (typeof (val) == "object") {
-//         // empty object
-//
-//         var r = true;
-//
-//         for (var f in val)
-//             r = false;
-//
-//         return r;
-//     }
-//
-//     return false;
-// }
-
 
 export {
   randInt,
@@ -189,14 +138,14 @@ export {
   includes,
 
   quickHash,
-  mergeUpdates,
+  // mergeUpdates,
   isMate,
 
   randomShip,
   patpArrToStr,
   patpStrToArr,
 
-  updaters,
+  // updaters,
   comparator,
   deepClone,
   compose,

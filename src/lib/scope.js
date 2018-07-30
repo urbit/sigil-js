@@ -1,27 +1,13 @@
-import { set, map, isString, get, chunk, flatten, reduce, filter, sort, groupBy } from 'lodash'
+import { map, reduce, filter, groupBy } from 'lodash'
 
 
 import {
-  quickHash,
-  randomShip,
-  patpArrToStr,
-  patpStrToArr,
-  updaters,
   entries,
   comparator,
   comparatorWithKey,
 } from '../lib/lib'
 
 import {
-  transpose,
-  scan,
-  grainPartition,
-  rectGrid,
-} from '../lib/lib.array'
-
-import {
-  pre,
-  suf,
   eachLPre,
   eachLSuf,
   suffixes,
@@ -32,18 +18,6 @@ import {
 const alphabet = 'abcdefghijklmnopqrstuvxyz'.split('')
 
 const vowels = 'aeiouy'.split('')
-
-// const stops = 'tdn'.split('')
-//
-// const fricatives = 'sfvz'.split('')
-//
-// const approximants = 'wjrl'.split('')
-//
-// const bilabial = 'pbm'.split('')
-//
-// const velar = 'kgcx'.split('')
-//
-// const glottal = 'h'.split('')
 
 const phonetics = [
   { cat: 'stops', members:'tdn'.split('') },
@@ -68,12 +42,12 @@ const dist = (a, b) => {
   }, 0))
 }
 
-const zop = (a, b) => reduce(a, (acc, key, index) => {
-  acc[key] = b[index]
-  return acc
-}, {})
-
-const zadd = (a, b) => map(a, (aItem, index) => aItem + b[index])
+// const zop = (a, b) => reduce(a, (acc, key, index) => {
+//   acc[key] = b[index]
+//   return acc
+// }, {})
+//
+// const zadd = (a, b) => map(a, (aItem, index) => aItem + b[index])
 
 const distributionPre = dist(alphabet, eachLPre)
 const distributionSuf = dist(alphabet, eachLSuf)
@@ -101,16 +75,16 @@ const zippedAll = map(alphabet, (letter, index) => {
 
 
 const isZero = a => a === 0
-const nonZero = a => !isZero(a)
+// const nonZero = a => !isZero(a)
 
 const neverPre = filter(zippedPre, item => isZero(item.frequency))
 const neverSuf = filter(zippedSuf, item => isZero(item.frequency))
 const neverDist = filter(zippedAll, item => isZero(item.frequency))
 
-const reverseStr = s => {
-  // console.log(s)
-  return s.split('').reverse().join('')
-}
+// const reverseStr = s => {
+//   // console.log(s)
+//   return s.split('').reverse().join('')
+// }
 // const suffixesSorted = suffixes.sort((a, b) => comparator(reverseStr(a), reverseStr(b)))
 //
 // const prefixesSorted = prefixes.sort((a, b) => comparator(reverseStr(a), reverseStr(b)))

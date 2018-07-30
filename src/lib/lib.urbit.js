@@ -1,8 +1,3 @@
-import {
-  sequence,
-  randInt,
-  isEven,
-} from './lib'
 
 const pre = `
 dozmarbinwansamlitsighidfidlissogdirwacsabwissib\

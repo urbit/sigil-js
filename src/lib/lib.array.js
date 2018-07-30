@@ -5,26 +5,20 @@ const seq = num => Array.from(Array(num), (nada, i) => i)
 
 // makes a 2D array of points parameters
 const lat = params => {
-
-  // margin, size, pointCount, isFlat or not
-  const { m, s, p, flat } = params
-
+  // gutter, size, pointCount, isFlat or not
+  const { m, g, s, p, flat } = params
   // Make blank arrays from point count
   const n = { x: seq(p.x), y: seq(p.y), }
-
   // Inner grid sizing, x: width, y: height
-  const i = { x: s.x - (m.x * 2), y: s.y - (m.y * 2), }
-
+  const i = { x: s.x - (g.x * 2), y: s.y - (g.y * 2), }
   // Cell sizing, x: width, y: height
   const c = { x: i.x / p.x, y: i.y / p.y, }
-
   // make a matrix where each item is a {x, y} with real coordinates
   const matrix = map(n.y, y => map(n.x, x => {
     const res = {
-      x: (x * c.x) + m.x + (x),
-      y: (y * c.y) + m.y + (y),
+      x: (x * c.x) + g.x + (x * m.x),
+      y: (y * c.y) + g.y + (y * m.y),
     }
-    // console.log((x * c.x) + (m.x * 2))
     return res
   }
 ))
@@ -51,7 +45,7 @@ const isEmpty = arr => isUndefined(arr)
   ? true
   : len(arr) === 0
 
-const lastIndex = arr => size(arr) - 1
+// const lastIndex = arr => size(arr) - 1
 
 const getEdge = {
   top:    cell => cell.edgeMap[0],
@@ -68,8 +62,8 @@ const getCellTo = {
 }
 
 const isInBounds = {
-  x:  (matrix, cI) => cI < lastIndex(matrix[0]),
-  y: (matrix, rI) => rI < lastIndex(matrix),
+  x:  (matrix, cI) => cI < lid(matrix[0]),
+  y: (matrix, rI) => rI < lid(matrix),
 }
 
 // const mmap = (arr, callback) => {
@@ -84,7 +78,7 @@ const transpose = matrix => map(matrix[0], (x,i) => map(matrix, x => x[i]))
 
 const isFirstIdx = i => i === 0
 
-const isLastIdx = (arr, i) => i === lastIndex(arr)
+const isLastIdx = (arr, i) => i === lid(arr)
 
 // const multisplice = (arr, indices) => map(indices, (startI, i) => arr.slice(startI, indices[i + 1]))
 
@@ -99,14 +93,13 @@ const rotateArray = (arr, n) => {
 export {
   seq,
   last,
-  lastIndex,
+  // lastIndex,
   getEdge,
   getCellTo,
   isInBounds,
   transpose,
   isFirstIdx,
   isLastIdx,
-  // sort,
   rotateArray,
   lat,
   isAtEnd,

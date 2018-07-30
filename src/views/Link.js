@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 
-import { ReactSVGComponents } from '../renderers/ReactSVGComponents'
-import { spill } from '../lib/spill'
-import { inhale, fan } from '../lib/lung2'
+import ReactSVGComponents from '../renderers/ReactSVGComponents'
+import { pour } from '../lib/pour'
+import { pull, fan } from '../lib/lung'
 import { map, filter, forEach, reduce, chunk,shuffle, isString } from 'lodash'
 import fileDownload from 'js-file-download'
 import omitEmpty from 'omit-empty'
@@ -58,7 +58,7 @@ class Link extends Component {
       return [...acc, ...item.members]
     }, [])
 
-    inhale((reference) => {
+    pull((reference) => {
       const lam = fan(reference)
       this.setState({
         pairedSymbolIndexes: map(filter(values(localStorage), item => isString(item)), s => parseInt(s)),
@@ -295,7 +295,7 @@ class Sym extends Component {
         className={'hp'}
         onClick={() => select()}>
       {
-        spill({
+        pour({
           symbols: [symbol],
           renderer: ReactSVGComponents,
           size: 96,

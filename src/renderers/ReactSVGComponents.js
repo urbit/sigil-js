@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { get, map } from 'lodash'
 
 const ReactSVGComponents = {
@@ -60,23 +60,4 @@ const ReactSVGComponents = {
   }
 }
 
-
-const insert = group => {
-  const model = {
-    tag: 'svg',
-    meta: {},
-    attr: {width: 128, height: 128},
-    children: [group],
-  }
-  return ReactSVGComponents.svg(model)
-}
-
-
-const mapInsert = arr => map(arr, group => insert(group))
-
-
-export {
-  ReactSVGComponents,
-  insert,
-  mapInsert,
-}
+export default ReactSVGComponents

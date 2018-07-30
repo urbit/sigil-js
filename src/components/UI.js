@@ -29,22 +29,19 @@ const ToggleButton = ({ isSelected, title, onClick, id }) => {
 class InputBox extends Component {
   constructor(props) {
     super(props)
-    this.state = {
-      c: ''
-    }
+    this.state = {c: ''}
   }
   render = () => {
     const { c } = this.state
     const { placeholder, title, submit } = this.props
     return (
       <div className={'inputBox'}>
-      <input
-        placeholder={'patp'}
-        type="text"
-        value={c}
-        onChange={e => this.setState({c: e.target.value})}
-      />
-      <button onClick={() => submit(c)}>{title}</button>
+        <input
+          placeholder={placeholder}
+          type="text"
+          value={c}
+          onChange={e => this.setState({c: e.target.value})} />
+        <button onClick={() => submit(c)}>{title}</button>
       </div>
     )
   }

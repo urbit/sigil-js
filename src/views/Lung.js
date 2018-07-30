@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
-import { map, filter, forEach, reduce, chunk,shuffle } from 'lodash'
+import { map, chunk, shuffle } from 'lodash'
 import fileDownload from 'js-file-download'
 import { toPlanetName } from 'urbit-ob'
 import ReactDOMServer from 'react-dom/server'
 
-import { inhale, walk, wedge, fan } from '../lib/lung2'
+import { pull, walk, wedge, fan } from '../lib/lung'
 import { base, baseState } from '../lib/lib.firebase'
 import {
   collider,
@@ -15,7 +15,7 @@ import {
 } from '../lib/lib'
 
 import {
-  lastIndex,
+  lid,
   len,
   isAtEnd,
   isAtStart,
@@ -30,13 +30,9 @@ import {
 
 import { ToggleButton } from '../components/UI'
 
-import { spill } from '../lib/spill'
+import { pour } from '../lib/pour'
 
-import {
-  ReactSVGComponents,
-  insert,
-  mapInsert,
-} from '../renderers/ReactSVGComponents'
+import ReactSVGComponents from '../renderers/ReactSVGComponents'
 
 
 const DB_PASS_ONE_KEY = 'c000'
@@ -68,7 +64,7 @@ class Lung extends Component {
 
   componentDidMount = () => {
 
-    inhale((reference) => {
+    pull((reference) => {
       // fan(reference)
       this.setState({ reference, lam: fan(reference) })
     })
@@ -120,47 +116,7 @@ class Lung extends Component {
       <RandomGrid page={shuffle(this.state.lam)} />
 
       <FicheList page={this.state.lam} />
-        {
 
-
-        // <Fiche
-        //   page={laminationZero}
-        //   pageLength={len(laminationZero)}
-        //   isFocussed={selectedFiche === 'A'}
-        //   switchStages={() => this.setState({ selectedFiche: 'A' })}
-        //   fbk={'c000'}
-        //   title={'Lamination A'}
-        //   id={'A'} />
-        //
-        // <h1 className={'arrow'}>{'↓'}</h1>
-        //
-        // <Fiche
-        //   page={laminationTwo}
-        //   pageLength={len(laminationTwo)}
-        //   isFocussed={selectedFiche === 'B'}
-        //   switchStages={() => this.setState({ selectedFiche: 'B' })}
-        //   fbk={'c001'}
-        //   title={'Lamination B'}
-        //   id={'B'} />
-        //
-        // <h1 className={'arrow'}>{'↓'}</h1>
-        //
-        // <Fiche
-        //   page={laminationThree}
-        //   pageLength={len(laminationThree)}
-        //   isFocussed={selectedFiche === 'C'}
-        //   switchStages={() => this.setState({ selectedFiche: 'C' })}
-        //   fbk={'c002'}
-        //   title={'Lamination C'}
-        //   id={'C'} />
-        //
-        // <div className={'flex'}>
-        //
-        //   <RandomGrid page={[...geons, ...approvedOne, ...approvedTwo]} num={4} />
-        //
-        // </div>
-
-        }
 
       </div>
     )
@@ -262,7 +218,7 @@ class Fiche extends Component {
                 <button onClick={() => this.setState({index: 0})}>{'Zero'}</button>
                 <button onClick={() => this.prevPage(pageLength)}>{'←'}</button>
                 <button onClick={() => this.nextPage(pageLength)}>{'→'}</button>
-                <button onClick={() => this.setState({index: lastIndex(page)})}>{'Max'}</button>
+                <button onClick={() => this.setState({index: lid(page)})}>{'Max'}</button>
                 <input
                   placeholder={index}
                   type="text"
@@ -275,9 +231,9 @@ class Fiche extends Component {
               </span>
             </nav>
             {
-              len(page) === 0
-              ? <div><p>{'Zero Length Array'}</p></div>
-              : <div> {insert(page[index])} </div>
+              // len(page) === 0
+              // ? <div><p>{'Zero Length Array'}</p></div>
+              // : <div> {insert(page[index])} </div>
             }
 
           </div>
@@ -297,7 +253,7 @@ const FicheList = ({page}) => {
         len(page) === 0
         ? <div><p>{'Zero Length Array'}</p></div>
         : <div className={'biggify'}> {map(page, symbol => {
-            return spill({
+            return pour({
               symbols: [symbol],
               renderer: ReactSVGComponents,
               size: 128,
@@ -353,8 +309,8 @@ class RandomGrid extends Component {
             <button onClick={() => this.setState({index: 0})}>{'Zero'}</button>
             <button onClick={() => this.prevPage(pageLength)}>{'←'}</button>
             <button onClick={() => this.nextPage(pageLength)}>{'→'}</button>
-            <button onClick={() => this.setState({index: lastIndex(page)})}>{'Max'}</button>
-            <button onClick={() => this.exportSVG(spill({
+            <button onClick={() => this.setState({index: lid(page)})}>{'Max'}</button>
+            <button onClick={() => this.exportSVG(pour({
 
                 symbols: symbols[this.state.index],
                 renderer: ReactSVGComponents,
@@ -365,7 +321,7 @@ class RandomGrid extends Component {
 
             <div>
               {
-                spill({
+                pour({
                   symbols: symbols[this.state.index],
                   renderer: ReactSVGComponents,
                   size: 300,

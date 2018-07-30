@@ -5,22 +5,13 @@ import {
   get,
   isUndefined,
   last,
-  has,
-  reduce,
 } from 'lodash'
 
-// import { toAddress } from 'urbit-ob'
-
 import { scale, translate, transform, toSVG, rotateDEG } from 'transformation-matrix'
-// import chroma from 'chroma-js'
 
 import {
-  quickHash,
-  randomShip,
-  patpArrToStr,
   patpStrToArr,
   isEven,
-  isOdd,
   deepClone,
   remap,
 } from '../lib/lib'
@@ -29,7 +20,86 @@ import { len, lat, sq } from '../lib/lib.array'
 
 import { suffixes, prefixes, } from '../lib/lib.urbit'
 
+// generate a seal
+const pour = ({ patp, sylmap, renderer, size, colorway, symbols }) => {
+  // if string recieved, convert to array, where each syllable is a string in the array.
+  patp = !isUndefined(patp) && isString(patp)
+    ? patpStrToArr(patp)
+    : undefined
 
+  // get svg objects from sylmap. If there is no sylmap, or if the syllable
+  // symbol cannot be found, return a default symbol instead.
+  symbols = !isUndefined(symbols)
+    ? symbols
+    : lookup(patp, sylmap)
+    
+  // The size of each svg as drawn in Figma
+  const UNIT = 128
+
+  if (!isEven(len(symbols) && len(symbols !== 1))) throw Error('nongalaxy patp argument to pour() is noneven length')
+  // make a layout object
+  const layout = makeLayout(len(symbols), UNIT, size, 16)
+
+
+  // transform symbols into place
+  const knolled = knoll(symbols, layout)
+  // make a background rectangle
+  const baseRectangle = {
+    tag: 'rect',
+    meta: { style: { fill: 'BG', stroke: 'NO' } },
+    attr: {
+      width: size,
+      height: size,
+      x: 0,
+      y: 0,
+    }
+  }
+  // insert symbol groups into SVG model, and apply color style
+  const model = dye({
+    tag: 'svg',
+    meta: {},
+    attr: { width: size, height: size },
+    children: [baseRectangle, ...knolled],
+  }, patp, colorway)
+  // Return the rendered object or the object itself.
+  return isUndefined(renderer)
+    ? model
+    : renderer.svg(model)
+}
+
+const lookup = (patp, sylmap) => {
+  // renderer and @P are not optional
+  if (isUndefined(patp)) throw Error('Missing patp argument to pour()')
+
+  return isUndefined(sylmap)
+  ? map(patp, syllable => DEFAULT_SYMBOL)
+  : map(patp, syllable => get(sylmap, syllable, DEFAULT_SYMBOL))
+}
+
+
+// transform symbols into position on grid
+const knoll = (symbols, layout) => map(symbols, (symbol, index) => {
+  const { grid, size, unit, bw, center, fudge } = layout
+  // We are mutating an object in this loop. In order to keep the sylmap pure,
+  // we deepClone the item.
+  const clone = deepClone(symbol)
+  // For some reason this is necessary to control the gap bewteen symbols
+  // get point coordinates from grid at symbol index
+  const { x, y } = grid[index]
+  // calculate scale factor, where 256 is the unit measurement
+  const sclf = (size - (bw * 2) + fudge) / (unit * 2)
+  // get rotation value in degrees from the top attr key of the clone
+  const deg = get(clone, ['meta', 'rotate'], 0)
+  // make an affine transformation matrix with x/y translation and uniform scaling
+  const affineMatrix = transform(translate(x, y), scale(sclf, sclf), rotateDEG(deg, center, center))
+  // set the transform attr on the clone with the new affine matrix
+  set(clone, ['attr', 'transform'], toSVG(affineMatrix))
+  // return an SVG group with symbol
+  return clone
+})
+
+
+// color options
 const cw = [
   ['#fff', '#000000'],
   ['#fff', '#4330FC'],
@@ -37,7 +107,6 @@ const cw = [
   ['#fff', '#129485'],
   ['#fff', '#928472'],
   ['#fff', '#FC5000'],
-  ['#fff', '#0A23FA'],
   ['#fff', '#2474D3'],
   ['#fff', '#A2C8D1'],
   ['#fff', '#203433'],
@@ -48,56 +117,41 @@ const cw = [
   ['#fff', '#E74E19'],
   ['#fff', '#00482F'],
   // ['#fff', ''],
-  // ['#fff', ''],
-  // ['#fff', ''],
-  // ['#fff', ''],
-  // ['#fff', ''],
-  // ['#fff', ''],
-  // ['#fff', ''],
-  // ['#fff', ''],
-
 ]
 
 
 const prism = (patp, colorways) => {
-
+  // get the first syllable
   const firstSyl = patp[0]
-
+  // get index of first syllable in syllables
   const idxOfFirstSyl = len(patp) === 1
     ? suffixes.indexOf(firstSyl)
     : prefixes.indexOf(firstSyl)
-
+  // make values for remap
   const iMax = 512 - 1
   const iMin = 0
   const oMax = len(colorways)
   const oMin = 0
-
+  // remap index of syllable to range of len(colorways)
   const index = Math.floor(remap(idxOfFirstSyl, iMax, iMin, oMax, oMin))
-
+  // return colorway at index
   return colorways[index]
 }
 
 
 const dye = (model, patp, colorway) => {
-
   // if the monotoneColorway param is true, return a black and white seal
   if (!isUndefined(colorway)) return dip(model, colorway)
-
   // pick a colorscheme from patp contents
-  colorway = prism(patp, cw)
-
+  colorway = !isUndefined(patp)
+    ? prism(patp, cw)
+    : cw[0]
   // apply a color to the model
   return dip(model, colorway)
 }
 
-const apply = {
-  strokeWidth: p => {
-    switch(p) {
-      case 'FG': return 1
-      case 'BG': return 1
-      default: return 0
-    }
-  },
+const applyStyle = {
+  // return background opacity value for foreground and bg
   fillOpacity: p => {
     switch(p) {
       case 'FG': return 1
@@ -105,6 +159,7 @@ const apply = {
       default: return 0
     }
   },
+  // return colorway index for foreground and bg
   color: (p, colorway) => {
     switch(p) {
       case 'FG': return colorway[0]
@@ -115,16 +170,16 @@ const apply = {
   }
 }
 
+
 // apply style attributes to a tag
-const applyStyle = (style, colorway) => {
-  const { fill, stroke } = style
+const returnStyleAttrs = (style, colorway) => {
+  const { fill } = style
   return {
-    fill: apply.color(fill, colorway),
-    // stroke: apply.color(stroke, colorway),
-    // strokeWidth: apply.strokeWidth(stroke),
-    fillOpacity: apply.fillOpacity(fill),
+    fill: applyStyle.color(fill, colorway),
+    fillOpacity: applyStyle.fillOpacity(fill),
   }
 }
+
 
 // Only apply styling to nodes that have a style meta property
 // Only apply styling to nodes that have a style meta property
@@ -136,7 +191,7 @@ const dip = (node, colorway) => {
   return {
     ...node,
     attr: style !== false
-      ? {...attr, ...applyStyle(style, colorway)}
+      ? {...attr, ...returnStyleAttrs(style, colorway)}
       : {...attr},
     children: map(children, child => dip(child, colorway)),
   }
@@ -145,7 +200,7 @@ const dip = (node, colorway) => {
 
 
 // This symbol is rendered when there is no sylmap
-const defaultSymbol = {
+const DEFAULT_SYMBOL = {
   tag: 'g',
   attr: {},
   children: [{
@@ -158,118 +213,81 @@ const defaultSymbol = {
 }
 
 
-const createGrid = (p, bw, size) => {
+// make a layout object for knoll()
+const makeLayout = (length, unit, size, borderRatio) => {
+  // calc margin size equal to that of etch lines
+  const marginSize = size / unit
+  // if size, is undefined, assign a default size.
+  const calculatedSize = isUndefined(size) ? () => unit * 2 : size
+  // calculate a gutter size for seal frame
+  const bw = calculatedSize / borderRatio
+  // generate a grid
+  const grid = createGrid(length, bw, calculatedSize, marginSize)
+  // return a layout object
+  return {
+    unit,
+    size: calculatedSize,
+    bw,
+    grid: grid,
+    center: unit / 2,
+    fudge: 0
+  }
+}
 
+
+// generate a grid based on patp length
+const createGrid = (length, bw, size, marginWidth) => {
   // create an offset that is used to center a single tile
-  const ctr = (0.5 * bw) + (0.25 * size)
-
+  const centerOffset = (0.5 * bw) + (0.25 * size)
   // generate a grid specific to the patp length
-  switch (len(p)) {
+  switch (length) {
+    // galaxy
     case 1: return lat({
-        m: sq(ctr),
+        g: sq(centerOffset),
+        m: {x:0, y:0},
         s: sq(size),
         p: {x: 1, y: 1},
         flat: true,
       })
+    // star
     case 2: return lat({
-        m: { x: bw, y: ctr },
+        g: { x: bw, y: centerOffset },
+        m: {x:marginWidth, y:0},
         s: sq(size),
         p: {x: 2, y: 1},
         flat: true,
       })
+    // planet and up
     default: return lat({
-        m: sq(bw),
+        g: sq(bw),
+        m: {x: marginWidth, y: marginWidth},
         s: sq(size),
-        p: sq(len(p) / 2),
+        p: sq(length / 2),
         flat: true,
       })
   }
 }
 
 
-const pour = ({ patp, sylmap, renderer, size, colorway, returnElem }) => {
-  // The size of each svg as drawn in Figma
-  const UNIT = 128
-
-  // renderer and @P are not optional
-  if (isUndefined(patp)) throw Error('Missing @P')
-
-  // if string recieved, convert to array, where each syllable is a string in the array.
-  if (isString(patp)) patp = patpStrToArr(patp)
-  if (!isEven(len(patp) && len(patp !== 1))) throw Error('@Ps are always of even length')
-
-  // if needed, set a size default param
-  size = isUndefined(size)
-    ? UNIT * 2
-    : size
-
-  // calculate a border width
-  const bw = size / 16
+// rename for testing
+const _createGrid = createGrid
+const _makeLayout = makeLayout
+const _returnStyleAttrs = returnStyleAttrs
+const _dip = dip
+const _knoll = knoll
+const _prism = prism
+const _dye = dye
+const _applyStyle = applyStyle
 
 
-  // make a grid suited to ship class
-  const grid = createGrid(patp, bw, size)
-
-  // get svg objects from sylmap. If there is no sylmap, or if the syllable
-  // symbol cannot be found, return a default symbol instead.
-  const symbols = isUndefined(sylmap)
-    ? map(patp, syllable => defaultSymbol)
-    : map(patp, syllable => get(sylmap, syllable, defaultSymbol))
-
-  // transform symbols into position on grid
-  const knolled = map(symbols, (symbol, index) => {
-    // We are mutating an object in this loop. In order to keep the sylmap pure,
-    // we deepClone the item.
-    const clone = deepClone(symbol)
-    // For some reason this is necessary to control the gap bewteen symbols
-    const fudge = -2
-    // get point coordinates from grid at symbol index
-    const { x, y } = grid[index]
-
-    // calculate scale factor, where 256 is the unit measurement
-    const scaleFactor = (size - (bw * 2) + fudge) / (UNIT * 2)
-
-    const deg = get(clone, ['meta', 'rotate'], 0)
-
-    // console.log(clone.children[lid(clone.children)])
-    const center = UNIT / 2
-    // make an affine transformation matrix with x/y translation and uniform scaling
-    const affineMatrix = transform(translate(x, y), scale(scaleFactor, scaleFactor), rotateDEG(deg, center, center))
-
-    // console.log(affineMatrix)
-    // set the transform attr on the clone with the new affine matrix
-    set(clone, ['attr', 'transform'], toSVG(affineMatrix))
-
-    // return an SVG group with symbol
-    return clone
-  })
-
-  // make a background rectangle
-  const bg = {
-    tag: 'rect',
-    meta: { style: { fill: 'BG', stroke: 'NO' } },
-    attr: {
-      width: size,
-      height: size,
-      x: 0,
-      y: 0,
-    }
-  }
-
-  // insert symbol groups into SVG model, and apply color style
-  const model = dye({
-    tag: 'svg',
-    meta: {},
-    attr: { width: size, height: size },
-    children: [bg, ...knolled],
-  }, patp, colorway)
-
-
-  // Return the rendered object or the object itself.
-  return isUndefined(renderer)
-    ? model
-    : renderer.svg(model)
+export {
+  pour,
+  _createGrid,
+  _makeLayout,
+  _returnStyleAttrs,
+  _dip,
+  _knoll,
+  _prism,
+  _dye,
+  _applyStyle,
 }
-
-
-export { pour, dye }

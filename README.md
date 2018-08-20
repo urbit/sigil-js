@@ -1,5 +1,7 @@
-# Urbit Seals
-[Github](https://github.com/urbit/avatars)
+# sigil.js
+[Github](https://github.com/urbit/sigil.js)
+
+![example images](https://github.com/urbit/sigil.js/blob/master/docs/outbound.png?raw=true)
 
 ## Overview
 In production, this repo is a library that exposes two items: `pour()` and `sylmap`. `pour()` is a function that generates an object representation of an SVG seal. `sylmap` is a mapping between syllables and symbols stored in JSON. The library requires a third component called a renderer, which takes the output of `pour()` and translates it into DOM nodes. In development, this repo also contains a pipeline of tools that assist in the design of combinatorial symbols.
@@ -13,7 +15,7 @@ In production, this repo is a library that exposes two items: `pour()` and `sylm
 |`$ yarn build`        | Create a build of the `pour()` lib            |
 
 
-![how this works diagram](https://github.com/urbit/avatars/blob/master/docs/high-level-flow.png?raw=true)
+![how this works diagram](https://github.com/urbit/sigil.js/blob/master/docs/high-level-flow.png?raw=true)
 
 ## `Pour()`
 ### Params

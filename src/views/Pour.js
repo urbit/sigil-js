@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { toPlanetName } from 'urbit-ob'
 import { map } from 'lodash'
+import fileDownload from 'js-file-download'
+import ReactDOMServer from 'react-dom/server'
 
 import {
   randomShip,
@@ -33,10 +35,10 @@ class Pour extends Component {
   }
 
 
-  // exportSVG = () => {
-  //   const data = paper.project.exportSVG({ asString: true })
-  //   // fileDownload(data, 'seal.svg')
-  // }
+
+  exportSVG = data => {
+    fileDownload(ReactDOMServer.renderToString(data), `${this.state.patp}.svg`)
+  }
 
 
   render = () => {
@@ -47,6 +49,17 @@ class Pour extends Component {
         <button onClick={() => this.setState({ patp: toPlanetName(randomShip('planet')) })}>
           {'Random @P'}
         </button>
+
+        <button onClick={() => this.exportSVG(pour({
+
+            patp: patp,
+            sylmap: sylmap,
+            renderer: ReactSVGComponents,
+            size: 256,
+            colorway: ['#000', '#fff'],
+
+        }))}>{'Export'}</button>
+
         <InputBox
           placeholder={'~ridlur-figbud'}
           title={'Submit'}

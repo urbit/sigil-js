@@ -47,6 +47,18 @@ class InputBox extends Component {
   }
 }
 
+const InputBoxUpperState = ({ onChange, currentValue, placeholder }) => {
+  // const classes = isSelected ? 'selected' : 'unselected'
+  return (
+    <div className={'inputBox'}>
+      <input
+        placeholder={placeholder}
+        type="text"
+        value={currentValue}
+        onChange={e => onChange(e)} />
+    </div> )
+}
+
 export {
   TabButton,
   ToggleButton,

@@ -32,7 +32,7 @@ const pour = ({ patp, sylmap, renderer, size, colorway, symbols }) => {
   symbols = !isUndefined(symbols)
     ? symbols
     : lookup(patp, sylmap)
-    
+
   // The size of each svg as drawn in Figma
   const UNIT = 128
 
@@ -102,40 +102,41 @@ const knoll = (symbols, layout) => map(symbols, (symbol, index) => {
 // color options
 const cw = [
   ['#fff', '#000000'],
-  ['#fff', '#4330FC'],
-  ['#fff', '#372284'],
-  ['#fff', '#129485'],
-  ['#fff', '#928472'],
-  ['#fff', '#FC5000'],
-  ['#fff', '#2474D3'],
-  ['#fff', '#A2C8D1'],
-  ['#fff', '#203433'],
-  ['#fff', '#FAA916'],
-  ['#fff', '#00B49D'],
-  ['#fff', '#852E46'],
-  ['#fff', '#AE2B27'],
-  ['#fff', '#E74E19'],
-  ['#fff', '#00482F'],
+  // ['#fff', '#4330FC'],
+  // ['#fff', '#372284'],
+  // ['#fff', '#129485'],
+  // ['#fff', '#928472'],
+  // ['#fff', '#FC5000'],
+  // ['#fff', '#2474D3'],
+  // ['#fff', '#A2C8D1'],
+  // ['#fff', '#203433'],
+  // ['#fff', '#FAA916'],
+  // ['#fff', '#00B49D'],
+  // ['#fff', '#852E46'],
+  // ['#fff', '#AE2B27'],
+  // ['#fff', '#E74E19'],
+  // ['#fff', '#00482F'],
   // ['#fff', ''],
 ]
 
 
 const prism = (patp, colorways) => {
+  return colorways[0]
   // get the first syllable
-  const firstSyl = patp[0]
-  // get index of first syllable in syllables
-  const idxOfFirstSyl = len(patp) === 1
-    ? suffixes.indexOf(firstSyl)
-    : prefixes.indexOf(firstSyl)
-  // make values for remap
-  const iMax = 512 - 1
-  const iMin = 0
-  const oMax = len(colorways)
-  const oMin = 0
-  // remap index of syllable to range of len(colorways)
-  const index = Math.floor(remap(idxOfFirstSyl, iMax, iMin, oMax, oMin))
-  // return colorway at index
-  return colorways[index]
+  // const firstSyl = patp[0]
+  // // get index of first syllable in syllables
+  // const idxOfFirstSyl = len(patp) === 1
+  //   ? suffixes.indexOf(firstSyl)
+  //   : prefixes.indexOf(firstSyl)
+  // // make values for remap
+  // const iMax = 512 - 1
+  // const iMin = 0
+  // const oMax = len(colorways)
+  // const oMin = 0
+  // // remap index of syllable to range of len(colorways)
+  // const index = Math.floor(remap(idxOfFirstSyl, iMax, iMin, oMax, oMin))
+  // // return colorway at index
+  // return colorways[index]
 }
 
 

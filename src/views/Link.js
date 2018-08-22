@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import ReactSVGComponents from '../renderers/ReactSVGComponents'
 import { pour } from '../lib/pour'
 import { pull, fan } from '../lib/lung'
-import { map, filter, forEach, reduce, chunk,shuffle, isString } from 'lodash'
+import { map, filter, forEach, reduce, chunk,shuffle, isString, cloneDeep, isNumber } from 'lodash'
 import fileDownload from 'js-file-download'
 import omitEmpty from 'omit-empty'
 import {
@@ -34,125 +34,154 @@ class Link extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      lam: [],
-      flat: [],
+      compositions: [],
       dictionary: [],
       reference: null,
-      selectedSymbolIndex: 0,
-      pairedSymbolIndexes: [],
-      selectedSyllableName: 'nada',
-      pairedSyllableNames: [],
+      adam: null,
+      pairedAdams: [],
+      eve: null,
+      pairedEves: [],
     }
   }
 
   componentDidMount = () => {
+    const { adam, eve } = this.state
+
     window.addEventListener('keydown', e => {
       if (e.keyCode === 13) this.pair()
+      if (e.keyCode === 85) this.unpair(adam, eve)
     })
+
     const dictionary = {
       suffixes: sylSort(suffixesSorted),
       prefixes: sylSort(prefixesSorted),
     }
 
-    const flat = reduce([...dictionary.suffixes, ...dictionary.prefixes], (acc, item) => {
-      return [...acc, ...item.members]
-    }, [])
-
-    pull((reference) => {
-      const lam = fan(reference)
-      this.setState({
-        pairedSymbolIndexes: map(filter(values(localStorage), item => isString(item)), s => parseInt(s)),
-        pairedSyllableNames: filter(keys(localStorage), item => item !== 'length'),
-        dictionary,
-        flat,
-        reference,
-        lam: lam })
-
-
-
-        const ls = {...localStorage}
-
-        // delete ls.length
-
-        console.log(ls)
-
-        console.log(len(keys(ls)))
-
-
-
-
-        delete ls.nada
-
-        ls.bic = '7'
-        ls.fal = '8'
-
-        const missingKeys = filter([...suffixes, ...prefixes], syl => !keys(ls).includes(syl))
-
-        var ks = Object.keys(ls);
-        var dupe = false;
-
-        for(var i=0;i<ks.length;i++){
-         for(var j=i+1;j<ks.length;j++){
-           if(ls[ks[i]] === ls[ks[j]]){
-             dupe = true;
-             break;
-           }
-         }
-         if(dupe){ console.log("dupe value is there..", ls[ks[i]], i); break; }
-        }
-
-        let arr = keys(ls)
-        var cache = {};
-        var results = [];
-        for (var i = 0, length = arr.length; i < length; i++) {
-          if(cache[arr[i]] === true){
-              results.push(arr[i]);
-           }else{
-               cache[arr[i]] = true;
-           }
-
-        }
-
-        console.log(missingKeys, ls.nada, ls.length, results )
-        console.log(ls)
-        const reRef = reduce(entries(ls), (acc, [key, value]) => {
-          console.log(key, value)
-          acc[key] = lam[value]
-          return acc
-        }, {})
-
-        console.log(reRef)
-        fileDownload(JSON.stringify(omitEmpty({...reRef})), 'sylmap.json')
+    this.setState({
+      dictionary,
     })
 
+    pull(reference => {
+      // combinatorics with fan()
+      const compositions = fan(reference)
+
+      // localStorage includes a 'length' value, filter it out
+      const withoutIndexValue = filter(values(localStorage), item => isString(item))
+
+      //
+      const symbolArray = map(withoutIndexValue, s => parseInt(s))
+
+      console.log(symbolArray)
 
 
+
+
+      this.setState({
+        pairedAdams: symbolArray,
+        pairedEves: filter(keys(localStorage), item => item !== 'length'),
+        reference,
+        compositions, })
+
+
+
+        const ls = cloneDeep(localStorage)
+
+        // delete ls.nada
+        //
+        // ls.bic = '7'
+        // ls.fal = '8'
+
+        // const missingKeys = filter([...suffixes, ...prefixes], syl => !keys(ls).includes(syl))
+        //
+        // var ks = Object.keys(ls);
+        // var dupe = false;
+        //
+        // for(var i=0;i<ks.length;i++){
+        //  for(var j=i+1;j<ks.length;j++){
+        //    if(ls[ks[i]] === ls[ks[j]]){
+        //      dupe = true;
+        //      break;
+        //    }
+        //  }
+        //  if(dupe){ console.log("dupe value is there..", ls[ks[i]], i); break; }
+        // }
+        //
+        // let arr = keys(ls)
+        // var cache = {};
+        // var results = [];
+        // for (var i = 0, length = arr.length; i < length; i++) {
+        //   if(cache[arr[i]] === true){
+        //       results.push(arr[i]);
+        //    }else{
+        //        cache[arr[i]] = true;
+        //    }
+        //
+        // }
+
+
+        const rebuild = reduce(entries(localStorage), (acc, [key, value]) => ({
+          ...acc,
+          [key]: compositions[value]
+        }), {})
+
+        const json = JSON.stringify(omitEmpty({...rebuild}))
+
+        fileDownload(json, 'sylmap.json')
+    })
   }
+
+
 
   pair = () => {
-    const {
-      selectedSyllable,
-      lam,
-      selectedSymbolIndex,
-      selectedSyllableName,
-      pairedSyllableNames,
-      pairedSymbolIndexes,
-    } = this.state
-    localStorage.setItem(`${selectedSyllableName}`, selectedSymbolIndex)
-    console.log(localStorage, this.state)
+    const { adam, eve, } = this.state
+
+    if (adam === null || eve === null) {
+      return
+    }
+
+    localStorage.setItem(`${eve}`, adam)
+
     this.setState({
-      selectedSymbolIndex: -1,
-      selectedSyllableName: 'nada',
-      pairedSyllableNames: [...pairedSyllableNames, selectedSyllableName],
-      pairedSymbolIndexes: [...pairedSymbolIndexes, selectedSymbolIndex],
+      adam: null,
+      eve: null,
     })
   }
+
+
+  unpairSymbol = index => {
+    const ls = localStorage
+    const indexOfKey = values(ls).indexOf(`${index}`)
+
+    if (indexOfKey !== -1) {
+      const key = keys(ls)[indexOfKey]
+      localStorage.removeItem(key)
+      this.setState({adam: null})
+    }
+  }
+
+
+
+  unpairSyllable = key => {
+    localStorage.removeItem(key)
+    this.setState({eve: null})
+  }
+
+
+  unpair = (index, key) => {
+    if (index !== null) {
+      this.unpairSymbol(index)
+    } else if (key !== null) {
+      this.unpairSyllable(key)
+    }
+  }
+
+
 
   clearAll = () => {
     localStorage.clear()
     this.setState({
-      pairedSyllableNames: [],
-      pairedSymbolIndexes: []
+      pairedEves: [],
+      pairedAdams: []
     })
   }
 
@@ -162,40 +191,41 @@ class Link extends Component {
     // return
   }
 
-  // unPair = (syl) => {
+   unPair = (syl) => {
   //   const {
   //     selectedSyllable,
   //     reference,
-  //     selectedSymbolIndex,
-  //     selectedSyllableName,
-  //     pairedSyllableNames,
-  //     pairedSymbolIndexes,
+  //     adam,
+  //     eve,
+  //     pairedEves,
+  //     pairedAdams,
   //   } = this.state
   //   localStorage.removeItem(`${syl}`)
   //   console.log(localStorage)
   //   indexOf(syl)
-  //   remove(pairedSyllableNames, item => )
+  //   remove(pairedEves, item => )
   //   this.setState({
   //
   //   })
   //
-  // }
+  }
 
 
   render = () => {
     const {
-      lam,
-      flat,
-      selectedSymbolIndex,
-      pairedSymbolIndexes,
-      pairedSyllableNames,
-      selectedSyllableName,
+      compositions,
+      adam,
+      pairedAdams,
+      pairedEves,
+      eve,
       dictionary,
     } = this.state
 
     return [
       <nav>
       <button onClick={() => this.pair()}>{'Pair'}</button>
+      <button onClick={() => this.unpair(adam, eve)}>{'Unpair'}</button>
+
       <button onClick={() => this.exportSylmap()}>{'Export'}</button>
 
       {
@@ -205,14 +235,14 @@ class Link extends Component {
       <div className={'grid'}>
         <section className={'a flex'}>
           {
-            map(lam, (symbol, i) =>
+            map(compositions, (symbol, i) =>
               <Sym
                 key={`symbol-${i}`}
                 index={i}
                 symbol={symbol}
-                isSelected={i === selectedSymbolIndex}
-                isPaired={pairedSymbolIndexes.includes(i)}
-                select={() => this.setState({selectedSymbolIndex: i})}
+                isSelected={i === adam}
+                isPaired={pairedAdams.includes(i)}
+                select={() => this.setState({adam: i})}
               /> )
           }
         </section>
@@ -221,16 +251,16 @@ class Link extends Component {
         <SylCategory
           title={'Suffixes'}
           payload={dictionary.suffixes}
-          selectedSyllableName={selectedSyllableName}
-          pairedSyllableNames={pairedSyllableNames}
-          select={(name) => this.setState({selectedSyllableName: name})}
+          eve={eve}
+          pairedEves={pairedEves}
+          select={(name) => this.setState({eve: name})}
           />
           <SylCategory
             title={'Prefixes'}
             payload={dictionary.prefixes}
-            selectedSyllableName={selectedSyllableName}
-            pairedSyllableNames={pairedSyllableNames}
-            select={(name) => this.setState({selectedSyllableName: name})}
+            eve={eve}
+            pairedEves={pairedEves}
+            select={(name) => this.setState({eve: name})}
             />
 
 
@@ -245,8 +275,8 @@ const SylCategory = ({
     title,
     payload,
     select,
-    pairedSyllableNames,
-    selectedSyllableName
+    pairedEves,
+    eve
   }) => {
   let idx = -1
   return (
@@ -262,8 +292,8 @@ const SylCategory = ({
                   index={idx}
                   syllable={member}
                   select={select}
-                  isPaired={pairedSyllableNames.includes(member)}
-                  isSelected={member === selectedSyllableName}
+                  isPaired={pairedEves.includes(member)}
+                  isSelected={member === eve}
                   />
 
               })

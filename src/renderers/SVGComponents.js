@@ -1,4 +1,3 @@
-import React from 'react'
 import { get, map } from 'lodash'
 
 const appendChildNodes = (p, svgNode) => {

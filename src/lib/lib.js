@@ -1,13 +1,13 @@
-import { get, set, reduce } from 'lodash'
+import { get, set, reduce } from 'lodash';
 
 
-const keys = obj => Object.keys(obj)
+const keys = obj => Object.keys(obj);
 
 
-const entries = obj => Object.entries(obj)
+const entries = obj => Object.entries(obj);
 
 
-const values = obj => Object.values(obj)
+const values = obj => Object.values(obj);
 
 
 // const includes = (arr, val) => arr.includes(val)
@@ -20,16 +20,16 @@ const values = obj => Object.values(obj)
 
 
 
-const isEven = n => n % 2 === 0
+const isEven = n => n % 2 === 0;
 
 
 
-const isOdd = n => n % 2 !== 0
+const isOdd = n => n % 2 !== 0;
 
 
 
 const patpArrToStr = p => {
-  return reduce(p, (acc, syl, i) => isEven(i)
+  return reduce(p, (acc, syl, i) => isEven(i);
     ? i === 0
       ? `~${acc}${syl}`
         ? i === 16
@@ -37,10 +37,10 @@ const patpArrToStr = p => {
       : `${acc}-${syl}`
     : `${acc}${syl}`
   , '')
-}
+};
 
 
-const patpStrToArr = p => p.replace(/[\^~-]/g,'').match(/.{1,3}/g)
+const patpStrToArr = p => p.replace(/[\^~-]/g,'').match(/.{1,3}/g);
 
 
 
@@ -52,4 +52,4 @@ export {
   keys,
   patpStrToArr,
   remap,
-}
+};

@@ -4,24 +4,18 @@ import {
   isString,
   get,
   isUndefined,
-  last,
+  cloneDeep,
 } from 'lodash'
-
 import { scale, translate, transform, toSVG, rotateDEG } from 'transformation-matrix'
 
-import {
-  patpStrToArr,
-  isEven,
-  deepClone,
-  remap,
-} from '../lib/lib'
+import { patpStrToArr, isEven } from '../lib/lib'
+import { len, lat, sq, last } from '../lib/lib.array'
+import sylmapjson from '../sylmaps/sylmap.json'
 
-import { len, lat, sq } from '../lib/lib.array'
-
-import { suffixes, prefixes, } from '../lib/lib.urbit'
 
 // generate a seal
-const pour = ({ patp, sylmap, renderer, size, colorway, symbols }) => {
+const pour = ({ patp, renderer, size, colorway, symbols }) => {
+  const sylmap = sylmapjson
   // if string recieved, convert to array, where each syllable is a string in the array.
   patp = !isUndefined(patp) && isString(patp)
     ? patpStrToArr(patp)
@@ -81,8 +75,8 @@ const lookup = (patp, sylmap) => {
 const knoll = (symbols, layout) => map(symbols, (symbol, index) => {
   const { grid, size, unit, bw, center, fudge } = layout
   // We are mutating an object in this loop. In order to keep the sylmap pure,
-  // we deepClone the item.
-  const clone = deepClone(symbol)
+  // we cloneDeep the item.
+  const clone = cloneDeep(symbol)
   // For some reason this is necessary to control the gap bewteen symbols
   // get point coordinates from grid at symbol index
   const { x, y } = grid[index]

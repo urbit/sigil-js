@@ -26,6 +26,7 @@
     "regenerator-runtime": "^0.12.1",
     "transformation-matrix": "^1.14.0"
   },
+  "main": "dist/bundle.js",
   "scripts": {
     "test": "jest",
     "build": "gulp"

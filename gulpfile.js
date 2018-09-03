@@ -43,6 +43,13 @@ gulp.task('default', function(cb) {
             'flatten',
             'size',
             'isUndefined'
+          ],
+          'node_modules/transformation-matrix/build-es/index.js': [
+            'scale',
+            'translate',
+            'transform',
+            'toSVG',
+            'rotateDEG',
           ]
         }
       }),

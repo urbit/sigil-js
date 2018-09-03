@@ -1,6 +1,3 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
-import './css/index.css'
-import App from './App'
+import { pour } from './lib/pour';
 
-ReactDOM.render(<App />, document.getElementById('root'))
+export { pour };

@@ -29,14 +29,14 @@ const isOdd = n => n % 2 !== 0;
 
 
 const patpArrToStr = p => {
-  return reduce(p, (acc, syl, i) => isEven(i);
+  return reduce(p, (acc, syl, i) => isEven(i)
     ? i === 0
       ? `~${acc}${syl}`
         ? i === 16
         : `${acc}^${syl}`
       : `${acc}-${syl}`
     : `${acc}${syl}`
-  , '')
+  , '');
 };
 
 

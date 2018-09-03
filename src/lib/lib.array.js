@@ -20,7 +20,7 @@ const lat = params => {
       y: (y * c.y) + g.y + (y * m.y),
     };
     return res;
-  };
+  }
 ));
 
   // flatten the matrix if param set

@@ -14,8 +14,8 @@ import sylmapjson from '../sylmaps/sylmap.json';
 
 
 // generate a seal
-const pour = ({ patp, renderer, size, colorway, symbols }) => {
-  const sylmap = sylmapjson;
+const _pour = ({ patp, renderer, sylmap, size, colorway, symbols }) => {
+
   // if string recieved, convert to array, where each syllable is a string in the array.
   patp = !isUndefined(patp) && isString(patp)
     ? patpStrToArr(patp)
@@ -138,7 +138,7 @@ const dye = (model, patp, colorway) => {
   // if the monotoneColorway param is true, return a black and white seal
   if (!isUndefined(colorway)) return dip(model, colorway);
   // pick a colorscheme from patp contents
-  colorway = !isUndefined(patp);
+  colorway = !isUndefined(patp)
     ? prism(patp, cw)
     : cw[0];
   // apply a color to the model
@@ -227,7 +227,7 @@ const makeLayout = (length, unit, size, borderRatio) => {
     center: unit / 2,
     fudge: 0
   };
-}
+};
 
 
 // generate a grid based on patp length
@@ -238,31 +238,36 @@ const createGrid = (length, bw, size, marginWidth) => {
   switch (length) {
     // galaxy
     case 1: return lat({
-        g: sq(centerOffset),
-        m: {x:0, y:0},
-        s: sq(size),
-        p: {x: 1, y: 1},
-        flat: true,
-      });
+      g: sq(centerOffset),
+      m: {x:0, y:0},
+      s: sq(size),
+      p: {x: 1, y: 1},
+      flat: true,
+    });
     // star
     case 2: return lat({
-        g: { x: bw, y: centerOffset },
-        m: {x:marginWidth, y:0},
-        s: sq(size),
-        p: {x: 2, y: 1},
-        flat: true,
-      });
+      g: { x: bw, y: centerOffset },
+      m: {x:marginWidth, y:0},
+      s: sq(size),
+      p: {x: 2, y: 1},
+      flat: true,
+    });
     // planet and up
     default: return lat({
-        g: sq(bw),
-        m: {x: marginWidth, y: marginWidth},
-        s: sq(size),
-        p: sq(length / 2),
-        flat: true,
-      });
+      g: sq(bw),
+      m: {x: marginWidth, y: marginWidth},
+      s: sq(size),
+      p: sq(length / 2),
+      flat: true,
+    });
   };
 };
 
+// wrap _pour with sylmap
+const pour = ({ patp, renderer, size, colorway, symbols }) => {
+  const sylmap = sylmapjson;
+  return _pour({ patp, sylmap, renderer, size, colorway, symbols });
+};
 
 // rename for testing
 const _createGrid = createGrid;
@@ -277,6 +282,7 @@ const _applyStyle = applyStyle;
 
 export {
   pour,
+  _pour,
   _createGrid,
   _makeLayout,
   _returnStyleAttrs,
@@ -285,4 +291,4 @@ export {
   _prism,
   _dye,
   _applyStyle,
-}
+};

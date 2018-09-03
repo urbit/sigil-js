@@ -10,6 +10,7 @@ var replace = require('rollup-plugin-replace');
 var json = require('rollup-plugin-json');
 var builtins = require('rollup-plugin-node-builtins');
 var rootImport = require('rollup-plugin-root-import');
+var uglify = require('rollup-plugin-uglify-es');
 
 /***
   End main config options
@@ -24,6 +25,7 @@ gulp.task('default', function(cb) {
     format: "es",
     plugins: [
       babel({
+        plugins: ['babel-plugin-lodash'],
         ignore: ['src/vendor/**', 'node_modules/**']
       }),
       commonjs({
@@ -54,7 +56,8 @@ gulp.task('default', function(cb) {
       }),
       json(),
       builtins(),
-      resolve()
+      resolve(),
+      uglify()
     ]
   }).on('bundle', function(bundle){ cache = bundle; })
     .on('error', function(e){

@@ -268,9 +268,9 @@ const createGrid = (length, bw, size, marginWidth) => {
 };
 
 // wrap _pour with sylmap
-const pour = ({ patp, renderer, size, colorway, symbols }) => {
+const pour = ({ patp, renderer, size, colorway, symbols, noBorder }) => {
   const sylmap = sylmapjson;
-  return _pour({ patp, sylmap, renderer, size, colorway, symbols });
+  return _pour({ patp, sylmap, renderer, size, colorway, symbols, noBorder });
 };
 
 // rename for testing

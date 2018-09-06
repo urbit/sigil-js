@@ -1,6 +1,6 @@
 {
   "name": "sigil-js",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "private": true,
   "devDependencies": {
     "@babel/core": "^7.0.0",

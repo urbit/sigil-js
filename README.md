@@ -27,6 +27,7 @@ In production, this repo is a library that expose `pour()` is a function that ge
 |`patp`      | any valid urbit patp                                                                             | `string` or `array` of form `['syl', 'syl', ...]`   | No, and can only accept galaxies, stars and planets.
 |`renderer`  | an object with methods that transform the output of svg object representation output of pour() | `object` with methods                               | Yes, will return POJO svg representation if no `renderer` provided
 |`size`      | width and height of final output                                                               | `integer`                                           | Yes, will default to 256px without `size` provided
+| `margin`| 'auto' or integer representing pixels | `string` or `integer` | Yes, 'auto' will be substituted if left undefined |
 |`colorway`      | a consistent colorscheme that ignores internal color method                                | `array` of form `[#background, #foreground]`                                           | Yes, will default to internal `dye()` method without `colorway` provided
 
 ## Using this Lib
@@ -39,7 +40,7 @@ In production, this repo is a library that expose `pour()` is a function that ge
 ### Example
 
  ```js
- import pour from 'sigil-js'
+ import {pour} from 'sigil-js'
  import ReactSVGComponents from 'ReactSVGComponents'
 
  <div> {
@@ -47,10 +48,47 @@ In production, this repo is a library that expose `pour()` is a function that ge
      patp: 'zod',
      renderer: ReactSVGComponents,
      size: 128,
+     margin: 'auto',
    })
  } </div>
 
  ```
+
+A margin value can be added to render single symbols.
+
+ ```js
+ import {pour} from 'sigil-js'
+ import ReactSVGComponents from 'ReactSVGComponents'
+
+ <div> {
+   pour({
+     patp: 'zod',
+     renderer: ReactSVGComponents,
+     size: 128,
+     margin: 0,
+   })
+ } </div>
+
+ ```
+
+
+A default renderer for plain HTML is now also exported.
+
+  ```js
+  import { pour, SVGComponents } from 'sigil-js'
+
+  <div> {
+    pour({
+      patp: 'zod',
+      renderer: SVGComponents,
+      size: 128,
+      margin: 0,
+    })
+  } </div>
+
+  ```
+
+
 
 ## Example Renderers
 

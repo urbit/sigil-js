@@ -50,6 +50,7 @@ gulp.task('default', function(cb) {
             'transform',
             'toSVG',
             'rotateDEG',
+            'scale'
           ]
         }
       }),

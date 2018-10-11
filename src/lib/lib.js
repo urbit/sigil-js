@@ -10,34 +10,32 @@ const entries = obj => Object.entries(obj);
 const values = obj => Object.values(obj);
 
 
-// const includes = (arr, val) => arr.includes(val)
+const seq = num => Array.from(Array(num), (nada, i) => i);
 
 
-// const compose = (...fs) => fs.reduceRight((pF, nF) => (...args) => nF(pF(...args)), v => v)
+const last = arr => arr[len(arr) - 1];
 
 
-// const remap = (n, iMax, iMin, oMax, oMin) => (n - iMin) * (oMax - oMin) / (iMax - iMin) + oMin
+const len = arr => size(arr);
 
 
-
-const isEven = n => n % 2 === 0;
-
+const isOdd = n => !!(n & 1);
 
 
-const isOdd = n => n % 2 !== 0;
+const isEven = n => !(n & 1);
 
 
 
-const patpArrToStr = p => {
-  return reduce(p, (acc, syl, i) => isEven(i)
-    ? i === 0
-      ? `~${acc}${syl}`
-        ? i === 16
-        : `${acc}^${syl}`
-      : `${acc}-${syl}`
-    : `${acc}${syl}`
-  , '');
-};
+// const patpArrToStr = p => {
+//   return reduce(p, (acc, syl, i) => isEven(i)
+//     ? i === 0
+//       ? `~${acc}${syl}`
+//         ? i === 16
+//         : `${acc}^${syl}`
+//       : `${acc}-${syl}`
+//     : `${acc}${syl}`
+//   , '');
+// };
 
 
 const patpStrToArr = p => p.replace(/[\^~-]/g,'').match(/.{1,3}/g);
@@ -45,11 +43,13 @@ const patpStrToArr = p => p.replace(/[\^~-]/g,'').match(/.{1,3}/g);
 
 
 export {
-  isEven,
-  isOdd,
-  values,
-  entries,
   keys,
+  entries,
+  values,
+  seq,
+  last,
+  len,
+  isOdd,
+  isEven,
   patpStrToArr,
-  remap,
 };

@@ -16,7 +16,7 @@ const seq = num => Array.from(Array(num), (nada, i) => i);
 const last = arr => arr[len(arr) - 1];
 
 
-const len = arr => size(arr);
+const len = arr => arr.length;
 
 
 const isOdd = n => !!(n & 1);

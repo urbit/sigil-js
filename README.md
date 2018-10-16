@@ -48,6 +48,7 @@ In production, this repo is a library that expose `pour()` is a function that ge
      patp: 'zod',
      renderer: ReactSVGComponents,
      size: 128,
+     colorway: ['black', 'white'],
      margin: 'auto',
    })
  } </div>
@@ -65,6 +66,7 @@ A margin value can be added to render single symbols.
      patp: 'zod',
      renderer: ReactSVGComponents,
      size: 128,
+     colorway: ['black', 'white'],
      margin: 0,
    })
  } </div>
@@ -82,6 +84,7 @@ A default renderer for plain HTML is now also exported.
       patp: 'zod',
       renderer: SVGComponents,
       size: 128,
+      colorway: ['black', 'white'],
       margin: 0,
     })
   } </div>

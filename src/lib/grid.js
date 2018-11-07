@@ -1,4 +1,3 @@
-import { flatten, size, map, isUndefined, reduce, isNumber } from 'lodash'
 
 const grid = ({ length, margin, size }) => {
 
@@ -21,7 +20,7 @@ const grid = ({ length, margin, size }) => {
   // calculate symbols size based on margin.
   const symbolSize = size - (rm * 2);
 
-  // symbols should always be the same size bewteen ships if a margin is not
+  // symbols should always be the same size between ships if a margin is not
   // defined or set to 'auto'
   const sw = mm || length > 1
     ? symbolSize / HORIZONTAL_SYMBOL_COUNT
@@ -70,7 +69,7 @@ const grid = ({ length, margin, size }) => {
 };
 
 
-const isNotMarginMode = margin => margin === 'auto' || isUndefined(margin);
+const isNotMarginMode = margin => margin === 'auto' || margin === undefined;
 
 // 2 dimensional centering for a square
 const dc = ({ le, mm, tw, sw, rm, rp }) => le > 1 || mm === true

@@ -10,13 +10,13 @@ import { patpStrToArr } from './lib';
 import grid from './grid'
 import dyes from './dyes'
 
-import sylgraphjson from './sylgraph.json';
+import sylgraphjson from '../sylgraphs/sylgraph.json';
 
 
 // generate a seal
 const _pour = ({ patp, renderer, sylgraph, size, colorway, symbols, margin, ignoreColorway }) => {
 
-  // if (isUndefined(renderer.svg)) throw new Error('Your renderer must have a `svg` method for pour to call.')
+  if (isUndefined(renderer.svg)) throw new Error('Your renderer must have a `svg` method for pour to call.')
 
   // if string received, convert to array, where each syllable is a string in
   // the array.
@@ -28,7 +28,7 @@ const _pour = ({ patp, renderer, sylgraph, size, colorway, symbols, margin, igno
   symbols = !isUndefined(symbols) ? symbols : lookup(patp, sylgraph);
 
   const layout = grid({
-    length: symbols.length,
+    length: symbols.length
     margin: margin,
     size,
   });
@@ -154,6 +154,7 @@ const DEFAULT_SYMBOL = {
 };
 
 
+// TODO revert this once graph is proven
 // wrap _pour with sylgraph
 const pour = ({ patp, renderer, size, sylgraph, colorway, symbols, margin, ignoreColorway }) => {
   sylgraph = isUndefined(sylgraph) ? sylgraphjson : sylgraph

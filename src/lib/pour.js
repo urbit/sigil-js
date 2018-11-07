@@ -10,7 +10,7 @@ import { patpStrToArr } from './lib';
 import grid from './grid'
 import dyes from './dyes'
 
-import sylgraphjson from '../sylgraphs/sylgraph.json';
+import sylgraphjson from './sylgraph.json';
 
 
 // generate a seal
@@ -28,7 +28,7 @@ const _pour = ({ patp, renderer, sylgraph, size, colorway, symbols, margin, igno
   symbols = !isUndefined(symbols) ? symbols : lookup(patp, sylgraph);
 
   const layout = grid({
-    length: symbols.length
+    length: symbols.length,
     margin: margin,
     size,
   });

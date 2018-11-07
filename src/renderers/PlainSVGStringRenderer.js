@@ -1,15 +1,27 @@
-import { get, map, reduce, entries, isUndefined } from 'lodash'
+import { get, isUndefined } from 'lodash'
 
+
+// converts object to XML attr
 const p2s = obj => {
-  if (!isUndefined(obj)) {
-    return reduce(Object.entries(obj), (acc, [k, v]) => `${acc}${k}='${v}' `, '')
+  if (obj !== undefined) {
+    return Object.entries(obj).reduce((acc, [k, v]) => `${acc}${c2d(k)}='${v}' `, '')
   }
   return
 }
 
+
+// converts camelCase to kebab-case
+const c2d = str => str
+    .replace(/(^[A-Z])/, ([first]) => first.toLowerCase())
+    .replace(/([A-Z])/g, ([letter]) => `-${letter.toLowerCase()}`)
+
+
+
 const recurse = p => {
-  return reduce(get(p, 'children', []), (a, c) => `${a} ${PlainSVGStringRenderer[c.tag](c)}`, '')
+  return get(p, 'children', []).reduce((a, c) => `${a} ${PlainSVGStringRenderer[c.tag](c)}`, '')
 }
+
+
 
 const PlainSVGStringRenderer = {
   svg: p => {

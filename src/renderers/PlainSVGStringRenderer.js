@@ -1,24 +1,24 @@
-import { get, isUndefined } from 'lodash'
+import { get } from 'lodash'
 
 
 // converts object to XML attr
 const p2s = obj => {
   if (obj !== undefined) {
-    return Object.entries(obj).reduce((acc, [k, v]) => `${acc}${c2d(k)}='${v}' `, '')
+    return Object.entries(obj).reduce((acc, [k, v]) => `${acc}${c2k(k)}='${v}' `, '')
   }
   return
 }
 
 
 // converts camelCase to kebab-case
-const c2d = str => str
-    .replace(/(^[A-Z])/, ([first]) => first.toLowerCase())
-    .replace(/([A-Z])/g, ([letter]) => `-${letter.toLowerCase()}`)
+const c2k = str => str
+  .replace(/(^[A-Z])/, ([first]) => first.toLowerCase())
+  .replace(/([A-Z])/g, ([letter]) => `-${letter.toLowerCase()}`)
 
 
 
 const recurse = p => {
-  return get(p, 'children', []).reduce((a, c) => `${a} ${PlainSVGStringRenderer[c.tag](c)}`, '')
+  return get(p, 'children', []).reduce((a, c) => `${a} ${PlainSVGStringRenderer[c.tag](c)}`, '');
 }
 
 

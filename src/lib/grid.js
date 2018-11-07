@@ -56,8 +56,8 @@ const grid = ({ length, margin, size }) => {
     ],
     4: [
       { x: d1(p), y: d1(p) },
-      { x: d1(p), y: d2(p) },
       { x: d2(p), y: d1(p) },
+      { x: d1(p), y: d2(p) },
       { x: d2(p), y: d2(p) },
     ],
   };

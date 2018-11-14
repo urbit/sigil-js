@@ -1,14 +1,14 @@
 # sigil-js
-[Github](https://github.com/urbit/sigil-js)
 
 ![example images](https://github.com/urbit/sigil-js/blob/master/docs/outbound.png?raw=true)
 
-### Note:
-sigils-js is now standalone from sigil-toolkit. It can now be added as a git-hosted module in package.json. a sylmap is no longer needed, because the sylmap is included inside the bundle.
-
 ## Overview
+
 In production, this repo is a library that expose `pour()` is a function that generates an object representation of an SVG seal. The library requires a 2nd function called a renderer, which takes the output of `pour()` and translates it into DOM nodes. See ./docs/renderExamples for a few ways to do this.
 
+### Note
+
+sigils-js is now standalone from sigil-toolkit. It can now be added as a git-hosted module in package.json. a sylmap is no longer needed, because the sylmap is included inside the bundle.
 
 ## Build
 
@@ -21,7 +21,9 @@ In production, this repo is a library that expose `pour()` is a function that ge
 ![how this works diagram](https://github.com/urbit/sigil-js/blob/master/docs/high-level-flow.png?raw=true)
 
 ## `Pour()`
+
 ### Params
+
 |Param     | Explanation                                                                                    | Type                                                | optional?
 | ---------| -----------------------------------------------------------------------------------------------|-----------------------------------------------------|------------------------|
 |`patp`      | any valid urbit patp                                                                             | `string` or `array` of form `['syl', 'syl', ...]`   | No, and can only accept galaxies, stars and planets.
@@ -33,194 +35,11 @@ In production, this repo is a library that expose `pour()` is a function that ge
 ## Using this Lib
 
 ### Building the `pour()` lib
+
  1. install deps: `npm install --save`
  2. run `npm run build` or `gulp`
  3. the library bundle will output to `./dist/bundle.js`
 
-### Example
+### Designing Symbols
 
- ```js
- import {pour} from 'sigil-js'
- import ReactSVGComponents from 'ReactSVGComponents'
-
- <div> {
-   pour({
-     patp: 'zod',
-     renderer: ReactSVGComponents,
-     size: 128,
-     colorway: ['black', 'white'],
-     margin: 'auto',
-   })
- } </div>
-
- ```
-
-A margin value can be added to render single symbols.
-
- ```js
- import {pour} from 'sigil-js'
- import ReactSVGComponents from 'ReactSVGComponents'
-
- <div> {
-   pour({
-     patp: 'zod',
-     renderer: ReactSVGComponents,
-     size: 128,
-     colorway: ['black', 'white'],
-     margin: 0,
-   })
- } </div>
-
- ```
-
-
-A default renderer for plain HTML is now also exported.
-
-  ```js
-  import { pour, SVGComponents } from 'sigil-js'
-
-  <div> {
-    pour({
-      patp: 'zod',
-      renderer: SVGComponents,
-      size: 128,
-      colorway: ['black', 'white'],
-      margin: 0,
-    })
-  } </div>
-
-  ```
-
-
-
-## Example Renderers
-
-### React
-
-```js
-import React from 'react'
-import { get, map } from 'lodash'
-
-const ReactSVGComponents = {
-  svg: p => {
-    return (
-      <svg {...p.attr} version={'1.1'} xmlns={'http://www.w3.org/2000/svg'}>
-       { map(get(p, 'children', []), child => ReactSVGComponents[child.tag](child)) }
-      </svg>
-    )
-  },
-  circle: p => {
-    return (
-      <circle {...p.attr}>
-      { map(get(p, 'children', []), child => ReactSVGComponents[child.tag](child)) }
-      </circle>
-    )
-  },
-  rect: p => {
-    return (
-      <rect {...p.attr}>
-      { map(get(p, 'children', []), child => ReactSVGComponents[child.tag](child)) }
-      </rect>
-    )
-  },
-  path: p => {
-    return (
-      <path {...p.attr}>
-      { map(get(p, 'children', []), child => ReactSVGComponents[child.tag](child)) }
-      </path>
-    )
-  },
-  g: p => {
-    return (
-      <g {...p.attr}>
-        { map(get(p, 'children', []), child => ReactSVGComponents[child.tag](child)) }
-      </g>
-    )
-  },
-  polygon: p => {
-    return (
-      <polygon {...p.attr}>
-      { map(get(p, 'children', []), child => ReactSVGComponents[child.tag](child)) }
-      </polygon>
-    )
-  },
-  line: p => {
-    return (
-      <line {...p.attr}>
-      { map(get(p, 'children', []), child => ReactSVGComponents[child.tag](child)) }
-      </line>
-    )
-  },
-  polyline: p => {
-    return (
-      <polyline {...p.attr}>
-      { map(get(p, 'children', []), child => ReactSVGComponents[child.tag](child)) }
-      </polyline>
-    )
-  }
-}
-
-export default ReactSVGComponents
-```
-
-
-### Normal SVGs
-
-```js
-import { get, map } from 'lodash'
-
-const appendChildNodes = (p, svgNode) => {
-  map(get(p, 'children', []), child => SVGComponents[child.tag](child)).forEach(c => {
-    svgNode.appendChild(c);
-  });
-  return svgNode;
-};
-
-const createChildNode = (p, nodeName) => {
-  let node = document.createElement(nodeName);
-  Object.keys(p.attr).forEach(k => {
-    node.setAttribute(k, p.attr[k]);
-  });
-  return appendChildNodes(p, node);
-};
-
-const SVGComponents = {
-  svg: p => {
-    let node = document.createElementNS("http://www.w3.org/2000/svg", "svg")
-    node.setAttribute("version", "1.1");
-    node.setAttribute("xlmns", "http://www.w3.org/2000/svg");
-    Object.keys(p.attr).forEach(k => {
-      node.setAttribute(k, p.attr[k]);
-    });
-    return appendChildNodes(p, node);
-  },
-  circle: p => {
-    return createChildNode(p, "circle");
-  },
-  rect: p => {
-    return createChildNode(p, "rect");
-  },
-  path: p => {
-    return createChildNode(p, "path");
-  },
-  g: p => {
-    return createChildNode(p, "g");
-  },
-  polygon: p => {
-    return createChildNode(p, "polygon");
-  },
-  line: p => {
-    return createChildNode(p, "line");
-  },
-  polyline: p => {
-    return createChildNode(p, "polyline");
-  }
-}
-
-export default SVGComponents
-
-
-```
-
-### Designing symbols
   To develop symbols, pair symbols / syllables, or visually validate the library, use [sigil-toolkit](https://github.com/urbit/sigil-toolkit)

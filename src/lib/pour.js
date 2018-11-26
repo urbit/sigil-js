@@ -16,7 +16,7 @@ const patpStrToArr = p => p.replace(/[\^~-]/g,'').match(/.{1,3}/g)
 // generate a seal
 const _pour = ({ patp, renderer, sylgraph, size, colorway, symbols, margin, ignoreColorway }) => {
 
-  if (isUndefined(renderer.svg)) throw new Error('Your renderer must have a `svg` method for pour to call.')
+  // if (isUndefined(renderer.svg)) throw new Error('Your renderer must have a `svg` method for pour to call.')
 
   // if string received, convert to array, where each syllable is a string in
   // the array.

@@ -5,7 +5,7 @@ test('converts zod', () => {
     patp: 'zod',
     renderer: undefined,
     size: 128
-  })
-  console.log(r)
+  });
+  
   expect(r).toBeDefined();
 });

@@ -221,6 +221,3 @@ export default SVGComponents
 
 
 ```
-
-### Designing symbols
-  To develop symbols, pair symbols / syllables, or visually validate the library, use [sigil-toolkit](https://github.com/urbit/sigil-toolkit)

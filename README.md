@@ -1,14 +1,14 @@
 # sigil-js
-[Github](https://github.com/urbit/sigil-js)
 
 ![example images](https://github.com/urbit/sigil-js/blob/master/docs/outbound.png?raw=true)
 
-### Note:
-sigils-js is now standalone from sigil-toolkit. It can now be added as a git-hosted module in package.json. a sylmap is no longer needed, because the sylmap is included inside the bundle.
-
 ## Overview
+
 In production, this repo is a library that expose `pour()` is a function that generates an object representation of an SVG seal. The library requires a 2nd function called a renderer, which takes the output of `pour()` and translates it into DOM nodes. See ./docs/renderExamples for a few ways to do this.
 
+### Note
+
+sigils-js is now standalone from sigil-toolkit. It can now be added as a git-hosted module in package.json. a sylmap is no longer needed, because the sylmap is included inside the bundle.
 
 ## Build
 
@@ -21,7 +21,9 @@ In production, this repo is a library that expose `pour()` is a function that ge
 ![how this works diagram](https://github.com/urbit/sigil-js/blob/master/docs/high-level-flow.png?raw=true)
 
 ## `Pour()`
+
 ### Params
+
 |Param     | Explanation                                                                                    | Type                                                | optional?
 | ---------| -----------------------------------------------------------------------------------------------|-----------------------------------------------------|------------------------|
 |`patp`      | any valid urbit patp                                                                             | `string` or `array` of form `['syl', 'syl', ...]`   | No, and can only accept galaxies, stars and planets.
@@ -33,6 +35,7 @@ In production, this repo is a library that expose `pour()` is a function that ge
 ## Using this Lib
 
 ### Building the `pour()` lib
+
  1. install deps: `npm install --save`
  2. run `npm run build` or `gulp`
  3. the library bundle will output to `./dist/bundle.js`
@@ -221,3 +224,4 @@ export default SVGComponents
 
 
 ```
+

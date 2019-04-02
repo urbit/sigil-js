@@ -6,10 +6,6 @@
 
 In production, this repo is a library that expose `pour()` is a function that generates an object representation of an SVG seal. The library requires a 2nd function called a renderer, which takes the output of `pour()` and translates it into DOM nodes. See ./docs/renderExamples for a few ways to do this.
 
-### Note
-
-sigils-js is now standalone from sigil-toolkit. It can now be added as a git-hosted module in package.json. a sylmap is no longer needed, because the sylmap is included inside the bundle.
-
 ## Build
 
 |Commands              | Description                                   |
@@ -224,4 +220,3 @@ export default SVGComponents
 
 
 ```
-

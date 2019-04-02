@@ -23,6 +23,7 @@ gulp.task('default', function(cb) {
     input: './src/index.js',
     cache: cache,
     format: "es",
+    // name: "sigils-js",
     plugins: [
       babel({
         plugins: ['babel-plugin-lodash'],

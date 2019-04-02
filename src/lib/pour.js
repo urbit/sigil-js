@@ -13,7 +13,7 @@ const last = arr => arr[arr.length - 1]
 const patpStrToArr = p => p.replace(/[\^~-]/g,'').match(/.{1,3}/g)
 
 
-// generate a seal
+// generate a sigil
 const _pour = ({ patp, renderer, sylgraph, size, colorway, symbols, margin, ignoreColorway }) => {
 
   // if (isUndefined(renderer.svg)) throw new Error('Your renderer must have a `svg` method for pour to call.')
@@ -319,7 +319,6 @@ const applyStyleAttrs = (style, colorway) => {
 
 
 
-// Only apply styling to nodes that have a style meta property
 // Only apply styling to nodes that have a style meta property
 const wash = (node, colorway) => {
   const style = get(node, ['meta', 'style'], false);

@@ -22,7 +22,8 @@ gulp.task('default', function(cb) {
   return rollup({
     input: './src/index.js',
     cache: cache,
-    format: "umd",
+    format: "es",
+    // name: "sigils-js",
     plugins: [
       babel({
         plugins: ['babel-plugin-lodash'],

@@ -6,8 +6,8 @@ const r = p => {
 }
 
 const ReactSVGComponents = {
-  svg:      p => <svg {...p.attr} version={'1.1'} xmlns={'http://www.w3.org/2000/svg'}>{ recurse(p) }</svg>,
-  
+  svg:      p => <svg {...p.attr} version={'1.1'} xmlns={'http://www.w3.org/2000/svg'}>{ r(p) }</svg>,
+
   circle:   p => <circle {...p.attr}>{ r(p) }</circle>,
 
   rect:     p => <rect {...p.attr}>{ r(p) }</rect>,

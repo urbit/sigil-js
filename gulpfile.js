@@ -22,7 +22,7 @@ gulp.task('default', function(cb) {
   return rollup({
     input: './src/index.js',
     cache: cache,
-    format: "es",
+    format: "cjs",
     // name: "sigils-js",
     plugins: [
       babel({

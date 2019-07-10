@@ -61,8 +61,11 @@ Then, `cd` into the repository and run `npm install`.
 
 |Commands              | Description                                   |
 | -------------------- | --------------------------------------------- |
-|`gulp` or `npm run build`| Build the library from source                 |
+|`gulp` or `npm run build`| Build the library from source              |
 
+### Tests
+
+There are no tests currently associated with this repository.
 
 ### Package Dependencies
 There is one dependency: [transformation-matrix](https://www.npmjs.com/package/transformation-matrix)

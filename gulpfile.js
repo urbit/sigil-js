@@ -25,8 +25,6 @@ gulp.task('jsx-transform', function(cb) {
 });
 
 
-<<<<<<< HEAD
-
 gulp.task('js-imports', function(cb) {
   return gulp.src('dist/index.js')
     .pipe(rollup({
@@ -57,59 +55,6 @@ gulp.task('js-imports', function(cb) {
         resolve()
       ]
     }, 'cjs'))
-=======
-gulp.task('default', function(cb) {
-  return rollup({
-    input: './src/index.js',
-    cache: cache,
-    format: "cjs",
-    // name: "sigils-js",
-    plugins: [
-      babel({
-        plugins: ['babel-plugin-lodash'],
-        ignore: ['src/vendor/**', 'node_modules/**']
-      }),
-      commonjs({
-        namedExports: {
-          'node_modules/lodash/lodash.js': [
-            'map',
-            'get',
-            'set',
-            'cloneDeep',
-            'entries',
-            'reduce',
-            'filter',
-            'last',
-            'isString',
-            'flatten',
-            'size',
-            'isUndefined'
-          ],
-          'node_modules/transformation-matrix/build-es/index.js': [
-            'scale',
-            'translate',
-            'transform',
-            'toSVG',
-            'rotateDEG',
-            'scale'
-          ]
-        }
-      }),
-      replace({
-        'process.env.NODE_ENV': JSON.stringify('development')
-      }),
-      rootImport({
-        root: `${__dirname}/src`,
-        useEntry: 'prepend',
-        extensions: '.js'
-      }),
-      json(),
-      builtins(),
-      resolve(),
-      uglify()
-    ]
-  }).on('bundle', function(bundle){ cache = bundle; })
->>>>>>> 130200360170483f233247e8d62cb0b1e0574bb1
     .on('error', function(e){
       console.log(e);
       cb();

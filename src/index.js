@@ -142,7 +142,7 @@ const transformations = (symbols, layout) => {
 //==============================================================================
 // Main function
 //
-const glyph = params => {
+const sigil = params => {
   // Set default values from config
   const colors = params.colors === undefined
     ? ['#fff', '#000']
@@ -211,4 +211,4 @@ const glyph = params => {
 }
 
 
-export default glyph
+export default sigil

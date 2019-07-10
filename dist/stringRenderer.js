@@ -1,10 +1,16 @@
-import { get } from 'lodash'
+
+const get = (object, path, fallback) => {
+  if  (object[path] === undefined) return fallback
+  return object[path]
+}
 
 
 // converts object to XML attr string
-const p2s = o => {
-  if (o !== undefined) {
-    return Object.entries(o).reduce((a, [k, v]) => `${a}${c2k(k)}='${v}' `, '')
+const p2s = object => {
+  if (object !== undefined) {
+    return Object
+      .entries(object)
+      .reduce((a, [k, v]) => `${a}${c2k(k)}='${v}' `, '')
   }
   return
 }
@@ -17,14 +23,13 @@ const c2k = str => str
   .replace(/([A-Z])/g, ([letter]) => `-${letter.toLowerCase()}`)
 
 
-
 const r = p => {
-  return get(p, 'children', []).reduce((a, c) => `${a} ${PlainSVGStringRenderer[c.tag](c)}`, '');
+  const children = get(p, 'children', [])
+  return children.reduce((a, c) => `${a} ${stringRenderer[c.tag](c)}`, '');
 }
 
 
-
-const PlainSVGStringRenderer = {
+const stringRenderer = {
   svg:        p => `<svg ${p2s(p.attr)} version='1.1' xmlns='http://www.w3.org/2000/svg'>${r(p)}</svg>`,
 
   circle:     p => `<circle ${p2s(p.attr)}>${r(p)}</circle>`,
@@ -40,6 +45,8 @@ const PlainSVGStringRenderer = {
   line:       p => `<line ${p2s(p.attr)}>${r(p)}</line>`,
 
   polyline:   p => `<polyline ${p2s(p.attr)}>${r(p)}</polyline>`,
+
+  'clip-path':   p => `<clip-path ${p2s(p.attr)}>${r(p)}</clip-path>`,
 }
 
-export default PlainSVGStringRenderer
+export default stringRenderer

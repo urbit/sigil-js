@@ -7,6 +7,10 @@ import {
   fromString,
   identity
 } from 'transformation-matrix';
+
+import stringRenderer from 'stringRenderer'
+import reactRenderer  from 'reactRenderer'
+
 import index from './index.json'
 
 const UNIT = 128
@@ -211,4 +215,8 @@ const sigil = params => {
 }
 
 
-export default sigil
+export {
+  sigil,
+  stringRenderer,
+  reactRenderer,
+}

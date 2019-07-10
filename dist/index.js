@@ -1,5 +1,12 @@
 'use strict';
 
+Object.defineProperty(exports, '__esModule', { value: true });
+
+function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
+
+var stringRenderer = _interopDefault(require('stringRenderer'));
+var reactRenderer = _interopDefault(require('reactRenderer'));
+
 /**
  * @ignore
  * @type {RegExp}
@@ -1313,7 +1320,7 @@ const transformations = (symbols, layout) => {
 //==============================================================================
 // Main function
 //
-const glyph = params => {
+const sigil = params => {
   // Set default values from config
   const colors = params.colors === undefined
     ? ['#fff', '#000']
@@ -1381,4 +1388,6 @@ const glyph = params => {
 
 };
 
-module.exports = glyph;
+exports.stringRenderer = stringRenderer;
+exports.reactRenderer = reactRenderer;
+exports.sigil = sigil;

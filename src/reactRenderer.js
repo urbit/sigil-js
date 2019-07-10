@@ -1,6 +1,6 @@
 import React from 'react'
 
-const ReactSVGRenderer = node => {
+const reactRenderer = node => {
   return (
     React.createElement(
       node.name,
@@ -10,4 +10,4 @@ const ReactSVGRenderer = node => {
   )
 }
 
-export default ReactSVGRenderer;
+export default reactRenderer;

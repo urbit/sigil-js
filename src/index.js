@@ -8,8 +8,8 @@ import {
   identity
 } from 'transformation-matrix';
 
-import stringRenderer from 'stringRenderer'
-import reactRenderer  from 'reactRenderer'
+import stringRenderer from './stringRenderer'
+import reactRenderer from './reactRenderer'
 
 import index from './index.json'
 
@@ -18,6 +18,9 @@ const UNIT_CENTER = UNIT / 2
 const MARGIN_RATIO = 0.1
 const FG = 1
 const BG = 0
+
+class ConfigError extends Error {}
+
 
 // apply color preference
 const paint = (node, colors, strokeWidth) => {
@@ -70,29 +73,42 @@ const grid = ( length, margin, size, strokeWidth ) => {
     sw: strokeWidth,
   };
 
-  const layoutTypes = number => {
+  let resultGrid = []
 
-    switch(length) {
-      case 4: return [
-        { x: d1(p), y: d1(p) },
-        { x: d2(p), y: d1(p) },
-        { x: d1(p), y: d2(p) },
-        { x: d2(p), y: d2(p) },
-      ]
-      case 2: return [
-        { x: d1(p), y: dc(p) },
-        { x: d2(p), y: dc(p) },
-      ]
-      default: return [
-        { x: dc(p), y: dc(p) },
-      ]
-    }
+  if (length === 16) {
+
+  }
+
+  if (length === 8) {
+
+  }
+
+  if (length === 4) {
+    resultGrid = [
+      { x: d1(p), y: d1(p) },
+      { x: d2(p), y: d1(p) },
+      { x: d1(p), y: d2(p) },
+      { x: d2(p), y: d2(p) },
+    ]
+  }
+
+  if (length === 2) {
+    resultGrid = [
+      { x: d1(p), y: dc(p) },
+      { x: d2(p), y: dc(p) },
+    ]
+  }
+
+  if (length === 1) {
+    resultGrid = [
+      { x: dc(p), y: dc(p) },
+    ]
   }
 
   return {
     ...p,
     scale: p.ss / UNIT,
-    grid: layoutTypes(length),
+    grid: resultGrid,
   };
 };
 
@@ -152,6 +168,10 @@ const sigil = params => {
     ? ['#fff', '#000']
     : params.colors
 
+  const attributes = params.attributes === undefined
+    ? {}
+    : params.attributes
+
 
   const margin = params.margin === undefined
     ? MARGIN_RATIO * params.size
@@ -164,6 +184,10 @@ const sigil = params => {
 
   // get phonemes as array from patp input
   const phonemes = params.patp.replace(/[\^~-]/g,'').match(/.{1,3}/g)
+
+  if (phonemes.length !== 1 && phonemes.length !== 2 && phonemes.length !== 4) {
+    throw new ConfigError(`sigil.js cannot render @P of length ${phonemes.length}. Only lengths of 1 (galaxy), 2 (star), and 4 (planet) are supported at this time.`)
+  }
 
   // get symbols and clone them.
   const symbols = phonemes.map(phoneme => {
@@ -182,13 +206,18 @@ const sigil = params => {
     attributes: {
       style: {
         // prevent bottom margin on svg tag
+        width: '100%',
+        height: '100%',
         display: 'block'
       },
       viewBox:`0 0 ${params.size} ${params.size}`,
+      preserveAspectRatio: "xMidYMid meet",
       width: `${params.size}px`,
       height: `${params.size}px`,
+      version:'1.1',
       xmlns:"http://www.w3.org/2000/svg",
       className: params.className,
+      ...attributes,
     },
     children: [
       {

@@ -5,7 +5,7 @@ const reactRenderer = node => {
     React.createElement(
       node.name,
       node.attributes,
-      node.children.map(child => reactRenderer(child))
+      node.children.map(child => ReactSVGRenderer(child))
     )
   )
 }

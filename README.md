@@ -4,7 +4,7 @@
 
 ## Overview
 
-In production, this repo is a library that expose `pour()` is a function that generates an object representation of an SVG seal. The library requires a 2nd function called a renderer, which takes the output of `pour()` and translates it into DOM nodes. See ./docs/renderExamples for a few ways to do this.
+In production, this repo is a library that expose `sigil()` is a function that generates an object representation of an SVG seal. The library requires a 2nd function called a renderer, which takes the output of `sigil()` and translates it into DOM nodes. See ./docs/renderExamples for a few ways to do this.
 
 ## Build
 
@@ -14,9 +14,7 @@ In production, this repo is a library that expose `pour()` is a function that ge
 |`npm run test`| Runs a basic test                 |
 
 
-![how this works diagram](https://github.com/urbit/sigil-js/blob/master/docs/high-level-flow.png?raw=true)
-
-## `Pour()`
+## `Sigil()`
 
 ### Params
 
@@ -30,7 +28,7 @@ In production, this repo is a library that expose `pour()` is a function that ge
 
 ## Using this Lib
 
-### Building the `pour()` lib
+### Building the `sigil()` lib
 
  1. install deps: `npm install --save`
  2. run `npm run build` or `gulp`

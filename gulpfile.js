@@ -1,90 +1,103 @@
-var gulp = require('gulp');
-var cssimport = require('gulp-cssimport');
-var cssnano = require('gulp-cssnano');
-var rollup = require('gulp-better-rollup');
-var sucrase = require('@sucrase/gulp-plugin');
-var minify = require('gulp-minify');
+// Gulp plugins
+var gulp = require("gulp");
+var rollup = require("gulp-better-rollup");
+var minify = require("gulp-minify");
+var sucrase = require("@sucrase/gulp-plugin");
+var rename = require("gulp-rename");
 var exec = require('child_process').exec;
+var gzip = require('gulp-gzip')
+// Rollup plugins
+var resolve = require("rollup-plugin-node-resolve");
+var commonjs = require("rollup-plugin-commonjs");
+var replace = require("rollup-plugin-replace");
+var json = require("rollup-plugin-json");
+var builtins = require("rollup-plugin-node-builtins");
+var rootImport = require("rollup-plugin-root-import");
+var globals = require("rollup-plugin-node-globals");
 
-var resolve = require('rollup-plugin-node-resolve');
-var commonjs = require('rollup-plugin-commonjs');
-var replace = require('rollup-plugin-replace');
-var json = require('rollup-plugin-json');
-var builtins = require('rollup-plugin-node-builtins');
-var rootImport = require('rollup-plugin-root-import');
-var globals = require('rollup-plugin-node-globals');
-var server = require("gulp-server-livereload");
+// Package.json
+var pkg = require("./package.json");
+
+const plugins = {
+  // gulp
+  minify: minify,
+  sucrase: sucrase,
+  rename: rename,
+  // rollup
+  rollup: rollup,
+  resolve: resolve,
+  commonjs: commonjs,
+  replace: replace,
+  json: json,
+  builtins: builtins,
+  rootImport: rootImport,
+  globals: globals,
+  exec: exec,
+};
+
+function getTask(task, src, dest, pkg) {
+  return require("./gulp/" + task)(gulp, plugins, src, dest);
+}
 
 
-gulp.task('jsx-transform', function(cb) {
-  return gulp.src('src/**/*.js')
-    .pipe(sucrase({
-      transforms: ['js']
-    }))
-    .pipe(gulp.dest('dist'));
-});
+var PATHS = {
+  src: "./src",
+  dist: "./dist",
+};
 
 
-gulp.task('js-imports', function(cb) {
-  return gulp.src('dist/index.js')
-    .pipe(rollup({
-      plugins: [
-        commonjs({
-          namedExports: {
-            'node_modules/transformation-matrix/build-commonjs/index.js': [
-              'scale',
-              'translate',
-              'transform',
-              'toSVG',
-              'fromString',
-              'identity',
-            ]
-          }
-        }),
-        replace({
-          'process.env.NODE_ENV': JSON.stringify('development')
-        }),
-        rootImport({
-          root: `${__dirname}/dist`,
-          useEntry: 'prepend',
-          extensions: ['.js']
-        }),
-        json(),
-        globals(),
-        builtins(),
-        resolve()
-      ]
-    }, 'cjs'))
-    .on('error', function(e){
-      console.log(e);
-      cb();
-    })
-    .pipe(gulp.dest('./dist/'))
-    .on('end', cb);
-});
+gulp.task(
+  "transpile",
+  getTask(
+    "js_sucrase",
+    `${PATHS.src}/*.js`,
+    `${PATHS.dist}`
+  )
+);
+
+
+gulp.task(
+  "bundle-cjs",
+  getTask(
+    "js_bundle_cjs",
+    `${PATHS.dist}/index.js`,
+    `${PATHS.dist}`,
+  )
+);
+
 
 gulp.task('copy-json', function () {
   return gulp
-  .src('src/index.json')
-  .pipe(gulp.dest('./dist/'))})
-
-gulp.task('js-minify', function () {
-  return gulp.src('./dist/index.js')
-    .pipe(minify())
-    .pipe(gulp.dest('./dist/'));
-});
-
-gulp.task('js-cachebust', function(cb) {
-  return Promise.resolve(
-    exec('git log', function (err, stdout, stderr) {
-      let firstLine = stdout.split("\n")[0];
-      let commitHash = firstLine.split(' ')[1].substr(0, 10);
-      let newFilename = "index-" + commitHash + "-min.js";
-
-      exec('mv ./dist/index-min.js ./dist/' + newFilename);
-    })
-  );
+    .src(`${PATHS.src}/index.json`)
+    .pipe(gulp.dest(`${PATHS.dist}`))
 })
 
 
-gulp.task('default', gulp.series('copy-json', 'jsx-transform', 'js-imports', 'js-minify', 'js-cachebust'))
+gulp.task(
+  "minify",
+  getTask(
+    "js_minify",
+    `${PATHS.dist}/index.js`,
+    `${PATHS.dist}`,
+  )
+);
+
+
+gulp.task('gzip', function () {
+  return gulp
+    .src(`${PATHS.dist}/index-min.js`)
+    .pipe(gzip())
+    .pipe(gulp.dest(`${PATHS.dist}`));
+});
+
+
+gulp.task(
+  'default',
+  gulp.series(
+    'copy-json',
+    'transpile',
+    'bundle-cjs',
+    'minify',
+    'gzip'
+  )
+)

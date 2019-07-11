@@ -163,6 +163,7 @@ const transformations = (symbols, layout) => {
 // Main function
 //
 const sigil = params => {
+
   // Set default values from config
   const colors = params.colors === undefined
     ? ['#fff', '#000']
@@ -182,16 +183,31 @@ const sigil = params => {
     ? 1
     : proportionFunction(params.size)
 
+  params.class = params.class === undefined
+    ? ''
+    : params.class
+
   // get phonemes as array from patp input
   const phonemes = params.patp.replace(/[\^~-]/g,'').match(/.{1,3}/g)
+  //
+  // const pass = phonemes.filter(p => phonemes.includes(p) === false)
+
+  // console.log(pass)
+
+  // if (pass.length !== 0) throw new ConfigError(`patp is invalid`)
 
   if (phonemes.length !== 1 && phonemes.length !== 2 && phonemes.length !== 4) {
-    throw new ConfigError(`sigil.js cannot render @P of length ${phonemes.length}. Only lengths of 1 (galaxy), 2 (star), and 4 (planet) are supported at this time.`)
+    throw new ConfigError(`sigil.js cannot render @p of length ${phonemes.length}. Only lengths of 1 (galaxy), 2 (star), and 4 (planet) are supported at this time.`)
   }
 
   // get symbols and clone them.
   const symbols = phonemes.map(phoneme => {
-    return JSON.parse(JSON.stringify(index[phoneme]))
+    const ast = index[phoneme]
+    if (ast !== undefined) {
+      return JSON.parse(JSON.stringify(ast))
+    } else {
+      throw new ConfigError(`@p is invalid. Recieved '${params.patp}'`)
+    }
   })
 
   // make a layout object for the transformations function
@@ -205,25 +221,21 @@ const sigil = params => {
     name: 'svg',
     attributes: {
       style: {
+        width: `${params.size}px`,
+        height: `${params.size}px`,
         // prevent bottom margin on svg tag
-        width: '100%',
-        height: '100%',
         display: 'block'
       },
       viewBox:`0 0 ${params.size} ${params.size}`,
-      preserveAspectRatio: "xMidYMid meet",
-      width: `${params.size}px`,
-      height: `${params.size}px`,
       version:'1.1',
       xmlns:"http://www.w3.org/2000/svg",
-      className: params.className,
+      class: params.class,
       ...attributes,
     },
     children: [
       {
         name: 'rect',
         attributes: {
-          // 'shape-rendering':'crispEdges',
           fill: BG,
           width: `${params.size}px`,
           height: `${params.size}px`,
@@ -237,9 +249,11 @@ const sigil = params => {
   }
 
   // apply color
-  const withColor = paint(wrapped, colors, strokeWidth)
+  const resultAST = paint(wrapped, colors, strokeWidth)
 
-  return params.renderer(withColor)
+  return params.renderer === undefined
+    ? resultAST
+    : params.renderer(resultAST)
 
 }
 

@@ -21,3 +21,8 @@ test('Planet works', () => {
   config.patp = 'littel-ponnys'
   expect(() => { sigil(config) }).not.toThrow()
 })
+
+test('Invalid name is invalidated', () => {
+  config.patp = 'and'
+  expect(() => { sigil(config) }).toThrow()
+})

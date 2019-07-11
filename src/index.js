@@ -166,7 +166,7 @@ const sigil = params => {
 
   // Set default values from config
   const colors = params.colors === undefined
-    ? ['#fff', '#000']
+    ? ['#000', '#fff']
     : params.colors
 
   const attributes = params.attributes === undefined
@@ -179,16 +179,20 @@ const sigil = params => {
     // 2 is added to offset center stroke alignment
     : params.margin + 2
 
-  const strokeWidth = params.iconMode === true
-    ? 1
-    : proportionFunction(params.size)
+  const strokeWidth = proportionFunction(params.size)
 
   params.class = params.class === undefined
     ? ''
     : params.class
 
   // get phonemes as array from patp input
-  const phonemes = params.patp.replace(/[\^~-]/g,'').match(/.{1,3}/g)
+  let phonemes = params.patp.replace(/[\^~-]/g,'').match(/.{1,3}/g)
+
+  if (iconMode === true) {
+    phonemes = phonemes[0]
+  }
+
+
   //
   // const pass = phonemes.filter(p => phonemes.includes(p) === false)
 
@@ -199,6 +203,7 @@ const sigil = params => {
   if (phonemes.length !== 1 && phonemes.length !== 2 && phonemes.length !== 4) {
     throw new ConfigError(`sigil.js cannot render @p of length ${phonemes.length}. Only lengths of 1 (galaxy), 2 (star), and 4 (planet) are supported at this time.`)
   }
+
 
   // get symbols and clone them.
   const symbols = phonemes.map(phoneme => {

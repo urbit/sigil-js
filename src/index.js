@@ -188,8 +188,8 @@ const sigil = params => {
   // get phonemes as array from patp input
   let phonemes = params.patp.replace(/[\^~-]/g,'').match(/.{1,3}/g)
 
-  if (iconMode === true) {
-    phonemes = phonemes[0]
+  if (params.iconMode === true) {
+    phonemes = [phonemes[0]]
   }
 
 

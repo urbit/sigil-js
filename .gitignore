@@ -9,6 +9,7 @@
 # production
 /build
 /assets/*/*
+/bin/*/*
 */dist
 */bin
 

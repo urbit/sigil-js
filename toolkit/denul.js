@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const { PATHS, EXT } = require('../constants')
+const { PATHS, EXT } = require('./constants')
 const INPUT_PATH = PATHS.svg
 
 // Figma refuses to export a file named 'nul', because of filesystem constraints on Windows machines. This script shims this behavior.

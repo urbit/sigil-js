@@ -6,6 +6,7 @@
     "@babel/preset-env": "^7.5.4",
     "@sucrase/gulp-plugin": "^2.0.0",
     "convert-svg-to-png": "^0.5.0",
+    "del": "^5.0.0",
     "figma-js": "^1.7.0",
     "gulp": "^4.0.0",
     "gulp-better-rollup": "^4.0.1",
@@ -45,13 +46,14 @@
     "test": "jest",
     "index-test": "run-s denul build-index phonemes",
     "image-test": "run-s denul prep png dupes",
-    "prep": "node toolkit/scripts/prep.js",
-    "png": "node toolkit/scripts/png.js",
-    "dupes": "node toolkit/test/dupes.js",
-    "compare": "node toolkit/test/compare.js",
-    "denul": "node toolkit/scripts/denul.js",
-    "phonemes": "node toolkit/test/phonemes.js",
-    "figma": "node toolkit/test/figma.js",
-    "build-index": "node toolkit/scripts/build-index.js"
+    "prep": "node toolkit/prep.js",
+    "png": "node toolkit/png.js",
+    "dupes": "node toolkit/dupes.js",
+    "compare": "node toolkit/compare.js",
+    "denul": "node toolkit/denul.js",
+    "phonemes": "node toolkit/phonemes.js",
+    "figma": "node toolkit/figma.js",
+    "build-index": "node toolkit/build-index.js",
+    "removeContentSyncTest": "node toolkit/removeContentSyncTest.js"
   }
 }

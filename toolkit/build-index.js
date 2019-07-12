@@ -1,7 +1,9 @@
 const fs = require('fs');
 const path = require('path');
 const svgson = require('svgson')
-const { PATHS, EXT } = require('../constants')
+const del = require('del')
+
+const { PATHS, EXT } = require('./constants')
 
 const INPUT_PATH = PATHS.svg
 const OUTPUT_PATH = PATHS.lib
@@ -187,9 +189,11 @@ const ast = fs
     return acc;
 }, {});
 
+// clear the existing index
+del.sync(OUTPUT_PATH + 'index.json')
 
 fs.writeFile(
-  OUTPUT_PATH + '/' + 'index.json',
+  OUTPUT_PATH + 'index.json',
   JSON.stringify(ast, null, 2),
   (err) => {
     if (err) console.log(err)

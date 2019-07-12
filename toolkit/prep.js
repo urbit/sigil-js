@@ -2,8 +2,9 @@ const fs = require('fs');
 const svgson = require('svgson')
 const path = require('path')
 
-const { PATHS, EXT } = require('../constants')
-const { removeContentSync } = require('../helpers')
+const del = require('del');
+
+const { PATHS, EXT } = require('./constants')
 
 // This script modifies strokeWidth of SVGs to make image testing faster and easier by enabling smaller PNGs.
 
@@ -11,7 +12,7 @@ const INPUT_PATH = PATHS.svg
 const OUTPUT_PATH = PATHS.svgSmall
 
 // delete existing files
-removeContentSync(OUTPUT_PATH)
+del.sync(OUTPUT_PATH)
 
 // Recurses through AST
 const process = node => {

@@ -1,11 +1,11 @@
 const fs = require('fs');
 const util = require('util');
 const path = require('path');
-const sharp = require('sharp')
-// const { convertFile, createConverter } = require('convert-svg-to-png')
+const sharp = require('sharp');
+const del = require('del');
 
-const { PATHS, EXT } = require('../constants')
-const {removeContentSync} = require('../helpers')
+const { removeContentSync } = require('./helpers')
+const { PATHS, EXT } = require('./constants')
 
 const INPUT_PATH = PATHS.svgSmall
 const OUTPUT_PATH = PATHS.pngSmall
@@ -13,7 +13,8 @@ const OUTPUT_PATH = PATHS.pngSmall
 const SIZE = 64
 
 // delete existing files
-removeContentSync(OUTPUT_PATH)
+del.sync(OUTPUT_PATH)
+fs.mkdirSync(OUTPUT_PATH);
 
 const convertSvgFiles = (inputPath, outputPath, size) => {
 

@@ -71,11 +71,11 @@ gulp.task(
 );
 
 
-// gulp.task('copy-json', function () {
-//   return gulp
-//     .src(`${PATHS.src}/index.json`)
-//     .pipe(gulp.dest(`${PATHS.dist}`))
-// })
+gulp.task('copy-json', function () {
+  return gulp
+    .src(`${PATHS.src}/index.json`)
+    .pipe(gulp.dest(`${PATHS.dist}`))
+})
 
 
 gulp.task(
@@ -99,7 +99,7 @@ gulp.task('gzip', function () {
 gulp.task(
   'default',
   gulp.series(
-    // 'copy-json',
+    'copy-json',
     'transpile',
     'bundle-cjs',
     'minify',

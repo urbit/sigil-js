@@ -91,7 +91,7 @@ Then, `cd` into the repository and run `npm install`.
 
 ### Toolkit
 
-The toolkit is comprised of helper node scripts, test scripts and a preview webapp. Despite the mystery, there actually isn't much to see here. It will remain undocumented for now.
+The toolkit is comprised of helper node scripts, test scripts and a preview webapp. Despite the mystery, there actually isn't much to see here. It will remain undocumented for the time being.
 
 ### Package Dependencies
 There is one dependency: [transformation-matrix](https://www.npmjs.com/package/transformation-matrix)

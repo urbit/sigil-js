@@ -1,5 +1,5 @@
 const fs = require('fs');
-const { PATHS, EXT } = require('../constants')
+const { PATHS, EXT } = require('./constants')
 
 const INPUT_PATH = PATHS.lib
 

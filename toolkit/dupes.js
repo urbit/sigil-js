@@ -4,8 +4,8 @@ const path = require('path');
 const sharp = require('sharp');
 const PNG = require('pngjs').PNG
 const pixelmatch = require('pixelmatch')
-const { removeContentSync } = require('../helpers')
-const { PATHS, EXT } = require('../constants')
+const { removeContentSync } = require('./helpers')
+const { PATHS, EXT } = require('./constants')
 
 const INPUT_PATH = PATHS.pngSmall
 const OUTPUT_PATH = PATHS.diff

@@ -27,8 +27,6 @@ const Sigil = props => {
     </div>
   )
 }
-
-
  ```
 
 ### Node
@@ -90,6 +88,10 @@ Then, `cd` into the repository and run `npm install`.
 ### Tests
 
 `npm run test`
+
+### Toolkit
+
+The toolkit is comprised of helper node scripts, test scripts and a preview webapp. Despite the mystery, there actually isn't much to see here. It will remain undocumented for now.
 
 ### Package Dependencies
 There is one dependency: [transformation-matrix](https://www.npmjs.com/package/transformation-matrix)

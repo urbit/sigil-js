@@ -171,7 +171,7 @@ gulp.task("site-webserver", function() {
 });
 
 gulp.task(
-  "site",
+  "preview",
   gulp.series(
     gulp.series("site-react", "site-css", "copy-site-assets", "copy-site-html"),
     gulp.parallel(

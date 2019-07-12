@@ -8,8 +8,9 @@
 
 # production
 /build
-/assets/*
+/assets/*/*
 */dist
+*/bin
 
 # misc
 .DS_Store

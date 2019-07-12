@@ -9,6 +9,7 @@
 # production
 /build
 /assets/*
+*/dist
 
 # misc
 .DS_Store

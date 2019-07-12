@@ -1,0 +1,72 @@
+@import "indigo.css";
+
+html {
+  overflow: overlay;
+}
+
+/* h1, h2 {
+  color: #7f7f7f;
+} */
+
+::-webkit-scrollbar {
+  width: 16px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  box-shadow: inset 0 0 10px 10px rgba(0, 0, 0, 0.5);
+  border: 4px solid transparent;
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  box-shadow: inset 0 0 10px 10px rgba(0, 0, 0, 0.7);
+}
+
+.mw100vw {
+  /* width: 100%; */
+  max-width: 100vw;
+}
+
+.mw1024 {
+  max-width: 1024px;
+}
+
+.grid12 {
+  width: 100%;
+  max-width: 1024px;
+  column-gap: 32px;
+}
+
+/* .half-1 {
+  grid-area: 1 / 1 / 2 / 7;
+}
+
+.half-2 {
+  grid-area: 1 / 7 / 2 / 13;
+}
+
+.fourth-1 {
+  grid-area: 1 / 1 / 2 / 4;
+}
+
+.fourth-2 {
+  grid-area: 1 / 4 / 2 / 7;
+}
+
+.fourth-3 {
+  grid-area: 1 / 7 / 2 / 10;
+}
+
+.fourth-4 {
+  grid-area: 1 / 10 / 2 / 13;
+} */
+/* .grid-auto {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 160px));
+  grid-template-rows: auto;
+  grid-gap: 32px;
+} */

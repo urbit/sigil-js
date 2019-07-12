@@ -4,13 +4,14 @@ module.exports = function (gulp, plugins, src, dest) {
       .src(src)
       .pipe(plugins.rollup({
         plugins: [
-          plugins.json({
-            preferConst: true,
-          }),
           plugins.commonjs({
-            exclude: ['index.json'],
+            // exclude: ['index.json'],
             namedExports: {
-              'node_modules/react/index.js': [ 'Component' ]
+              'node_modules/react/index.js': [ 'Component' ],
+              'node_modules/urbit-ob/dist/index.js': [
+                'tierOfadd',
+                'patp'
+              ]
             }
           }),
           plugins.replace({
@@ -21,11 +22,12 @@ module.exports = function (gulp, plugins, src, dest) {
             useEntry: 'prepend',
             extensions: ['.js']
           }),
-          // plugins.globals(),
-          // plugins.builtins(),
-          plugins.resolve({
-            extensions: ['.js', '.json'],
+          plugins.json({
+            preferConst: true,
           }),
+          plugins.globals(),
+          plugins.builtins(),
+          plugins.resolve(),
         ]
       }, 'cjs'))
       .on('error', function(e){

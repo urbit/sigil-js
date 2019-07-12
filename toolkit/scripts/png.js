@@ -15,9 +15,10 @@ const SIZE = 64
 // delete existing files
 removeContentSync(OUTPUT_PATH)
 
-const convertSvgFiles = (inputPath, outputPath) => {
+const convertSvgFiles = (inputPath, outputPath, size) => {
 
-  const promises = fs.readdirSync(INPUT_PATH)
+  const promises = fs
+    .readdirSync(INPUT_PATH)
     .filter(filename => path.extname(filename).toLowerCase() === EXT.svg)
     .map((f, idx) => {
 
@@ -26,7 +27,7 @@ const convertSvgFiles = (inputPath, outputPath) => {
 
       const fileName = path.basename(f, EXT.svg);
       return sharp(INPUT_PATH + f)
-        .resize(SIZE)
+        .resize(size)
         .png()
         .toFile(OUTPUT_PATH + fileName + EXT.png, err => {
           if (err) console.log(err)
@@ -39,4 +40,4 @@ const convertSvgFiles = (inputPath, outputPath) => {
 }
 
 
-convertSvgFiles(INPUT_PATH, OUTPUT_PATH)
+convertSvgFiles(INPUT_PATH, OUTPUT_PATH, SIZE)

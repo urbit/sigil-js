@@ -48,6 +48,7 @@
     "prep": "node toolkit/scripts/prep.js",
     "png": "node toolkit/scripts/png.js",
     "dupes": "node toolkit/test/dupes.js",
+    "compare": "node toolkit/test/compare.js",
     "denul": "node toolkit/scripts/denul.js",
     "phonemes": "node toolkit/test/phonemes.js",
     "figma": "node toolkit/test/figma.js",

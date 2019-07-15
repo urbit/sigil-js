@@ -23,7 +23,7 @@ del.sync([PATHS.pngOld + '/*.png', `!${PATHS.pngOld}`]);
 del.sync([PATHS.pngNew + '/*.png', `!${PATHS.pngNew}`]);
 del.sync([PATHS.comp + '/*.png', `!${PATHS.comp}`]);
 
-let log ={
+let log = {
 
 }
 
@@ -120,6 +120,10 @@ const newPromises = fs
         SIZE,
         { threshold: 0.1, includeAA: true }
       );
+
+      log[ph] = {
+
+      }
 
       csv = `${csv}\n${ph},${numDiffPixels}`
 

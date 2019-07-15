@@ -1,8 +1,9 @@
+require('dotenv').config()
 const Figma = require('figma-js')
 
 const DOC_REF = 'fkE0F4vb1Wf28MSGeFCFRar3'
 const PAGE = 'V1.1'
-const TOKEN = '1952-9da74b1b-551c-4acf-83b4-23b31743ab51'
+const TOKEN = process.env.FIGMA_API_TOKEN
 
 const figma = Figma.Client({ personalAccessToken: TOKEN })
 

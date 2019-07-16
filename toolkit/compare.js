@@ -17,6 +17,7 @@ const SIZE = 400
 
 del.sync([PATHS.pngComp + '/*.png', `!${PATHS.pngComp}`]);
 del.sync([PATHS.comp + '/*.png', `!${PATHS.comp}`]);
+del.sync([PATHS.allComp + '/*.png', `!${PATHS.allComp}`]);
 
 let json = {
 
@@ -152,7 +153,7 @@ const newPromises = fs
           { input: `${PATHS.pngComp}${ph}-diff${EXT.png}`, gravity: 'northwest' },
         ])
         // .png()
-        .toFile(PATHS.allComp + ph + '-all' + EXT.png)
+        .toFile(PATHS.allComp + ph + EXT.png)
 
     })
 

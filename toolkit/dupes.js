@@ -2,6 +2,7 @@ const fs = require('fs');
 const util = require('util');
 const path = require('path');
 const sharp = require('sharp');
+const del = require('del')
 const PNG = require('pngjs').PNG
 const pixelmatch = require('pixelmatch')
 const { removeContentSync } = require('./helpers')
@@ -9,10 +10,10 @@ const { PATHS, EXT } = require('./constants')
 
 const INPUT_PATH = PATHS.pngSmall
 const OUTPUT_PATH = PATHS.diff
-const MAX_SCORE = 4
+const MAX_SCORE = 32
 const SIZE = 64
 
-removeContentSync(OUTPUT_PATH)
+del.sync([OUTPUT_PATH + '/*.png', `!${OUTPUT_PATH}`]);
 
 const pngs = fs
   .readdirSync(INPUT_PATH)

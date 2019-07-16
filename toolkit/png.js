@@ -4,7 +4,6 @@ const path = require('path');
 const sharp = require('sharp');
 const del = require('del');
 
-const { removeContentSync } = require('./helpers')
 const { PATHS, EXT } = require('./constants')
 
 const INPUT_PATH = PATHS.svgSmall
@@ -13,8 +12,8 @@ const OUTPUT_PATH = PATHS.pngSmall
 const SIZE = 64
 
 // delete existing files
-del.sync(OUTPUT_PATH)
-fs.mkdirSync(OUTPUT_PATH);
+del.sync([OUTPUT_PATH + '/*.png', `!${OUTPUT_PATH}`]);
+
 
 const convertSvgFiles = (inputPath, outputPath, size) => {
 

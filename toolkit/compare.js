@@ -15,15 +15,10 @@ const SIZE = 400
 // const INPUT_PATH_OLD = PATH.
 // const INPUT_PATH_NEW =
 
-const pngOld = __dirname + '/../bin/pngOld/'
-const pngNew = __dirname + '/../bin/pngNew/'
-const comp = __dirname + '/../bin/comp/'
-
-del.sync([PATHS.pngOld + '/*.png', `!${PATHS.pngOld}`]);
-del.sync([PATHS.pngNew + '/*.png', `!${PATHS.pngNew}`]);
+del.sync([PATHS.pngComp + '/*.png', `!${PATHS.pngComp}`]);
 del.sync([PATHS.comp + '/*.png', `!${PATHS.comp}`]);
 
-let log = {
+let json = {
 
 }
 
@@ -49,7 +44,7 @@ const oldPromises = fs
     return sharp(Buffer.from(s))
       .resize(SIZE)
       .png()
-      .toFile(PATHS.pngOld + p + EXT.png)
+      .toFile(PATHS.pngComp + p + '-old' + EXT.png)
       // .then(info => { console.log(info) })
       // .catch(err => { console.error(err) });
   })
@@ -71,13 +66,12 @@ const newPromises = fs
     p: p,
   }))
   .map(({ s, p }, idx) => {
-    console.log(s)
     process.stdout.write(`${p}: new`)
     process.stdout.write('\033[0G');
     return sharp(Buffer.from(s))
       .resize(SIZE)
       .png()
-      .toFile(PATHS.pngNew + p + EXT.png)
+      .toFile(PATHS.pngComp + p + '-new' + EXT.png)
       // .then(info => { console.log(info) })
       // .catch(err => { console.error(err) });
   })
@@ -89,6 +83,7 @@ const newPromises = fs
   var nData = null
   var oData = null
   var diff = new PNG({ width: SIZE, height: SIZE });
+  // var out = new PNG({ width: SIZE*3, height: SIZE });
   var numDiffPixels = null
 
   process.stdout.write(`resolving...`)
@@ -97,14 +92,14 @@ const newPromises = fs
   Promise.all([...oldPromises, ...newPromises])
   .then(() => {
     // filenames should be the same between old and new
-    const filenames = fs
+    const compositePromises = fs
       .readdirSync(PATHS.svg)
       .filter(f => path.extname(f).toLowerCase() === EXT.svg)
       .map(f => path.basename(f, EXT.svg))
-      .forEach(ph => {
+      .map(ph => {
       // png = filenames[i]
-      n = PATHS.pngNew + ph + EXT.png
-      o = PATHS.pngOld + ph + EXT.png
+      n = PATHS.pngComp + ph + '-new' + EXT.png
+      o = PATHS.pngComp + ph + '-old' + EXT.png
 
       process.stdout.write(`${ph}: compare`)
       process.stdout.write('\033[0G');
@@ -121,21 +116,50 @@ const newPromises = fs
         { threshold: 0.1, includeAA: true }
       );
 
-      log[ph] = {
-
+      json[ph] = {
+        phoneme: ph,
+        diffPx: numDiffPixels,
       }
 
       csv = `${csv}\n${ph},${numDiffPixels}`
 
 
+
+
+
+
       fs.writeFileSync(
-        `${PATHS.comp}${ph}:${numDiffPixels}${EXT.png}`,
+        `${PATHS.comp}${numDiffPixels}-${ph}-diff${EXT.png}`,
         PNG.sync.write(diff)
       );
 
+      fs.writeFileSync(
+        `${PATHS.pngComp}${ph}-diff${EXT.png}`,
+        PNG.sync.write(diff)
+      );
+
+      return sharp({
+          create: {
+            width: SIZE*3,
+            height: SIZE,
+            channels: 4,
+            background: { r: 0, g: 0, b: 0, alpha: 1 }
+          }
+        })
+        .composite([
+          { input: `${PATHS.pngComp}${ph}-old${EXT.png}`, gravity: 'northeast' },
+          { input: `${PATHS.pngComp}${ph}-new${EXT.png}`, gravity: 'centre' },
+          { input: `${PATHS.pngComp}${ph}-diff${EXT.png}`, gravity: 'northwest' },
+        ])
+        // .png()
+        .toFile(PATHS.allComp + ph + '-all' + EXT.png)
+
     })
 
+    Promise.all(compositePromises).then(() => {}).catch(e => console.log(e))
+
     fs.writeFileSync(`${PATHS.logs}log.csv`, csv)
+    fs.writeFileSync(`${PATHS.logs}log.json`, JSON.stringify(json))
 
   })
   .catch(e => console.log(e))

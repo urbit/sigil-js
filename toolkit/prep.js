@@ -12,7 +12,7 @@ const INPUT_PATH = PATHS.svg
 const OUTPUT_PATH = PATHS.svgSmall
 
 // delete existing files
-del.sync(OUTPUT_PATH)
+del.sync([OUTPUT_PATH + '/*.svg', `!${OUTPUT_PATH}`]);
 
 // Recurses through AST
 const process = node => {

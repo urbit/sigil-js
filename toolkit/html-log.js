@@ -12,15 +12,17 @@ const OUTPUT_PATH = PATHS.log
 
 const buffer = fs.readFileSync(INPUT_PATH + 'log.json')
 
+const ASSETS_PATH = process.env.ASSETS_PATH
+
 const html = JSON
   .parse(buffer)
   .reduce(p => {
     return (
       `<div class='flex'>
         <p class='mono'>${p}</p>
-        <img class='s8' src='media.urbit.org/sigil/${p}-old.png' />
-        <img class='s8' src='media.urbit.org/sigil/${p}-new.png' />
-        <img class='s8' src='media.urbit.org/sigil/${p}-diff.png' />
+        <img class='s8' src='${ASSETS_PATH}${p}-old.png' />
+        <img class='s8' src='${ASSETS_PATH}${p}-new.png' />
+        <img class='s8' src='${ASSETS_PATH}${p}-diff.png' />
       </div>
       `
     )

@@ -10,7 +10,9 @@ const PATHS = {
   lib: __dirname + '/../lib/src/',
   diff: __dirname + '/../bin/diff/',
   comp: __dirname + '/../bin/comp/',
+  pngComp: __dirname + '/../bin/pngComp/',
   logs: __dirname + '/../bin/logs/',
+  allComp: __dirname + '/../bin/allComp/',
 }
 
 const EXT = {

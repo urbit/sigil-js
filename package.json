@@ -4,6 +4,7 @@
   "private": false,
   "devDependencies": {
     "@babel/preset-env": "^7.5.4",
+    "@google-cloud/storage": "^3.0.2",
     "@sucrase/gulp-plugin": "^2.0.0",
     "convert-svg-to-png": "^0.5.0",
     "del": "^5.0.0",
@@ -47,6 +48,7 @@
     "test": "jest",
     "index-test": "run-s denul build-index phonemes",
     "image-test": "run-s denul prep png dupes",
+    "new-symbols": "run-s denul build-index phonemes prep png dupes",
     "prep": "node toolkit/prep.js",
     "png": "node toolkit/png.js",
     "dupes": "node toolkit/dupes.js",
@@ -55,6 +57,8 @@
     "phonemes": "node toolkit/phonemes.js",
     "figma": "node toolkit/figma.js",
     "build-index": "node toolkit/build-index.js",
+    "html-log": "node toolkit/html-log.js",
+    "gcp-log": "node toolkit/gcp-log.js",
     "removeContentSyncTest": "node toolkit/removeContentSyncTest.js"
   }
 }

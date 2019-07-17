@@ -4,7 +4,7 @@
 
 Each of the ~4.2 billion points on Azimuth is unique. Each one has a pronounceable, easily memorized name, something like ~ravmel-ropdyl. Sigils visualize these names – there are as many unique Sigils as there are Azimuth points. Sigil.js is a javascript library that renders these Sigils as SVG.
 
-![example images](https://github.com/urbit/sigil-js/blob/master/docs/intro.png?raw=true)
+![example images](https://github.com/urbit/sigil-js/blob/master/docs/a.png?raw=true)
 
 ## Usage
 

@@ -1,5 +1,5 @@
 {
-  "name": "sigil-js",
+  "name": "urbit-sigil-js",
   "version": "1.3.0",
   "private": false,
   "devDependencies": {

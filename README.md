@@ -1,5 +1,8 @@
 # Sigil.js
 
+![Version](https://img.shields.io/npm/v/urbit-sigil-js.svg)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 [Github](https://github.com/urbit/sigil-js)
 
 Each of the ~4.2 billion points on Azimuth is unique. Each one has a pronounceable, easily memorized name, something like ~ravmel-ropdyl. Sigils visualize these names – there are as many unique Sigils as there are Azimuth points. Sigil.js is a javascript library that renders these Sigils as SVG.

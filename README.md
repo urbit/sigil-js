@@ -105,4 +105,4 @@ Please read [CONTRIBUTING.md](https://github.com/urbit/sigil-js/CONTRIBUTING.md)
 ### License
 This project is licensed under the MIT License - see the [LICENSE.txt](https://github.com/urbit/sigil-js/LICENSE.md) file for details
 
-![many](https://github.com/urbit/sigil-js/blob/master/docs/many.png?raw=true)
+![many](https://github.com/urbit/sigil-js/blob/master/docs/outro.png?raw=true)

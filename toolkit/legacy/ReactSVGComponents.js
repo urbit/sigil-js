@@ -1,5 +1,13 @@
 import React from 'react'
-import { get } from 'lodash'
+
+const get = (o, p, d) => {
+  if (o[p] === undefined) {
+    return d
+  } else {
+    return o[p]
+  }
+}
+
 
 const r = p => {
   return get(p, 'children', []).map((a, c) => `${a} ${ReactSVGComponents[c.tag](c)}`, '');

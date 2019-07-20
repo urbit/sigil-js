@@ -12,7 +12,7 @@
 /bin/*/*
 **/dist
 */bin
-
+*/**/dist
 
 # misc
 .DS_Store

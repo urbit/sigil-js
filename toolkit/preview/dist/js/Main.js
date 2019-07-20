@@ -137,13 +137,14 @@ class Main extends Component {
                 React.createElement('div', {__self: this, __source: {fileName: _jsxFileName, lineNumber: 137}}
                   , 
                     sigil({
-                      patp: randoms[1],
+                      patp: 'doz',
                       // index: index,
                       size: s,
                       renderer: reactRenderer,
                       // className: "mr1 mt1",
                       // iconMode: true,
                       margin:0,
+                      class: 'm2',
                       colors: ['white', 'black'].reverse(),
                     })
                   
@@ -175,11 +176,11 @@ class Main extends Component {
             // })
           
 
-          , React.createElement('div', { className: "flex flex-wrap mono"  , __self: this, __source: {fileName: _jsxFileName, lineNumber: 178}}
+          , React.createElement('div', { className: "flex flex-wrap mono"  , __self: this, __source: {fileName: _jsxFileName, lineNumber: 179}}
           , 
             randoms.map((p, i) => {
               return (
-                React.createElement('div', { key: i, className: "flex mono" , __self: this, __source: {fileName: _jsxFileName, lineNumber: 182}}
+                React.createElement('div', { key: i, className: "flex mono" , __self: this, __source: {fileName: _jsxFileName, lineNumber: 183}}
                   , 
                     sigil({
                       patp: p,

@@ -137,13 +137,14 @@ class Main extends Component {
                 <div>
                   {
                     sigil({
-                      patp: randoms[1],
+                      patp: 'doz',
                       // index: index,
                       size: s,
                       renderer: reactRenderer,
                       // className: "mr1 mt1",
                       // iconMode: true,
                       margin:0,
+                      class: 'm2',
                       colors: ['white', 'black'].reverse(),
                     })
                   }

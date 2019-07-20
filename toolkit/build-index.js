@@ -17,7 +17,7 @@ const preprocess = (ast) => {
     dropSVGTag,
     createPaintTargets,
     killDefs,
-    addNoScalingStroke,
+    // addNoScalingStroke,
     wrapRootInGroup,
     ensureNoFill,
     label,

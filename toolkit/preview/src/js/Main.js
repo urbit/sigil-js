@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import {sigil, reactRenderer} from '../../../../lib/dist/index'
+import {sigil, reactRenderer, stringRenderer} from '../../../../lib/dist/index'
 import ob from 'urbit-ob';
+import FileSaver from 'file-saver';
 
 const compose = (...fs) => {
   return fs.reduceRight((f, g) => (...args) => g(f(...args)), (v) => v)
@@ -36,6 +37,55 @@ const randomShip = (classOf) => {
 
 class Main extends Component {
 
+  downloadSVG() {
+    const config = {
+      patp:'noslec-hopsyx',
+      renderer: stringRenderer,
+      size: 32,
+      colors: ['white', 'black'].reverse(),
+    };
+
+    const s = sigil(config);
+
+    const b = new Blob([s], { type: "text/plain;charset=utf-8" });
+    FileSaver.saveAs(b, `sigljstest.svg`);
+  }
+
+  // downloadPNG() {
+  //   const { patp, pngSize, colors } = this.state;
+  //
+  //   const _size = pngSize / window.devicePixelRatio;
+  //
+  //   console.log(window.devicePixelRatio, _size, pngSize);
+  //
+  //   // initialize canvas element
+  //   this.canvas = initCanvas(this.scr_ref, { x: _size, y: _size });
+  //   const ctx = this.canvas.getContext('2d');
+  //
+  //   // make sigil svg and encoded into base64
+  //   const svg = sigil({
+  //     patp:'noslec-hopsyx',
+  //     renderer: stringRenderer,
+  //     size: 32,
+  //     colors: ['white', 'black'].reverse(),
+  //     // margin: (54 / 256) * _size,
+  //   });
+  //   const svg64 = btoa(svg);
+  //   const image64 = DATA_URI_PREFIX + svg64;
+  //
+  //   // load this image, then
+  //   loadImg(image64, img => {
+  //     // draw into canvas context, convert canvas context to blob and download
+  //     ctx.drawImage(img, 0, 0, _size, _size);
+  //     const png = dataURItoBlob(this.canvas.toDataURL("image/png"));
+  //     saveAs(png, `${this.state.patp}.png`);
+  //     ctx.clearRect(0, 0, pngSize, pngSize);
+  //
+  //   });
+  //
+  //   return;
+  // }
+
 
   render() {
 
@@ -68,10 +118,39 @@ class Main extends Component {
 
   const randoms = sequence(312).map(() => randomShip('PLANET'))
 
+  const sizes = [32, 64, 72, 128, 256]
+
     return (
-      <div className="bg-black">
+      <div className="bg-white">
+        <button onClick={()=>this.downloadSVG()}>Download Test SVG</button>
+        {
+          // <button onClick={()=>this.downloadPNG()}>Download Test PNG</button>
+        }
+
         <div className="p8 flex flex-wrap">
           <p className="mono">Glyph Toolkit</p>
+
+
+          {
+            sizes.map((s, i) => {
+              return (
+                <div>
+                  {
+                    sigil({
+                      patp: randoms[1],
+                      // index: index,
+                      size: s,
+                      renderer: reactRenderer,
+                      // className: "mr1 mt1",
+                      // iconMode: true,
+                      margin:0,
+                      colors: ['white', 'black'].reverse(),
+                    })
+                  }
+                </div>
+              )
+            })
+          }
 
           {
             // Object
@@ -109,8 +188,8 @@ class Main extends Component {
                       renderer: reactRenderer,
                       // className: "mr1 mt1",
                       // iconMode: true,
-                      // margin: -17,
-                      colors: ['white', 'black'].reverse(),
+                      margin: 0,
+                      colors: ['black', 'white'],
                     })
                   }
                   {

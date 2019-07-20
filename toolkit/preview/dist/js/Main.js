@@ -1,6 +1,7 @@
 const _jsxFileName = "/Users/gavinatkinson/Tlon/sigil-js/toolkit/preview/src/js/Main.js";import React, { Component } from "react";
-import {sigil, reactRenderer} from '../../../../lib/dist/index'
+import {sigil, reactRenderer, stringRenderer} from '../../../../lib/dist/index'
 import ob from 'urbit-ob';
+import FileSaver from 'file-saver';
 
 const compose = (...fs) => {
   return fs.reduceRight((f, g) => (...args) => g(f(...args)), (v) => v)
@@ -36,6 +37,55 @@ const randomShip = (classOf) => {
 
 class Main extends Component {
 
+  downloadSVG() {
+    const config = {
+      patp:'noslec-hopsyx',
+      renderer: stringRenderer,
+      size: 32,
+      colors: ['white', 'black'].reverse(),
+    };
+
+    const s = sigil(config);
+
+    const b = new Blob([s], { type: "text/plain;charset=utf-8" });
+    FileSaver.saveAs(b, `sigljstest.svg`);
+  }
+
+  // downloadPNG() {
+  //   const { patp, pngSize, colors } = this.state;
+  //
+  //   const _size = pngSize / window.devicePixelRatio;
+  //
+  //   console.log(window.devicePixelRatio, _size, pngSize);
+  //
+  //   // initialize canvas element
+  //   this.canvas = initCanvas(this.scr_ref, { x: _size, y: _size });
+  //   const ctx = this.canvas.getContext('2d');
+  //
+  //   // make sigil svg and encoded into base64
+  //   const svg = sigil({
+  //     patp:'noslec-hopsyx',
+  //     renderer: stringRenderer,
+  //     size: 32,
+  //     colors: ['white', 'black'].reverse(),
+  //     // margin: (54 / 256) * _size,
+  //   });
+  //   const svg64 = btoa(svg);
+  //   const image64 = DATA_URI_PREFIX + svg64;
+  //
+  //   // load this image, then
+  //   loadImg(image64, img => {
+  //     // draw into canvas context, convert canvas context to blob and download
+  //     ctx.drawImage(img, 0, 0, _size, _size);
+  //     const png = dataURItoBlob(this.canvas.toDataURL("image/png"));
+  //     saveAs(png, `${this.state.patp}.png`);
+  //     ctx.clearRect(0, 0, pngSize, pngSize);
+  //
+  //   });
+  //
+  //   return;
+  // }
+
 
   render() {
 
@@ -68,10 +118,39 @@ class Main extends Component {
 
   const randoms = sequence(312).map(() => randomShip('PLANET'))
 
+  const sizes = [32, 64, 72, 128, 256]
+
     return (
-      React.createElement('div', { className: "bg-black", __self: this, __source: {fileName: _jsxFileName, lineNumber: 72}}
-        , React.createElement('div', { className: "p8 flex flex-wrap"  , __self: this, __source: {fileName: _jsxFileName, lineNumber: 73}}
-          , React.createElement('p', { className: "mono", __self: this, __source: {fileName: _jsxFileName, lineNumber: 74}}, "Glyph Toolkit" )
+      React.createElement('div', { className: "bg-white", __self: this, __source: {fileName: _jsxFileName, lineNumber: 124}}
+        , React.createElement('button', { onClick: ()=>this.downloadSVG(), __self: this, __source: {fileName: _jsxFileName, lineNumber: 125}}, "Download Test SVG"  )
+        
+          // <button onClick={()=>this.downloadPNG()}>Download Test PNG</button>
+        
+
+        , React.createElement('div', { className: "p8 flex flex-wrap"  , __self: this, __source: {fileName: _jsxFileName, lineNumber: 130}}
+          , React.createElement('p', { className: "mono", __self: this, __source: {fileName: _jsxFileName, lineNumber: 131}}, "Glyph Toolkit" )
+
+
+          , 
+            sizes.map((s, i) => {
+              return (
+                React.createElement('div', {__self: this, __source: {fileName: _jsxFileName, lineNumber: 137}}
+                  , 
+                    sigil({
+                      patp: randoms[1],
+                      // index: index,
+                      size: s,
+                      renderer: reactRenderer,
+                      // className: "mr1 mt1",
+                      // iconMode: true,
+                      margin:0,
+                      colors: ['white', 'black'].reverse(),
+                    })
+                  
+                )
+              )
+            })
+          
 
           
             // Object
@@ -96,11 +175,11 @@ class Main extends Component {
             // })
           
 
-          , React.createElement('div', { className: "flex flex-wrap mono"  , __self: this, __source: {fileName: _jsxFileName, lineNumber: 99}}
+          , React.createElement('div', { className: "flex flex-wrap mono"  , __self: this, __source: {fileName: _jsxFileName, lineNumber: 178}}
           , 
             randoms.map((p, i) => {
               return (
-                React.createElement('div', { key: i, className: "flex mono" , __self: this, __source: {fileName: _jsxFileName, lineNumber: 103}}
+                React.createElement('div', { key: i, className: "flex mono" , __self: this, __source: {fileName: _jsxFileName, lineNumber: 182}}
                   , 
                     sigil({
                       patp: p,
@@ -109,8 +188,8 @@ class Main extends Component {
                       renderer: reactRenderer,
                       // className: "mr1 mt1",
                       // iconMode: true,
-                      // margin: -17,
-                      colors: ['white', 'black'].reverse(),
+                      margin: 0,
+                      colors: ['black', 'white'],
                     })
                   
                   

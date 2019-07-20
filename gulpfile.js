@@ -147,7 +147,7 @@ gulp.task("site-css", function() {
 
 gulp.task("watch-site-react", function() {
   gulp.watch(`${PATHS.preview}/src/js/**/*.{js,json}`, gulp.series("site-react"));
-  // gulp.watch(`./vendor/**/*.js`, gulp.series("site-react"));
+  gulp.watch(`./lib/dist/*.js`, gulp.series("site-react"));
 });
 
 // TODO: Change to SASS

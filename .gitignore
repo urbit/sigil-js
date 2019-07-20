@@ -10,8 +10,9 @@
 /build
 /assets/*/*
 /bin/*/*
-*/dist
+**/dist
 */bin
+
 
 # misc
 .DS_Store

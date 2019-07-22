@@ -17,7 +17,7 @@ Each of the ~4.2 billion points on Azimuth is unique. Each one has a pronounceab
 
 ### ES2015 / React
  ```js
- import { sigil, reactRenderer } from 'sigil-js'
+ import { sigil, reactRenderer } from 'urbit-sigil-js'
 
 const Sigil = props => {
   return (
@@ -37,7 +37,7 @@ const Sigil = props => {
 
 ### Node
 ```js
-const { sigil, stringRenderer } = require('sigil-js')
+const { sigil, stringRenderer } = require('urbit-sigil-js')
 
 const svgString = sigil({
   patp: 'zod',

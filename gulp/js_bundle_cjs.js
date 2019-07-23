@@ -4,6 +4,7 @@ module.exports = function (gulp, plugins, src, dest) {
       .src(src)
       .pipe(plugins.rollup({
         plugins: [
+
           plugins.commonjs({
             // exclude: ['index.json'],
             namedExports: {
@@ -28,6 +29,20 @@ module.exports = function (gulp, plugins, src, dest) {
           plugins.globals(),
           plugins.builtins(),
           plugins.resolve(),
+          // Applies object rest/spread syntax polyfill
+          plugins.babel({
+            babelrc: false,
+            extensions: ['js'],
+            plugins: [
+              ["@babel/plugin-proposal-object-rest-spread", { useBuiltIns: true }]
+            ],
+            exclude: [
+              "node_modules/**",
+              "docs/**",
+              "bin/**",
+              "assets/**",
+            ]
+          }),
         ]
       }, 'cjs'))
       .on('error', function(e){

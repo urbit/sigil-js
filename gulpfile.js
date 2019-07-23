@@ -18,6 +18,7 @@ var json = require("rollup-plugin-json");
 var builtins = require("rollup-plugin-node-builtins");
 var rootImport = require("rollup-plugin-root-import");
 var globals = require("rollup-plugin-node-globals");
+var babel = require("rollup-plugin-babel");
 
 // Package.json
 var pkg = require("./package.json");
@@ -27,6 +28,7 @@ const plugins = {
   minify: minify,
   sucrase: sucrase,
   rename: rename,
+  exec: exec,
   // rollup
   rollup: rollup,
   resolve: resolve,
@@ -36,7 +38,7 @@ const plugins = {
   builtins: builtins,
   rootImport: rootImport,
   globals: globals,
-  exec: exec,
+  babel: babel,
 };
 
 function getTask(task, src, dest, pkg) {

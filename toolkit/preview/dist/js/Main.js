@@ -144,8 +144,9 @@ class Main extends Component {
                       // className: "mr1 mt1",
                       // iconMode: true,
                       margin:0,
+                      // style:{width: s+'px', height:s+'px'},
                       class: 'm2',
-                      colors: ['white', 'black'].reverse(),
+                      colors: ['black', 'white'],
                     })
                   
                 )
@@ -176,11 +177,11 @@ class Main extends Component {
             // })
           
 
-          , React.createElement('div', { className: "flex flex-wrap mono"  , __self: this, __source: {fileName: _jsxFileName, lineNumber: 179}}
+          , React.createElement('div', { className: "flex flex-wrap mono"  , __self: this, __source: {fileName: _jsxFileName, lineNumber: 180}}
           , 
             randoms.map((p, i) => {
               return (
-                React.createElement('div', { key: i, className: "flex mono" , __self: this, __source: {fileName: _jsxFileName, lineNumber: 183}}
+                React.createElement('div', { key: i, className: "flex mono" , __self: this, __source: {fileName: _jsxFileName, lineNumber: 184}}
                   , 
                     sigil({
                       patp: p,

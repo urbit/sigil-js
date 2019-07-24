@@ -51247,6 +51247,7 @@ var dist = createCommonjsModule(function (module, exports) {
     // Set default values from config
     const colors = params.colors === undefined ? ['#000', '#fff'] : params.colors;
     params.attributes = params.attributes === undefined ? {} : params.attributes;
+    params.style = params.style === undefined ? {} : params.style;
     params.class = params.class === undefined ? '' : params.class;
     const sw = params.size / 128 + 0.33; // get phonemes as array from patp input
 
@@ -51281,17 +51282,36 @@ var dist = createCommonjsModule(function (module, exports) {
     const grid = grids[symbols.length];
     const scaleFactor = sz / UNIT; // apply the transformations
 
-    const arranged = transformations(symbols, grid, scaleFactor); // wrap symbols in SVG tag and add background rect. Also merge in values from the params including class and attributes.
+    const arranged = transformations(symbols, grid, scaleFactor);
+
+    if (params.style.width === undefined) {
+      params.style.width = `${params.size}px`;
+    }
+
+    if (params.style.height === undefined) {
+      params.style.height = `${params.size}px`;
+    } //
+    // if (params.style !== undefined) {
+    //   params.style.width = params.style.width === undefined
+    //     ? `${params.size}px`
+    //     : params.style.width
+    //
+    //   params.style.height = params.style.height === undefined
+    //     ? `${params.size}px`
+    //     : params.style.height
+    // }
+    // wrap symbols in SVG tag and add background rect. Also merge in values from the params including class and attributes.
+
 
     const wrapped = {
       name: 'svg',
       attributes: _objectSpread2({
-        style: {
-          width: `${params.size}px`,
-          height: `${params.size}px`,
+        style: _objectSpread2({
+          // width: `${params.size}px`,
+          // height: `${params.size}px`,
           // prevent bottom margin on svg tag
           display: 'block'
-        },
+        }, params.style),
         viewBox: `0 0 ${params.size} ${params.size}`,
         version: '1.1',
         xmlns: "http://www.w3.org/2000/svg",
@@ -74736,8 +74756,9 @@ class Main extends react_1 {
         // className: "mr1 mt1",
         // iconMode: true,
         margin: 0,
+        // style:{width: s+'px', height:s+'px'},
         class: 'm2',
-        colors: ['white', 'black'].reverse()
+        colors: ['black', 'white']
       }));
     }) // Object
     //   .entries(index)
@@ -74764,7 +74785,7 @@ class Main extends react_1 {
       __self: this,
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 179
+        lineNumber: 180
       }
     }, randoms.map((p, i) => {
       return react.createElement('div', {
@@ -74773,7 +74794,7 @@ class Main extends react_1 {
         __self: this,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 183
+          lineNumber: 184
         }
       }, dist_2({
         patp: p,

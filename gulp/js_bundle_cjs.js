@@ -28,7 +28,7 @@ module.exports = function (gulp, plugins, src, dest) {
           }),
           plugins.globals(),
           plugins.builtins(),
-          plugins.resolve(),
+
           // Applies object rest/spread syntax polyfill
           plugins.babel({
             babelrc: false,
@@ -43,6 +43,7 @@ module.exports = function (gulp, plugins, src, dest) {
               "assets/**",
             ]
           }),
+          plugins.resolve(),
         ]
       }, 'cjs'))
       .on('error', function(e){

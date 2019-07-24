@@ -144,8 +144,9 @@ class Main extends Component {
                       // className: "mr1 mt1",
                       // iconMode: true,
                       margin:0,
+                      // style:{width: s+'px', height:s+'px'},
                       class: 'm2',
-                      colors: ['white', 'black'].reverse(),
+                      colors: ['black', 'white'],
                     })
                   }
                 </div>

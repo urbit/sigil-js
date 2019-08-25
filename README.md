@@ -8,7 +8,7 @@
 
 [→ NPM](https://www.npmjs.com/package/urbit-sigil-js)
 
-Each of the ~4.2 billion points on Azimuth is unique. Each one has a pronounceable, easily memorized name, something like ~ravmel-ropdyl. Sigils visualize these names – there are as many unique Sigils as there are Azimuth points. `sigil-js` is a javascript library that converts one of these names into it's corrosponding Sigil.
+Each of the ~4.2 billion points on Azimuth is unique. Each one has a pronounceable, easily memorized name, something like ~ravmel-ropdyl. Sigils visualize these names – there are as many unique Sigils as there are Azimuth points. `sigil-js` is a javascript library that converts one of these names into its corresponding Sigil.
 
 ![example images](https://github.com/urbit/sigil-js/blob/master/docs/a.png?raw=true)
 

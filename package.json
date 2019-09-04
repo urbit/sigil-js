@@ -1,6 +1,6 @@
 {
   "name": "urbit-sigil-js",
-  "version": "1.3.7",
+  "version": "1.3.8",
   "private": false,
   "license": "MIT",
   "devDependencies": {
@@ -50,6 +50,7 @@
   "scripts": {
     "build": "gulp",
     "test": "jest",
+    "start": "gulp preview",
     "index-test": "run-s denul build-index phonemes",
     "image-test": "run-s denul prep png dupes",
     "new-symbols": "run-s denul build-index phonemes prep png dupes",

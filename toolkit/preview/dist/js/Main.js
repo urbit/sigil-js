@@ -1,4 +1,4 @@
-const _jsxFileName = "/Users/gavinatkinson/Tlon/sigil-js/toolkit/preview/src/js/Main.js";import React, { Component } from "react";
+const _jsxFileName = "/Users/gavinatkinson/tlon/sigil-js/toolkit/preview/src/js/Main.js";import React, { Component } from "react";
 import {sigil, reactRenderer, stringRenderer} from '../../../../lib/dist/index'
 import ob from 'urbit-ob';
 import FileSaver from 'file-saver';
@@ -137,12 +137,17 @@ class Main extends Component {
                 React.createElement('div', {__self: this, __source: {fileName: _jsxFileName, lineNumber: 137}}
                   , 
                     sigil({
-                      patp: 'doz',
+                      patp: 'bud',
                       // index: index,
-                      size: s,
+                      // size: s,
+                      width: s,
+                      height: s,
                       renderer: reactRenderer,
                       // className: "mr1 mt1",
                       // iconMode: true,
+                      style: { border: '1px solid blue' },
+                      full: true,
+                      // background: false,
                       margin:0,
                       // style:{width: s+'px', height:s+'px'},
                       class: 'm2',
@@ -177,11 +182,11 @@ class Main extends Component {
             // })
           
 
-          , React.createElement('div', { className: "flex flex-wrap mono"  , __self: this, __source: {fileName: _jsxFileName, lineNumber: 180}}
+          , React.createElement('div', { className: "flex flex-wrap mono"  , __self: this, __source: {fileName: _jsxFileName, lineNumber: 185}}
           , 
             randoms.map((p, i) => {
               return (
-                React.createElement('div', { key: i, className: "flex mono" , __self: this, __source: {fileName: _jsxFileName, lineNumber: 184}}
+                React.createElement('div', { key: i, className: "flex mono" , __self: this, __source: {fileName: _jsxFileName, lineNumber: 189}}
                   , 
                     sigil({
                       patp: p,
@@ -190,7 +195,7 @@ class Main extends Component {
                       renderer: reactRenderer,
                       // className: "mr1 mt1",
                       // iconMode: true,
-                      margin: 0,
+                      // margin: 1,
                       colors: ['black', 'white'],
                     })
                   

@@ -10,6 +10,10 @@ function createCommonjsModule(fn, module) {
 	return module = { exports: {} }, fn(module, module.exports), module.exports;
 }
 
+function getCjsExportFromNamespace (n) {
+	return n && n['default'] || n;
+}
+
 /*
 object-assign
 (c) Sindre Sorhus
@@ -51246,9 +51250,17 @@ var dist = createCommonjsModule(function (module, exports) {
   const sigil = params => {
     // Set default values from config
     const colors = params.colors === undefined ? ['#000', '#fff'] : params.colors;
-    params.attributes = params.attributes === undefined ? {} : params.attributes;
+    params.attributes = params.attributes === undefined ? {} : params.attributes; //
+    // params.background = params.background === undefined
+    //   ? true
+    //   : params.background
+
+    params.full = params.full === undefined ? false : params.full;
     params.style = params.style === undefined ? {} : params.style;
     params.class = params.class === undefined ? '' : params.class;
+    params.size = params.size === undefined ? params.height : params.size;
+    params.width = params.width === undefined ? params.size : params.width;
+    params.height = params.height === undefined ? params.size : params.height;
     const sw = params.size / 128 + 0.33; // get phonemes as array from patp input
 
     let phonemes = params.patp.replace(/[\^~-]/g, '').match(/.{1,3}/g);
@@ -51275,44 +51287,57 @@ var dist = createCommonjsModule(function (module, exports) {
     const ma = params.margin = params.margin === undefined ? MARGIN_RATIO * ss : params.margin;
     const sz = (ss - ma * 2 - sw) / 2;
     const grids = {
-      4: [[ma, ma], [ma + sz + sw, ma], [ma, ma + sz + sw], [ma + sz + sw, ma + sz + sw]],
-      2: [[ma, ss - ss / 2 - sz / 2], [ma + sz + sw, ss - ss / 2 - sz / 2]],
-      1: [[ss - ss / 2 - sz / 2, ss - ss / 2 - sz / 2]]
+      '4': [[ma, ma], // 1st Quartile
+      [ma + sz + sw, ma], // 2nd Quartile
+      [ma, ma + sz + sw], // 3rd Quartile
+      [ma + sz + sw, ma + sz + sw] // 4th Quartile
+      ],
+      '2': [[ma, ss - ss / 2 - sz / 2], // Left half
+      [ma + sz + sw, ss - ss / 2 - sz / 2]],
+      '2-f': [[ma, ma], // [x,y] Left half
+      [ma + sz * 2 + sw, ma]],
+      '1': [[ss - ss / 2 - sz / 2, ss - ss / 2 - sz / 2]],
+      '1-f': [[ma, ma]]
     };
-    const grid = grids[symbols.length];
-    const scaleFactor = sz / UNIT; // apply the transformations
+    const gridKey = params.full === true ? `${symbols.length}-f` : symbols.length;
+    const grid = grids[gridKey];
+    const scaleFactor = params.full === true ? sz / UNIT * 2 : sz / UNIT; // apply the transformations
 
     const arranged = transformations(symbols, grid, scaleFactor);
 
     if (params.style.width === undefined) {
-      params.style.width = `${params.size}px`;
+      params.style.width = `${params.width}px`;
     }
 
     if (params.style.height === undefined) {
-      params.style.height = `${params.size}px`;
-    } //
-    // if (params.style !== undefined) {
-    //   params.style.width = params.style.width === undefined
-    //     ? `${params.size}px`
-    //     : params.style.width
-    //
-    //   params.style.height = params.style.height === undefined
-    //     ? `${params.size}px`
-    //     : params.style.height
-    // }
-    // wrap symbols in SVG tag and add background rect. Also merge in values from the params including class and attributes.
+      params.style.height = `${params.height}px`;
+    } // wrap symbols in SVG tag and add background rect. Also merge in values from the params including class and attributes.
+    // const children = params.background === true
+    //   ? [
+    //       {
+    //       name: 'rect',
+    //       attributes: {
+    //         fill: BG,
+    //         width: `${params.width}px`,
+    //         height: `${params.height}px`,
+    //         x: 0,
+    //         y: 0,
+    //       },
+    //       children: [],
+    //     },
+    //     ...arranged,
+    //   ]
+    // : arranged
 
 
     const wrapped = {
       name: 'svg',
       attributes: _objectSpread2({
         style: _objectSpread2({
-          // width: `${params.size}px`,
-          // height: `${params.size}px`,
           // prevent bottom margin on svg tag
           display: 'block'
         }, params.style),
-        viewBox: `0 0 ${params.size} ${params.size}`,
+        viewBox: `0 0 ${params.width} ${params.height}`,
         version: '1.1',
         xmlns: "http://www.w3.org/2000/svg",
         class: params.class
@@ -51321,8 +51346,8 @@ var dist = createCommonjsModule(function (module, exports) {
         name: 'rect',
         attributes: {
           fill: BG,
-          width: `${params.size}px`,
-          height: `${params.size}px`,
+          width: `${params.width}px`,
+          height: `${params.height}px`,
           x: 0,
           y: 0
         },
@@ -51331,7 +51356,7 @@ var dist = createCommonjsModule(function (module, exports) {
 
     };
     const resultAST = paint(wrapped, colors, sw / scaleFactor);
-    return params.renderer === undefined ? resultASTs : params.renderer(resultAST);
+    return params.renderer === undefined ? resultAST : params.renderer(resultAST);
   };
 
   exports.reactRenderer = reactRenderer;
@@ -53328,6 +53353,8 @@ var bufferEs6 = /*#__PURE__*/Object.freeze({
 	isBuffer: isBuffer
 });
 
+var require$$0 = getCjsExportFromNamespace(bufferEs6);
+
 var bn = createCommonjsModule(function (module) {
 (function (module, exports) {
 
@@ -53380,7 +53407,7 @@ var bn = createCommonjsModule(function (module) {
 
   var Buffer;
   try {
-    Buffer = bufferEs6.Buffer;
+    Buffer = require$$0.Buffer;
   } catch (e) {
   }
 
@@ -74623,10 +74650,10 @@ var src = Object.assign(
 var FileSaver_min = createCommonjsModule(function (module, exports) {
 (function(a,b){b();})(commonjsGlobal,function(){function b(a,b){return "undefined"==typeof b?b={autoBom:!1}:"object"!=typeof b&&(console.warn("Deprecated: Expected third argument to be a object"),b={autoBom:!b}),b.autoBom&&/^\s*(?:text\/\S*|application\/xml|\S*\/\S*\+xml)\s*;.*charset\s*=\s*utf-8/i.test(a.type)?new Blob(["\uFEFF",a],{type:a.type}):a}function c(b,c,d){var e=new XMLHttpRequest;e.open("GET",b),e.responseType="blob",e.onload=function(){a(e.response,c,d);},e.onerror=function(){console.error("could not download file");},e.send();}function d(a){var b=new XMLHttpRequest;b.open("HEAD",a,!1);try{b.send();}catch(a){}return 200<=b.status&&299>=b.status}function e(a){try{a.dispatchEvent(new MouseEvent("click"));}catch(c){var b=document.createEvent("MouseEvents");b.initMouseEvent("click",!0,!0,window,0,0,0,80,20,!1,!1,!1,!1,0,null),a.dispatchEvent(b);}}var f="object"==typeof window&&window.window===window?window:"object"==typeof self&&self.self===self?self:"object"==typeof commonjsGlobal&&commonjsGlobal.global===commonjsGlobal?commonjsGlobal:void 0,a=f.saveAs||("object"!=typeof window||window!==f?function(){}:"download"in HTMLAnchorElement.prototype?function(b,g,h){var i=f.URL||f.webkitURL,j=document.createElement("a");g=g||b.name||"download",j.download=g,j.rel="noopener","string"==typeof b?(j.href=b,j.origin===location.origin?e(j):d(j.href)?c(b,g,h):e(j,j.target="_blank")):(j.href=i.createObjectURL(b),setTimeout(function(){i.revokeObjectURL(j.href);},4E4),setTimeout(function(){e(j);},0));}:"msSaveOrOpenBlob"in navigator?function(f,g,h){if(g=g||f.name||"download","string"!=typeof f)navigator.msSaveOrOpenBlob(b(f,h),g);else if(d(f))c(f,g,h);else{var i=document.createElement("a");i.href=f,i.target="_blank",setTimeout(function(){e(i);});}}:function(a,b,d,e){if(e=e||open("","_blank"),e&&(e.document.title=e.document.body.innerText="downloading..."),"string"==typeof a)return c(a,b,d);var g="application/octet-stream"===a.type,h=/constructor/i.test(f.HTMLElement)||f.safari,i=/CriOS\/[\d]+/.test(navigator.userAgent);if((i||g&&h)&&"object"==typeof FileReader){var j=new FileReader;j.onloadend=function(){var a=j.result;a=i?a:a.replace(/^data:[^;]*;/,"data:attachment/file;"),e?e.location.href=a:location=a,e=null;},j.readAsDataURL(a);}else{var k=f.URL||f.webkitURL,l=k.createObjectURL(a);e?e.location=l:location.href=l,e=null,setTimeout(function(){k.revokeObjectURL(l);},4E4);}});f.saveAs=a.saveAs=a,(module.exports=a);});
 
-
+//# sourceMappingURL=FileSaver.min.js.map
 });
 
-const _jsxFileName = "/Users/gavinatkinson/Tlon/sigil-js/toolkit/preview/src/js/Main.js";
+const _jsxFileName = "/Users/gavinatkinson/tlon/sigil-js/toolkit/preview/src/js/Main.js";
 
 const compose = (...fs) => {
   return fs.reduceRight((f, g) => (...args) => g(f(...args)), v => v);
@@ -74749,12 +74776,19 @@ class Main extends react_1 {
           lineNumber: 137
         }
       }, dist_2({
-        patp: 'doz',
+        patp: 'bud',
         // index: index,
-        size: s,
+        // size: s,
+        width: s,
+        height: s,
         renderer: dist_1,
         // className: "mr1 mt1",
         // iconMode: true,
+        style: {
+          border: '1px solid blue'
+        },
+        full: true,
+        // background: false,
         margin: 0,
         // style:{width: s+'px', height:s+'px'},
         class: 'm2',
@@ -74785,7 +74819,7 @@ class Main extends react_1 {
       __self: this,
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 180
+        lineNumber: 185
       }
     }, randoms.map((p, i) => {
       return react.createElement('div', {
@@ -74794,7 +74828,7 @@ class Main extends react_1 {
         __self: this,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 184
+          lineNumber: 189
         }
       }, dist_2({
         patp: p,
@@ -74803,7 +74837,7 @@ class Main extends react_1 {
         renderer: dist_1,
         // className: "mr1 mt1",
         // iconMode: true,
-        margin: 0,
+        // margin: 1,
         colors: ['black', 'white']
       }) // sigil({
       //   patp: p,
@@ -74838,7 +74872,7 @@ class Main extends react_1 {
 
 }
 
-const _jsxFileName$1 = "/Users/gavinatkinson/Tlon/sigil-js/toolkit/preview/src/js/index.js";
+const _jsxFileName$1 = "/Users/gavinatkinson/tlon/sigil-js/toolkit/preview/src/js/index.js";
 reactDom.render(react.createElement(Main, {
   __self: undefined,
   __source: {

@@ -137,12 +137,17 @@ class Main extends Component {
                 <div>
                   {
                     sigil({
-                      patp: 'doz',
+                      patp: 'bud',
                       // index: index,
-                      size: s,
+                      // size: s,
+                      width: s,
+                      height: s,
                       renderer: reactRenderer,
                       // className: "mr1 mt1",
                       // iconMode: true,
+                      style: { border: '1px solid blue' },
+                      full: true,
+                      // background: false,
                       margin:0,
                       // style:{width: s+'px', height:s+'px'},
                       class: 'm2',
@@ -190,7 +195,7 @@ class Main extends Component {
                       renderer: reactRenderer,
                       // className: "mr1 mt1",
                       // iconMode: true,
-                      margin: 0,
+                      // margin: 1,
                       colors: ['black', 'white'],
                     })
                   }

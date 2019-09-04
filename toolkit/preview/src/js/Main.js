@@ -137,7 +137,7 @@ class Main extends Component {
                 <div>
                   {
                     sigil({
-                      patp: 'bud',
+                      patp: 'figbud-budbud',
                       // index: index,
                       // size: s,
                       width: s,

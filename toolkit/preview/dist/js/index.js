@@ -74776,7 +74776,7 @@ class Main extends react_1 {
           lineNumber: 137
         }
       }, dist_2({
-        patp: 'bud',
+        patp: 'figbud-budbud',
         // index: index,
         // size: s,
         width: s,

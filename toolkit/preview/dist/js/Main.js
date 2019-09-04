@@ -137,7 +137,7 @@ class Main extends Component {
                 React.createElement('div', {__self: this, __source: {fileName: _jsxFileName, lineNumber: 137}}
                   , 
                     sigil({
-                      patp: 'bud',
+                      patp: 'figbud-budbud',
                       // index: index,
                       // size: s,
                       width: s,

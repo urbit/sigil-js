@@ -1,5 +1,5 @@
 const _jsxFileName = "/Users/gavinatkinson/tlon/sigil-js/toolkit/preview/src/js/Main.js";import React, { Component } from "react";
-import {sigil, reactRenderer, stringRenderer} from '../../../../lib/dist/index'
+import {sigil, reactRenderer, stringRenderer, reactImageRenderer} from '../../../../lib/dist/index'
 import ob from 'urbit-ob';
 import FileSaver from 'file-saver';
 
@@ -10,6 +10,7 @@ const compose = (...fs) => {
 const randInt = max => Math.floor(Math.random() * Math.floor(max));
 
 const noSig = str => str.replace(/~+/g, '');
+
 const sequence = num => Array.from(Array(num), (_, i) => i);
 
 const SHIP_TYPES = {
@@ -116,49 +117,99 @@ class Main extends Component {
     '~hidrel-fabtel',
   ]
 
-  const randoms = sequence(312).map(() => randomShip('PLANET'))
+  // const randoms = sequence(312).map(() => randomShip('STAR'))
 
   const sizes = [32, 64, 72, 128, 256]
 
+  const s = 32
+  const r = reactImageRenderer
+
+  const configs = [
+    {
+      patp: 'ridlur-figbud',
+      size: s,
+      renderer: r,
+      style: { border: '1px solid blue' },
+      class: 'm2',
+      margin: false,
+      colors: ['white', 'black'],
+    },
+    {
+      patp: 'ridlur-figbud',
+      size: s,
+      renderer: r,
+      style: { border: '1px solid blue' },
+      class: 'm2',
+      margin: true,
+      colors: ['white', 'black'],
+    },
+    {
+      patp: 'ridlur',
+      size: s,
+      renderer: r,
+      style: { border: '1px solid blue' },
+      class: 'm2',
+      margin: false,
+      colors: ['white', 'black'],
+    },
+    {
+      patp: 'ridlur',
+      size: s,
+      renderer: r,
+      style: { border: '1px solid blue' },
+      class: 'm2',
+      margin: true,
+      colors: ['white', 'black'],
+    },
+    {
+      patp: 'rid',
+      size: s,
+      renderer: r,
+      style: { border: '1px solid blue' },
+      class: 'm2',
+      margin: false,
+      colors: ['white', 'black'],
+    },
+    {
+      patp: 'rid',
+      size: s,
+      renderer: r,
+      style: { border: '1px solid blue' },
+      class: 'm2',
+      margin: true,
+      colors: ['white', 'black'],
+    },
+  ]
+
     return (
-      React.createElement('div', { className: "bg-white", __self: this, __source: {fileName: _jsxFileName, lineNumber: 124}}
-        , React.createElement('button', { onClick: ()=>this.downloadSVG(), __self: this, __source: {fileName: _jsxFileName, lineNumber: 125}}, "Download Test SVG"  )
+      React.createElement('div', { className: "bg-white", __self: this, __source: {fileName: _jsxFileName, lineNumber: 185}}
+        , React.createElement('button', { onClick: ()=>this.downloadSVG(), __self: this, __source: {fileName: _jsxFileName, lineNumber: 186}}, "Download Test SVG"  )
         
           // <button onClick={()=>this.downloadPNG()}>Download Test PNG</button>
         
 
-        , React.createElement('div', { className: "p8 flex flex-wrap"  , __self: this, __source: {fileName: _jsxFileName, lineNumber: 130}}
-          , React.createElement('p', { className: "mono", __self: this, __source: {fileName: _jsxFileName, lineNumber: 131}}, "Glyph Toolkit" )
+        , React.createElement('div', { className: "p8 flex flex-col"  , __self: this, __source: {fileName: _jsxFileName, lineNumber: 191}}
+          , React.createElement('p', { className: "mono", __self: this, __source: {fileName: _jsxFileName, lineNumber: 192}}, "Glyph Toolkit" )
 
-
+          , React.createElement('span', { class: "flex flex-wrap" , __self: this, __source: {fileName: _jsxFileName, lineNumber: 194}}
           , 
-            sizes.map((s, i) => {
+            configs.map((config, i) => {
               return (
-                React.createElement('div', {__self: this, __source: {fileName: _jsxFileName, lineNumber: 137}}
+                React.createElement('div', {__self: this, __source: {fileName: _jsxFileName, lineNumber: 198}}
                   , 
-                    sigil({
-                      patp: 'figbud-budbud',
-                      // index: index,
-                      // size: s,
-                      width: s,
-                      height: s,
-                      renderer: reactRenderer,
-                      // className: "mr1 mt1",
-                      // iconMode: true,
-                      style: { border: '1px solid blue' },
-                      full: true,
-                      // background: false,
-                      margin:0,
-                      // style:{width: s+'px', height:s+'px'},
-                      class: 'm2',
-                      colors: ['black', 'white'],
-                    })
+                    sigil(config)
                   
+                  , React.createElement('pre', {__self: this, __source: {fileName: _jsxFileName, lineNumber: 202}}
+                    , 
+                      JSON.stringify(config, null, '  ')
+                    
+                  )
                 )
               )
             })
-          
 
+          
+          )
           
             // Object
             //   .entries(index)
@@ -182,60 +233,60 @@ class Main extends Component {
             // })
           
 
-          , React.createElement('div', { className: "flex flex-wrap mono"  , __self: this, __source: {fileName: _jsxFileName, lineNumber: 185}}
-          , 
-            randoms.map((p, i) => {
-              return (
-                React.createElement('div', { key: i, className: "flex mono" , __self: this, __source: {fileName: _jsxFileName, lineNumber: 189}}
-                  , 
-                    sigil({
-                      patp: p,
-                      // index: index,
-                      size: 128,
-                      renderer: reactRenderer,
-                      // className: "mr1 mt1",
-                      // iconMode: true,
-                      // margin: 1,
-                      colors: ['black', 'white'],
-                    })
-                  
-                  
-                    // sigil({
-                    //   patp: p,
-                    //   index: index,
-                    //   size: 64,
-                    //   // margin:0,
-                    //   renderer: ReactSVGRenderer,
-                    //   className: "mr1 mt1",
-                    //   colors: ['white', 'black'].reverse(),
-                    // })
-                  
-                  
-                    // sigil({
-                    //   patp: p,
-                    //   index: index,
-                    //   size: 128,
-                    //   // margin:0,
-                    //   renderer: ReactSVGRenderer,
-                    //   className: "mr1 mt1",
-                    //   colors: ['white', 'black'].reverse(),
-                    // })
-                  
-                  
-                    // sigil({
-                    //   patp: p,
-                    //   index: index,
-                    //   size: 512,
-                    //   // margin:0,
-                    //   renderer: ReactSVGRenderer,
-                    //   className: "mr1 mt1",
-                    //   colors: ['white', 'black'].reverse(),
-                    // })
-                  
-                )
-              )
-            }
-          )
+          , React.createElement('div', { className: "flex flex-wrap mono"  , __self: this, __source: {fileName: _jsxFileName, lineNumber: 236}}
+          
+          //   randoms.map((p, i) => {
+          //     return (
+          //       <div key={i} className='flex mono p1'>
+          //         {
+          //           sigil({
+          //             patp: p,
+          //             // index: index,
+          //             size: 128,
+          //             renderer: reactRenderer,
+          //             // className: "mr1 mt1",
+          //             // iconMode: true,
+          //             // margin: 1,
+          //             colors: ['black', 'white'],
+          //           })
+          //         }
+          //         {
+          //           // sigil({
+          //           //   patp: p,
+          //           //   index: index,
+          //           //   size: 64,
+          //           //   // margin:0,
+          //           //   renderer: ReactSVGRenderer,
+          //           //   className: "mr1 mt1",
+          //           //   colors: ['white', 'black'].reverse(),
+          //           // })
+          //         }
+          //         {
+          //           // sigil({
+          //           //   patp: p,
+          //           //   index: index,
+          //           //   size: 128,
+          //           //   // margin:0,
+          //           //   renderer: ReactSVGRenderer,
+          //           //   className: "mr1 mt1",
+          //           //   colors: ['white', 'black'].reverse(),
+          //           // })
+          //         }
+          //         {
+          //           // sigil({
+          //           //   patp: p,
+          //           //   index: index,
+          //           //   size: 512,
+          //           //   // margin:0,
+          //           //   renderer: ReactSVGRenderer,
+          //           //   className: "mr1 mt1",
+          //           //   colors: ['white', 'black'].reverse(),
+          //           // })
+          //         }
+          //       </div>
+          //     )
+          //   }
+          // )
           
           )
 

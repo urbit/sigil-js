@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import {sigil, reactRenderer, stringRenderer} from '../../../../lib/dist/index'
+import {sigil, reactRenderer, stringRenderer, reactImageRenderer} from '../../../../lib/dist/index'
 import ob from 'urbit-ob';
 import FileSaver from 'file-saver';
 
@@ -10,6 +10,7 @@ const compose = (...fs) => {
 const randInt = max => Math.floor(Math.random() * Math.floor(max));
 
 const noSig = str => str.replace(/~+/g, '');
+
 const sequence = num => Array.from(Array(num), (_, i) => i);
 
 const SHIP_TYPES = {
@@ -116,9 +117,69 @@ class Main extends Component {
     '~hidrel-fabtel',
   ]
 
-  const randoms = sequence(312).map(() => randomShip('PLANET'))
+  // const randoms = sequence(312).map(() => randomShip('STAR'))
 
   const sizes = [32, 64, 72, 128, 256]
+
+  const s = 32
+  const r = reactImageRenderer
+
+  const configs = [
+    {
+      patp: 'ridlur-figbud',
+      size: s,
+      renderer: r,
+      style: { border: '1px solid blue' },
+      class: 'm2',
+      margin: false,
+      colors: ['white', 'black'],
+    },
+    {
+      patp: 'ridlur-figbud',
+      size: s,
+      renderer: r,
+      style: { border: '1px solid blue' },
+      class: 'm2',
+      margin: true,
+      colors: ['white', 'black'],
+    },
+    {
+      patp: 'ridlur',
+      size: s,
+      renderer: r,
+      style: { border: '1px solid blue' },
+      class: 'm2',
+      margin: false,
+      colors: ['white', 'black'],
+    },
+    {
+      patp: 'ridlur',
+      size: s,
+      renderer: r,
+      style: { border: '1px solid blue' },
+      class: 'm2',
+      margin: true,
+      colors: ['white', 'black'],
+    },
+    {
+      patp: 'rid',
+      size: s,
+      renderer: r,
+      style: { border: '1px solid blue' },
+      class: 'm2',
+      margin: false,
+      colors: ['white', 'black'],
+    },
+    {
+      patp: 'rid',
+      size: s,
+      renderer: r,
+      style: { border: '1px solid blue' },
+      class: 'm2',
+      margin: true,
+      colors: ['white', 'black'],
+    },
+  ]
 
     return (
       <div className="bg-white">
@@ -127,38 +188,28 @@ class Main extends Component {
           // <button onClick={()=>this.downloadPNG()}>Download Test PNG</button>
         }
 
-        <div className="p8 flex flex-wrap">
+        <div className="p8 flex flex-col">
           <p className="mono">Glyph Toolkit</p>
 
-
+          <span class='flex flex-wrap'>
           {
-            sizes.map((s, i) => {
+            configs.map((config, i) => {
               return (
                 <div>
                   {
-                    sigil({
-                      patp: 'figbud-budbud',
-                      // index: index,
-                      // size: s,
-                      width: s,
-                      height: s,
-                      renderer: reactRenderer,
-                      // className: "mr1 mt1",
-                      // iconMode: true,
-                      style: { border: '1px solid blue' },
-                      full: true,
-                      // background: false,
-                      margin:0,
-                      // style:{width: s+'px', height:s+'px'},
-                      class: 'm2',
-                      colors: ['black', 'white'],
-                    })
+                    sigil(config)
                   }
+                  <pre>
+                    {
+                      JSON.stringify(config, null, '  ')
+                    }
+                  </pre>
                 </div>
               )
             })
-          }
 
+          }
+          </span>
           {
             // Object
             //   .entries(index)
@@ -184,58 +235,58 @@ class Main extends Component {
 
           <div className="flex flex-wrap mono">
           {
-            randoms.map((p, i) => {
-              return (
-                <div key={i} className='flex mono'>
-                  {
-                    sigil({
-                      patp: p,
-                      // index: index,
-                      size: 128,
-                      renderer: reactRenderer,
-                      // className: "mr1 mt1",
-                      // iconMode: true,
-                      // margin: 1,
-                      colors: ['black', 'white'],
-                    })
-                  }
-                  {
-                    // sigil({
-                    //   patp: p,
-                    //   index: index,
-                    //   size: 64,
-                    //   // margin:0,
-                    //   renderer: ReactSVGRenderer,
-                    //   className: "mr1 mt1",
-                    //   colors: ['white', 'black'].reverse(),
-                    // })
-                  }
-                  {
-                    // sigil({
-                    //   patp: p,
-                    //   index: index,
-                    //   size: 128,
-                    //   // margin:0,
-                    //   renderer: ReactSVGRenderer,
-                    //   className: "mr1 mt1",
-                    //   colors: ['white', 'black'].reverse(),
-                    // })
-                  }
-                  {
-                    // sigil({
-                    //   patp: p,
-                    //   index: index,
-                    //   size: 512,
-                    //   // margin:0,
-                    //   renderer: ReactSVGRenderer,
-                    //   className: "mr1 mt1",
-                    //   colors: ['white', 'black'].reverse(),
-                    // })
-                  }
-                </div>
-              )
-            }
-          )
+          //   randoms.map((p, i) => {
+          //     return (
+          //       <div key={i} className='flex mono p1'>
+          //         {
+          //           sigil({
+          //             patp: p,
+          //             // index: index,
+          //             size: 128,
+          //             renderer: reactRenderer,
+          //             // className: "mr1 mt1",
+          //             // iconMode: true,
+          //             // margin: 1,
+          //             colors: ['black', 'white'],
+          //           })
+          //         }
+          //         {
+          //           // sigil({
+          //           //   patp: p,
+          //           //   index: index,
+          //           //   size: 64,
+          //           //   // margin:0,
+          //           //   renderer: ReactSVGRenderer,
+          //           //   className: "mr1 mt1",
+          //           //   colors: ['white', 'black'].reverse(),
+          //           // })
+          //         }
+          //         {
+          //           // sigil({
+          //           //   patp: p,
+          //           //   index: index,
+          //           //   size: 128,
+          //           //   // margin:0,
+          //           //   renderer: ReactSVGRenderer,
+          //           //   className: "mr1 mt1",
+          //           //   colors: ['white', 'black'].reverse(),
+          //           // })
+          //         }
+          //         {
+          //           // sigil({
+          //           //   patp: p,
+          //           //   index: index,
+          //           //   size: 512,
+          //           //   // margin:0,
+          //           //   renderer: ReactSVGRenderer,
+          //           //   className: "mr1 mt1",
+          //           //   colors: ['white', 'black'].reverse(),
+          //           // })
+          //         }
+          //       </div>
+          //     )
+          //   }
+          // )
           }
           </div>
 

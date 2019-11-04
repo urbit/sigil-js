@@ -23975,61 +23975,19 @@ var dist = createCommonjsModule(function (module, exports) {
 
     return target;
   }
-  /**
-   * @ignore
-   * @type {RegExp}
-   */
-
-
-  var matrixRegex = /^matrix\(\s*([0-9_+-.e]+)\s*,\s*([0-9_+-.e]+)\s*,\s*([0-9_+-.e]+)\s*,\s*([0-9_+-.e]+)\s*,\s*([0-9_+-.e]+)\s*,\s*([0-9_+-.e]+)\s*\)$/i;
-  /**
-   * Parse a string matrix formatted as matrix(a,b,c,d,e,f)
-   * @param string String with a matrix
-   * @returns {{a: number, b: number, c: number, e: number, d: number, f: number}} Affine matrix
-   */
-
-  function fromString(string) {
-    var parsed = string.match(matrixRegex);
-    if (parsed === null || parsed.length < 7) throw new Error("'" + string + "' is not a matrix");
-    return {
-      a: parseFloat(parsed[1]),
-      b: parseFloat(parsed[2]),
-      c: parseFloat(parsed[3]),
-      d: parseFloat(parsed[4]),
-      e: parseFloat(parsed[5]),
-      f: parseFloat(parsed[6])
-    };
-  }
-  /**
-   * Identity matrix
-   * @returns {{a: number, b: number, c: number, e: number, d: number, f: number}} Affine matrix
-   */
-
-
-  function identity() {
-    return {
-      a: 1,
-      c: 0,
-      e: 0,
-      b: 0,
-      d: 1,
-      f: 0
-    };
-  }
 
   function isUndefined(val) {
     return typeof val === 'undefined';
   }
   /**
    * Calculate a translate matrix
-   * @param tx Translation on axis x
-   * @param [ty = 0] Translation on axis y
-   * @returns {{a: number, b: number, c: number, e: number, d: number, f: number}} Affine matrix
+   * @param tx {number} Translation on axis x
+   * @param [ty = 0] {number} Translation on axis y
+   * @returns {Matrix} Affine Matrix
    */
 
 
-  function translate(tx) {
-    var ty = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+  function translate(tx, ty = 0) {
     return {
       a: 1,
       c: 0,
@@ -24039,37 +23997,17 @@ var dist = createCommonjsModule(function (module, exports) {
       f: ty
     };
   }
-
-  function _toConsumableArray(arr) {
-    if (Array.isArray(arr)) {
-      for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) {
-        arr2[i] = arr[i];
-      }
-
-      return arr2;
-    } else {
-      return Array.from(arr);
-    }
-  }
-
-  function _toArray(arr) {
-    return Array.isArray(arr) ? arr : Array.from(arr);
-  }
   /**
    * Merge multiple matrices into one
-   * @param matrices {...object} list of matrices
-   * @returns {{a: number, b: number, c: number, e: number, d: number, f: number}} Affine matrix
+   * @param matrices {Matrix[]} Array of affine matrix
+   * @returns {Matrix} Affine Matrix
    */
 
 
-  function transform() {
-    for (var _len = arguments.length, matrices = Array(_len), _key = 0; _key < _len; _key++) {
-      matrices[_key] = arguments[_key];
-    }
-
+  function transform(...matrices) {
     matrices = Array.isArray(matrices[0]) ? matrices[0] : matrices;
 
-    var multiply = function multiply(m1, m2) {
+    const multiply = (m1, m2) => {
       return {
         a: m1.a * m2.a + m1.c * m2.b,
         c: m1.a * m2.c + m1.c * m2.d,
@@ -24091,27 +24029,20 @@ var dist = createCommonjsModule(function (module, exports) {
         return multiply(matrices[0], matrices[1]);
 
       default:
-        var _matrices = matrices,
-            _matrices2 = _toArray(_matrices),
-            m1 = _matrices2[0],
-            m2 = _matrices2[1],
-            rest = _matrices2.slice(2);
-
-        var m = multiply(m1, m2);
-        return transform.apply(undefined, [m].concat(_toConsumableArray(rest)));
+        const [m1, m2, ...rest] = matrices;
+        const m = multiply(m1, m2);
+        return transform(m, ...rest);
     }
   }
-
-  var PI = Math.PI;
   /**
    * Calculate a scaling matrix
-   * @param sx Scaling on axis x
-   * @param [sy = sx] Scaling on axis y (default sx)
-   * @returns {{a: number, b: number, c: number, e: number, d: number, f: number}} Affine matrix
+   * @param sx {number} Scaling on axis x
+   * @param [sy = sx] {number} Scaling on axis y (default sx)
+   * @returns {Matrix} Affine Matrix
    */
 
-  function scale(sx) {
-    var sy = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
+
+  function scale(sx, sy = undefined) {
     if (isUndefined(sy)) sy = sx;
     return {
       a: sx,
@@ -24123,31 +24054,165 @@ var dist = createCommonjsModule(function (module, exports) {
     };
   }
   /**
-   * Serialize the matrix to a string that can be used with CSS or SVG
-   * @param matrix Affine matrix
-   * @returns {string} String that contains a matrix formatted as matrix(a,b,c,d,e,f)
+   * Serialize an affine matrix to a string that can be used with CSS or SVG
+   * @param matrix {Matrix} Affine Matrix
+   * @returns {string} String that contains an affine matrix formatted as matrix(a,b,c,d,e,f)
    */
 
   /**
-   * Serialize the matrix to a string that can be used with CSS or SVG
-   * @param matrix Affine matrix
-   * @returns {string} String that contains a matrix formatted as matrix(a,b,c,d,e,f)
-   */
-
-
-  function toSVG(matrix) {
-    return toString(matrix);
-  }
-  /**
-   * Serialize the matrix to a string that can be used with CSS or SVG
-   * @param matrix Affine matrix
-   * @returns {string} String that contains a matrix formatted as matrix(a,b,c,d,e,f)
+   * Serialize an affine matrix to a string that can be used with CSS or SVG
+   * @param matrix {Matrix} Affine Matrix
+   * @returns {string} String that contains an affine matrix formatted as matrix(a,b,c,d,e,f)
    */
 
 
   function toString(matrix) {
-    return "matrix(" + matrix.a + "," + matrix.b + "," + matrix.c + "," + matrix.d + "," + matrix.e + "," + matrix.f + ")";
+    return `matrix(${matrix.a},${matrix.b},${matrix.c},${matrix.d},${matrix.e},${matrix.f})`;
+  } // Generated by PEG.js v0.11.0-master.30f3260, https://pegjs.org/
+
+
+  function peg$subclass(child, parent) {
+    function C() {
+      this.constructor = child;
+    }
+
+    C.prototype = parent.prototype;
+    child.prototype = new C();
   }
+
+  function peg$SyntaxError(message, expected, found, location) {
+    this.message = message;
+    this.expected = expected;
+    this.found = found;
+    this.location = location;
+    this.name = "SyntaxError"; // istanbul ignore next
+
+    if (typeof Error.captureStackTrace === "function") {
+      Error.captureStackTrace(this, peg$SyntaxError);
+    }
+  }
+
+  peg$subclass(peg$SyntaxError, Error);
+
+  peg$SyntaxError.buildMessage = function (expected, found) {
+    var DESCRIBE_EXPECTATION_FNS = {
+      literal: function (expectation) {
+        return "\"" + literalEscape(expectation.text) + "\"";
+      },
+      class: function (expectation) {
+        var escapedParts = expectation.parts.map(function (part) {
+          return Array.isArray(part) ? classEscape(part[0]) + "-" + classEscape(part[1]) : classEscape(part);
+        });
+        return "[" + (expectation.inverted ? "^" : "") + escapedParts + "]";
+      },
+      any: function () {
+        return "any character";
+      },
+      end: function () {
+        return "end of input";
+      },
+      other: function (expectation) {
+        return expectation.description;
+      },
+      not: function (expectation) {
+        return "not " + describeExpectation(expectation.expected);
+      }
+    };
+
+    function hex(ch) {
+      return ch.charCodeAt(0).toString(16).toUpperCase();
+    }
+
+    function literalEscape(s) {
+      return s.replace(/\\/g, "\\\\").replace(/"/g, "\\\"").replace(/\0/g, "\\0").replace(/\t/g, "\\t").replace(/\n/g, "\\n").replace(/\r/g, "\\r").replace(/[\x00-\x0F]/g, function (ch) {
+        return "\\x0" + hex(ch);
+      }).replace(/[\x10-\x1F\x7F-\x9F]/g, function (ch) {
+        return "\\x" + hex(ch);
+      });
+    }
+
+    function classEscape(s) {
+      return s.replace(/\\/g, "\\\\").replace(/\]/g, "\\]").replace(/\^/g, "\\^").replace(/-/g, "\\-").replace(/\0/g, "\\0").replace(/\t/g, "\\t").replace(/\n/g, "\\n").replace(/\r/g, "\\r").replace(/[\x00-\x0F]/g, function (ch) {
+        return "\\x0" + hex(ch);
+      }).replace(/[\x10-\x1F\x7F-\x9F]/g, function (ch) {
+        return "\\x" + hex(ch);
+      });
+    }
+
+    function describeExpectation(expectation) {
+      return DESCRIBE_EXPECTATION_FNS[expectation.type](expectation);
+    }
+
+    function describeExpected(expected) {
+      var descriptions = expected.map(describeExpectation);
+      var i, j;
+      descriptions.sort();
+
+      if (descriptions.length > 0) {
+        for (i = 1, j = 1; i < descriptions.length; i++) {
+          if (descriptions[i - 1] !== descriptions[i]) {
+            descriptions[j] = descriptions[i];
+            j++;
+          }
+        }
+
+        descriptions.length = j;
+      }
+
+      switch (descriptions.length) {
+        case 1:
+          return descriptions[0];
+
+        case 2:
+          return descriptions[0] + " or " + descriptions[1];
+
+        default:
+          return descriptions.slice(0, -1).join(", ") + ", or " + descriptions[descriptions.length - 1];
+      }
+    }
+
+    function describeFound(found) {
+      return found ? "\"" + literalEscape(found) + "\"" : "end of input";
+    }
+
+    return "Expected " + describeExpected(expected) + " but " + describeFound(found) + " found.";
+  };
+  /**
+   * Copyright (c) 2013-present, Facebook, Inc.
+   *
+   * This source code is licensed under the MIT license found in the
+   * LICENSE file in the root directory of this source tree.
+   */
+
+
+  var invariant = function (condition, format, a, b, c, d, e, f) {
+    {
+      if (format === undefined) {
+        throw new Error('invariant requires an error message argument');
+      }
+    }
+
+    if (!condition) {
+      var error;
+
+      if (format === undefined) {
+        error = new Error('Minified exception occurred; use the non-minified dev environment ' + 'for the full error message and additional helpful warnings.');
+      } else {
+        var args = [a, b, c, d, e, f];
+        var argIndex = 0;
+        error = new Error(format.replace(/%s/g, function () {
+          return args[argIndex++];
+        }));
+        error.name = 'Invariant Violation';
+      }
+
+      error.framesToPop = 1; // we don't care about invariant's own frame
+
+      throw error;
+    }
+  };
+
+  var invariant_1 = invariant;
 
   function createCommonjsModule(fn, module) {
     return module = {
@@ -26708,83 +26773,92 @@ var dist = createCommonjsModule(function (module, exports) {
     }), node.children.map((child, j) => reactRenderer(child, `${i}:${j}`)));
   };
 
+  const reactImageRenderer = node => {
+    return react.createElement(node.name, {
+      style: {
+        backgroundRepeat: 'no-repeat',
+        width: node.attributes.style.width,
+        height: node.attributes.style.height,
+        backgroundImage: `url(data:image/svg+xml;base64,${btoa(stringRenderer(node))})`
+      }
+    });
+  };
+
+  const deepClone = v => JSON.parse(JSON.stringify(v));
+
+  const chunkStr = (str, size) => {
+    const r = new RegExp(`.{1,${size}}`, 'g');
+    return str.match(r);
+  };
+
+  const isUndefined$1 = v => typeof v === 'undefined';
+
   const bac = {
     "name": "g",
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "-0.0029152",
+        "x2": "127.983",
+        "y2": "127.986",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "-0.0029152",
-          "x2": "127.983",
-          "y2": "127.986",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "16",
-          "cy": "112",
-          "r": "11.5",
-          "fill": 0,
-          "stroke": 0
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "16",
-          "cy": "112",
-          "r": "9",
-          "fill": 1,
-          "stroke": 1,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "16",
+        "cy": "112",
+        "r": "11.5",
+        "fill": 0,
+        "stroke": 0
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "16",
+        "cy": "112",
+        "r": "9",
+        "fill": 1,
+        "stroke": 1,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const bal = {
@@ -26792,96 +26866,84 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0.0541 0C70.7217 0.0292317 128 57.3256 128 128C57.3177 128 0.0164917 70.7089 7.62806e-06 0.0305091C7.62851e-06 0.0203397 -4.44317e-10 0.01017 0 0H0.0541Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "32",
+        "cy": "32",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "32",
+        "cy": "32",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "0.5",
+        "y1": "-0.5",
+        "x2": "181.5",
+        "y2": "-0.5",
+        "transform": "matrix(-0.707107 0.707107 0.707107 0.707107 128.71 0)",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0.0541 0C70.7217 0.0292317 128 57.3256 128 128C57.3177 128 0.0164917 70.7089 7.62806e-06 0.0305091C7.62851e-06 0.0203397 -4.44317e-10 0.01017 0 0H0.0541Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "32",
-          "cy": "32",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "32",
-          "cy": "32",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "0.5",
-          "y1": "-0.5",
-          "x2": "181.5",
-          "y2": "-0.5",
-          "transform": "matrix(-0.707107 0.707107 0.707107 0.707107 128.71 0)",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "128",
-          "y1": "32.0072",
-          "x2": "32.7071",
-          "y2": "127.3",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "128",
-          "y1": "64.0072",
-          "x2": "64.7071",
-          "y2": "127.3",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "128",
-          "y1": "96.0072",
-          "x2": "96.7071",
-          "y2": "127.3",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "128",
+        "y1": "32.0072",
+        "x2": "32.7071",
+        "y2": "127.3",
+        "stroke": 0,
+        "stroke-linecap": "square",
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "128",
+        "y1": "64.0072",
+        "x2": "64.7071",
+        "y2": "127.3",
+        "stroke": 0,
+        "stroke-linecap": "square",
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "128",
+        "y1": "96.0072",
+        "x2": "96.7071",
+        "y2": "127.3",
+        "stroke": 0,
+        "stroke-linecap": "square",
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const ban = {
@@ -26889,29 +26951,22 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 0C128 70.6924 70.6924 128 -1.52588e-05 128",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 0C128 70.6924 70.6924 128 -1.52588e-05 128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
     }]
   };
   const bar = {
@@ -26919,66 +26974,56 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "circle",
       "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "64",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-0.00292969 0L127.997 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "64",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.00292969 0L127.997 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "16",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "32",
-          "cy": "32",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "32",
-          "cy": "32",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "16",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "32",
+        "cy": "32",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "32",
+        "cy": "32",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const bat = {
@@ -26986,29 +27031,22 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 0C128 35.3462 99.3462 64 64 64C28.6538 64 0 35.3462 0 0",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 0C128 35.3462 99.3462 64 64 64C28.6538 64 0 35.3462 0 0",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
     }]
   };
   const bec = {
@@ -27016,40 +27054,32 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-0.00280762 0L127.997 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.00280762 0L127.997 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "fill-rule": "evenodd",
-          "clip-rule": "evenodd",
-          "d": "M80 64C80 72.8366 72.8366 80 64 80C55.1634 80 48 72.8366 48 64C48 55.1634 55.1634 48 64 48C72.8366 48 80 55.1634 80 64ZM64 72C68.4183 72 72 68.4183 72 64C72 59.5817 68.4183 56 64 56C59.5817 56 56 59.5817 56 64C56 68.4183 59.5817 72 64 72Z",
-          "fill": 0
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "fill-rule": "evenodd",
+        "clip-rule": "evenodd",
+        "d": "M80 64C80 72.8366 72.8366 80 64 80C55.1634 80 48 72.8366 48 64C48 55.1634 55.1634 48 64 48C72.8366 48 80 55.1634 80 64ZM64 72C68.4183 72 72 68.4183 72 64C72 59.5817 68.4183 56 64 56C59.5817 56 56 59.5817 56 64C56 68.4183 59.5817 72 64 72Z",
+        "fill": 0
+      },
+      "children": []
     }]
   };
   const bel = {
@@ -27058,15 +27088,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M0 127.946C0.0292286 57.2783 57.3256 3.08928e-06 128 0C128 70.6823 70.7089 127.984 0.0305092 128C0.0203397 128 0.01017 128 2.36469e-09 128L0 127.946Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -27083,16 +27113,16 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "rect",
-      "value": "",
       "attributes": {
         "width": "128",
         "height": "128",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -27103,7 +27133,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "32",
         "cy": "64",
@@ -27114,7 +27143,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "32",
         "cy": "64",
@@ -27132,15 +27160,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M128 0C57.3075 8.42999e-07 -8.42999e-07 57.3075 0 128H128V0Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M128 64C92.6538 64 64 92.6538 64 128",
         "stroke": 0,
@@ -27154,29 +27182,22 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M64 128H0L5.59506e-06 0L64 5.59506e-06C99.3462 8.68512e-06 128 28.6538 128 64C128 99.3462 99.3462 128 64 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M96 0L96 128",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 128H0L5.59506e-06 0L64 5.59506e-06C99.3462 8.68512e-06 128 28.6538 128 64C128 99.3462 99.3462 128 64 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M96 0L96 128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
     }]
   };
   const bes = {
@@ -27184,39 +27205,31 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M64 128C64 92.6538 35.3462 64 0 64",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 128C64 92.6538 35.3462 64 0 64",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.00280762 0L127.997 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-0.00280762 0L127.997 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const bet = {
@@ -27225,17 +27238,17 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
         "r": "64",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "16.0036",
         "y1": "15.9965",
@@ -27253,15 +27266,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 128H0L5.59506e-06 0L64 5.59506e-06C99.3462 8.68512e-06 128 28.6538 128 64C128 99.3462 99.3462 128 64 128Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "16.0036",
         "y1": "15.9965",
@@ -27273,7 +27286,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "fill-rule": "evenodd",
         "clip-rule": "evenodd",
@@ -27288,29 +27300,22 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 96C74.9807 96 32 53.0193 32 -4.19629e-06",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 96C74.9807 96 32 53.0193 32 -4.19629e-06",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
     }]
   };
   const bid = {
@@ -27318,38 +27323,30 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M32 0C32 70.6925 74.9807 128 128 128",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M32 0C32 70.6925 74.9807 128 128 128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 64L0 64",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 64L0 64",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const bil = {
@@ -27358,15 +27355,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "80.0035",
         "y1": "79.9965",
@@ -27378,7 +27375,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "fill-rule": "evenodd",
         "clip-rule": "evenodd",
@@ -27394,11 +27390,12 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "rect",
-      "value": "",
       "attributes": {
         "width": "128",
         "height": "128",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }]
@@ -27409,15 +27406,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "128",
         "y1": "64",
@@ -27429,7 +27426,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "128",
         "y1": "96",
@@ -27441,7 +27437,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "128",
         "y1": "32",
@@ -27458,53 +27453,44 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0.0541 0C70.7217 0.0292317 128 57.3256 128 128C57.3177 128 0.0164917 70.7089 7.62806e-06 0.0305091C7.62851e-06 0.0203397 -4.44317e-10 0.01017 0 0H0.0541Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 0L0 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0.0541 0C70.7217 0.0292317 128 57.3256 128 128C57.3177 128 0.0164917 70.7089 7.62806e-06 0.0305091C7.62851e-06 0.0203397 -4.44317e-10 0.01017 0 0H0.0541Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 0L0 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const bol = {
@@ -27513,17 +27499,17 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
         "r": "64",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -27534,7 +27520,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "128",
         "y1": "64",
@@ -27551,29 +27536,22 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 0C57.3075 8.42999e-07 -8.42999e-07 57.3075 0 128H128V0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 128C92.6538 128 64 99.3462 64 64C64 28.6538 92.6538 4.215e-07 128 0",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 0C57.3075 8.42999e-07 -8.42999e-07 57.3075 0 128H128V0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 128C92.6538 128 64 99.3462 64 64C64 28.6538 92.6538 4.215e-07 128 0",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
     }]
   };
   const bor = {
@@ -27581,75 +27559,57 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "-0.0029152",
+        "x2": "127.983",
+        "y2": "127.986",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "-0.0029152",
-          "x2": "127.983",
-          "y2": "127.986",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "g",
-        "value": "",
-        "attributes": {
-          "fill": "none"
-        },
-        "children": [{
-          "name": "path",
-          "value": "",
-          "attributes": {
-            "d": "M0 128C4.63574e-06 92.6489 14.3309 60.6449 37.5 37.4807",
-            "stroke": 0,
-            "fill": "none"
-          },
-          "children": []
-        }, {
-          "name": "path",
-          "value": "",
-          "attributes": {
-            "d": "M32 128C32 101.492 42.7436 77.4939 60.1138 60.1217",
-            "stroke": 0,
-            "fill": "none"
-          },
-          "children": []
-        }, {
-          "name": "path",
-          "value": "",
-          "attributes": {
-            "d": "M64 128C64 110.328 71.1626 94.3287 82.7432 82.7471",
-            "stroke": 0,
-            "fill": "none"
-          },
-          "children": []
-        }, {
-          "name": "path",
-          "value": "",
-          "attributes": {
-            "d": "M95.6284 128C95.6284 119.164 99.2097 111.164 105 105.374",
-            "stroke": 0,
-            "fill": "none"
-          },
-          "children": []
-        }]
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M0 128C4.63574e-06 92.6489 14.3309 60.6449 37.5 37.4807",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M32 128C32 101.492 42.7436 77.4939 60.1138 60.1217",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M64 128C64 110.328 71.1626 94.3287 82.7432 82.7471",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M95.6284 128C95.6284 119.164 99.2097 111.164 105 105.374",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const bos = {
@@ -27657,55 +27617,46 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "-0.0029152",
+        "x2": "127.983",
+        "y2": "127.986",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "-0.0029152",
-          "x2": "127.983",
-          "y2": "127.986",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "32",
-          "cy": "32",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "32",
-          "cy": "32",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "32",
+        "cy": "32",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "32",
+        "cy": "32",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const bot = {
@@ -27714,15 +27665,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "32",
         "y1": "2.18557e-08",
@@ -27734,7 +27685,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "32",
         "cy": "96",
@@ -27745,7 +27695,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "32",
         "cy": "96",
@@ -27757,7 +27706,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "32",
         "cy": "32",
@@ -27768,7 +27716,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "32",
         "cy": "32",
@@ -27786,15 +27733,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M16 64C16 90.5097 37.4903 112 64 112",
         "stroke": 0,
@@ -27803,7 +27750,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "16",
         "cy": "64",
@@ -27814,7 +27760,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "16",
         "cy": "64",
@@ -27831,39 +27776,31 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M5.59506e-06 128C70.6925 128 128 70.6925 128 0L0 5.59506e-06L5.59506e-06 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M7.37542e-06 -3.56072e-06C1.19529e-06 70.6924 57.3075 128 128 128",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M5.59506e-06 128C70.6925 128 128 70.6925 128 0L0 5.59506e-06L5.59506e-06 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M7.37542e-06 -3.56072e-06C1.19529e-06 70.6924 57.3075 128 128 128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 0L0 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 0L0 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const bus = {
@@ -27871,39 +27808,31 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M32 128C32 110.327 17.6731 96 0 96",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M32 128C32 110.327 17.6731 96 0 96",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.00292969 0L127.997 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-0.00292969 0L127.997 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const byl = {
@@ -27911,62 +27840,52 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M5.59506e-06 128C70.6925 128 128 70.6925 128 0L0 5.59506e-06L5.59506e-06 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "16",
+        "cy": "112",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "16",
+        "cy": "112",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-0.00280762 0L127.997 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M5.59506e-06 128C70.6925 128 128 70.6925 128 0L0 5.59506e-06L5.59506e-06 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "16",
-          "cy": "112",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "16",
-          "cy": "112",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.00280762 0L127.997 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M22.1288 22.6299C16.0075 28.7511 8.0234 31.874 0.00134547 31.9986M44.7562 45.2573C32.3866 57.6269 16.2133 63.8747 0.00134277 64.0005M67.3836 67.8847C48.7656 86.5027 24.403 95.8749 0.00134412 96.0012",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M22.1288 22.6299C16.0075 28.7511 8.0234 31.874 0.00134547 31.9986M44.7562 45.2573C32.3866 57.6269 16.2133 63.8747 0.00134277 64.0005M67.3836 67.8847C48.7656 86.5027 24.403 95.8749 0.00134412 96.0012",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const byn = {
@@ -27975,55 +27894,45 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M5.59506e-06 128C70.6925 128 128 70.6925 128 0L0 5.59506e-06L5.59506e-06 128Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 0C128 35.3511 113.669 67.3551 90.5 90.5193",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 0C128 35.3511 113.669 67.3551 90.5 90.5193",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M96 0C96 26.5077 85.2564 50.5061 67.8862 67.8783",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 0C64 17.6721 56.8374 33.6713 45.2568 45.2529",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M32.3716 0C32.3716 8.83603 28.7903 16.8356 23 22.6264",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M96 0C96 26.5077 85.2564 50.5061 67.8862 67.8783",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M64 0C64 17.6721 56.8374 33.6713 45.2568 45.2529",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M32.3716 0C32.3716 8.83603 28.7903 16.8356 23 22.6264",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const byr = {
@@ -28031,53 +27940,44 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0 127.946C0.0292286 57.2783 57.3256 3.08928e-06 128 0C128 70.6823 70.7089 127.984 0.0305092 128C0.0203397 128 0.01017 128 2.36469e-09 128L0 127.946Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-0.00280762 0L127.997 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 127.946C0.0292286 57.2783 57.3256 3.08928e-06 128 0C128 70.6823 70.7089 127.984 0.0305092 128C0.0203397 128 0.01017 128 2.36469e-09 128L0 127.946Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.00280762 0L127.997 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "48",
-          "cy": "80",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "48",
-          "cy": "80",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "48",
+        "cy": "80",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "48",
+        "cy": "80",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const byt = {
@@ -28085,49 +27985,40 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M64 128H0L5.59506e-06 0L64 5.59506e-06C99.3462 8.68512e-06 128 28.6538 128 64C128 99.3462 99.3462 128 64 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "48",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 128H0L5.59506e-06 0L64 5.59506e-06C99.3462 8.68512e-06 128 28.6538 128 64C128 99.3462 99.3462 128 64 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "48",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 64L0 64",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M32 0L32 128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 64L0 64",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M32 0L32 128",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const dab = {
@@ -28136,15 +28027,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "y1": "-0.5",
         "x2": "45.2548",
@@ -28156,7 +28047,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "16",
         "cy": "112",
@@ -28167,7 +28057,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "16",
         "cy": "112",
@@ -28184,48 +28073,39 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 0L0 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 0L0 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 0L64 128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 64L-5.96046e-08 64",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M64 0L64 128",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 64L-5.96046e-08 64",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const dal = {
@@ -28233,85 +28113,74 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0.0541 0C70.7217 0.0292317 128 57.3256 128 128C57.3177 128 0.0164917 70.7089 7.62806e-06 0.0305091C7.62851e-06 0.0203397 -4.44317e-10 0.01017 0 0H0.0541Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "-0.0029152",
+        "x2": "63.29",
+        "y2": "63.2929",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0.0541 0C70.7217 0.0292317 128 57.3256 128 128C57.3177 128 0.0164917 70.7089 7.62806e-06 0.0305091C7.62851e-06 0.0203397 -4.44317e-10 0.01017 0 0H0.0541Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "-0.0029152",
-          "x2": "63.29",
-          "y2": "63.2929",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "0.5",
-          "y1": "-0.5",
-          "x2": "181.5",
-          "y2": "-0.5",
-          "transform": "matrix(-0.707107 0.707107 0.707107 0.707107 128.71 0)",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "128",
-          "y1": "32.0072",
-          "x2": "32.7071",
-          "y2": "127.3",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "128",
-          "y1": "64.0072",
-          "x2": "64.7071",
-          "y2": "127.3",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "128",
-          "y1": "96.0072",
-          "x2": "96.7071",
-          "y2": "127.3",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "0.5",
+        "y1": "-0.5",
+        "x2": "181.5",
+        "y2": "-0.5",
+        "transform": "matrix(-0.707107 0.707107 0.707107 0.707107 128.71 0)",
+        "stroke": 0,
+        "stroke-linecap": "square",
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "128",
+        "y1": "32.0072",
+        "x2": "32.7071",
+        "y2": "127.3",
+        "stroke": 0,
+        "stroke-linecap": "square",
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "128",
+        "y1": "64.0072",
+        "x2": "64.7071",
+        "y2": "127.3",
+        "stroke": 0,
+        "stroke-linecap": "square",
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "128",
+        "y1": "96.0072",
+        "x2": "96.7071",
+        "y2": "127.3",
+        "stroke": 0,
+        "stroke-linecap": "square",
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const dan = {
@@ -28319,55 +28188,46 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "64",
+        "y1": "2.18557e-08",
+        "x2": "64",
+        "y2": "128",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "64",
-          "y1": "2.18557e-08",
-          "x2": "64",
-          "y2": "128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "96",
-          "y1": "2.18557e-08",
-          "x2": "96",
-          "y2": "128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "16",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "96",
+        "y1": "2.18557e-08",
+        "x2": "96",
+        "y2": "128",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "16",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const dap = {
@@ -28376,15 +28236,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "80.0035",
         "y1": "79.9964",
@@ -28396,7 +28256,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -28407,7 +28266,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -28424,82 +28282,70 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "circle",
       "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "64",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "32",
+        "cy": "96",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "32",
+        "cy": "96",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M86.6274 86.6274C99.1242 74.1307 99.1242 53.8694 86.6274 41.3726C74.1306 28.8758 53.8694 28.8758 41.3726 41.3726",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "64",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "32",
-          "cy": "96",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "32",
-          "cy": "96",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M86.6274 86.6274C99.1242 74.1307 99.1242 53.8694 86.6274 41.3726C74.1306 28.8758 53.8694 28.8758 41.3726 41.3726",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M75.3137 75.3137C81.5621 69.0653 81.5621 58.9347 75.3137 52.6863C69.0653 46.4379 58.9347 46.4379 52.6863 52.6863",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M97.9411 97.9411C116.686 79.1959 116.686 48.804 97.9411 30.0589C79.196 11.3137 48.804 11.3137 30.0589 30.0589",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.00292969 0L127.997 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M75.3137 75.3137C81.5621 69.0653 81.5621 58.9347 75.3137 52.6863C69.0653 46.4379 58.9347 46.4379 52.6863 52.6863",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M97.9411 97.9411C116.686 79.1959 116.686 48.804 97.9411 30.0589C79.196 11.3137 48.804 11.3137 30.0589 30.0589",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-0.00292969 0L127.997 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const das = {
@@ -28508,16 +28354,16 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "rect",
-      "value": "",
       "attributes": {
         "width": "128",
         "height": "128",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "64",
         "y1": "2.18557e-08",
@@ -28529,7 +28375,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "fill-rule": "evenodd",
         "clip-rule": "evenodd",
@@ -28544,29 +28389,22 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 128C92.6538 128 64 99.3462 64 64C64 28.6538 92.6538 -1.54503e-06 128 0",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 128C92.6538 128 64 99.3462 64 64C64 28.6538 92.6538 -1.54503e-06 128 0",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
     }]
   };
   const dav = {
@@ -28574,61 +28412,51 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 64L0 64",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 64L0 64",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M96 64C96 46.3269 81.6731 32 64 32",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "96",
-          "cy": "64",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "96",
-          "cy": "64",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M96 64C96 46.3269 81.6731 32 64 32",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "96",
+        "cy": "64",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "96",
+        "cy": "64",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const deb = {
@@ -28637,16 +28465,16 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "rect",
-      "value": "",
       "attributes": {
         "width": "128",
         "height": "128",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 -6.35781e-07C64 35.3462 35.3462 64 0 64",
         "stroke": 0,
@@ -28661,15 +28489,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -28680,7 +28508,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -28692,7 +28519,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "112",
         "cy": "16",
@@ -28703,7 +28529,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "112",
         "cy": "16",
@@ -28720,83 +28545,71 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0.0541 0C70.7217 0.0292317 128 57.3256 128 128C57.3177 128 0.0164917 70.7089 7.62806e-06 0.0305091C7.62851e-06 0.0203397 -4.44317e-10 0.01017 0 0H0.0541Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M0 128L128 0",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0.0541 0C70.7217 0.0292317 128 57.3256 128 128C57.3177 128 0.0164917 70.7089 7.62806e-06 0.0305091C7.62851e-06 0.0203397 -4.44317e-10 0.01017 0 0H0.0541Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 128L128 0",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 94L94 0",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 64L64 0",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 32L32 0",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "16",
-          "cy": "112",
-          "r": "11.5",
-          "fill": 0,
-          "stroke": 0
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "16",
-          "cy": "112",
-          "r": "9",
-          "fill": 1,
-          "stroke": 1,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M0 94L94 0",
+        "stroke": 0,
+        "stroke-linecap": "square",
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M0 64L64 0",
+        "stroke": 0,
+        "stroke-linecap": "square",
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M0 32L32 0",
+        "stroke": 0,
+        "stroke-linecap": "square",
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "16",
+        "cy": "112",
+        "r": "11.5",
+        "fill": 0,
+        "stroke": 0
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "16",
+        "cy": "112",
+        "r": "9",
+        "fill": 1,
+        "stroke": 1,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const deg = {
@@ -28804,30 +28617,23 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "rect",
       "attributes": {
+        "width": "128",
+        "height": "128",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M64 128C64 92.6538 35.3462 64 0 64",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "rect",
-        "value": "",
-        "attributes": {
-          "width": "128",
-          "height": "128",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 128C64 92.6538 35.3462 64 0 64",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
     }]
   };
   const del = {
@@ -28836,15 +28642,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M0 127.946C0.0292286 57.2783 57.3256 3.08928e-06 128 0C128 70.6823 70.7089 127.984 0.0305092 128C0.0203397 128 0.01017 128 2.36469e-09 128L0 127.946Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "32",
         "cy": "96",
@@ -28855,7 +28661,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "32",
         "cy": "96",
@@ -28872,64 +28677,54 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "circle",
       "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "64",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-0.00292969 0L127.997 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "64",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.00292969 0L127.997 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 -6.35781e-07C64 35.3462 35.3462 64 0 64",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "32",
-          "cy": "32",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "32",
-          "cy": "32",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M64 -6.35781e-07C64 35.3462 35.3462 64 0 64",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "32",
+        "cy": "32",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "32",
+        "cy": "32",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const den = {
@@ -28937,40 +28732,32 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "rect",
       "attributes": {
+        "width": "128",
+        "height": "128",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M1.52575e-06 96C53.0193 96 96 53.0193 96 0",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "rect",
-        "value": "",
-        "attributes": {
-          "width": "128",
-          "height": "128",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M1.52575e-06 96C53.0193 96 96 53.0193 96 0",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.00280762 0L127.997 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-0.00280762 0L127.997 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const dep = {
@@ -28978,54 +28765,38 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 0C57.3075 8.42999e-07 -8.42999e-07 57.3075 0 128H128V0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M32 128C32 101.492 42.7436 77.4939 60.1138 60.1216",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 0C57.3075 8.42999e-07 -8.42999e-07 57.3075 0 128H128V0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "g",
-        "value": "",
-        "attributes": {
-          "fill": "none"
-        },
-        "children": [{
-          "name": "path",
-          "value": "",
-          "attributes": {
-            "d": "M32 128C32 101.492 42.7436 77.4939 60.1138 60.1216",
-            "stroke": 0,
-            "fill": "none"
-          },
-          "children": []
-        }, {
-          "name": "path",
-          "value": "",
-          "attributes": {
-            "d": "M64 128C64 110.328 71.1626 94.3287 82.7432 82.7471",
-            "stroke": 0,
-            "fill": "none"
-          },
-          "children": []
-        }, {
-          "name": "path",
-          "value": "",
-          "attributes": {
-            "d": "M95.6284 128C95.6284 119.164 99.2097 111.164 105 105.374",
-            "stroke": 0,
-            "fill": "none"
-          },
-          "children": []
-        }]
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M64 128C64 110.328 71.1626 94.3287 82.7432 82.7471",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M95.6284 128C95.6284 119.164 99.2097 111.164 105 105.374",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const der = {
@@ -29033,29 +28804,22 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0 64L5.59506e-06 0L128 1.11901e-05V64C128 99.3462 99.3462 128 64 128C28.6538 128 -4.6351e-06 99.3462 0 64Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M96 128L96 0",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 64L5.59506e-06 0L128 1.11901e-05V64C128 99.3462 99.3462 128 64 128C28.6538 128 -4.6351e-06 99.3462 0 64Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M96 128L96 0",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
     }]
   };
   const des = {
@@ -29063,29 +28827,22 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 0C57.3075 8.42999e-07 -8.42999e-07 57.3075 0 128H128V0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M96 0L96 128",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 0C57.3075 8.42999e-07 -8.42999e-07 57.3075 0 128H128V0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M96 0L96 128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
     }]
   };
   const det = {
@@ -29094,17 +28851,17 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
         "r": "64",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "15.9964",
         "y1": "111.996",
@@ -29122,15 +28879,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 128H0L5.59506e-06 0L64 5.59506e-06C99.3462 8.68512e-06 128 28.6538 128 64C128 99.3462 99.3462 128 64 128Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "96.5",
         "y1": "3.07317e-08",
@@ -29142,7 +28899,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "32.5",
         "y1": "3.07317e-08",
@@ -29154,7 +28910,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -29165,7 +28920,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -29183,15 +28937,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 128H0L5.59506e-06 0L64 5.59506e-06C99.3462 8.68512e-06 128 28.6538 128 64C128 99.3462 99.3462 128 64 128Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "64",
         "y1": "2.18557e-08",
@@ -29203,7 +28957,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "fill-rule": "evenodd",
         "clip-rule": "evenodd",
@@ -29218,69 +28971,59 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "circle",
       "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "64",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "8.74228e-08",
+        "y1": "64",
+        "x2": "128",
+        "y2": "64",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "64",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "8.74228e-08",
-          "y1": "64",
-          "x2": "128",
-          "y2": "64",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "5.25874e-08",
-          "y1": "32",
-          "x2": "128",
-          "y2": "32",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "32",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "32",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "5.25874e-08",
+        "y1": "32",
+        "x2": "128",
+        "y2": "32",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "32",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "32",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const dif = {
@@ -29288,89 +29031,77 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M60.1244 67.3837C41.5063 48.7657 32.1342 24.4031 32.0079 0.00145601M82.7518 44.7563C70.3822 32.3867 64.1344 16.2134 64.0086 0.00145196M105.379 22.1289C99.258 16.0077 96.1351 8.02351 96.0105 0.00145196",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M60.1244 67.3837C41.5063 48.7657 32.1342 24.4031 32.0079 0.00145601M82.7518 44.7563C70.3822 32.3867 64.1344 16.2134 64.0086 0.00145196M105.379 22.1289C99.258 16.0077 96.1351 8.02351 96.0105 0.00145196",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "0.5",
-          "y1": "-0.5",
-          "x2": "181.5",
-          "y2": "-0.5",
-          "transform": "matrix(-0.707107 0.707107 0.707107 0.707107 128.71 0)",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "16",
-          "cy": "16",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "16",
-          "cy": "16",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "16",
-          "cy": "112",
-          "r": "11.5",
-          "fill": 0,
-          "stroke": 0
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "16",
-          "cy": "112",
-          "r": "9",
-          "fill": 1,
-          "stroke": 1,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "0.5",
+        "y1": "-0.5",
+        "x2": "181.5",
+        "y2": "-0.5",
+        "transform": "matrix(-0.707107 0.707107 0.707107 0.707107 128.71 0)",
+        "stroke": 0,
+        "stroke-linecap": "square",
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "16",
+        "cy": "16",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "16",
+        "cy": "16",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "16",
+        "cy": "112",
+        "r": "11.5",
+        "fill": 0,
+        "stroke": 0
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "16",
+        "cy": "112",
+        "r": "9",
+        "fill": 1,
+        "stroke": 1,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const dig = {
@@ -29378,55 +29109,46 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "64.5",
+        "y1": "-0.5",
+        "x2": "64.5",
+        "y2": "127.5",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "64.5",
-          "y1": "-0.5",
-          "x2": "64.5",
-          "y2": "127.5",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "16.0035",
-          "y1": "15.9965",
-          "x2": "48.0035",
-          "y2": "47.9965",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "16",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "16.0035",
+        "y1": "15.9965",
+        "x2": "48.0035",
+        "y2": "47.9965",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "16",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const dil = {
@@ -29434,46 +29156,38 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "80.0036",
+        "y1": "79.9964",
+        "x2": "112.004",
+        "y2": "111.996",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "80.0036",
-          "y1": "79.9964",
-          "x2": "112.004",
-          "y2": "111.996",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "0.5",
-          "y1": "-0.5",
-          "x2": "181.5",
-          "y2": "-0.5",
-          "transform": "matrix(-0.707107 0.707107 0.707107 0.707107 128.71 0)",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "0.5",
+        "y1": "-0.5",
+        "x2": "181.5",
+        "y2": "-0.5",
+        "transform": "matrix(-0.707107 0.707107 0.707107 0.707107 128.71 0)",
+        "stroke": 0,
+        "stroke-linecap": "square",
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const din = {
@@ -29482,16 +29196,16 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "rect",
-      "value": "",
       "attributes": {
         "width": "128",
         "height": "128",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "96",
         "y1": "2.18557e-08",
@@ -29509,15 +29223,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M96 64C96 81.6731 81.6731 96 64 96",
         "stroke": 0,
@@ -29526,7 +29240,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "16.0035",
         "y1": "15.9965",
@@ -29538,7 +29251,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -29554,76 +29266,65 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 0C57.3075 8.42999e-07 -8.42999e-07 57.3075 0 128H128V0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-0.0029152 0L127.997 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 0C57.3075 8.42999e-07 -8.42999e-07 57.3075 0 128H128V0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.0029152 0L127.997 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "96",
-          "cy": "32",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "96",
-          "cy": "32",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "32",
-          "cy": "96",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "32",
-          "cy": "96",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "96",
+        "cy": "32",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "96",
+        "cy": "32",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "32",
+        "cy": "96",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "32",
+        "cy": "96",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const div = {
@@ -29631,48 +29332,39 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "rect",
       "attributes": {
+        "width": "128",
+        "height": "128",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M64 0L64 128",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "rect",
-        "value": "",
-        "attributes": {
-          "width": "128",
-          "height": "128",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 0L64 128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-4.19629e-06 96C70.6924 96 128 53.0193 128 5.59506e-06",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-2.79753e-06 64C70.6924 64 128 35.3462 128 5.59506e-06",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-4.19629e-06 96C70.6924 96 128 53.0193 128 5.59506e-06",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-2.79753e-06 64C70.6924 64 128 35.3462 128 5.59506e-06",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const doc = {
@@ -29680,50 +29372,41 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0 127.946C0.0292286 57.2783 57.3256 3.08928e-06 128 0C128 70.6823 70.7089 127.984 0.0305092 128C0.0203397 128 0.01017 128 2.36469e-09 128L0 127.946Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M127.997 0L-0.00291443 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 127.946C0.0292286 57.2783 57.3256 3.08928e-06 128 0C128 70.6823 70.7089 127.984 0.0305092 128C0.0203397 128 0.01017 128 2.36469e-09 128L0 127.946Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M127.997 0L-0.00291443 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "16",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M86.6274 41.3726C74.1306 28.8758 53.8694 28.8758 41.3726 41.3726C28.8758 53.8694 28.8758 74.1306 41.3726 86.6274",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "16",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M86.6274 41.3726C74.1306 28.8758 53.8694 28.8758 41.3726 41.3726C28.8758 53.8694 28.8758 74.1306 41.3726 86.6274",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const dol = {
@@ -29731,40 +29414,32 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "circle",
       "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "64",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 64L0 64",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "64",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 64L0 64",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-4.19629e-06 16C26.5097 16 48 37.4903 48 64C48 90.5097 26.5097 112 0 112",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-4.19629e-06 16C26.5097 16 48 37.4903 48 64C48 90.5097 26.5097 112 0 112",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const don = {
@@ -29772,29 +29447,22 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 0C57.3075 8.42999e-07 -8.42999e-07 57.3075 0 128H128V0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-3.8147e-06 128C-7.24632e-07 92.6538 28.6538 64 64 64C99.3462 64 128 92.6538 128 128",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 0C57.3075 8.42999e-07 -8.42999e-07 57.3075 0 128H128V0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-3.8147e-06 128C-7.24632e-07 92.6538 28.6538 64 64 64C99.3462 64 128 92.6538 128 128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
     }]
   };
   const dop = {
@@ -29802,63 +29470,53 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "circle",
       "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "64",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M64 112C90.5097 112 112 90.5097 112 64C112 37.4903 90.5097 16 64 16",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "64",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 112C90.5097 112 112 90.5097 112 64C112 37.4903 90.5097 16 64 16",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 64L0 64",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 64L0 64",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const dor = {
@@ -29867,15 +29525,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "y1": "63.5",
         "x2": "128",
@@ -29891,41 +29549,33 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "-0.0029152",
+        "x2": "127.983",
+        "y2": "127.986",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "-0.0029152",
-          "x2": "127.983",
-          "y2": "127.986",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M86.6274 86.6274C99.1242 74.1306 99.1242 53.8693 86.6274 41.3725C74.1306 28.8758 53.8694 28.8758 41.3726 41.3725",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M86.6274 86.6274C99.1242 74.1306 99.1242 53.8693 86.6274 41.3725C74.1306 28.8758 53.8694 28.8758 41.3726 41.3725",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const dot = {
@@ -29934,15 +29584,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -29953,7 +29603,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -29970,49 +29619,40 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "rect",
       "attributes": {
+        "width": "128",
+        "height": "128",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 0L0 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "rect",
-        "value": "",
-        "attributes": {
-          "width": "128",
-          "height": "128",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 0L0 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.701724 31.9914C25.6281 31.9914 49.4822 42.5913 66.8261 59.7565M-0.701723 63.9914C16.7916 63.9914 32.6456 71.0098 44.1982 82.3844M-0.701722 95.9914C7.955 95.9914 15.8089 99.4288 21.5694 105.013",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 0C35.3511 0 67.3551 14.3309 90.5193 37.5",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-0.701724 31.9914C25.6281 31.9914 49.4822 42.5913 66.8261 59.7565M-0.701723 63.9914C16.7916 63.9914 32.6456 71.0098 44.1982 82.3844M-0.701722 95.9914C7.955 95.9914 15.8089 99.4288 21.5694 105.013",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M0 0C35.3511 0 67.3551 14.3309 90.5193 37.5",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const doz = {
@@ -30020,59 +29660,49 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "circle",
       "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "64",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 128L0 0",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "64",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 128L0 0",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M30.0589 30.0589C48.804 11.3137 79.196 11.3137 97.9411 30.0589C116.686 48.804 116.686 79.196 97.9411 97.9411",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M52.6863 52.6863C58.9347 46.4379 69.0653 46.4379 75.3137 52.6863C81.5621 58.9347 81.5621 69.0653 75.3137 75.3137",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M41.3726 41.3726C53.8694 28.8758 74.1306 28.8758 86.6274 41.3726C99.1242 53.8694 99.1242 74.1306 86.6274 86.6274",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M30.0589 30.0589C48.804 11.3137 79.196 11.3137 97.9411 30.0589C116.686 48.804 116.686 79.196 97.9411 97.9411",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M52.6863 52.6863C58.9347 46.4379 69.0653 46.4379 75.3137 52.6863C81.5621 58.9347 81.5621 69.0653 75.3137 75.3137",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M41.3726 41.3726C53.8694 28.8758 74.1306 28.8758 86.6274 41.3726C99.1242 53.8694 99.1242 74.1306 86.6274 86.6274",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const duc = {
@@ -30080,61 +29710,51 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 64L0 64",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 64L0 64",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 32L0 32",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "32",
-          "cy": "32",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "32",
-          "cy": "32",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 32L0 32",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "32",
+        "cy": "32",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "32",
+        "cy": "32",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const dul = {
@@ -30143,17 +29763,17 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
         "r": "64",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 16C90.5097 16 112 37.4903 112 64",
         "stroke": 0,
@@ -30162,7 +29782,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 64L64 128",
         "stroke": 0,
@@ -30171,7 +29790,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -30182,7 +29800,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -30200,15 +29817,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 128H0L5.59506e-06 0L64 5.59506e-06C99.3462 8.68512e-06 128 28.6538 128 64C128 99.3462 99.3462 128 64 128Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M112 64C112 37.4903 90.5097 16 64 16",
         "stroke": 0,
@@ -30223,10 +29840,11 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M0 64L5.59506e-06 0L128 1.11901e-05V64C128 99.3462 99.3462 128 64 128C28.6538 128 -4.6351e-06 99.3462 0 64Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }]
@@ -30236,39 +29854,31 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M32 -3.05151e-06C32 53.0193 74.9807 96 128 96",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M32 -3.05151e-06C32 53.0193 74.9807 96 128 96",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 0L0 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 0L0 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const dut = {
@@ -30277,16 +29887,16 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "rect",
-      "value": "",
       "attributes": {
         "width": "128",
         "height": "128",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "96",
         "cy": "96",
@@ -30297,7 +29907,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "96",
         "cy": "96",
@@ -30314,29 +29923,22 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M5.59506e-06 128C70.6925 128 128 70.6925 128 0L0 5.59506e-06L5.59506e-06 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-2.79795e-06 -3.55988e-06C70.6924 -4.40288e-06 128 57.3075 128 128",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M5.59506e-06 128C70.6925 128 128 70.6925 128 0L0 5.59506e-06L5.59506e-06 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-2.79795e-06 -3.55988e-06C70.6924 -4.40288e-06 128 57.3075 128 128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
     }]
   };
   const dyl = {
@@ -30344,29 +29946,22 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M2.03434e-06 128C70.6924 128 128 70.6925 128 0",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M2.03434e-06 128C70.6924 128 128 70.6925 128 0",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
     }]
   };
   const dyn = {
@@ -30374,29 +29969,22 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M5.59506e-06 128C70.6925 128 128 70.6925 128 0L0 5.59506e-06L5.59506e-06 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 32L0 32",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M5.59506e-06 128C70.6925 128 128 70.6925 128 0L0 5.59506e-06L5.59506e-06 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 32L0 32",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
     }]
   };
   const dyr = {
@@ -30404,264 +29992,25 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
-      "attributes": {
-        "fill": "none"
-      },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 127.946C0.0292286 57.2783 57.3256 3.08928e-06 128 0C128 70.6823 70.7089 127.984 0.0305092 128C0.0203397 128 0.01017 128 2.36469e-09 128L0 127.946Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.00292969 0L127.997 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "96",
-          "cy": "32",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "96",
-          "cy": "32",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "32",
-          "cy": "96",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "32",
-          "cy": "96",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
-    }]
-  };
-  const dys = {
-    "name": "g",
-    "value": "",
-    "attributes": {},
-    "children": [{
-      "name": "g",
-      "value": "",
-      "attributes": {
-        "fill": "none"
-      },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-3.8147e-06 1.11901e-05C-7.24633e-07 35.3462 28.6538 64 64 64C99.3462 64 128 35.3462 128 0",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
-    }]
-  };
-  const dyt = {
-    "name": "g",
-    "value": "",
-    "attributes": {},
-    "children": [{
-      "name": "g",
-      "value": "",
-      "attributes": {
-        "fill": "none"
-      },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 128H0L5.59506e-06 0L64 5.59506e-06C99.3462 8.68512e-06 128 28.6538 128 64C128 99.3462 99.3462 128 64 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "32",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 64L0 64",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "32",
-          "cy": "64",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "32",
-          "cy": "64",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
-    }]
-  };
-  const fab = {
-    "name": "g",
-    "value": "",
-    "attributes": {},
-    "children": [{
-      "name": "g",
-      "value": "",
-      "attributes": {
-        "fill": "none"
-      },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 0L0 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "16",
-          "cy": "112",
-          "r": "11.5",
-          "fill": 0,
-          "stroke": 0
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "16",
-          "cy": "112",
-          "r": "9",
-          "fill": 1,
-          "stroke": 1,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
-    }]
-  };
-  const fad = {
-    "name": "g",
-    "value": "",
-    "attributes": {},
-    "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
-        "d": "M5.59506e-06 128C70.6925 128 128 70.6925 128 0L0 5.59506e-06L5.59506e-06 128Z",
-        "fill": 1
+        "d": "M0 127.946C0.0292286 57.2783 57.3256 3.08928e-06 128 0C128 70.6823 70.7089 127.984 0.0305092 128C0.0203397 128 0.01017 128 2.36469e-09 128L0 127.946Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-0.00292969 0L127.997 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
+        "fill": "none"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "96",
         "cy": "32",
@@ -30672,7 +30021,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "96",
         "cy": "32",
@@ -30684,7 +30032,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "32",
         "cy": "96",
@@ -30695,7 +30042,206 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
+      "attributes": {
+        "cx": "32",
+        "cy": "96",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
+    }]
+  };
+  const dys = {
+    "name": "g",
+    "value": "",
+    "attributes": {},
+    "children": [{
+      "name": "path",
+      "attributes": {
+        "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-3.8147e-06 1.11901e-05C-7.24633e-07 35.3462 28.6538 64 64 64C99.3462 64 128 35.3462 128 0",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }]
+  };
+  const dyt = {
+    "name": "g",
+    "value": "",
+    "attributes": {},
+    "children": [{
+      "name": "path",
+      "attributes": {
+        "d": "M64 128H0L5.59506e-06 0L64 5.59506e-06C99.3462 8.68512e-06 128 28.6538 128 64C128 99.3462 99.3462 128 64 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "32",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 64L0 64",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "32",
+        "cy": "64",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "32",
+        "cy": "64",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
+    }]
+  };
+  const fab = {
+    "name": "g",
+    "value": "",
+    "attributes": {},
+    "children": [{
+      "name": "path",
+      "attributes": {
+        "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 0L0 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "16",
+        "cy": "112",
+        "r": "11.5",
+        "fill": 0,
+        "stroke": 0
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "16",
+        "cy": "112",
+        "r": "9",
+        "fill": 1,
+        "stroke": 1,
+        "stroke-width": "2"
+      },
+      "children": []
+    }]
+  };
+  const fad = {
+    "name": "g",
+    "value": "",
+    "attributes": {},
+    "children": [{
+      "name": "path",
+      "attributes": {
+        "d": "M5.59506e-06 128C70.6925 128 128 70.6925 128 0L0 5.59506e-06L5.59506e-06 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "96",
+        "cy": "32",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "96",
+        "cy": "32",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "32",
+        "cy": "96",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
       "attributes": {
         "cx": "32",
         "cy": "96",
@@ -30712,73 +30258,55 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0 127.946C0.0292286 57.2783 57.3256 3.08928e-06 128 0C128 70.6823 70.7089 127.984 0.0305092 128C0.0203397 128 0.01017 128 2.36469e-09 128L0 127.946Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M0 128L128 0",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 127.946C0.0292286 57.2783 57.3256 3.08928e-06 128 0C128 70.6823 70.7089 127.984 0.0305092 128C0.0203397 128 0.01017 128 2.36469e-09 128L0 127.946Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 128L128 0",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "g",
-        "value": "",
-        "attributes": {
-          "fill": "none"
-        },
-        "children": [{
-          "name": "path",
-          "value": "",
-          "attributes": {
-            "d": "M0 0C35.3511 0 67.3551 14.3309 90.5193 37.5",
-            "stroke": 0,
-            "fill": "none"
-          },
-          "children": []
-        }, {
-          "name": "path",
-          "value": "",
-          "attributes": {
-            "d": "M0 32C26.5077 32 50.5061 42.7436 67.8783 60.1138",
-            "stroke": 0,
-            "fill": "none"
-          },
-          "children": []
-        }, {
-          "name": "path",
-          "value": "",
-          "attributes": {
-            "d": "M0 64C17.6721 64 33.6713 71.1626 45.2529 82.7432",
-            "stroke": 0,
-            "fill": "none"
-          },
-          "children": []
-        }, {
-          "name": "path",
-          "value": "",
-          "attributes": {
-            "d": "M0 95.6284C8.83603 95.6284 16.8356 99.2097 22.6264 105",
-            "stroke": 0,
-            "fill": "none"
-          },
-          "children": []
-        }]
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M0 0C35.3511 0 67.3551 14.3309 90.5193 37.5",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M0 32C26.5077 32 50.5061 42.7436 67.8783 60.1138",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M0 64C17.6721 64 33.6713 71.1626 45.2529 82.7432",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M0 95.6284C8.83603 95.6284 16.8356 99.2097 22.6264 105",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const fam = {
@@ -30787,15 +30315,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "128",
         "y1": "64",
@@ -30807,7 +30335,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "64",
         "y1": "2.18557e-08",
@@ -30819,7 +30346,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -30830,7 +30356,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -30847,49 +30372,40 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 0L0 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 0L0 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 0L64 128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.00292969 0L127.997 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M64 0L64 128",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-0.00292969 0L127.997 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const fas = {
@@ -30898,16 +30414,16 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "rect",
-      "value": "",
       "attributes": {
         "width": "128",
         "height": "128",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -30918,7 +30434,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "96",
         "cy": "64",
@@ -30929,7 +30444,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "96",
         "cy": "64",
@@ -30946,30 +30460,23 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "rect",
       "attributes": {
+        "width": "128",
+        "height": "128",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M7.37542e-06 -3.56072e-06C1.19529e-06 70.6924 57.3075 128 128 128",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "rect",
-        "value": "",
-        "attributes": {
-          "width": "128",
-          "height": "128",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M7.37542e-06 -3.56072e-06C1.19529e-06 70.6924 57.3075 128 128 128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
     }]
   };
   const fed = {
@@ -30977,54 +30484,45 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "circle",
       "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "64",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 32L0 32",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "64",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 32L0 32",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const fel = {
@@ -31033,15 +30531,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M0 127.946C0.0292286 57.2783 57.3256 3.08928e-06 128 0C128 70.6823 70.7089 127.984 0.0305092 128C0.0203397 128 0.01017 128 2.36469e-09 128L0 127.946Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "y1": "-0.5",
         "x2": "45.2548",
@@ -31058,74 +30556,56 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "rect",
       "attributes": {
+        "width": "128",
+        "height": "128",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-0.00280762 0L127.997 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "rect",
-        "value": "",
-        "attributes": {
-          "width": "128",
-          "height": "128",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.00280762 0L127.997 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "g",
-        "value": "",
-        "attributes": {
-          "fill": "none"
-        },
-        "children": [{
-          "name": "path",
-          "value": "",
-          "attributes": {
-            "d": "M0 128C4.63574e-06 92.6489 14.3309 60.6449 37.5 37.4807",
-            "stroke": 0,
-            "fill": "none"
-          },
-          "children": []
-        }, {
-          "name": "path",
-          "value": "",
-          "attributes": {
-            "d": "M32 128C32 101.492 42.7436 77.4939 60.1138 60.1217",
-            "stroke": 0,
-            "fill": "none"
-          },
-          "children": []
-        }, {
-          "name": "path",
-          "value": "",
-          "attributes": {
-            "d": "M64 128C64 110.328 71.1626 94.3287 82.7432 82.7471",
-            "stroke": 0,
-            "fill": "none"
-          },
-          "children": []
-        }, {
-          "name": "path",
-          "value": "",
-          "attributes": {
-            "d": "M95.6284 128C95.6284 119.164 99.2097 111.164 105 105.374",
-            "stroke": 0,
-            "fill": "none"
-          },
-          "children": []
-        }]
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M0 128C4.63574e-06 92.6489 14.3309 60.6449 37.5 37.4807",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M32 128C32 101.492 42.7436 77.4939 60.1138 60.1217",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M64 128C64 110.328 71.1626 94.3287 82.7432 82.7471",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M95.6284 128C95.6284 119.164 99.2097 111.164 105 105.374",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const fep = {
@@ -31133,30 +30613,23 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 0L0 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 0L0 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
     }]
   };
   const fer = {
@@ -31164,29 +30637,22 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M64 128H0L5.59506e-06 0L64 5.59506e-06C99.3462 8.68512e-06 128 28.6538 128 64C128 99.3462 99.3462 128 64 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M64 0L64 128",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 128H0L5.59506e-06 0L64 5.59506e-06C99.3462 8.68512e-06 128 28.6538 128 64C128 99.3462 99.3462 128 64 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 0L64 128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
     }]
   };
   const fes = {
@@ -31195,15 +30661,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M128 0C57.3075 8.42999e-07 -8.42999e-07 57.3075 0 128H128V0Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M32 0L32 128",
         "stroke": 0,
@@ -31217,32 +30683,25 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "circle",
       "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "64",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 0L0 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "64",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 0L0 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
     }]
   };
   const fex = {
@@ -31251,15 +30710,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 128H0L5.59506e-06 0L64 5.59506e-06C99.3462 8.68512e-06 128 28.6538 128 64C128 99.3462 99.3462 128 64 128Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "y1": "-0.5",
         "x2": "45.2548",
@@ -31271,7 +30730,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "fill-rule": "evenodd",
         "clip-rule": "evenodd",
@@ -31286,76 +30744,65 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-0.00291443 0L127.997 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.00291443 0L127.997 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "96",
-          "cy": "96",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "96",
-          "cy": "96",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "32",
-          "cy": "32",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "32",
-          "cy": "32",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "96",
+        "cy": "96",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "96",
+        "cy": "96",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "32",
+        "cy": "32",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "32",
+        "cy": "32",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const fig = {
@@ -31363,51 +30810,42 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M64 0L64 128",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 0L64 128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "32",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "16",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "32",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "16",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const fil = {
@@ -31416,15 +30854,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "128",
         "y1": "64",
@@ -31436,7 +30874,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "64",
         "y1": "2.18557e-08",
@@ -31448,7 +30885,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "32",
         "y1": "2.18557e-08",
@@ -31466,16 +30902,16 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "rect",
-      "value": "",
       "attributes": {
         "width": "128",
         "height": "128",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "98",
         "y1": "2.18557e-08",
@@ -31492,66 +30928,56 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "32",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "32",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "-0.0029152",
-          "x2": "127.983",
-          "y2": "127.986",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "96",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "96",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "-0.0029152",
+        "x2": "127.983",
+        "y2": "127.986",
+        "stroke": 0,
+        "stroke-linecap": "square",
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "96",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "96",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const fir = {
@@ -31560,15 +30986,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "y1": "-0.5",
         "x2": "45.2548",
@@ -31580,7 +31006,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "80.0036",
         "y1": "79.9965",
@@ -31592,7 +31017,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "16.0035",
         "y1": "15.9965",
@@ -31604,7 +31028,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -31615,7 +31038,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -31632,34 +31054,27 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0.0541 0C70.7217 0.0292317 128 57.3256 128 128C57.3177 128 0.0164917 70.7089 7.62806e-06 0.0305091C7.62851e-06 0.0203397 -4.44317e-10 0.01017 0 0H0.0541Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "0.5",
+        "y1": "-0.5",
+        "x2": "181.5",
+        "y2": "-0.5",
+        "transform": "matrix(-0.707107 0.707107 0.707107 0.707107 128.71 0)",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0.0541 0C70.7217 0.0292317 128 57.3256 128 128C57.3177 128 0.0164917 70.7089 7.62806e-06 0.0305091C7.62851e-06 0.0203397 -4.44317e-10 0.01017 0 0H0.0541Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "0.5",
-          "y1": "-0.5",
-          "x2": "181.5",
-          "y2": "-0.5",
-          "transform": "matrix(-0.707107 0.707107 0.707107 0.707107 128.71 0)",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
     }]
   };
   const fod = {
@@ -31668,15 +31083,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "fill-rule": "evenodd",
         "clip-rule": "evenodd",
@@ -31691,50 +31106,41 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 0C57.3075 8.42999e-07 -8.42999e-07 57.3075 0 128H128V0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-0.00292969 0L127.997 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 0C57.3075 8.42999e-07 -8.42999e-07 57.3075 0 128H128V0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.00292969 0L127.997 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M86.6274 86.6274C99.1242 74.1306 99.1242 53.8694 86.6274 41.3726C74.1306 28.8758 53.8694 28.8758 41.3726 41.3726",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "16",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M86.6274 86.6274C99.1242 74.1306 99.1242 53.8694 86.6274 41.3726C74.1306 28.8758 53.8694 28.8758 41.3726 41.3726",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "16",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const fol = {
@@ -31743,17 +31149,17 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
         "r": "64",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -31764,7 +31170,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "128",
         "y1": "64",
@@ -31781,32 +31186,25 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 0C57.3075 8.42999e-07 -8.42999e-07 57.3075 0 128H128V0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "-0.0029152",
+        "x2": "127.983",
+        "y2": "127.986",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 0C57.3075 8.42999e-07 -8.42999e-07 57.3075 0 128H128V0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "-0.0029152",
-          "x2": "127.983",
-          "y2": "127.986",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
     }]
   };
   const fop = {
@@ -31814,66 +31212,56 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "circle",
       "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "64",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "-0.0029152",
+        "x2": "127.983",
+        "y2": "127.986",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "64",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "-0.0029152",
-          "x2": "127.983",
-          "y2": "127.986",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M16 64C16 90.5097 37.4903 112 64 112",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "16",
-          "cy": "64",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "16",
-          "cy": "64",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M16 64C16 90.5097 37.4903 112 64 112",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "16",
+        "cy": "64",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "16",
+        "cy": "64",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const fos = {
@@ -31881,59 +31269,49 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M5.59506e-06 128C70.6925 128 128 70.6925 128 0L0 5.59506e-06L5.59506e-06 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "-0.0029152",
+        "x2": "127.983",
+        "y2": "127.986",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M5.59506e-06 128C70.6925 128 128 70.6925 128 0L0 5.59506e-06L5.59506e-06 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "-0.0029152",
-          "x2": "127.983",
-          "y2": "127.986",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M96 0C96 53.0193 53.0193 96 0 96",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 0C64 35.3462 35.3462 64 0 64",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M32 0C32 17.6731 17.6731 32 0 32",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M96 0C96 53.0193 53.0193 96 0 96",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M64 0C64 35.3462 35.3462 64 0 64",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M32 0C32 17.6731 17.6731 32 0 32",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const fot = {
@@ -31942,15 +31320,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "15.9964",
         "y1": "111.997",
@@ -31962,7 +31340,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -31973,7 +31350,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -31991,17 +31367,17 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
         "r": "64",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 96C81.6731 96 96 81.6731 96 64C96 46.3269 81.6731 32 64 32",
         "stroke": 0,
@@ -32015,65 +31391,55 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 64V128H0L2.79753e-06 64C4.34256e-06 28.6538 28.6538 -1.54503e-06 64 0C99.3462 1.54503e-06 128 28.6538 128 64Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "15.9964",
+        "y1": "111.997",
+        "x2": "47.9964",
+        "y2": "79.9965",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 64V128H0L2.79753e-06 64C4.34256e-06 28.6538 28.6538 -1.54503e-06 64 0C99.3462 1.54503e-06 128 28.6538 128 64Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "15.9964",
-          "y1": "111.997",
-          "x2": "47.9964",
-          "y2": "79.9965",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.00280762 0L127.997 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "16",
-          "cy": "112",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "16",
-          "cy": "112",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-0.00280762 0L127.997 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "16",
+        "cy": "112",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "16",
+        "cy": "112",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const fur = {
@@ -32081,50 +31447,41 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M5.59506e-06 128C70.6925 128 128 70.6925 128 0L0 5.59506e-06L5.59506e-06 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 0L0 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M5.59506e-06 128C70.6925 128 128 70.6925 128 0L0 5.59506e-06L5.59506e-06 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 0L0 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M86.8823 41.6275C74.3855 29.1307 54.1242 29.1307 41.6274 41.6275C29.1307 54.1243 29.1307 74.3855 41.6274 86.8823",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "16",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M86.8823 41.6275C74.3855 29.1307 54.1242 29.1307 41.6274 41.6275C29.1307 54.1243 29.1307 74.3855 41.6274 86.8823",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "16",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const fus = {
@@ -32132,39 +31489,31 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 0L0 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 0L0 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M32 128C32 110.327 17.6731 96 0 96",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M32 128C32 110.327 17.6731 96 0 96",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const fyl = {
@@ -32172,39 +31521,31 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M5.59506e-06 128C70.6925 128 128 70.6925 128 0L0 5.59506e-06L5.59506e-06 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M22.1288 22.6299C16.0075 28.7511 8.0234 31.874 0.00134547 31.9986M44.7562 45.2573C32.3866 57.6269 16.2133 63.8747 0.00134277 64.0005M67.3836 67.8847C48.7656 86.5027 24.403 95.8749 0.00134412 96.0012",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M5.59506e-06 128C70.6925 128 128 70.6925 128 0L0 5.59506e-06L5.59506e-06 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M22.1288 22.6299C16.0075 28.7511 8.0234 31.874 0.00134547 31.9986M44.7562 45.2573C32.3866 57.6269 16.2133 63.8747 0.00134277 64.0005M67.3836 67.8847C48.7656 86.5027 24.403 95.8749 0.00134412 96.0012",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.00280762 0L127.997 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-0.00280762 0L127.997 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const fyn = {
@@ -32212,30 +31553,23 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M5.59506e-06 128C70.6925 128 128 70.6925 128 0L0 5.59506e-06L5.59506e-06 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 0L0 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M5.59506e-06 128C70.6925 128 128 70.6925 128 0L0 5.59506e-06L5.59506e-06 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 0L0 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
     }]
   };
   const fyr = {
@@ -32243,42 +31577,34 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0 127.946C0.0292286 57.2783 57.3256 3.08928e-06 128 0C128 70.6823 70.7089 127.984 0.0305092 128C0.0203397 128 0.01017 128 2.36469e-09 128L0 127.946Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-0.00268555 0L127.997 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 127.946C0.0292286 57.2783 57.3256 3.08928e-06 128 0C128 70.6823 70.7089 127.984 0.0305092 128C0.0203397 128 0.01017 128 2.36469e-09 128L0 127.946Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.00268555 0L127.997 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "y1": "-0.5",
-          "x2": "45.2548",
-          "y2": "-0.5",
-          "transform": "matrix(0.707107 -0.707107 -0.707107 -0.707107 79.6499 47.6499)",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "y1": "-0.5",
+        "x2": "45.2548",
+        "y2": "-0.5",
+        "transform": "matrix(0.707107 -0.707107 -0.707107 -0.707107 79.6499 47.6499)",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const hab = {
@@ -32286,66 +31612,56 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "0.5",
+        "y1": "-0.5",
+        "x2": "181.5",
+        "y2": "-0.5",
+        "transform": "matrix(-0.707107 0.707107 0.707107 0.707107 128.71 0)",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "0.5",
-          "y1": "-0.5",
-          "x2": "181.5",
-          "y2": "-0.5",
-          "transform": "matrix(-0.707107 0.707107 0.707107 0.707107 128.71 0)",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M60.1244 67.3837C41.5063 48.7657 32.1342 24.4031 32.0079 0.00145601M82.7518 44.7563C70.3822 32.3867 64.1344 16.2134 64.0086 0.00145196M105.379 22.1289C99.258 16.0077 96.1351 8.02351 96.0105 0.00145196",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "16",
-          "cy": "112",
-          "r": "11.5",
-          "fill": 0,
-          "stroke": 0
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "16",
-          "cy": "112",
-          "r": "9",
-          "fill": 1,
-          "stroke": 1,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M60.1244 67.3837C41.5063 48.7657 32.1342 24.4031 32.0079 0.00145601M82.7518 44.7563C70.3822 32.3867 64.1344 16.2134 64.0086 0.00145196M105.379 22.1289C99.258 16.0077 96.1351 8.02351 96.0105 0.00145196",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "16",
+        "cy": "112",
+        "r": "11.5",
+        "fill": 0,
+        "stroke": 0
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "16",
+        "cy": "112",
+        "r": "9",
+        "fill": 1,
+        "stroke": 1,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const hac = {
@@ -32353,68 +31669,58 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "0.5",
+        "y1": "-0.5",
+        "x2": "181.5",
+        "y2": "-0.5",
+        "transform": "matrix(-0.707107 0.707107 0.707107 0.707107 128.71 0)",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "0.5",
-          "y1": "-0.5",
-          "x2": "181.5",
-          "y2": "-0.5",
-          "transform": "matrix(-0.707107 0.707107 0.707107 0.707107 128.71 0)",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "32",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "32",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const had = {
@@ -32423,15 +31729,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M5.59506e-06 128C70.6925 128 128 70.6925 128 0L0 5.59506e-06L5.59506e-06 128Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "32",
         "cy": "32",
@@ -32442,7 +31748,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "32",
         "cy": "32",
@@ -32459,50 +31764,41 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0 127.946C0.0292286 57.2783 57.3256 3.08928e-06 128 0C128 70.6823 70.7089 127.984 0.0305092 128C0.0203397 128 0.01017 128 2.36469e-09 128L0 127.946Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "64.5",
+        "y1": "-0.5",
+        "x2": "64.5",
+        "y2": "127.5",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 127.946C0.0292286 57.2783 57.3256 3.08928e-06 128 0C128 70.6823 70.7089 127.984 0.0305092 128C0.0203397 128 0.01017 128 2.36469e-09 128L0 127.946Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "64.5",
-          "y1": "-0.5",
-          "x2": "64.5",
-          "y2": "127.5",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M16 64C16 90.5097 37.4903 112 64 112",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M112 64C112 37.4903 90.5097 16 64 16",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M16 64C16 90.5097 37.4903 112 64 112",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M112 64C112 37.4903 90.5097 16 64 16",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const han = {
@@ -32511,10 +31807,11 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M5.59506e-06 128C70.6925 128 128 70.6925 128 0L0 5.59506e-06L5.59506e-06 128Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }]
@@ -32524,77 +31821,66 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "circle",
       "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "64",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "32",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "64",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "32",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "48",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.00292969 0L127.997 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "48",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-0.00292969 0L127.997 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const har = {
@@ -32603,17 +31889,17 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
         "r": "64",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "64",
         "y1": "2.18557e-08",
@@ -32625,7 +31911,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -32642,16 +31927,16 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "rect",
-      "value": "",
       "attributes": {
         "width": "128",
         "height": "128",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -32662,7 +31947,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "32",
@@ -32673,7 +31957,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "32",
@@ -32685,7 +31968,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "32",
         "cy": "64",
@@ -32696,7 +31978,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "32",
         "cy": "64",
@@ -32713,55 +31994,46 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "16",
+        "cy": "16",
+        "r": "8",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "0.5",
+        "y1": "-0.5",
+        "x2": "181.5",
+        "y2": "-0.5",
+        "transform": "matrix(-0.707107 0.707107 0.707107 0.707107 128.71 0)",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "16",
-          "cy": "16",
-          "r": "8",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "0.5",
-          "y1": "-0.5",
-          "x2": "181.5",
-          "y2": "-0.5",
-          "transform": "matrix(-0.707107 0.707107 0.707107 0.707107 128.71 0)",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "fill-rule": "evenodd",
-          "clip-rule": "evenodd",
-          "d": "M48 32C48 40.8366 40.8366 48 32 48C23.1634 48 16 40.8366 16 32C16 23.1634 23.1634 16 32 16C40.8366 16 48 23.1634 48 32ZM32 40C36.4183 40 40 36.4183 40 32C40 27.5817 36.4183 24 32 24C27.5817 24 24 27.5817 24 32C24 36.4183 27.5817 40 32 40Z",
-          "fill": 0
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "fill-rule": "evenodd",
+        "clip-rule": "evenodd",
+        "d": "M48 32C48 40.8366 40.8366 48 32 48C23.1634 48 16 40.8366 16 32C16 23.1634 23.1634 16 32 16C40.8366 16 48 23.1634 48 32ZM32 40C36.4183 40 40 36.4183 40 32C40 27.5817 36.4183 24 32 24C27.5817 24 24 27.5817 24 32C24 36.4183 27.5817 40 32 40Z",
+        "fill": 0
+      },
+      "children": []
     }]
   };
   const hav = {
@@ -32770,15 +32042,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "96",
         "y1": "2.18557e-08",
@@ -32795,30 +32067,23 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "rect",
       "attributes": {
+        "width": "128",
+        "height": "128",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M2.03434e-06 128C70.6924 128 128 70.6925 128 0",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "rect",
-        "value": "",
-        "attributes": {
-          "width": "128",
-          "height": "128",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M2.03434e-06 128C70.6924 128 128 70.6925 128 0",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
     }]
   };
   const hec = {
@@ -32827,15 +32092,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "32",
         "cy": "32",
@@ -32846,7 +32111,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "32",
         "cy": "32",
@@ -32858,7 +32122,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "32",
         "cy": "96",
@@ -32869,7 +32132,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "32",
         "cy": "96",
@@ -32881,7 +32143,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "96",
         "cy": "96",
@@ -32892,7 +32153,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "96",
         "cy": "96",
@@ -32909,42 +32169,34 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "-0.00285417",
+        "x2": "127.983",
+        "y2": "127.986",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "-0.00285417",
-          "x2": "127.983",
-          "y2": "127.986",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.00292969 0L127.997 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-0.00292969 0L127.997 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const hes = {
@@ -32952,39 +32204,31 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 0C57.3075 8.42999e-07 -8.42999e-07 57.3075 0 128H128V0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M32 0L32 128",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 0C57.3075 8.42999e-07 -8.42999e-07 57.3075 0 128H128V0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M32 0L32 128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "fill-rule": "evenodd",
-          "clip-rule": "evenodd",
-          "d": "M48 96C48 104.837 40.8366 112 32 112C23.1634 112 16 104.837 16 96C16 87.1634 23.1634 80 32 80C40.8366 80 48 87.1634 48 96ZM32 104C36.4183 104 40 100.418 40 96C40 91.5817 36.4183 88 32 88C27.5817 88 24 91.5817 24 96C24 100.418 27.5817 104 32 104Z",
-          "fill": 0
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "fill-rule": "evenodd",
+        "clip-rule": "evenodd",
+        "d": "M48 96C48 104.837 40.8366 112 32 112C23.1634 112 16 104.837 16 96C16 87.1634 23.1634 80 32 80C40.8366 80 48 87.1634 48 96ZM32 104C36.4183 104 40 100.418 40 96C40 91.5817 36.4183 88 32 88C27.5817 88 24 91.5817 24 96C24 100.418 27.5817 104 32 104Z",
+        "fill": 0
+      },
+      "children": []
     }]
   };
   const het = {
@@ -32993,17 +32237,17 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
         "r": "64",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M96 128L96 0",
         "stroke": 0,
@@ -33017,40 +32261,32 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M64 128H0L5.59506e-06 0L64 5.59506e-06C99.3462 8.68512e-06 128 28.6538 128 64C128 99.3462 99.3462 128 64 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 0L0 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 128H0L5.59506e-06 0L64 5.59506e-06C99.3462 8.68512e-06 128 28.6538 128 64C128 99.3462 99.3462 128 64 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 0L0 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "fill-rule": "evenodd",
-          "clip-rule": "evenodd",
-          "d": "M80 64C80 72.8366 72.8366 80 64 80C55.1634 80 48 72.8366 48 64C48 55.1634 55.1634 48 64 48C72.8366 48 80 55.1634 80 64ZM64 72C68.4183 72 72 68.4183 72 64C72 59.5817 68.4183 56 64 56C59.5817 56 56 59.5817 56 64C56 68.4183 59.5817 72 64 72Z",
-          "fill": 0
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "fill-rule": "evenodd",
+        "clip-rule": "evenodd",
+        "d": "M80 64C80 72.8366 72.8366 80 64 80C55.1634 80 48 72.8366 48 64C48 55.1634 55.1634 48 64 48C72.8366 48 80 55.1634 80 64ZM64 72C68.4183 72 72 68.4183 72 64C72 59.5817 68.4183 56 64 56C59.5817 56 56 59.5817 56 64C56 68.4183 59.5817 72 64 72Z",
+        "fill": 0
+      },
+      "children": []
     }]
   };
   const hid = {
@@ -33058,66 +32294,55 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-0.00292969 0L127.997 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.00292969 0L127.997 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M2.03434e-06 128C70.6924 128 128 70.6925 128 0",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M1.52575e-06 96C53.0193 96 96 53.0193 96 0",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M1.01717e-06 64C35.3462 64 64 35.3462 64 0",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M5.08584e-07 32C17.6731 32 32 17.6731 32 0",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M2.03434e-06 128C70.6924 128 128 70.6925 128 0",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M1.52575e-06 96C53.0193 96 96 53.0193 96 0",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M1.01717e-06 64C35.3462 64 64 35.3462 64 0",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M5.08584e-07 32C17.6731 32 32 17.6731 32 0",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const hil = {
@@ -33126,15 +32351,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "8.74228e-08",
         "y1": "64",
@@ -33146,7 +32371,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "64",
         "y1": "2.18557e-08",
@@ -33164,16 +32388,16 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "rect",
-      "value": "",
       "attributes": {
         "width": "128",
         "height": "128",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "32",
         "y1": "2.18557e-08",
@@ -33185,7 +32409,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "fill-rule": "evenodd",
         "clip-rule": "evenodd",
@@ -33201,15 +32424,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M128 64V128H0L2.79753e-06 64C4.34256e-06 28.6538 28.6538 -1.54503e-06 64 0C99.3462 1.54503e-06 128 28.6538 128 64Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "128",
         "y1": "64",
@@ -33227,15 +32450,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "y1": "-0.5",
         "x2": "45.2548",
@@ -33247,7 +32470,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -33258,7 +32480,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -33276,15 +32497,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M32 0L32 128",
         "stroke": 0,
@@ -33299,17 +32520,17 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
         "r": "64",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "128",
         "y1": "64",
@@ -33321,7 +32542,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -33332,7 +32552,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "96",
@@ -33343,7 +32562,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "96",
@@ -33360,63 +32578,53 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "circle",
       "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "64",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 64L0 64",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "64",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 64L0 64",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 96C81.6731 96 96 81.6731 96 64C96 46.3269 81.6731 32 64 32",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M64 96C81.6731 96 96 81.6731 96 64C96 46.3269 81.6731 32 64 32",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const hos = {
@@ -33425,15 +32633,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "80.0036",
         "y1": "79.9965",
@@ -33445,7 +32653,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "16.0036",
         "y1": "15.9965",
@@ -33457,7 +32664,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "48",
         "cy": "48",
@@ -33468,7 +32674,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "48",
         "cy": "48",
@@ -33480,7 +32685,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "80",
         "cy": "47",
@@ -33491,7 +32695,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "80",
         "cy": "47",
@@ -33503,7 +32706,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "80",
         "cy": "81",
@@ -33514,7 +32716,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "80",
         "cy": "81",
@@ -33526,7 +32727,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "48",
         "cy": "80",
@@ -33537,7 +32737,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "48",
         "cy": "80",
@@ -33555,17 +32754,17 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
         "r": "64",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -33576,7 +32775,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "48",
         "cy": "64",
@@ -33587,7 +32785,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "48",
         "cy": "64",
@@ -33604,62 +32801,52 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-0.00292969 0L127.997 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.00292969 0L127.997 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 96C46.3269 96 32 81.6731 32 64",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M64 96C46.3269 96 32 81.6731 32 64",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const hut = {
@@ -33668,16 +32855,16 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "rect",
-      "value": "",
       "attributes": {
         "width": "128",
         "height": "128",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -33688,7 +32875,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "32",
         "cy": "32",
@@ -33699,7 +32885,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "32",
         "cy": "32",
@@ -33711,7 +32896,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "96",
         "cy": "96",
@@ -33722,7 +32906,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "96",
         "cy": "96",
@@ -33739,56 +32922,47 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 0C57.3075 8.42999e-07 -8.42999e-07 57.3075 0 128H128V0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "-0.0029152",
+        "x2": "127.983",
+        "y2": "127.986",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 0C57.3075 8.42999e-07 -8.42999e-07 57.3075 0 128H128V0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "-0.0029152",
-          "x2": "127.983",
-          "y2": "127.986",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "y1": "-0.5",
-          "x2": "45.2548",
-          "y2": "-0.5",
-          "transform": "matrix(0.707107 -0.707107 -0.707107 -0.707107 79.65 47.6499)",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "15.9964",
-          "y1": "111.997",
-          "x2": "47.9964",
-          "y2": "79.9965",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "y1": "-0.5",
+        "x2": "45.2548",
+        "y2": "-0.5",
+        "transform": "matrix(0.707107 -0.707107 -0.707107 -0.707107 79.65 47.6499)",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "15.9964",
+        "y1": "111.997",
+        "x2": "47.9964",
+        "y2": "79.9965",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const lac = {
@@ -33796,54 +32970,38 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M64 -9.40976e-06C64 70.6924 92.6538 128 128 128",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 -9.40976e-06C64 70.6924 92.6538 128 128 128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M32 -7.63193e-07C32 70.6924 74.9807 128 128 128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "g",
-        "value": "",
-        "attributes": {
-          "fill": "none"
-        },
-        "children": [{
-          "name": "path",
-          "value": "",
-          "attributes": {
-            "d": "M128 64L0 64",
-            "stroke": 0,
-            "fill": "none"
-          },
-          "children": []
-        }]
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M32 -7.63193e-07C32 70.6924 74.9807 128 128 128",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 64L0 64",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const lad = {
@@ -33852,15 +33010,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M128 0C57.3075 8.42999e-07 -8.42999e-07 57.3075 0 128H128V0Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "95.35",
         "y1": "32.7071",
@@ -33873,7 +33031,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "96",
         "cy": "32",
@@ -33884,7 +33041,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "96",
         "cy": "32",
@@ -33896,7 +33052,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "32",
         "cy": "96",
@@ -33907,7 +33062,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "32",
         "cy": "96",
@@ -33925,15 +33079,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 112C90.5097 112 112 90.5097 112 64",
         "stroke": 0,
@@ -33948,15 +33102,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "64",
         "y1": "2.18557e-08",
@@ -33968,7 +33122,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "32",
         "y1": "2.18557e-08",
@@ -33980,7 +33133,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -33997,15 +33149,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M112 64C112 37.4903 90.5097 16 64 16",
         "stroke": 0,
@@ -34014,7 +33166,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "112",
         "cy": "64",
@@ -34025,7 +33176,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "112",
         "cy": "64",
@@ -34042,91 +33192,79 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "circle",
       "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "64",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "2.78181e-08",
+        "y1": "64",
+        "x2": "128",
+        "y2": "64",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "64",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "2.78181e-08",
-          "y1": "64",
-          "x2": "128",
-          "y2": "64",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "16",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "96",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "96",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "32",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "32",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "16",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "96",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "96",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "32",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "32",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const las = {
@@ -34135,16 +33273,16 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "rect",
-      "value": "",
       "attributes": {
         "width": "128",
         "height": "128",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -34155,7 +33293,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "16",
         "cy": "64",
@@ -34166,7 +33303,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "16",
         "cy": "64",
@@ -34183,56 +33319,46 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M2.03434e-06 128C70.6924 128 128 70.6925 128 0",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M2.03434e-06 128C70.6924 128 128 70.6925 128 0",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M1.52575e-06 96C53.0193 96 96 53.0193 96 0",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M1.01717e-06 64C35.3462 64 64 35.3462 64 0",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M5.08584e-07 32C17.6731 32 32 17.6731 32 0",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M1.52575e-06 96C53.0193 96 96 53.0193 96 0",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M1.01717e-06 64C35.3462 64 64 35.3462 64 0",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M5.08584e-07 32C17.6731 32 32 17.6731 32 0",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const lav = {
@@ -34240,63 +33366,46 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 0C57.3075 8.42999e-07 -8.42999e-07 57.3075 0 128H128V0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 128C92.6489 128 60.6449 113.669 37.4807 90.5",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 0C57.3075 8.42999e-07 -8.42999e-07 57.3075 0 128H128V0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "g",
-        "value": "",
-        "attributes": {
-          "fill": "none"
-        },
-        "children": [{
-          "name": "path",
-          "value": "",
-          "attributes": {
-            "d": "M128 128C92.6489 128 60.6449 113.669 37.4807 90.5",
-            "stroke": 0,
-            "fill": "none"
-          },
-          "children": []
-        }, {
-          "name": "path",
-          "value": "",
-          "attributes": {
-            "d": "M128 96C101.492 96 77.4939 85.2564 60.1217 67.8862",
-            "stroke": 0,
-            "fill": "none"
-          },
-          "children": []
-        }, {
-          "name": "path",
-          "value": "",
-          "attributes": {
-            "d": "M128 64C110.328 64 94.3287 56.8374 82.7471 45.2568",
-            "stroke": 0,
-            "fill": "none"
-          },
-          "children": []
-        }, {
-          "name": "path",
-          "value": "",
-          "attributes": {
-            "d": "M128 32.3716C119.164 32.3716 111.164 28.7903 105.374 23",
-            "stroke": 0,
-            "fill": "none"
-          },
-          "children": []
-        }]
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 96C101.492 96 77.4939 85.2564 60.1217 67.8862",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 64C110.328 64 94.3287 56.8374 82.7471 45.2568",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 32.3716C119.164 32.3716 111.164 28.7903 105.374 23",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const leb = {
@@ -34304,30 +33413,23 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "rect",
       "attributes": {
+        "width": "128",
+        "height": "128",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-1.64036e-05 32C53.0193 32 96 74.9807 96 128",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "rect",
-        "value": "",
-        "attributes": {
-          "width": "128",
-          "height": "128",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-1.64036e-05 32C53.0193 32 96 74.9807 96 128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
     }]
   };
   const lec = {
@@ -34335,53 +33437,44 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-0.00292969 0L127.997 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.00292969 0L127.997 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const led = {
@@ -34390,17 +33483,17 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
         "r": "64",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "32",
@@ -34411,7 +33504,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "32",
@@ -34429,16 +33521,16 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "rect",
-      "value": "",
       "attributes": {
         "width": "128",
         "height": "128",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M7.63192e-07 32C17.6731 32 32 46.3269 32 64C32 81.6731 17.6731 96 0 96",
         "stroke": 0,
@@ -34453,16 +33545,16 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "rect",
-      "value": "",
       "attributes": {
         "width": "128",
         "height": "128",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -34473,7 +33565,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "96",
@@ -34484,7 +33575,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "96",
@@ -34502,15 +33592,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M128 0C57.3075 8.42999e-07 -8.42999e-07 57.3075 0 128H128V0Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M128 96C110.327 96 96 110.327 96 128",
         "stroke": 0,
@@ -34524,69 +33614,24 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
-      "attributes": {
-        "fill": "none"
-      },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 128H0L5.59506e-06 0L64 5.59506e-06C99.3462 8.68512e-06 128 28.6538 128 64C128 99.3462 99.3462 128 64 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M32 0L32 128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "32",
-          "cy": "32",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "32",
-          "cy": "32",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
-    }]
-  };
-  const lev = {
-    "name": "g",
-    "value": "",
-    "attributes": {},
-    "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 128H0L5.59506e-06 0L64 5.59506e-06C99.3462 8.68512e-06 128 28.6538 128 64C128 99.3462 99.3462 128 64 128Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M32 0L32 128",
+        "stroke": 0,
+        "fill": "none"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "32",
         "cy": "32",
@@ -34597,7 +33642,42 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
+      "attributes": {
+        "cx": "32",
+        "cy": "32",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
+    }]
+  };
+  const lev = {
+    "name": "g",
+    "value": "",
+    "attributes": {},
+    "children": [{
+      "name": "path",
+      "attributes": {
+        "d": "M64 128H0L5.59506e-06 0L64 5.59506e-06C99.3462 8.68512e-06 128 28.6538 128 64C128 99.3462 99.3462 128 64 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "32",
+        "cy": "32",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
       "attributes": {
         "cx": "32",
         "cy": "32",
@@ -34614,52 +33694,43 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M64 128H0L5.59506e-06 0L64 5.59506e-06C99.3462 8.68512e-06 128 28.6538 128 64C128 99.3462 99.3462 128 64 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-0.00292969 0L127.997 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 128H0L5.59506e-06 0L64 5.59506e-06C99.3462 8.68512e-06 128 28.6538 128 64C128 99.3462 99.3462 128 64 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.00292969 0L127.997 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "15.9965",
-          "y1": "111.997",
-          "x2": "47.9965",
-          "y2": "79.9965",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "fill-rule": "evenodd",
-          "clip-rule": "evenodd",
-          "d": "M80 64C80 72.8366 72.8366 80 64 80C55.1634 80 48 72.8366 48 64C48 55.1634 55.1634 48 64 48C72.8366 48 80 55.1634 80 64ZM64 72C68.4183 72 72 68.4183 72 64C72 59.5817 68.4183 56 64 56C59.5817 56 56 59.5817 56 64C56 68.4183 59.5817 72 64 72Z",
-          "fill": 0
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "15.9965",
+        "y1": "111.997",
+        "x2": "47.9965",
+        "y2": "79.9965",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "fill-rule": "evenodd",
+        "clip-rule": "evenodd",
+        "d": "M80 64C80 72.8366 72.8366 80 64 80C55.1634 80 48 72.8366 48 64C48 55.1634 55.1634 48 64 48C72.8366 48 80 55.1634 80 64ZM64 72C68.4183 72 72 68.4183 72 64C72 59.5817 68.4183 56 64 56C59.5817 56 56 59.5817 56 64C56 68.4183 59.5817 72 64 72Z",
+        "fill": 0
+      },
+      "children": []
     }]
   };
   const lib = {
@@ -34667,47 +33738,32 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "circle",
       "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "64",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 64C92.6538 64 64 92.6538 64 128",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "64",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 64C92.6538 64 64 92.6538 64 128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "g",
-        "value": "",
-        "attributes": {
-          "fill": "none"
-        },
-        "children": [{
-          "name": "path",
-          "value": "",
-          "attributes": {
-            "d": "M128 64L0 64",
-            "stroke": 0,
-            "fill": "none"
-          },
-          "children": []
-        }]
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 64L0 64",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const lid = {
@@ -34715,42 +33771,34 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "16.0036",
+        "y1": "15.9965",
+        "x2": "48.0036",
+        "y2": "47.9965",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "16.0036",
-          "y1": "15.9965",
-          "x2": "48.0036",
-          "y2": "47.9965",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 0L0 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 0L0 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const lig = {
@@ -34759,17 +33807,17 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
         "r": "64",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -34786,16 +33834,16 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "rect",
-      "value": "",
       "attributes": {
         "width": "128",
         "height": "128",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "64",
         "y1": "128",
@@ -34807,7 +33855,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "80",
         "cy": "64",
@@ -34822,38 +33869,30 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 64L0 64",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 64L0 64",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-4.70488e-06 64C35.3462 64 64 35.3462 64 0",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-4.70488e-06 64C35.3462 64 64 35.3462 64 0",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const lit = {
@@ -34861,73 +33900,55 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0.0541 0C70.7217 0.0292317 128 57.3256 128 128C57.3177 128 0.0164917 70.7089 7.62806e-06 0.0305091C7.62851e-06 0.0203397 -4.44317e-10 0.01017 0 0H0.0541Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-0.00286865 0L127.997 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0.0541 0C70.7217 0.0292317 128 57.3256 128 128C57.3177 128 0.0164917 70.7089 7.62806e-06 0.0305091C7.62851e-06 0.0203397 -4.44317e-10 0.01017 0 0H0.0541Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.00286865 0L127.997 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "g",
-        "value": "",
-        "attributes": {
-          "fill": "none"
-        },
-        "children": [{
-          "name": "path",
-          "value": "",
-          "attributes": {
-            "d": "M128 0C128 35.3511 113.669 67.3551 90.5 90.5193",
-            "stroke": 0,
-            "fill": "none"
-          },
-          "children": []
-        }, {
-          "name": "path",
-          "value": "",
-          "attributes": {
-            "d": "M96 0C96 26.5077 85.2564 50.5061 67.8862 67.8783",
-            "stroke": 0,
-            "fill": "none"
-          },
-          "children": []
-        }, {
-          "name": "path",
-          "value": "",
-          "attributes": {
-            "d": "M64 0C64 17.6721 56.8374 33.6713 45.2568 45.2529",
-            "stroke": 0,
-            "fill": "none"
-          },
-          "children": []
-        }, {
-          "name": "path",
-          "value": "",
-          "attributes": {
-            "d": "M32.3716 0C32.3716 8.83603 28.7903 16.8356 23 22.6264",
-            "stroke": 0,
-            "fill": "none"
-          },
-          "children": []
-        }]
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 0C128 35.3511 113.669 67.3551 90.5 90.5193",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M96 0C96 26.5077 85.2564 50.5061 67.8862 67.8783",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M64 0C64 17.6721 56.8374 33.6713 45.2568 45.2529",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M32.3716 0C32.3716 8.83603 28.7903 16.8356 23 22.6264",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const liv = {
@@ -34935,48 +33956,39 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "rect",
       "attributes": {
+        "width": "128",
+        "height": "128",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-5.21346e-06 32C70.6924 32 128 17.6731 128 0",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "rect",
-        "value": "",
-        "attributes": {
-          "width": "128",
-          "height": "128",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-5.21346e-06 32C70.6924 32 128 17.6731 128 0",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M3.4331e-06 96C70.6924 96 128 53.0193 128 0",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 0L64 128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M3.4331e-06 96C70.6924 96 128 53.0193 128 0",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M64 0L64 128",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const loc = {
@@ -34984,29 +33996,22 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0.0541 0C70.7217 0.0292317 128 57.3256 128 128C57.3177 128 0.0164917 70.7089 7.62806e-06 0.0305091C7.62851e-06 0.0203397 -4.44317e-10 0.01017 0 0H0.0541Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 96C74.9807 96 32 53.0193 32 -4.19629e-06",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0.0541 0C70.7217 0.0292317 128 57.3256 128 128C57.3177 128 0.0164917 70.7089 7.62806e-06 0.0305091C7.62851e-06 0.0203397 -4.44317e-10 0.01017 0 0H0.0541Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 96C74.9807 96 32 53.0193 32 -4.19629e-06",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
     }]
   };
   const lod = {
@@ -35015,15 +34020,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M16 64C16 90.5097 37.4903 112 64 112",
         "stroke": 0,
@@ -35038,16 +34043,16 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "rect",
-      "value": "",
       "attributes": {
         "width": "128",
         "height": "128",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "32",
         "cy": "32",
@@ -35058,7 +34063,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "32",
         "cy": "32",
@@ -35070,7 +34074,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "96",
         "cy": "32",
@@ -35081,7 +34084,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "96",
         "cy": "32",
@@ -35093,7 +34095,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "96",
         "cy": "96",
@@ -35104,7 +34105,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "96",
         "cy": "96",
@@ -35121,56 +34121,46 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 0C57.3075 8.42999e-07 -8.42999e-07 57.3075 0 128H128V0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M2.03434e-06 128C70.6924 128 128 70.6925 128 0",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 0C57.3075 8.42999e-07 -8.42999e-07 57.3075 0 128H128V0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M2.03434e-06 128C70.6924 128 128 70.6925 128 0",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M1.52575e-06 96C53.0193 96 96 53.0193 96 0",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M1.01717e-06 64C35.3462 64 64 35.3462 64 0",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M5.08584e-07 32C17.6731 32 32 17.6731 32 0",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M1.52575e-06 96C53.0193 96 96 53.0193 96 0",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M1.01717e-06 64C35.3462 64 64 35.3462 64 0",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M5.08584e-07 32C17.6731 32 32 17.6731 32 0",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const lop = {
@@ -35179,17 +34169,17 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
         "r": "64",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "128",
         "y1": "64",
@@ -35201,7 +34191,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "128",
         "y1": "32",
@@ -35213,7 +34202,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -35224,7 +34212,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -35242,15 +34229,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "64",
         "y1": "2.18557e-08",
@@ -35267,55 +34254,46 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "-0.0029152",
+        "x2": "127.983",
+        "y2": "127.986",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "-0.0029152",
-          "x2": "127.983",
-          "y2": "127.986",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "96",
-          "cy": "96",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "96",
-          "cy": "96",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "96",
+        "cy": "96",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "96",
+        "cy": "96",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const luc = {
@@ -35323,50 +34301,41 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "128",
+        "y1": "64",
+        "x2": "-8.87604e-09",
+        "y2": "64",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "128",
-          "y1": "64",
-          "x2": "-8.87604e-09",
-          "y2": "64",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 64L0 64",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 96L0 96",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 64L0 64",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 96L0 96",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const lud = {
@@ -35374,56 +34343,46 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 64L0 64",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 64L0 64",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M32 0L32 128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 0L64 128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M96 0L96 128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M32 0L32 128",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M64 0L64 128",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M96 0L96 128",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const lug = {
@@ -35432,10 +34391,11 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 128H0L5.59506e-06 -7.62939e-06L64 -2.03434e-06C99.3462 1.05573e-06 128 28.6538 128 64C128 99.3462 99.3462 128 64 128Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }]
@@ -35446,17 +34406,17 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
         "r": "64",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -35473,15 +34433,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 128H0L5.59506e-06 -7.62939e-06L64 -2.03434e-06C99.3462 1.05573e-06 128 28.6538 128 64C128 99.3462 99.3462 128 64 128Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 16C90.5097 16 112 37.4903 112 64C112 90.5097 90.5097 112 64 112",
         "stroke": 0,
@@ -35490,7 +34450,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "128",
         "y1": "64",
@@ -35508,15 +34467,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 0L64 128",
         "stroke": 0,
@@ -35525,7 +34484,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M96 0L96 128",
         "stroke": 0,
@@ -35534,7 +34492,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M32 0L32 128",
         "stroke": 0,
@@ -35548,53 +34505,44 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 0L0 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 0L0 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "96",
-          "cy": "96",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "96",
-          "cy": "96",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "96",
+        "cy": "96",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "96",
+        "cy": "96",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const lut = {
@@ -35603,16 +34551,16 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "rect",
-      "value": "",
       "attributes": {
         "width": "128",
         "height": "128",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "32",
         "cy": "64",
@@ -35623,7 +34571,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "32",
         "cy": "64",
@@ -35641,15 +34588,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M5.59506e-06 128C70.6925 128 128 70.6925 128 0L0 5.59506e-06L5.59506e-06 128Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "fill-rule": "evenodd",
         "clip-rule": "evenodd",
@@ -35664,64 +34611,54 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0.0541 0C70.7217 0.0292317 128 57.3256 128 128C57.3177 128 0.0164917 70.7089 7.62806e-06 0.0305091C7.62851e-06 0.0203397 -4.44317e-10 0.01017 0 0H0.0541Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-0.00280762 0L127.997 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0.0541 0C70.7217 0.0292317 128 57.3256 128 128C57.3177 128 0.0164917 70.7089 7.62806e-06 0.0305091C7.62851e-06 0.0203397 -4.44317e-10 0.01017 0 0H0.0541Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.00280762 0L127.997 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "32",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "32",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "32",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "32",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "32",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "32",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const lyn = {
@@ -35729,29 +34666,22 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M5.59506e-06 128C70.6925 128 128 70.6925 128 0L0 5.59506e-06L5.59506e-06 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M32 0L32 128",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M5.59506e-06 128C70.6925 128 128 70.6925 128 0L0 5.59506e-06L5.59506e-06 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M32 0L32 128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
     }]
   };
   const lyr = {
@@ -35759,53 +34689,44 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0 127.946C0.0292286 57.2783 57.3256 3.08928e-06 128 0C128 70.6823 70.7089 127.984 0.0305092 128C0.0203397 128 0.01017 128 2.36469e-09 128L0 127.946Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-0.00268555 0L127.997 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 127.946C0.0292286 57.2783 57.3256 3.08928e-06 128 0C128 70.6823 70.7089 127.984 0.0305092 128C0.0203397 128 0.01017 128 2.36469e-09 128L0 127.946Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.00268555 0L127.997 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "80",
-          "cy": "48",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "80",
-          "cy": "48",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "80",
+        "cy": "48",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "80",
+        "cy": "48",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const lys = {
@@ -35814,15 +34735,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -35833,7 +34754,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -35845,7 +34765,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "16",
         "cy": "112",
@@ -35856,7 +34775,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "16",
         "cy": "112",
@@ -35873,53 +34791,44 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M64 128H0L5.59506e-06 0L64 5.59506e-06C99.3462 8.68512e-06 128 28.6538 128 64C128 99.3462 99.3462 128 64 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 0L0 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 128H0L5.59506e-06 0L64 5.59506e-06C99.3462 8.68512e-06 128 28.6538 128 64C128 99.3462 99.3462 128 64 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 0L0 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "80.0035",
-          "y1": "79.9965",
-          "x2": "112.003",
-          "y2": "111.997",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "16",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "80.0035",
+        "y1": "79.9965",
+        "x2": "112.003",
+        "y2": "111.997",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "16",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const lyx = {
@@ -35927,53 +34836,44 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M5.59506e-06 128C70.6925 128 128 70.6925 128 0L0 5.59506e-06L5.59506e-06 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-0.00292969 0L127.997 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M5.59506e-06 128C70.6925 128 128 70.6925 128 0L0 5.59506e-06L5.59506e-06 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.00292969 0L127.997 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "32",
-          "cy": "32",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "32",
-          "cy": "32",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "32",
+        "cy": "32",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "32",
+        "cy": "32",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const mac = {
@@ -35982,15 +34882,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "16",
         "cy": "112",
@@ -36001,7 +34901,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "16",
         "cy": "112",
@@ -36018,63 +34917,53 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "32",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "32",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 64L0 64",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "96",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "96",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 64L0 64",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "96",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "96",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const mal = {
@@ -36083,15 +34972,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M0.0541 0C70.7217 0.0292317 128 57.3256 128 128C57.3177 128 0.0164917 70.7089 7.62806e-06 0.0305091C7.62851e-06 0.0203397 -4.44317e-10 0.01017 0 0H0.0541Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "80.0035",
         "y1": "79.9964",
@@ -36103,7 +34992,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "16",
         "cy": "112",
@@ -36114,7 +35002,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "16",
         "cy": "112",
@@ -36132,15 +35019,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M128 0C57.3075 8.42999e-07 -8.42999e-07 57.3075 0 128H128V0Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "80.0036",
         "y1": "79.9965",
@@ -36152,7 +35039,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -36163,7 +35049,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -36180,68 +35065,57 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "circle",
       "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "64",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-0.0029152 0L127.997 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "64",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.0029152 0L127.997 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 64L64 128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M86.6274 86.6274C99.1242 74.1307 99.1242 53.8694 86.6274 41.3726C74.1306 28.8758 53.8694 28.8758 41.3726 41.3726",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M75.3137 75.3137C81.5621 69.0653 81.5621 58.9347 75.3137 52.6863C69.0653 46.4379 58.9347 46.4379 52.6863 52.6863",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M97.9411 97.9411C116.686 79.1959 116.686 48.804 97.9411 30.0589C79.196 11.3137 48.804 11.3137 30.0589 30.0589",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M64 64L64 128",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M86.6274 86.6274C99.1242 74.1307 99.1242 53.8694 86.6274 41.3726C74.1306 28.8758 53.8694 28.8758 41.3726 41.3726",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M75.3137 75.3137C81.5621 69.0653 81.5621 58.9347 75.3137 52.6863C69.0653 46.4379 58.9347 46.4379 52.6863 52.6863",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M97.9411 97.9411C116.686 79.1959 116.686 48.804 97.9411 30.0589C79.196 11.3137 48.804 11.3137 30.0589 30.0589",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const mas = {
@@ -36250,16 +35124,16 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "rect",
-      "value": "",
       "attributes": {
         "width": "128",
         "height": "128",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -36270,7 +35144,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "fill-rule": "evenodd",
         "clip-rule": "evenodd",
@@ -36285,29 +35158,22 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 32C110.327 32 96 17.6731 96 0",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 32C110.327 32 96 17.6731 96 0",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
     }]
   };
   const meb = {
@@ -36315,30 +35181,23 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "rect",
       "attributes": {
+        "width": "128",
+        "height": "128",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M32 -3.05151e-06C32 53.0193 74.9807 96 128 96",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "rect",
-        "value": "",
-        "attributes": {
-          "width": "128",
-          "height": "128",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M32 -3.05151e-06C32 53.0193 74.9807 96 128 96",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
     }]
   };
   const mec = {
@@ -36347,15 +35206,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "80.0035",
         "y1": "79.9965",
@@ -36367,7 +35226,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -36378,7 +35236,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -36396,17 +35253,17 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
         "r": "64",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "96",
         "cy": "64",
@@ -36417,7 +35274,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "96",
         "cy": "64",
@@ -36434,30 +35290,23 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "rect",
       "attributes": {
+        "width": "128",
+        "height": "128",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 64C92.6538 64 64 92.6538 64 128",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "rect",
-        "value": "",
-        "attributes": {
-          "width": "128",
-          "height": "128",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 64C92.6538 64 64 92.6538 64 128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
     }]
   };
   const mel = {
@@ -36466,15 +35315,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M0 127.946C0.0292286 57.2783 57.3256 3.08928e-06 128 0C128 70.6823 70.7089 127.984 0.0305092 128C0.0203397 128 0.01017 128 2.36469e-09 128L0 127.946Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "15.9964",
         "y1": "111.997",
@@ -36491,47 +35340,38 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 0C57.3075 8.42999e-07 -8.42999e-07 57.3075 0 128H128V0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 64L0 64",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 0C57.3075 8.42999e-07 -8.42999e-07 57.3075 0 128H128V0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 64L0 64",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 96L0 96",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 32L0 32",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 96L0 96",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 32L0 32",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const mer = {
@@ -36539,29 +35379,22 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M64 128H0L5.59506e-06 0L64 5.59506e-06C99.3462 8.68512e-06 128 28.6538 128 64C128 99.3462 99.3462 128 64 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M32 0L32 128",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 128H0L5.59506e-06 0L64 5.59506e-06C99.3462 8.68512e-06 128 28.6538 128 64C128 99.3462 99.3462 128 64 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M32 0L32 128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
     }]
   };
   const mes = {
@@ -36569,42 +35402,34 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-0.00280762 0L127.997 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.00280762 0L127.997 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "15.9964",
-          "y1": "111.996",
-          "x2": "47.9964",
-          "y2": "79.9964",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "15.9964",
+        "y1": "111.996",
+        "x2": "47.9964",
+        "y2": "79.9964",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const met = {
@@ -36613,17 +35438,17 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
         "r": "64",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M32 128L32 0",
         "stroke": 0,
@@ -36638,15 +35463,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 128H0L5.59506e-06 0L64 5.59506e-06C99.3462 8.68512e-06 128 28.6538 128 64C128 99.3462 99.3462 128 64 128Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -36662,40 +35487,32 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M64 128H0L5.59506e-06 0L64 5.59506e-06C99.3462 8.68512e-06 128 28.6538 128 64C128 99.3462 99.3462 128 64 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-0.00292969 0L127.997 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 128H0L5.59506e-06 0L64 5.59506e-06C99.3462 8.68512e-06 128 28.6538 128 64C128 99.3462 99.3462 128 64 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.00292969 0L127.997 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "fill-rule": "evenodd",
-          "clip-rule": "evenodd",
-          "d": "M80 64C80 72.8366 72.8366 80 64 80C55.1634 80 48 72.8366 48 64C48 55.1634 55.1634 48 64 48C72.8366 48 80 55.1634 80 64ZM64 72C68.4183 72 72 68.4183 72 64C72 59.5817 68.4183 56 64 56C59.5817 56 56 59.5817 56 64C56 68.4183 59.5817 72 64 72Z",
-          "fill": 0
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "fill-rule": "evenodd",
+        "clip-rule": "evenodd",
+        "d": "M80 64C80 72.8366 72.8366 80 64 80C55.1634 80 48 72.8366 48 64C48 55.1634 55.1634 48 64 48C72.8366 48 80 55.1634 80 64ZM64 72C68.4183 72 72 68.4183 72 64C72 59.5817 68.4183 56 64 56C59.5817 56 56 59.5817 56 64C56 68.4183 59.5817 72 64 72Z",
+        "fill": 0
+      },
+      "children": []
     }]
   };
   const mic = {
@@ -36703,29 +35520,22 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-2.09815e-06 80C26.5097 80 48 101.49 48 128",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-2.09815e-06 80C26.5097 80 48 101.49 48 128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
     }]
   };
   const mid = {
@@ -36733,41 +35543,33 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "128",
+        "y1": "64",
+        "x2": "-4.37114e-08",
+        "y2": "64",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "128",
-          "y1": "64",
-          "x2": "-4.37114e-08",
-          "y2": "64",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 64C92.6538 64 64 92.6538 64 128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 64C92.6538 64 64 92.6538 64 128",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const mig = {
@@ -36776,15 +35578,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "64",
         "y1": "2.18557e-08",
@@ -36796,7 +35598,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "80.0036",
         "y1": "79.9965",
@@ -36808,7 +35609,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -36825,15 +35625,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "128",
         "y1": "64",
@@ -36845,7 +35645,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "128",
         "y1": "32",
@@ -36857,7 +35656,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "128",
         "y1": "96",
@@ -36874,33 +35672,26 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "rect",
       "attributes": {
+        "width": "128",
+        "height": "128",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "-0.0029152",
+        "x2": "127.983",
+        "y2": "127.986",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "rect",
-        "value": "",
-        "attributes": {
-          "width": "128",
-          "height": "128",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "-0.0029152",
-          "x2": "127.983",
-          "y2": "127.986",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
     }]
   };
   const mip = {
@@ -36908,52 +35699,43 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 0C57.3075 8.42999e-07 -8.42999e-07 57.3075 0 128H128V0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "64",
+        "y1": "2.18557e-08",
+        "x2": "64",
+        "y2": "128",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 0C57.3075 8.42999e-07 -8.42999e-07 57.3075 0 128H128V0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "64",
-          "y1": "2.18557e-08",
-          "x2": "64",
-          "y2": "128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 128C92.6538 128 64 99.3462 64 64C64 28.6538 92.6538 4.215e-07 128 0",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "16",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 128C92.6538 128 64 99.3462 64 64C64 28.6538 92.6538 4.215e-07 128 0",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "16",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const mir = {
@@ -36962,15 +35744,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "16.0036",
         "y1": "15.9964",
@@ -36982,7 +35764,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M96 64C96 46.3269 81.6731 32 64 32",
         "stroke": 0,
@@ -36991,7 +35772,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -37007,39 +35787,31 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 0C57.3075 8.42999e-07 -8.42999e-07 57.3075 0 128H128V0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 64C92.6538 64 64 92.6538 64 128",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 0C57.3075 8.42999e-07 -8.42999e-07 57.3075 0 128H128V0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 64C92.6538 64 64 92.6538 64 128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.00286865 0L127.997 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-0.00286865 0L127.997 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const mit = {
@@ -37047,57 +35819,48 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0.0541 0C70.7217 0.0292317 128 57.3256 128 128C57.3177 128 0.0164917 70.7089 7.62806e-06 0.0305091C7.62851e-06 0.0203397 -4.44317e-10 0.01017 0 0H0.0541Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "0.5",
+        "y1": "-0.5",
+        "x2": "181.5",
+        "y2": "-0.5",
+        "transform": "matrix(-0.707107 0.707107 0.707107 0.707107 128.71 0)",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0.0541 0C70.7217 0.0292317 128 57.3256 128 128C57.3177 128 0.0164917 70.7089 7.62806e-06 0.0305091C7.62851e-06 0.0203397 -4.44317e-10 0.01017 0 0H0.0541Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "0.5",
-          "y1": "-0.5",
-          "x2": "181.5",
-          "y2": "-0.5",
-          "transform": "matrix(-0.707107 0.707107 0.707107 0.707107 128.71 0)",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "32",
-          "cy": "32",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "32",
-          "cy": "32",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "32",
+        "cy": "32",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "32",
+        "cy": "32",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const moc = {
@@ -37105,47 +35868,38 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0.0541 0C70.7217 0.0292317 128 57.3256 128 128C57.3177 128 0.0164917 70.7089 7.62806e-06 0.0305091C7.62851e-06 0.0203397 -4.44317e-10 0.01017 0 0H0.0541Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 64L0 64",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0.0541 0C70.7217 0.0292317 128 57.3256 128 128C57.3177 128 0.0164917 70.7089 7.62806e-06 0.0305091C7.62851e-06 0.0203397 -4.44317e-10 0.01017 0 0H0.0541Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 64L0 64",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 96L0 96",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 32L0 32",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 96L0 96",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 32L0 32",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const mod = {
@@ -37154,15 +35908,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M0 96L128 96",
         "stroke": 0,
@@ -37171,7 +35925,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "16.0035",
         "y1": "15.9965",
@@ -37188,54 +35941,45 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 0C57.3075 8.42999e-07 -8.42999e-07 57.3075 0 128H128V0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "-0.0029152",
+        "x2": "127.983",
+        "y2": "127.986",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 0C57.3075 8.42999e-07 -8.42999e-07 57.3075 0 128H128V0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "-0.0029152",
-          "x2": "127.983",
-          "y2": "127.986",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "32",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "16",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "32",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "16",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const mol = {
@@ -37244,17 +35988,17 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
         "r": "64",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "128",
         "y1": "64",
@@ -37266,7 +36010,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M112 64C112 90.5097 90.5097 112 64 112C37.4903 112 16 90.5097 16 64",
         "stroke": 0,
@@ -37275,7 +36018,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M112 0C112 26.5097 90.5097 48 64 48C37.4903 48 16 26.5097 16 0",
         "stroke": 0,
@@ -37290,15 +36032,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M128 0C57.3075 8.42999e-07 -8.42999e-07 57.3075 0 128H128V0Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "fill-rule": "evenodd",
         "clip-rule": "evenodd",
@@ -37313,68 +36055,58 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "circle",
       "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "64",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "-0.0029152",
+        "x2": "127.983",
+        "y2": "127.986",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "64",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "-0.0029152",
-          "x2": "127.983",
-          "y2": "127.986",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "32",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "32",
-          "cy": "64",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "32",
-          "cy": "64",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "32",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "32",
+        "cy": "64",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "32",
+        "cy": "64",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const mor = {
@@ -37383,15 +36115,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "16.0035",
         "y1": "15.9964",
@@ -37403,7 +36135,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "15.9964",
         "y1": "111.996",
@@ -37415,7 +36146,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -37426,7 +36156,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -37443,57 +36172,48 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "0.5",
+        "y1": "-0.5",
+        "x2": "181.5",
+        "y2": "-0.5",
+        "transform": "matrix(-0.707107 0.707107 0.707107 0.707107 128.71 0)",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "0.5",
-          "y1": "-0.5",
-          "x2": "181.5",
-          "y2": "-0.5",
-          "transform": "matrix(-0.707107 0.707107 0.707107 0.707107 128.71 0)",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "96",
-          "cy": "32",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "96",
-          "cy": "32",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "96",
+        "cy": "32",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "96",
+        "cy": "32",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const mot = {
@@ -37502,15 +36222,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M128 96C110.327 96 96 81.6731 96 64C96 46.3269 110.327 32 128 32",
         "stroke": 0,
@@ -37519,7 +36239,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -37530,7 +36249,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -37547,53 +36265,44 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-0.00292969 0L127.997 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.00292969 0L127.997 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "80",
-          "cy": "80",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "80",
-          "cy": "80",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "80",
+        "cy": "80",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "80",
+        "cy": "80",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const mug = {
@@ -37602,15 +36311,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 128H0L5.59506e-06 0L64 5.59506e-06C99.3462 8.68512e-06 128 28.6538 128 64C128 99.3462 99.3462 128 64 128Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 96C81.6731 96 96 81.6731 96 64C96 46.3269 81.6731 32 64 32",
         "stroke": 0,
@@ -37625,17 +36334,17 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
         "r": "64",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "80.0035",
         "y1": "79.9964",
@@ -37647,7 +36356,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M112 64C112 37.4903 90.5097 16 64 16",
         "stroke": 0,
@@ -37662,17 +36370,17 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
         "r": "64",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M128 64C92.6538 64 64 35.3462 64 0",
         "stroke": 0,
@@ -37681,7 +36389,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -37692,7 +36399,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -37709,75 +36415,64 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 64L0 64",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 64L0 64",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "32",
-          "cy": "64",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "32",
-          "cy": "64",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "32",
+        "cy": "64",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "32",
+        "cy": "64",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const mus = {
@@ -37785,43 +36480,35 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "0.5",
+        "y1": "-0.5",
+        "x2": "181.5",
+        "y2": "-0.5",
+        "transform": "matrix(-0.707107 0.707107 0.707107 0.707107 128.71 0)",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "0.5",
-          "y1": "-0.5",
-          "x2": "181.5",
-          "y2": "-0.5",
-          "transform": "matrix(-0.707107 0.707107 0.707107 0.707107 128.71 0)",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M96 128C96 74.9807 53.0193 32 0 32",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M96 128C96 74.9807 53.0193 32 0 32",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const mut = {
@@ -37830,16 +36517,16 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "rect",
-      "value": "",
       "attributes": {
         "width": "128",
         "height": "128",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "96",
         "cy": "32",
@@ -37850,7 +36537,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "96",
         "cy": "32",
@@ -37868,15 +36554,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M5.59506e-06 128C70.6925 128 128 70.6925 128 0L0 5.59506e-06L5.59506e-06 128Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "16.0035",
         "y1": "15.9965",
@@ -37888,7 +36574,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "16",
         "cy": "16",
@@ -37899,7 +36584,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "16",
         "cy": "16",
@@ -37916,56 +36600,46 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M5.59506e-06 128C70.6925 128 128 70.6925 128 0L0 5.59506e-06L5.59506e-06 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 1.52638e-06C57.3076 -7.74381e-06 9.2702e-06 57.3075 0 128",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M5.59506e-06 128C70.6925 128 128 70.6925 128 0L0 5.59506e-06L5.59506e-06 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 1.52638e-06C57.3076 -7.74381e-06 9.2702e-06 57.3075 0 128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 32C74.9807 32 32 74.9807 32 128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 64C92.6538 64 64 92.6538 64 128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 96C110.327 96 96 110.327 96 128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 32C74.9807 32 32 74.9807 32 128",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 64C92.6538 64 64 92.6538 64 128",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 96C110.327 96 96 110.327 96 128",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const myr = {
@@ -37973,53 +36647,44 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0 127.946C0.0292286 57.2783 57.3256 3.08928e-06 128 0C128 70.6823 70.7089 127.984 0.0305092 128C0.0203397 128 0.01017 128 2.36469e-09 128L0 127.946Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-0.00292969 0L127.997 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 127.946C0.0292286 57.2783 57.3256 3.08928e-06 128 0C128 70.6823 70.7089 127.984 0.0305092 128C0.0203397 128 0.01017 128 2.36469e-09 128L0 127.946Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.00292969 0L127.997 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "32",
-          "cy": "96",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "32",
-          "cy": "96",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "32",
+        "cy": "96",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "32",
+        "cy": "96",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const nac = {
@@ -38028,15 +36693,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -38047,7 +36712,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "16",
         "cy": "112",
@@ -38058,7 +36722,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "16",
         "cy": "112",
@@ -38075,59 +36738,49 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0.0541 0C70.7217 0.0292317 128 57.3256 128 128C57.3177 128 0.0164917 70.7089 7.62806e-06 0.0305091C7.62851e-06 0.0203397 -4.44317e-10 0.01017 0 0H0.0541Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "-0.0029152",
+        "x2": "127.983",
+        "y2": "127.986",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0.0541 0C70.7217 0.0292317 128 57.3256 128 128C57.3177 128 0.0164917 70.7089 7.62806e-06 0.0305091C7.62851e-06 0.0203397 -4.44317e-10 0.01017 0 0H0.0541Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "-0.0029152",
-          "x2": "127.983",
-          "y2": "127.986",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M2.82114e-06 110C60.7513 110 110 60.7513 110 0",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-5.09828e-06 73C40.3168 73 73 40.3168 73 0",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-6.63647e-07 37C20.4345 37 37 20.4345 37 0",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M2.82114e-06 110C60.7513 110 110 60.7513 110 0",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-5.09828e-06 73C40.3168 73 73 40.3168 73 0",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-6.63647e-07 37C20.4345 37 37 20.4345 37 0",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const nam = {
@@ -38135,78 +36788,67 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "8.74228e-08",
+        "y1": "64",
+        "x2": "128",
+        "y2": "64",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "8.74228e-08",
-          "y1": "64",
-          "x2": "128",
-          "y2": "64",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "112",
-          "cy": "64",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "112",
-          "cy": "64",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "112",
+        "cy": "64",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "112",
+        "cy": "64",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const nap = {
@@ -38215,15 +36857,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M128 0C57.3075 8.42999e-07 -8.42999e-07 57.3075 0 128H128V0Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "64",
         "y1": "2.18557e-08",
@@ -38235,7 +36877,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "96",
         "cy": "32",
@@ -38246,7 +36887,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "96",
         "cy": "32",
@@ -38258,7 +36898,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "96",
         "cy": "96",
@@ -38269,7 +36908,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "96",
         "cy": "96",
@@ -38287,17 +36925,17 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
         "r": "64",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -38308,7 +36946,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -38324,29 +36961,22 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-1.52588e-05 128C-9.07866e-06 57.3075 57.3076 1.44926e-06 128 7.62939e-06",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-1.52588e-05 128C-9.07866e-06 57.3075 57.3076 1.44926e-06 128 7.62939e-06",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
     }]
   };
   const nav = {
@@ -38354,54 +36984,38 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 96C101.492 96 77.4939 85.2564 60.1217 67.8862",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "g",
-        "value": "",
-        "attributes": {
-          "fill": "none"
-        },
-        "children": [{
-          "name": "path",
-          "value": "",
-          "attributes": {
-            "d": "M128 96C101.492 96 77.4939 85.2564 60.1217 67.8862",
-            "stroke": 0,
-            "fill": "none"
-          },
-          "children": []
-        }, {
-          "name": "path",
-          "value": "",
-          "attributes": {
-            "d": "M128 64C110.328 64 94.3287 56.8374 82.7471 45.2568",
-            "stroke": 0,
-            "fill": "none"
-          },
-          "children": []
-        }, {
-          "name": "path",
-          "value": "",
-          "attributes": {
-            "d": "M128 32.3716C119.164 32.3716 111.164 28.7903 105.374 23",
-            "stroke": 0,
-            "fill": "none"
-          },
-          "children": []
-        }]
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 64C110.328 64 94.3287 56.8374 82.7471 45.2568",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 32.3716C119.164 32.3716 111.164 28.7903 105.374 23",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const neb = {
@@ -38409,30 +37023,23 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "rect",
       "attributes": {
+        "width": "128",
+        "height": "128",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 32C74.9807 32 32 74.9807 32 128",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "rect",
-        "value": "",
-        "attributes": {
-          "width": "128",
-          "height": "128",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 32C74.9807 32 32 74.9807 32 128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
     }]
   };
   const nec = {
@@ -38441,15 +37048,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "32",
         "cy": "32",
@@ -38460,7 +37067,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "32",
         "cy": "32",
@@ -38472,7 +37078,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "96",
         "cy": "96",
@@ -38483,7 +37088,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "96",
         "cy": "96",
@@ -38495,7 +37099,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 0L64 128",
         "stroke": 0,
@@ -38510,17 +37113,17 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
         "r": "64",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -38531,7 +37134,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -38548,39 +37150,31 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0 127.946C0.0292286 57.2783 57.3256 3.08928e-06 128 0C128 70.6823 70.7089 127.984 0.0305092 128C0.0203397 128 0.01017 128 2.36469e-09 128L0 127.946Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-0.00268555 0L127.997 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 127.946C0.0292286 57.2783 57.3256 3.08928e-06 128 0C128 70.6823 70.7089 127.984 0.0305092 128C0.0203397 128 0.01017 128 2.36469e-09 128L0 127.946Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.00268555 0L127.997 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M96 1.90735e-06C96 53.0193 53.0193 96 0 96",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M96 1.90735e-06C96 53.0193 53.0193 96 0 96",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const nem = {
@@ -38588,64 +37182,54 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "circle",
       "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "64",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-0.00292969 0L127.997 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "64",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.00292969 0L127.997 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 64C92.6538 64 64 92.6538 64 128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "32",
-          "cy": "32",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "32",
-          "cy": "32",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 64C92.6538 64 64 92.6538 64 128",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "32",
+        "cy": "32",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "32",
+        "cy": "32",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const nep = {
@@ -38653,56 +37237,46 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 128C57.3076 128 3.09007e-06 70.6925 0 0",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 128C57.3076 128 3.09007e-06 70.6925 0 0",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 96C74.9807 96 32 53.0193 32 0",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 64C92.6538 64 64 35.3462 64 0",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 32C110.327 32 96 17.6731 96 0",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 96C74.9807 96 32 53.0193 32 0",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 64C92.6538 64 64 35.3462 64 0",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 32C110.327 32 96 17.6731 96 0",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const ner = {
@@ -38710,41 +37284,33 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M64 128H0L5.59506e-06 0L64 5.59506e-06C99.3462 8.68512e-06 128 28.6538 128 64C128 99.3462 99.3462 128 64 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M64 0L64 128",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 128H0L5.59506e-06 0L64 5.59506e-06C99.3462 8.68512e-06 128 28.6538 128 64C128 99.3462 99.3462 128 64 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 0L64 128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "15.9965",
-          "y1": "111.997",
-          "x2": "47.9965",
-          "y2": "79.9965",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "15.9965",
+        "y1": "111.997",
+        "x2": "47.9965",
+        "y2": "79.9965",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const nes = {
@@ -38752,29 +37318,22 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 0C57.3075 8.42999e-07 -8.42999e-07 57.3075 0 128H128V0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M64 0L64 128",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 0C57.3075 8.42999e-07 -8.42999e-07 57.3075 0 128H128V0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 0L64 128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
     }]
   };
   const net = {
@@ -38783,17 +37342,17 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
         "r": "64",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 64L64 128",
         "stroke": 0,
@@ -38808,15 +37367,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 128H0L5.59506e-06 0L64 5.59506e-06C99.3462 8.68512e-06 128 28.6538 128 64C128 99.3462 99.3462 128 64 128Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -38827,7 +37386,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "32",
         "cy": "32",
@@ -38838,7 +37396,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "32",
         "cy": "32",
@@ -38856,15 +37413,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 128H0L5.59506e-06 -7.62939e-06L64 -2.03434e-06C99.3462 1.05573e-06 128 28.6538 128 64C128 99.3462 99.3462 128 64 128Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "80.0035",
         "y1": "79.9964",
@@ -38876,7 +37433,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "fill-rule": "evenodd",
         "clip-rule": "evenodd",
@@ -38891,40 +37447,32 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "circle",
       "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "64",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 64L0 64",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "64",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 64L0 64",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 96L0 96",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 96L0 96",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const nid = {
@@ -38932,38 +37480,30 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 64L0 64",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 64L0 64",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 128C92.6538 128 64 70.6925 64 7.63192e-07",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 128C92.6538 128 64 70.6925 64 7.63192e-07",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const nil = {
@@ -38972,15 +37512,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "128",
         "y1": "64",
@@ -38992,7 +37532,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "128",
         "y1": "32",
@@ -39010,15 +37549,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M128 64V128H0L2.79753e-06 64C4.34256e-06 28.6538 28.6538 -1.54503e-06 64 0C99.3462 1.54503e-06 128 28.6538 128 64Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "64",
         "y1": "2.18557e-08",
@@ -39035,39 +37574,31 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 0C57.3075 8.42999e-07 -8.42999e-07 57.3075 0 128H128V0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 32C74.9807 32 32 74.9807 32 128",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 0C57.3075 8.42999e-07 -8.42999e-07 57.3075 0 128H128V0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 32C74.9807 32 32 74.9807 32 128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.00285435 0L127.997 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-0.00285435 0L127.997 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const noc = {
@@ -39076,15 +37607,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "64",
         "y1": "2.18557e-08",
@@ -39096,7 +37627,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -39107,7 +37637,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -39125,15 +37654,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "32",
         "cy": "64",
@@ -39144,7 +37673,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "32",
         "cy": "64",
@@ -39156,7 +37684,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "96",
         "cy": "64",
@@ -39167,7 +37694,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "96",
         "cy": "64",
@@ -39184,57 +37710,48 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "circle",
       "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "64",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "128",
+        "y1": "64",
+        "x2": "1.51277e-05",
+        "y2": "64",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "64",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "128",
-          "y1": "64",
-          "x2": "1.51277e-05",
-          "y2": "64",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "96",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "96",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "96",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "96",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const nom = {
@@ -39243,16 +37760,16 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "rect",
-      "value": "",
       "attributes": {
         "width": "128",
         "height": "128",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "32",
         "cy": "96",
@@ -39263,7 +37780,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "32",
         "cy": "96",
@@ -39275,7 +37791,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "96",
         "cy": "96",
@@ -39286,7 +37801,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "96",
         "cy": "96",
@@ -39298,7 +37812,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "96",
         "cy": "32",
@@ -39309,7 +37822,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "96",
         "cy": "32",
@@ -39326,95 +37838,40 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "circle",
       "attributes": {
-        "fill": "none"
-      },
-      "children": [{
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "64",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "-0.0029152",
-          "x2": "127.983",
-          "y2": "127.986",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "y1": "-0.5",
-          "x2": "45.2548",
-          "y2": "-0.5",
-          "transform": "matrix(0.707107 -0.707107 -0.707107 -0.707107 79.65 47.65)",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
-    }]
-  };
-  const nor = {
-    "name": "g",
-    "value": "",
-    "attributes": {},
-    "children": [{
-      "name": "path",
-      "value": "",
-      "attributes": {
-        "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
-        "fill": 1
+        "cx": "64",
+        "cy": "64",
+        "r": "64",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
-      "name": "path",
-      "value": "",
+      "name": "line",
       "attributes": {
-        "d": "M64 96C46.3269 96 32 81.6731 32 64",
+        "x1": "-0.0029152",
+        "x2": "127.983",
+        "y2": "127.986",
+        "stroke": 0,
+        "stroke-linecap": "square",
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "y1": "-0.5",
+        "x2": "45.2548",
+        "y2": "-0.5",
+        "transform": "matrix(0.707107 -0.707107 -0.707107 -0.707107 79.65 47.65)",
         "stroke": 0,
         "fill": "none"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -39425,7 +37882,50 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
+    }]
+  };
+  const nor = {
+    "name": "g",
+    "value": "",
+    "attributes": {},
+    "children": [{
+      "name": "path",
+      "attributes": {
+        "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M64 96C46.3269 96 32 81.6731 32 64",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -39442,57 +37942,48 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "0.5",
+        "y1": "-0.5",
+        "x2": "181.5",
+        "y2": "-0.5",
+        "transform": "matrix(-0.707107 0.707107 0.707107 0.707107 128.71 0)",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "0.5",
-          "y1": "-0.5",
-          "x2": "181.5",
-          "y2": "-0.5",
-          "transform": "matrix(-0.707107 0.707107 0.707107 0.707107 128.71 0)",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "32",
-          "cy": "32",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "32",
-          "cy": "32",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "32",
+        "cy": "32",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "32",
+        "cy": "32",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const nov = {
@@ -39500,69 +37991,58 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "rect",
       "attributes": {
+        "width": "128",
+        "height": "128",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "-0.0029152",
+        "x2": "127.983",
+        "y2": "127.986",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "rect",
-        "value": "",
-        "attributes": {
-          "width": "128",
-          "height": "128",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "-0.0029152",
-          "x2": "127.983",
-          "y2": "127.986",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M2.03434e-06 128C70.6924 128 128 70.6925 128 0",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M1.52575e-06 96C53.0193 96 96 53.0193 96 0",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M1.01717e-06 64C35.3462 64 64 35.3462 64 0",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M5.08584e-07 32C17.6731 32 32 17.6731 32 0",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M2.03434e-06 128C70.6924 128 128 70.6925 128 0",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M1.52575e-06 96C53.0193 96 96 53.0193 96 0",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M1.01717e-06 64C35.3462 64 64 35.3462 64 0",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M5.08584e-07 32C17.6731 32 32 17.6731 32 0",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const nub = {
@@ -39570,29 +38050,22 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 64L0 64",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 64L0 64",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
     }]
   };
   const nul = {
@@ -39601,17 +38074,17 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
         "r": "64",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -39622,7 +38095,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "32",
         "cy": "64",
@@ -39633,7 +38105,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "32",
         "cy": "64",
@@ -39650,76 +38121,65 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 0L0 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 0L0 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "32",
-          "cy": "32",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "32",
-          "cy": "32",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "96",
-          "cy": "96",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "96",
-          "cy": "96",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "32",
+        "cy": "32",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "32",
+        "cy": "32",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "96",
+        "cy": "96",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "96",
+        "cy": "96",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const nup = {
@@ -39728,15 +38188,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 128H0L5.59506e-06 -7.62939e-06L64 -2.03434e-06C99.3462 1.05573e-06 128 28.6538 128 64C128 99.3462 99.3462 128 64 128Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 16C90.5097 16 112 37.4903 112 64C112 90.5097 90.5097 112 64 112",
         "stroke": 0,
@@ -39750,62 +38210,52 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-0.00280762 0L127.997 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.00280762 0L127.997 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0.000105172 128C35.3582 128 67.3679 113.664 90.5332 90.4863",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "31",
-          "cy": "32",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "31",
-          "cy": "32",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M0.000105172 128C35.3582 128 67.3679 113.664 90.5332 90.4863",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "31",
+        "cy": "32",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "31",
+        "cy": "32",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const nut = {
@@ -39814,16 +38264,16 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "rect",
-      "value": "",
       "attributes": {
         "width": "128",
         "height": "128",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "80.0035",
         "y1": "79.9964",
@@ -39835,7 +38285,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "y1": "-0.5",
         "x2": "45.2548",
@@ -39847,7 +38296,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "96",
         "cy": "96",
@@ -39858,7 +38306,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "96",
         "cy": "96",
@@ -39875,47 +38322,38 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 64L0 64",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 64L0 64",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 96L0 96",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 32L0 32",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 96L0 96",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 32L0 32",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const nyd = {
@@ -39923,52 +38361,43 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0.0541 0C70.7217 0.0292317 128 57.3256 128 128C57.3177 128 0.0164917 70.7089 7.62806e-06 0.0305091C7.62851e-06 0.0203397 -4.44317e-10 0.01017 0 0H0.0541Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-0.00292969 0L127.997 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0.0541 0C70.7217 0.0292317 128 57.3256 128 128C57.3177 128 0.0164917 70.7089 7.62806e-06 0.0305091C7.62851e-06 0.0203397 -4.44317e-10 0.01017 0 0H0.0541Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.00292969 0L127.997 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "32",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "16",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "32",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "16",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const nyl = {
@@ -39976,73 +38405,55 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-0.00292969 0L127.997 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.00292969 0L127.997 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "g",
-        "value": "",
-        "attributes": {
-          "fill": "none"
-        },
-        "children": [{
-          "name": "path",
-          "value": "",
-          "attributes": {
-            "d": "M0 128C4.63574e-06 92.6489 14.3309 60.6449 37.5 37.4807",
-            "stroke": 0,
-            "fill": "none"
-          },
-          "children": []
-        }, {
-          "name": "path",
-          "value": "",
-          "attributes": {
-            "d": "M32 128C32 101.492 42.7436 77.4939 60.1138 60.1217",
-            "stroke": 0,
-            "fill": "none"
-          },
-          "children": []
-        }, {
-          "name": "path",
-          "value": "",
-          "attributes": {
-            "d": "M64 128C64 110.328 71.1626 94.3287 82.7432 82.7471",
-            "stroke": 0,
-            "fill": "none"
-          },
-          "children": []
-        }, {
-          "name": "path",
-          "value": "",
-          "attributes": {
-            "d": "M95.6284 128C95.6284 119.164 99.2097 111.164 105 105.374",
-            "stroke": 0,
-            "fill": "none"
-          },
-          "children": []
-        }]
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M0 128C4.63574e-06 92.6489 14.3309 60.6449 37.5 37.4807",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M32 128C32 101.492 42.7436 77.4939 60.1138 60.1217",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M64 128C64 110.328 71.1626 94.3287 82.7432 82.7471",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M95.6284 128C95.6284 119.164 99.2097 111.164 105 105.374",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const nym = {
@@ -40050,47 +38461,38 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M5.59506e-06 128C70.6925 128 128 70.6925 128 0L0 5.59506e-06L5.59506e-06 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M64 0L64 128",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M5.59506e-06 128C70.6925 128 128 70.6925 128 0L0 5.59506e-06L5.59506e-06 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 0L64 128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M96 0L96 128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M32 0L32 128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M96 0L96 128",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M32 0L32 128",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const nyr = {
@@ -40098,39 +38500,31 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0 127.946C0.0292286 57.2783 57.3256 3.08928e-06 128 0C128 70.6823 70.7089 127.984 0.0305092 128C0.0203397 128 0.01017 128 2.36469e-09 128L0 127.946Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-0.00268555 0L127.997 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 127.946C0.0292286 57.2783 57.3256 3.08928e-06 128 0C128 70.6823 70.7089 127.984 0.0305092 128C0.0203397 128 0.01017 128 2.36469e-09 128L0 127.946Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.00268555 0L127.997 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M95.9984 0C95.9984 26.3298 85.3985 50.1839 68.2332 67.5278M63.9983 0C63.9983 17.4933 56.9799 33.3473 45.6054 44.8999M31.9983 0C31.9983 8.65672 28.5609 16.5106 22.9766 22.2711",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M95.9984 0C95.9984 26.3298 85.3985 50.1839 68.2332 67.5278M63.9983 0C63.9983 17.4933 56.9799 33.3473 45.6054 44.8999M31.9983 0C31.9983 8.65672 28.5609 16.5106 22.9766 22.2711",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const nys = {
@@ -40139,15 +38533,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "16",
         "cy": "112",
@@ -40158,7 +38552,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "16",
         "cy": "112",
@@ -40175,47 +38568,38 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M64 128H0L5.59506e-06 0L64 5.59506e-06C99.3462 8.68512e-06 128 28.6538 128 64C128 99.3462 99.3462 128 64 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 64L0 64",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 128H0L5.59506e-06 0L64 5.59506e-06C99.3462 8.68512e-06 128 28.6538 128 64C128 99.3462 99.3462 128 64 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 64L0 64",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 32C81.6731 32 96 46.3269 96 64",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 16C90.5097 16 112 37.4903 112 64",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M64 32C81.6731 32 96 46.3269 96 64",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M64 16C90.5097 16 112 37.4903 112 64",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const nyx = {
@@ -40223,40 +38607,32 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M5.59506e-06 128C70.6925 128 128 70.6925 128 0L0 5.59506e-06L5.59506e-06 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-0.00292969 0L127.997 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M5.59506e-06 128C70.6925 128 128 70.6925 128 0L0 5.59506e-06L5.59506e-06 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.00292969 0L127.997 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "fill-rule": "evenodd",
-          "clip-rule": "evenodd",
-          "d": "M80 64C80 72.8366 72.8366 80 64 80C55.1634 80 48 72.8366 48 64C48 55.1634 55.1634 48 64 48C72.8366 48 80 55.1634 80 64ZM64 72C68.4183 72 72 68.4183 72 64C72 59.5817 68.4183 56 64 56C59.5817 56 56 59.5817 56 64C56 68.4183 59.5817 72 64 72Z",
-          "fill": 0
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "fill-rule": "evenodd",
+        "clip-rule": "evenodd",
+        "d": "M80 64C80 72.8366 72.8366 80 64 80C55.1634 80 48 72.8366 48 64C48 55.1634 55.1634 48 64 48C72.8366 48 80 55.1634 80 64ZM64 72C68.4183 72 72 68.4183 72 64C72 59.5817 68.4183 56 64 56C59.5817 56 56 59.5817 56 64C56 68.4183 59.5817 72 64 72Z",
+        "fill": 0
+      },
+      "children": []
     }]
   };
   const pac = {
@@ -40264,64 +38640,54 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 0L0 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 0L0 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "16",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "32",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "32",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "16",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "32",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "32",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const pad = {
@@ -40330,15 +38696,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "96",
         "cy": "32",
@@ -40349,7 +38715,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "96",
         "cy": "32",
@@ -40367,15 +38732,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "15.9964",
         "y1": "111.997",
@@ -40392,64 +38757,47 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0.0541 0C70.7217 0.0292317 128 57.3256 128 128C57.3177 128 0.0164917 70.7089 7.62806e-06 0.0305091C7.62851e-06 0.0203397 -4.44317e-10 0.01017 0 0H0.0541Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 0L0 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0.0541 0C70.7217 0.0292317 128 57.3256 128 128C57.3177 128 0.0164917 70.7089 7.62806e-06 0.0305091C7.62851e-06 0.0203397 -4.44317e-10 0.01017 0 0H0.0541Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 0L0 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "g",
-        "value": "",
-        "attributes": {
-          "fill": "none"
-        },
-        "children": [{
-          "name": "path",
-          "value": "",
-          "attributes": {
-            "d": "M128 96C101.492 96 77.4939 85.2564 60.1217 67.8862",
-            "stroke": 0,
-            "fill": "none"
-          },
-          "children": []
-        }, {
-          "name": "path",
-          "value": "",
-          "attributes": {
-            "d": "M128 64C110.328 64 94.3287 56.8374 82.7471 45.2568",
-            "stroke": 0,
-            "fill": "none"
-          },
-          "children": []
-        }, {
-          "name": "path",
-          "value": "",
-          "attributes": {
-            "d": "M128 32.3716C119.164 32.3716 111.164 28.7903 105.374 23",
-            "stroke": 0,
-            "fill": "none"
-          },
-          "children": []
-        }]
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 96C101.492 96 77.4939 85.2564 60.1217 67.8862",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 64C110.328 64 94.3287 56.8374 82.7471 45.2568",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 32.3716C119.164 32.3716 111.164 28.7903 105.374 23",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const pan = {
@@ -40457,43 +38805,35 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "0.5",
+        "y1": "-0.5",
+        "x2": "181.5",
+        "y2": "-0.5",
+        "transform": "matrix(-0.707107 0.707107 0.707107 0.707107 128.71 0)",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "0.5",
-          "y1": "-0.5",
-          "x2": "181.5",
-          "y2": "-0.5",
-          "transform": "matrix(-0.707107 0.707107 0.707107 0.707107 128.71 0)",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M41.3726 86.6274C28.8758 74.1306 28.8758 53.8693 41.3726 41.3725C53.8694 28.8758 74.1306 28.8758 86.6274 41.3725",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M41.3726 86.6274C28.8758 74.1306 28.8758 53.8693 41.3726 41.3725C53.8694 28.8758 74.1306 28.8758 86.6274 41.3725",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const par = {
@@ -40501,47 +38841,39 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "circle",
       "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "64",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "0.5",
+        "y1": "-0.5",
+        "x2": "181.5",
+        "y2": "-0.5",
+        "transform": "matrix(-0.707107 0.707107 0.707107 0.707107 128.693 0)",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "64",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "0.5",
-          "y1": "-0.5",
-          "x2": "181.5",
-          "y2": "-0.5",
-          "transform": "matrix(-0.707107 0.707107 0.707107 0.707107 128.693 0)",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "16",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "16",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const pas = {
@@ -40550,16 +38882,16 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "rect",
-      "value": "",
       "attributes": {
         "width": "128",
         "height": "128",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M32 0L32 128",
         "stroke": 0,
@@ -40568,7 +38900,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 0L64 128",
         "stroke": 0,
@@ -40577,7 +38908,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M96 0L96 128",
         "stroke": 0,
@@ -40591,47 +38921,38 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M32 -2.67054e-06C32 53.0193 74.9807 96 128 96",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M32 -2.67054e-06C32 53.0193 74.9807 96 128 96",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 -1.78036e-06C64 35.3462 92.6538 64 128 64",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M96 -8.9018e-07C96 17.6731 110.327 32 128 32",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M64 -1.78036e-06C64 35.3462 92.6538 64 128 64",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M96 -8.9018e-07C96 17.6731 110.327 32 128 32",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const pec = {
@@ -40639,53 +38960,44 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 0L0 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 0L0 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const ped = {
@@ -40694,17 +39006,17 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
         "r": "64",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "32",
         "cy": "64",
@@ -40715,7 +39027,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "32",
         "cy": "64",
@@ -40733,16 +39044,16 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "rect",
-      "value": "",
       "attributes": {
         "width": "128",
         "height": "128",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M96 0C96 17.6731 81.6731 32 64 32C46.3269 32 32 17.6731 32 0",
         "stroke": 0,
@@ -40757,15 +39068,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M0 127.946C0.0292286 57.2783 57.3256 3.08928e-06 128 0C128 70.6823 70.7089 127.984 0.0305092 128C0.0203397 128 0.01017 128 2.36469e-09 128L0 127.946Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -40776,7 +39087,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M112 64C112 37.4903 90.5097 16 64 16",
         "stroke": 0,
@@ -40790,41 +39100,33 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "circle",
       "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "64",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-0.00280762 0L127.997 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "64",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.00280762 0L127.997 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 128C64 92.6538 35.3462 64 0 64",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M64 128C64 92.6538 35.3462 64 0 64",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const pen = {
@@ -40833,16 +39135,16 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "rect",
-      "value": "",
       "attributes": {
         "width": "128",
         "height": "128",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M96 0C96 17.6731 81.6731 32 64 32C46.3269 32 32 17.6731 32 0",
         "stroke": 0,
@@ -40850,22 +39152,14 @@ var dist = createCommonjsModule(function (module, exports) {
       },
       "children": []
     }, {
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M-0.00292969 0L127.997 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.00292969 0L127.997 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
     }]
   };
   const per = {
@@ -40874,15 +39168,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M0 64L5.59506e-06 0L128 1.11901e-05V64C128 99.3462 99.3462 128 64 128C28.6538 128 -4.6351e-06 99.3462 0 64Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 0L64 128",
         "stroke": 0,
@@ -40896,41 +39190,33 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 0C57.3075 8.42999e-07 -8.42999e-07 57.3075 0 128H128V0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M64 112C90.5097 112 112 90.5097 112 64",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 0C57.3075 8.42999e-07 -8.42999e-07 57.3075 0 128H128V0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 112C90.5097 112 112 90.5097 112 64",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "-0.00285417",
-          "x2": "127.983",
-          "y2": "127.986",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "-0.00285417",
+        "x2": "127.983",
+        "y2": "127.986",
+        "stroke": 0,
+        "stroke-linecap": "square",
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const pet = {
@@ -40939,17 +39225,17 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
         "r": "64",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "80.0035",
         "y1": "79.9964",
@@ -40967,15 +39253,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 128H0L5.59506e-06 0L64 5.59506e-06C99.3462 8.68512e-06 128 28.6538 128 64C128 99.3462 99.3462 128 64 128Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -40986,7 +39272,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "fill-rule": "evenodd",
         "clip-rule": "evenodd",
@@ -41001,47 +39286,38 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M96 128C96 74.9807 53.0193 32 0 32",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M96 128C96 74.9807 53.0193 32 0 32",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 128C64 92.6538 35.3462 64 0 64",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M32 128C32 110.327 17.6731 96 0 96",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M64 128C64 92.6538 35.3462 64 0 64",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M32 128C32 110.327 17.6731 96 0 96",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const pid = {
@@ -41049,55 +39325,46 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "-0.0029152",
+        "x2": "127.983",
+        "y2": "127.986",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "-0.0029152",
-          "x2": "127.983",
-          "y2": "127.986",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "16",
-          "cy": "112",
-          "r": "11.5",
-          "fill": 0,
-          "stroke": 0
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "16",
-          "cy": "112",
-          "r": "9",
-          "fill": 1,
-          "stroke": 1,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "16",
+        "cy": "112",
+        "r": "11.5",
+        "fill": 0,
+        "stroke": 0
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "16",
+        "cy": "112",
+        "r": "9",
+        "fill": 1,
+        "stroke": 1,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const pil = {
@@ -41105,57 +39372,48 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "0.5",
+        "y1": "-0.5",
+        "x2": "181.5",
+        "y2": "-0.5",
+        "transform": "matrix(-0.707107 0.707107 0.707107 0.707107 128.71 0)",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "0.5",
-          "y1": "-0.5",
-          "x2": "181.5",
-          "y2": "-0.5",
-          "transform": "matrix(-0.707107 0.707107 0.707107 0.707107 128.71 0)",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "96",
-          "cy": "96",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "96",
-          "cy": "96",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "96",
+        "cy": "96",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "96",
+        "cy": "96",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const pin = {
@@ -41163,53 +39421,44 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "rect",
       "attributes": {
+        "width": "128",
+        "height": "128",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M32 0L32 128",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "rect",
-        "value": "",
-        "attributes": {
-          "width": "128",
-          "height": "128",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M32 0L32 128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "32",
-          "cy": "32",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "32",
-          "cy": "32",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "32",
+        "cy": "32",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "32",
+        "cy": "32",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const pit = {
@@ -41217,57 +39466,48 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0.0541 0C70.7217 0.0292317 128 57.3256 128 128C57.3177 128 0.0164917 70.7089 7.62806e-06 0.0305091C7.62851e-06 0.0203397 -4.44317e-10 0.01017 0 0H0.0541Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "0.5",
+        "y1": "-0.5",
+        "x2": "181.5",
+        "y2": "-0.5",
+        "transform": "matrix(-0.707107 0.707107 0.707107 0.707107 128.71 0)",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0.0541 0C70.7217 0.0292317 128 57.3256 128 128C57.3177 128 0.0164917 70.7089 7.62806e-06 0.0305091C7.62851e-06 0.0203397 -4.44317e-10 0.01017 0 0H0.0541Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "0.5",
-          "y1": "-0.5",
-          "x2": "181.5",
-          "y2": "-0.5",
-          "transform": "matrix(-0.707107 0.707107 0.707107 0.707107 128.71 0)",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "16",
-          "cy": "112",
-          "r": "11.5",
-          "fill": 0,
-          "stroke": 0
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "16",
-          "cy": "112",
-          "r": "9",
-          "fill": 1,
-          "stroke": 1,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "16",
+        "cy": "112",
+        "r": "11.5",
+        "fill": 0,
+        "stroke": 0
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "16",
+        "cy": "112",
+        "r": "9",
+        "fill": 1,
+        "stroke": 1,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const poc = {
@@ -41275,56 +39515,47 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0.0541 0C70.7217 0.0292317 128 57.3256 128 128C57.3177 128 0.0164917 70.7089 7.62806e-06 0.0305091C7.62851e-06 0.0203397 -4.44317e-10 0.01017 0 0H0.0541Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "64.5",
+        "y1": "-0.5",
+        "x2": "64.5",
+        "y2": "127.5",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0.0541 0C70.7217 0.0292317 128 57.3256 128 128C57.3177 128 0.0164917 70.7089 7.62806e-06 0.0305091C7.62851e-06 0.0203397 -4.44317e-10 0.01017 0 0H0.0541Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "64.5",
-          "y1": "-0.5",
-          "x2": "64.5",
-          "y2": "127.5",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "96.5",
-          "y1": "-0.5",
-          "x2": "96.5",
-          "y2": "127.5",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "32.5",
-          "y1": "-0.5",
-          "x2": "32.5",
-          "y2": "127.5",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "96.5",
+        "y1": "-0.5",
+        "x2": "96.5",
+        "y2": "127.5",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "32.5",
+        "y1": "-0.5",
+        "x2": "32.5",
+        "y2": "127.5",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const pod = {
@@ -41333,15 +39564,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "128",
         "y1": "96",
@@ -41359,17 +39590,17 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
         "r": "64",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -41380,7 +39611,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "128",
         "y1": "32",
@@ -41398,10 +39628,11 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M128 0C57.3075 8.42999e-07 -8.42999e-07 57.3075 0 128H128V0Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }]
@@ -41411,55 +39642,46 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "-0.0029152",
+        "x2": "127.983",
+        "y2": "127.986",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "-0.0029152",
-          "x2": "127.983",
-          "y2": "127.986",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "96",
-          "cy": "32",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "96",
-          "cy": "32",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "96",
+        "cy": "32",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "96",
+        "cy": "32",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const pub = {
@@ -41467,29 +39689,22 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M32 0L32 128",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M32 0L32 128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
     }]
   };
   const pun = {
@@ -41498,17 +39713,17 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
         "r": "64",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M112 64C112 37.4903 90.5097 16 64 16",
         "stroke": 0,
@@ -41517,7 +39732,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M96 64C96 46.3269 81.6731 32 64 32",
         "stroke": 0,
@@ -41526,7 +39740,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M80 64C80 55.1634 72.8366 48 64 48",
         "stroke": 0,
@@ -41540,39 +39753,31 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M5.59506e-06 128C70.6925 128 128 70.6925 128 0L0 5.59506e-06L5.59506e-06 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-0.00292969 0L127.997 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M5.59506e-06 128C70.6925 128 128 70.6925 128 0L0 5.59506e-06L5.59506e-06 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.00292969 0L127.997 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M3.73284e-05 64C17.6633 64 33.6554 56.8445 45.2356 45.2741",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M3.73284e-05 64C17.6633 64 33.6554 56.8445 45.2356 45.2741",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const put = {
@@ -41581,16 +39786,16 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "rect",
-      "value": "",
       "attributes": {
         "width": "128",
         "height": "128",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "32",
         "cy": "96",
@@ -41601,7 +39806,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "32",
         "cy": "96",
@@ -41618,29 +39822,22 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-5.59506e-06 128C35.3462 128 64 99.3462 64 64C64 28.6538 35.3462 1.54503e-06 0 0",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-5.59506e-06 128C35.3462 128 64 99.3462 64 64C64 28.6538 35.3462 1.54503e-06 0 0",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
     }]
   };
   const pyx = {
@@ -41648,53 +39845,44 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M5.59506e-06 128C70.6925 128 128 70.6925 128 0L0 5.59506e-06L5.59506e-06 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-0.00292969 0L127.997 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M5.59506e-06 128C70.6925 128 128 70.6925 128 0L0 5.59506e-06L5.59506e-06 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.00292969 0L127.997 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "96",
-          "cy": "32",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "96",
-          "cy": "32",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "96",
+        "cy": "32",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "96",
+        "cy": "32",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const rab = {
@@ -41702,42 +39890,34 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 0C57.3075 8.42999e-07 -8.42999e-07 57.3075 0 128H128V0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-0.00292969 0L127.997 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 0C57.3075 8.42999e-07 -8.42999e-07 57.3075 0 128H128V0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.00292969 0L127.997 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "15.9965",
-          "y1": "111.997",
-          "x2": "47.9964",
-          "y2": "79.9965",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "15.9965",
+        "y1": "111.997",
+        "x2": "47.9964",
+        "y2": "79.9965",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const rac = {
@@ -41746,15 +39926,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M0.0541 0C70.7217 0.0292317 128 57.3256 128 128C57.3177 128 0.0164917 70.7089 7.62806e-06 0.0305091C7.62851e-06 0.0203397 -4.44317e-10 0.01017 0 0H0.0541Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "16",
         "cy": "112",
@@ -41765,7 +39945,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "16",
         "cy": "112",
@@ -41783,15 +39962,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "32",
         "cy": "96",
@@ -41802,7 +39981,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "32",
         "cy": "96",
@@ -41820,15 +39998,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "16.0036",
         "y1": "15.9965",
@@ -41846,15 +40024,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M0.0541 0C70.7217 0.0292317 128 57.3256 128 128C57.3177 128 0.0164917 70.7089 7.62806e-06 0.0305091C7.62851e-06 0.0203397 -4.44317e-10 0.01017 0 0H0.0541Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -41865,7 +40043,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -41882,15 +40059,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "64",
         "y1": "2.18557e-08",
@@ -41902,7 +40079,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "fill-rule": "evenodd",
         "clip-rule": "evenodd",
@@ -41917,50 +40093,41 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M64 0L64 128",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 0L64 128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.00291443 0L127.997 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "16",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-0.00291443 0L127.997 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "16",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const rap = {
@@ -41968,55 +40135,46 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "64",
+        "y1": "-1.29797e-08",
+        "x2": "64",
+        "y2": "128",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "64",
-          "y1": "-1.29797e-08",
-          "x2": "64",
-          "y2": "128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "96",
-          "cy": "64",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "96",
-          "cy": "64",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "96",
+        "cy": "64",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "96",
+        "cy": "64",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const rav = {
@@ -42024,29 +40182,22 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 32L0 32",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 32L0 32",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
     }]
   };
   const reb = {
@@ -42054,30 +40205,23 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "rect",
       "attributes": {
+        "width": "128",
+        "height": "128",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 -9.40976e-06C57.3075 -6.31969e-06 -3.09007e-06 57.3075 0 128",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "rect",
-        "value": "",
-        "attributes": {
-          "width": "128",
-          "height": "128",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 -9.40976e-06C57.3075 -6.31969e-06 -3.09007e-06 57.3075 0 128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
     }]
   };
   const rec = {
@@ -42086,15 +40230,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "32",
         "cy": "96",
@@ -42105,7 +40249,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "32",
         "cy": "96",
@@ -42117,7 +40260,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "96",
         "cy": "96",
@@ -42128,7 +40270,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "96",
         "cy": "96",
@@ -42146,17 +40287,17 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
         "r": "64",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "96",
@@ -42167,7 +40308,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "96",
@@ -42184,53 +40324,44 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0.0541 0C70.7217 0.0292317 128 57.3256 128 128C57.3177 128 0.0164917 70.7089 7.62806e-06 0.0305091C7.62851e-06 0.0203397 -4.44317e-10 0.01017 0 0H0.0541Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-0.00292969 0L127.997 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0.0541 0C70.7217 0.0292317 128 57.3256 128 128C57.3177 128 0.0164917 70.7089 7.62806e-06 0.0305091C7.62851e-06 0.0203397 -4.44317e-10 0.01017 0 0H0.0541Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.00292969 0L127.997 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "16",
-          "cy": "112",
-          "r": "11.5",
-          "fill": 0,
-          "stroke": 0
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "16",
-          "cy": "112",
-          "r": "9",
-          "fill": 1,
-          "stroke": 1,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "16",
+        "cy": "112",
+        "r": "11.5",
+        "fill": 0,
+        "stroke": 0
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "16",
+        "cy": "112",
+        "r": "9",
+        "fill": 1,
+        "stroke": 1,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const reg = {
@@ -42238,30 +40369,23 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "rect",
       "attributes": {
+        "width": "128",
+        "height": "128",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 96C110.327 96 96 81.6731 96 64C96 46.3269 110.327 32 128 32",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "rect",
-        "value": "",
-        "attributes": {
-          "width": "128",
-          "height": "128",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 96C110.327 96 96 81.6731 96 64C96 46.3269 110.327 32 128 32",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
     }]
   };
   const rel = {
@@ -42269,47 +40393,38 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0 127.946C0.0292286 57.2783 57.3256 3.08928e-06 128 0C128 70.6823 70.7089 127.984 0.0305092 128C0.0203397 128 0.01017 128 2.36469e-09 128L0 127.946Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 64L0 64",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 127.946C0.0292286 57.2783 57.3256 3.08928e-06 128 0C128 70.6823 70.7089 127.984 0.0305092 128C0.0203397 128 0.01017 128 2.36469e-09 128L0 127.946Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 64L0 64",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 96L0 96",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 32L0 32",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 96L0 96",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 32L0 32",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const rem = {
@@ -42317,41 +40432,33 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "circle",
       "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "64",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-0.00292969 0L127.997 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "64",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.00292969 0L127.997 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 64C92.6538 64 64 35.3462 64 0",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 64C92.6538 64 64 35.3462 64 0",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const ren = {
@@ -42360,16 +40467,16 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "rect",
-      "value": "",
       "attributes": {
         "width": "128",
         "height": "128",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "80.0035",
         "y1": "79.9965",
@@ -42381,7 +40488,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -42397,29 +40503,22 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 0C57.3075 8.42999e-07 -8.42999e-07 57.3075 0 128H128V0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M32 128C32 74.9807 74.9807 32 128 32",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 0C57.3075 8.42999e-07 -8.42999e-07 57.3075 0 128H128V0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M32 128C32 74.9807 74.9807 32 128 32",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
     }]
   };
   const res = {
@@ -42428,15 +40527,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M128 0C57.3075 8.42999e-07 -8.42999e-07 57.3075 0 128H128V0Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "80.0035",
         "y1": "79.9965",
@@ -42453,31 +40552,24 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "circle",
       "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "64",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 64L0 64",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "64",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 64L0 64",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
     }]
   };
   const rev = {
@@ -42486,15 +40578,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 128H0L5.59506e-06 0L64 5.59506e-06C99.3462 8.68512e-06 128 28.6538 128 64C128 99.3462 99.3462 128 64 128Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "15.9965",
         "y1": "111.997",
@@ -42506,7 +40598,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "16",
         "cy": "112",
@@ -42517,7 +40608,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "16",
         "cy": "112",
@@ -42529,7 +40619,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "fill-rule": "evenodd",
         "clip-rule": "evenodd",
@@ -42544,39 +40633,31 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M64 128H0L5.59506e-06 0L64 5.59506e-06C99.3462 8.68512e-06 128 28.6538 128 64C128 99.3462 99.3462 128 64 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 64L0 64",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 128H0L5.59506e-06 0L64 5.59506e-06C99.3462 8.68512e-06 128 28.6538 128 64C128 99.3462 99.3462 128 64 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 64L0 64",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "fill-rule": "evenodd",
-          "clip-rule": "evenodd",
-          "d": "M80 64C80 72.8366 72.8366 80 64 80C55.1634 80 48 72.8366 48 64C48 55.1634 55.1634 48 64 48C72.8366 48 80 55.1634 80 64ZM64 72C68.4183 72 72 68.4183 72 64C72 59.5817 68.4183 56 64 56C59.5817 56 56 59.5817 56 64C56 68.4183 59.5817 72 64 72Z",
-          "fill": 0
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "fill-rule": "evenodd",
+        "clip-rule": "evenodd",
+        "d": "M80 64C80 72.8366 72.8366 80 64 80C55.1634 80 48 72.8366 48 64C48 55.1634 55.1634 48 64 48C72.8366 48 80 55.1634 80 64ZM64 72C68.4183 72 72 68.4183 72 64C72 59.5817 68.4183 56 64 56C59.5817 56 56 59.5817 56 64C56 68.4183 59.5817 72 64 72Z",
+        "fill": 0
+      },
+      "children": []
     }]
   };
   const rib = {
@@ -42584,46 +40665,38 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "circle",
       "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "64",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "8.74228e-08",
+        "y1": "64",
+        "x2": "128",
+        "y2": "64",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "64",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "8.74228e-08",
-          "y1": "64",
-          "x2": "128",
-          "y2": "64",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "64",
-          "y1": "2.18557e-08",
-          "x2": "64",
-          "y2": "128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "64",
+        "y1": "2.18557e-08",
+        "x2": "64",
+        "y2": "128",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const ric = {
@@ -42632,15 +40705,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M96 128C96 74.9807 53.0193 32 0 32",
         "stroke": 0,
@@ -42654,38 +40727,30 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M64 0L64 128",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 0L64 128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M96 0L96 128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M96 0L96 128",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const rig = {
@@ -42694,17 +40759,17 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
         "r": "64",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "32",
@@ -42715,7 +40780,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "32",
@@ -42727,7 +40791,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "96",
@@ -42738,7 +40801,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "96",
@@ -42755,57 +40817,48 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "0.5",
+        "y1": "-0.5",
+        "x2": "181.5",
+        "y2": "-0.5",
+        "transform": "matrix(-0.707107 0.707107 0.707107 0.707107 128.693 0)",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "0.5",
-          "y1": "-0.5",
-          "x2": "181.5",
-          "y2": "-0.5",
-          "transform": "matrix(-0.707107 0.707107 0.707107 0.707107 128.693 0)",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "96",
-          "cy": "32",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "96",
-          "cy": "32",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "96",
+        "cy": "32",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "96",
+        "cy": "32",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const rin = {
@@ -42814,16 +40867,16 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "rect",
-      "value": "",
       "attributes": {
         "width": "128",
         "height": "128",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "64",
         "y1": "2.18557e-08",
@@ -42835,7 +40888,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "32",
         "y1": "2.18557e-08",
@@ -42852,62 +40904,52 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-0.00292969 0L127.997 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.00292969 0L127.997 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M96 64C96 46.3269 81.6731 32 64 32",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "96",
-          "cy": "64",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "96",
-          "cy": "64",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M96 64C96 46.3269 81.6731 32 64 32",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "96",
+        "cy": "64",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "96",
+        "cy": "64",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const ris = {
@@ -42915,75 +40957,57 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 0C57.3075 8.42999e-07 -8.42999e-07 57.3075 0 128H128V0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "-0.0029152",
+        "x2": "127.983",
+        "y2": "127.986",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 0C57.3075 8.42999e-07 -8.42999e-07 57.3075 0 128H128V0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "-0.0029152",
-          "x2": "127.983",
-          "y2": "127.986",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "g",
-        "value": "",
-        "attributes": {
-          "fill": "none"
-        },
-        "children": [{
-          "name": "path",
-          "value": "",
-          "attributes": {
-            "d": "M128 0C128 35.3511 113.669 67.3551 90.5 90.5193",
-            "stroke": 0,
-            "fill": "none"
-          },
-          "children": []
-        }, {
-          "name": "path",
-          "value": "",
-          "attributes": {
-            "d": "M96 0C96 26.5077 85.2564 50.5061 67.8862 67.8783",
-            "stroke": 0,
-            "fill": "none"
-          },
-          "children": []
-        }, {
-          "name": "path",
-          "value": "",
-          "attributes": {
-            "d": "M64 0C64 17.6721 56.8374 33.6713 45.2568 45.2529",
-            "stroke": 0,
-            "fill": "none"
-          },
-          "children": []
-        }, {
-          "name": "path",
-          "value": "",
-          "attributes": {
-            "d": "M32.3716 0C32.3716 8.83603 28.7903 16.8356 23 22.6264",
-            "stroke": 0,
-            "fill": "none"
-          },
-          "children": []
-        }]
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 0C128 35.3511 113.669 67.3551 90.5 90.5193",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M96 0C96 26.5077 85.2564 50.5061 67.8862 67.8783",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M64 0C64 17.6721 56.8374 33.6713 45.2568 45.2529",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M32.3716 0C32.3716 8.83603 28.7903 16.8356 23 22.6264",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const rit = {
@@ -42991,44 +41015,36 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0.0541 0C70.7217 0.0292317 128 57.3256 128 128C57.3177 128 0.0164917 70.7089 7.62806e-06 0.0305091C7.62851e-06 0.0203397 -4.44317e-10 0.01017 0 0H0.0541Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "0.5",
+        "y1": "-0.5",
+        "x2": "181.5",
+        "y2": "-0.5",
+        "transform": "matrix(-0.707107 0.707107 0.707107 0.707107 128.71 0)",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0.0541 0C70.7217 0.0292317 128 57.3256 128 128C57.3177 128 0.0164917 70.7089 7.62806e-06 0.0305091C7.62851e-06 0.0203397 -4.44317e-10 0.01017 0 0H0.0541Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "0.5",
-          "y1": "-0.5",
-          "x2": "181.5",
-          "y2": "-0.5",
-          "transform": "matrix(-0.707107 0.707107 0.707107 0.707107 128.71 0)",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "fill-rule": "evenodd",
-          "clip-rule": "evenodd",
-          "d": "M80 64C80 72.8366 72.8366 80 64 80C55.1634 80 48 72.8366 48 64C48 55.1634 55.1634 48 64 48C72.8366 48 80 55.1634 80 64ZM64 72C68.4183 72 72 68.4183 72 64C72 59.5817 68.4183 56 64 56C59.5817 56 56 59.5817 56 64C56 68.4183 59.5817 72 64 72Z",
-          "fill": 0
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "fill-rule": "evenodd",
+        "clip-rule": "evenodd",
+        "d": "M80 64C80 72.8366 72.8366 80 64 80C55.1634 80 48 72.8366 48 64C48 55.1634 55.1634 48 64 48C72.8366 48 80 55.1634 80 64ZM64 72C68.4183 72 72 68.4183 72 64C72 59.5817 68.4183 56 64 56C59.5817 56 56 59.5817 56 64C56 68.4183 59.5817 72 64 72Z",
+        "fill": 0
+      },
+      "children": []
     }]
   };
   const riv = {
@@ -43037,16 +41053,16 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "rect",
-      "value": "",
       "attributes": {
         "width": "128",
         "height": "128",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -43057,7 +41073,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "64",
         "y1": "2.18557e-08",
@@ -43069,7 +41084,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -43086,15 +41100,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M0.0541 0C70.7217 0.0292317 128 57.3256 128 128C57.3177 128 0.0164917 70.7089 7.62806e-06 0.0305091C7.62851e-06 0.0203397 -4.44317e-10 0.01017 0 0H0.0541Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -43105,7 +41119,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -43117,7 +41130,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "16",
         "cy": "112",
@@ -43128,7 +41140,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "16",
         "cy": "112",
@@ -43140,7 +41151,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "112",
         "cy": "16",
@@ -43151,7 +41161,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "112",
         "cy": "16",
@@ -43168,40 +41177,32 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "circle",
       "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "64",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 64L0 64",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "64",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 64L0 64",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 16C90.5097 16 112 37.4903 112 64C112 90.5097 90.5097 112 64 112",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M64 16C90.5097 16 112 37.4903 112 64C112 90.5097 90.5097 112 64 112",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const ron = {
@@ -43209,29 +41210,22 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 0C57.3075 8.42999e-07 -8.42999e-07 57.3075 0 128H128V0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 0C128 70.6924 70.6925 128 0 128",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 0C57.3075 8.42999e-07 -8.42999e-07 57.3075 0 128H128V0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 0C128 70.6924 70.6925 128 0 128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
     }]
   };
   const rop = {
@@ -43239,41 +41233,33 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "circle",
       "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "64",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-0.00292969 0L127.997 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "64",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.00292969 0L127.997 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M112 64C112 37.4903 90.5097 16 64 16",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M112 64C112 37.4903 90.5097 16 64 16",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const ros = {
@@ -43281,57 +41267,48 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "0.5",
+        "y1": "-0.5",
+        "x2": "181.5",
+        "y2": "-0.5",
+        "transform": "matrix(-0.707107 0.707107 0.707107 0.707107 128.71 0)",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "0.5",
-          "y1": "-0.5",
-          "x2": "181.5",
-          "y2": "-0.5",
-          "transform": "matrix(-0.707107 0.707107 0.707107 0.707107 128.71 0)",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "96",
-          "cy": "96",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "96",
-          "cy": "96",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "96",
+        "cy": "96",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "96",
+        "cy": "96",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const rov = {
@@ -43339,76 +41316,58 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "rect",
       "attributes": {
+        "width": "128",
+        "height": "128",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "-0.0029152",
+        "x2": "127.983",
+        "y2": "127.986",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "rect",
-        "value": "",
-        "attributes": {
-          "width": "128",
-          "height": "128",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "-0.0029152",
-          "x2": "127.983",
-          "y2": "127.986",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "g",
-        "value": "",
-        "attributes": {
-          "fill": "none"
-        },
-        "children": [{
-          "name": "path",
-          "value": "",
-          "attributes": {
-            "d": "M128 0C128 35.3511 113.669 67.3551 90.5 90.5193",
-            "stroke": 0,
-            "fill": "none"
-          },
-          "children": []
-        }, {
-          "name": "path",
-          "value": "",
-          "attributes": {
-            "d": "M96 0C96 26.5077 85.2564 50.5061 67.8862 67.8783",
-            "stroke": 0,
-            "fill": "none"
-          },
-          "children": []
-        }, {
-          "name": "path",
-          "value": "",
-          "attributes": {
-            "d": "M64 0C64 17.6721 56.8374 33.6713 45.2568 45.2529",
-            "stroke": 0,
-            "fill": "none"
-          },
-          "children": []
-        }, {
-          "name": "path",
-          "value": "",
-          "attributes": {
-            "d": "M32.3716 0C32.3716 8.83603 28.7903 16.8356 23 22.6264",
-            "stroke": 0,
-            "fill": "none"
-          },
-          "children": []
-        }]
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 0C128 35.3511 113.669 67.3551 90.5 90.5193",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M96 0C96 26.5077 85.2564 50.5061 67.8862 67.8783",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M64 0C64 17.6721 56.8374 33.6713 45.2568 45.2529",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M32.3716 0C32.3716 8.83603 28.7903 16.8356 23 22.6264",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const ruc = {
@@ -43416,38 +41375,30 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 64L0 64",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 64L0 64",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 32L0 32",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 32L0 32",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const rud = {
@@ -43455,47 +41406,38 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 64L0 64",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 64L0 64",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M32 0L32 128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 0L64 128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M32 0L32 128",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M64 0L64 128",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const rul = {
@@ -43504,17 +41446,17 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
         "r": "64",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "80.0035",
         "y1": "79.9964",
@@ -43526,7 +41468,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "fill-rule": "evenodd",
         "clip-rule": "evenodd",
@@ -43541,29 +41482,22 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M5.59506e-06 128C70.6925 128 128 70.6925 128 0L0 5.59506e-06L5.59506e-06 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M5.08584e-07 32C17.6731 32 32 17.6731 32 0",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M5.59506e-06 128C70.6925 128 128 70.6925 128 0L0 5.59506e-06L5.59506e-06 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M5.08584e-07 32C17.6731 32 32 17.6731 32 0",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
     }]
   };
   const run = {
@@ -43572,15 +41506,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 128H0L5.59506e-06 0L64 5.59506e-06C99.3462 8.68512e-06 128 28.6538 128 64C128 99.3462 99.3462 128 64 128Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 0L64 128",
         "stroke": 0,
@@ -43589,7 +41523,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M96 0L96 128",
         "stroke": 0,
@@ -43598,7 +41531,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M32 0L32 128",
         "stroke": 0,
@@ -43612,49 +41544,40 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M64 128H0L5.59506e-06 0L64 5.59506e-06C99.3462 8.68512e-06 128 28.6538 128 64C128 99.3462 99.3462 128 64 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M64 0L64 128",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 128H0L5.59506e-06 0L64 5.59506e-06C99.3462 8.68512e-06 128 28.6538 128 64C128 99.3462 99.3462 128 64 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 0L64 128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 112C90.5097 112 112 90.5097 112 64C112 37.4903 90.5097 16 64 16",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "32",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M64 112C90.5097 112 112 90.5097 112 64C112 37.4903 90.5097 16 64 16",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "32",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const rus = {
@@ -43662,39 +41585,31 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 0L0 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 0L0 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 128C64 92.6538 35.3462 64 0 64",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M64 128C64 92.6538 35.3462 64 0 64",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const rut = {
@@ -43703,16 +41618,16 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "rect",
-      "value": "",
       "attributes": {
         "width": "128",
         "height": "128",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "32",
         "cy": "32",
@@ -43723,7 +41638,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "32",
         "cy": "32",
@@ -43740,38 +41654,30 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 64L0 64",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 64L0 64",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M32 64C32 81.6731 46.3269 96 64 96",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M32 64C32 81.6731 46.3269 96 64 96",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const ryc = {
@@ -43779,29 +41685,22 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 96L0 96",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 96L0 96",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
     }]
   };
   const ryd = {
@@ -43809,39 +41708,31 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0.0541 0C70.7217 0.0292317 128 57.3256 128 128C57.3177 128 0.0164917 70.7089 7.62806e-06 0.0305091C7.62851e-06 0.0203397 -4.44317e-10 0.01017 0 0H0.0541Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-0.00280762 0L127.997 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0.0541 0C70.7217 0.0292317 128 57.3256 128 128C57.3177 128 0.0164917 70.7089 7.62806e-06 0.0305091C7.62851e-06 0.0203397 -4.44317e-10 0.01017 0 0H0.0541Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.00280762 0L127.997 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M96 64C96 81.6731 81.6731 96 64 96",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M96 64C96 81.6731 81.6731 96 64 96",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const ryg = {
@@ -43849,64 +41740,54 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M5.59506e-06 128C70.6925 128 128 70.6925 128 0L0 5.59506e-06L5.59506e-06 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-2.79795e-06 -3.55988e-06C70.6924 -4.40288e-06 128 57.3075 128 128",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M5.59506e-06 128C70.6925 128 128 70.6925 128 0L0 5.59506e-06L5.59506e-06 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-2.79795e-06 -3.55988e-06C70.6924 -4.40288e-06 128 57.3075 128 128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "16.0035",
-          "y1": "15.9965",
-          "x2": "48.0035",
-          "y2": "47.9965",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "16.0035",
+        "y1": "15.9965",
+        "x2": "48.0035",
+        "y2": "47.9965",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const ryl = {
@@ -43914,73 +41795,55 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 0L0 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 0L0 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "g",
-        "value": "",
-        "attributes": {
-          "fill": "none"
-        },
-        "children": [{
-          "name": "path",
-          "value": "",
-          "attributes": {
-            "d": "M128 128C92.6489 128 60.6449 113.669 37.4807 90.5",
-            "stroke": 0,
-            "fill": "none"
-          },
-          "children": []
-        }, {
-          "name": "path",
-          "value": "",
-          "attributes": {
-            "d": "M128 96C101.492 96 77.4939 85.2564 60.1217 67.8862",
-            "stroke": 0,
-            "fill": "none"
-          },
-          "children": []
-        }, {
-          "name": "path",
-          "value": "",
-          "attributes": {
-            "d": "M128 64C110.328 64 94.3287 56.8374 82.7471 45.2568",
-            "stroke": 0,
-            "fill": "none"
-          },
-          "children": []
-        }, {
-          "name": "path",
-          "value": "",
-          "attributes": {
-            "d": "M128 32.3716C119.164 32.3716 111.164 28.7903 105.374 23",
-            "stroke": 0,
-            "fill": "none"
-          },
-          "children": []
-        }]
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 128C92.6489 128 60.6449 113.669 37.4807 90.5",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 96C101.492 96 77.4939 85.2564 60.1217 67.8862",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 64C110.328 64 94.3287 56.8374 82.7471 45.2568",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 32.3716C119.164 32.3716 111.164 28.7903 105.374 23",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const rym = {
@@ -43988,29 +41851,22 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M5.59506e-06 128C70.6925 128 128 70.6925 128 0L0 5.59506e-06L5.59506e-06 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 96L0 96",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M5.59506e-06 128C70.6925 128 128 70.6925 128 0L0 5.59506e-06L5.59506e-06 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 96L0 96",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
     }]
   };
   const ryn = {
@@ -44018,29 +41874,22 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M5.59506e-06 128C70.6925 128 128 70.6925 128 0L0 5.59506e-06L5.59506e-06 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 128C57.3075 128 -3.09007e-06 70.6925 0 0",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M5.59506e-06 128C70.6925 128 128 70.6925 128 0L0 5.59506e-06L5.59506e-06 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 128C57.3075 128 -3.09007e-06 70.6925 0 0",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
     }]
   };
   const ryp = {
@@ -44048,30 +41897,23 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M5.59506e-06 128C70.6925 128 128 70.6925 128 0L0 5.59506e-06L5.59506e-06 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-0.00292969 0L127.997 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M5.59506e-06 128C70.6925 128 128 70.6925 128 0L0 5.59506e-06L5.59506e-06 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.00292969 0L127.997 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
     }]
   };
   const rys = {
@@ -44079,29 +41921,22 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M1.52575e-06 96C53.0193 96 96 53.0193 96 0",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M1.52575e-06 96C53.0193 96 96 53.0193 96 0",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
     }]
   };
   const ryt = {
@@ -44109,52 +41944,43 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M64 128H0L5.59506e-06 -7.62939e-06L64 -2.03434e-06C99.3462 1.05573e-06 128 28.6538 128 64C128 99.3462 99.3462 128 64 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "16",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 128H0L5.59506e-06 -7.62939e-06L64 -2.03434e-06C99.3462 1.05573e-06 128 28.6538 128 64C128 99.3462 99.3462 128 64 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "16",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "48",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 0L0 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "48",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 0L0 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const ryx = {
@@ -44162,55 +41988,46 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M5.59506e-06 128C70.6925 128 128 70.6925 128 0L0 5.59506e-06L5.59506e-06 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "0.5",
+        "y1": "-0.5",
+        "x2": "181.5",
+        "y2": "-0.5",
+        "transform": "matrix(-0.707107 0.707107 0.707107 0.707107 128.71 0)",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M5.59506e-06 128C70.6925 128 128 70.6925 128 0L0 5.59506e-06L5.59506e-06 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "0.5",
-          "y1": "-0.5",
-          "x2": "181.5",
-          "y2": "-0.5",
-          "transform": "matrix(-0.707107 0.707107 0.707107 0.707107 128.71 0)",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 0L0 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "16",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 0L0 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "16",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const sab = {
@@ -44218,65 +42035,55 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-0.00292969 0L127.997 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.00292969 0L127.997 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "y1": "-0.5",
-          "x2": "45.2548",
-          "y2": "-0.5",
-          "transform": "matrix(0.707107 -0.707107 -0.707107 -0.707107 79.65 47.65)",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "16",
-          "cy": "112",
-          "r": "11.5",
-          "fill": 0,
-          "stroke": 0
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "16",
-          "cy": "112",
-          "r": "9",
-          "fill": 1,
-          "stroke": 1,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "y1": "-0.5",
+        "x2": "45.2548",
+        "y2": "-0.5",
+        "transform": "matrix(0.707107 -0.707107 -0.707107 -0.707107 79.65 47.65)",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "16",
+        "cy": "112",
+        "r": "11.5",
+        "fill": 0,
+        "stroke": 0
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "16",
+        "cy": "112",
+        "r": "9",
+        "fill": 1,
+        "stroke": 1,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const sal = {
@@ -44284,39 +42091,31 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0.0541 0C70.7217 0.0292317 128 57.3256 128 128C57.3177 128 0.0164917 70.7089 7.62806e-06 0.0305091C7.62851e-06 0.0203397 -4.44317e-10 0.01017 0 0H0.0541Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M0 128L128 0",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0.0541 0C70.7217 0.0292317 128 57.3256 128 128C57.3177 128 0.0164917 70.7089 7.62806e-06 0.0305091C7.62851e-06 0.0203397 -4.44317e-10 0.01017 0 0H0.0541Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 128L128 0",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.701724 31.9914C25.6281 31.9914 49.4822 42.5913 66.8261 59.7565M-0.701723 63.9914C16.7916 63.9914 32.6456 71.0098 44.1982 82.3844M-0.701722 95.9914C7.955 95.9914 15.8089 99.4288 21.5694 105.013",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-0.701724 31.9914C25.6281 31.9914 49.4822 42.5913 66.8261 59.7565M-0.701723 63.9914C16.7916 63.9914 32.6456 71.0098 44.1982 82.3844M-0.701722 95.9914C7.955 95.9914 15.8089 99.4288 21.5694 105.013",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const sam = {
@@ -44324,50 +42123,41 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "48",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "48",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 0L64 128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "fill-rule": "evenodd",
-          "clip-rule": "evenodd",
-          "d": "M80 64C80 72.8366 72.8366 80 64 80C55.1634 80 48 72.8366 48 64C48 55.1634 55.1634 48 64 48C72.8366 48 80 55.1634 80 64ZM64 72C68.4183 72 72 68.4183 72 64C72 59.5817 68.4183 56 64 56C59.5817 56 56 59.5817 56 64C56 68.4183 59.5817 72 64 72Z",
-          "fill": 0
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M64 0L64 128",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "fill-rule": "evenodd",
+        "clip-rule": "evenodd",
+        "d": "M80 64C80 72.8366 72.8366 80 64 80C55.1634 80 48 72.8366 48 64C48 55.1634 55.1634 48 64 48C72.8366 48 80 55.1634 80 64ZM64 72C68.4183 72 72 68.4183 72 64C72 59.5817 68.4183 56 64 56C59.5817 56 56 59.5817 56 64C56 68.4183 59.5817 72 64 72Z",
+        "fill": 0
+      },
+      "children": []
     }]
   };
   const san = {
@@ -44375,32 +42165,25 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "-0.0029152",
+        "x2": "127.983",
+        "y2": "127.986",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "-0.0029152",
-          "x2": "127.983",
-          "y2": "127.986",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
     }]
   };
   const sap = {
@@ -44409,15 +42192,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "128",
         "y1": "64",
@@ -44429,7 +42212,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "96",
         "cy": "64",
@@ -44445,17 +42227,17 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
         "r": "64",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -44466,7 +42248,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -44477,7 +42258,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "64",
         "y1": "2.18557e-08",
@@ -44494,29 +42274,22 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 128C128 57.3076 70.6925 0 0 0",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 128C128 57.3076 70.6925 0 0 0",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
     }]
   };
   const sav = {
@@ -44524,66 +42297,56 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "0.5",
+        "y1": "-0.5",
+        "x2": "181.5",
+        "y2": "-0.5",
+        "transform": "matrix(-0.707107 0.707107 0.707107 0.707107 128.71 0)",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "0.5",
-          "y1": "-0.5",
-          "x2": "181.5",
-          "y2": "-0.5",
-          "transform": "matrix(-0.707107 0.707107 0.707107 0.707107 128.71 0)",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M96 64C96 46.3269 81.6731 32 64 32",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "32",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "32",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M96 64C96 46.3269 81.6731 32 64 32",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "32",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "32",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const seb = {
@@ -44592,16 +42355,16 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "rect",
-      "value": "",
       "attributes": {
         "width": "128",
         "height": "128",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M128 64C92.6538 64 64 35.3462 64 0",
         "stroke": 0,
@@ -44616,15 +42379,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "32",
         "cy": "32",
@@ -44635,7 +42398,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "32",
         "cy": "32",
@@ -44653,17 +42415,17 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
         "r": "64",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -44674,7 +42436,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -44686,7 +42447,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "96",
         "cy": "64",
@@ -44697,7 +42457,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "96",
         "cy": "64",
@@ -44715,15 +42474,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M0.0541 0C70.7217 0.0292317 128 57.3256 128 128C57.3177 128 0.0164917 70.7089 7.62806e-06 0.0305091C7.62851e-06 0.0203397 -4.44317e-10 0.01017 0 0H0.0541Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -44734,7 +42493,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -44746,7 +42504,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "16",
         "cy": "112",
@@ -44757,7 +42514,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "16",
         "cy": "112",
@@ -44775,16 +42531,16 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "rect",
-      "value": "",
       "attributes": {
         "width": "128",
         "height": "128",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M32 128C32 110.327 46.3269 96 64 96C81.6731 96 96 110.327 96 128",
         "stroke": 0,
@@ -44799,15 +42555,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M0 127.946C0.0292286 57.2783 57.3256 3.08928e-06 128 0C128 70.6823 70.7089 127.984 0.0305092 128C0.0203397 128 0.01017 128 2.36469e-09 128L0 127.946Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -44823,41 +42579,33 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "circle",
       "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "64",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M1.01717e-06 64C35.3462 64 64 35.3462 64 0",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "64",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M1.01717e-06 64C35.3462 64 64 35.3462 64 0",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.00292969 0L127.997 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-0.00292969 0L127.997 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const sen = {
@@ -44866,16 +42614,16 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "rect",
-      "value": "",
       "attributes": {
         "width": "128",
         "height": "128",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 0L64 128",
         "stroke": 0,
@@ -44884,7 +42632,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M96 128C96 110.327 81.6731 96 64 96C46.3269 96 32 110.327 32 128",
         "stroke": 0,
@@ -44893,7 +42640,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -44904,7 +42650,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -44922,15 +42667,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M128 0C57.3075 8.42999e-07 -8.42999e-07 57.3075 0 128H128V0Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 128L64 0",
         "stroke": 0,
@@ -44939,7 +42684,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M32 128L32 0",
         "stroke": 0,
@@ -44948,7 +42692,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M96 128L96 0",
         "stroke": 0,
@@ -44963,15 +42706,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M0 64L5.59506e-06 0L128 1.11901e-05V64C128 99.3462 99.3462 128 64 128C28.6538 128 -4.6351e-06 99.3462 0 64Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M32 0L32 128",
         "stroke": 0,
@@ -44986,17 +42729,17 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
         "r": "64",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 64L128 64",
         "stroke": 0,
@@ -45011,15 +42754,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 128H0L5.59506e-06 0L64 5.59506e-06C99.3462 8.68512e-06 128 28.6538 128 64C128 99.3462 99.3462 128 64 128Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -45035,41 +42778,33 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "circle",
       "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "64",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 0L0 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "64",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 0L0 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 9.40976e-06C64 35.3462 92.6538 64 128 64",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M64 9.40976e-06C64 35.3462 92.6538 64 128 64",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const sic = {
@@ -45077,30 +42812,23 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 0L0 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 0L0 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
     }]
   };
   const sid = {
@@ -45108,38 +42836,30 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 64L0 64",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 64L0 64",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 128C110.327 128 96 113.673 96 96C96 78.3269 110.327 64 128 64",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 128C110.327 128 96 113.673 96 96C96 78.3269 110.327 64 128 64",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const sig = {
@@ -45148,17 +42868,17 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
         "r": "64",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "32",
         "cy": "64",
@@ -45169,7 +42889,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "32",
         "cy": "64",
@@ -45181,7 +42900,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "96",
         "cy": "64",
@@ -45192,7 +42910,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "96",
         "cy": "64",
@@ -45210,15 +42927,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "16.0036",
         "y1": "15.9965",
@@ -45229,22 +42946,14 @@ var dist = createCommonjsModule(function (module, exports) {
       },
       "children": []
     }, {
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 0L0 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 0L0 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
     }]
   };
   const sim = {
@@ -45252,38 +42961,30 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 64V128H0L2.79753e-06 64C4.34256e-06 28.6538 28.6538 -1.54503e-06 64 0C99.3462 1.54503e-06 128 28.6538 128 64Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M64 0L64 128",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 64V128H0L2.79753e-06 64C4.34256e-06 28.6538 28.6538 -1.54503e-06 64 0C99.3462 1.54503e-06 128 28.6538 128 64Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 0L64 128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M32 0L32 128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M32 0L32 128",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const sip = {
@@ -45291,62 +42992,52 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "rect",
       "attributes": {
+        "width": "128",
+        "height": "128",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M64 0L64 128",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "rect",
-        "value": "",
-        "attributes": {
-          "width": "128",
-          "height": "128",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 0L64 128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M16 64C16 37.4903 37.4903 16 64 16",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "16",
-          "cy": "64",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "16",
-          "cy": "64",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M16 64C16 37.4903 37.4903 16 64 16",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "16",
+        "cy": "64",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "16",
+        "cy": "64",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const sit = {
@@ -45355,15 +43046,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M0.0541 0C70.7217 0.0292317 128 57.3256 128 128C57.3177 128 0.0164917 70.7089 7.62806e-06 0.0305091C7.62851e-06 0.0203397 -4.44317e-10 0.01017 0 0H0.0541Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "fill-rule": "evenodd",
         "clip-rule": "evenodd",
@@ -45378,62 +43069,52 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "rect",
       "attributes": {
+        "width": "128",
+        "height": "128",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M64 0L64 128",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "rect",
-        "value": "",
-        "attributes": {
-          "width": "128",
-          "height": "128",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 0L64 128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 96L0 96",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 96L0 96",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const soc = {
@@ -45442,15 +43123,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M0 127.946C0.0292286 57.2783 57.3256 3.08928e-06 128 0C128 70.6823 70.7089 127.984 0.0305092 128C0.0203397 128 0.01017 128 2.36469e-09 128L0 127.946Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "64",
         "y1": "2.18557e-08",
@@ -45462,7 +43143,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -45473,7 +43153,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "16",
         "cy": "16",
@@ -45484,7 +43163,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "16",
         "cy": "16",
@@ -45501,50 +43179,41 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 0C57.3075 8.42999e-07 -8.42999e-07 57.3075 0 128H128V0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 0L0 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 0C57.3075 8.42999e-07 -8.42999e-07 57.3075 0 128H128V0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 0L0 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 96C81.6731 96 96 81.6731 96 64C96 46.3269 81.6731 32 64 32",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "16",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M64 96C81.6731 96 96 81.6731 96 64C96 46.3269 81.6731 32 64 32",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "16",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const sol = {
@@ -45552,42 +43221,34 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "circle",
       "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "64",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "32",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "64",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "32",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 64L-5.96046e-08 64",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 64L-5.96046e-08 64",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const som = {
@@ -45596,16 +43257,16 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "rect",
-      "value": "",
       "attributes": {
         "width": "128",
         "height": "128",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "96",
         "cy": "96",
@@ -45616,7 +43277,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "96",
         "cy": "96",
@@ -45628,7 +43288,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "32",
         "cy": "96",
@@ -45639,7 +43298,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "32",
         "cy": "96",
@@ -45651,7 +43309,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "32",
         "cy": "32",
@@ -45662,7 +43319,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "32",
         "cy": "32",
@@ -45679,32 +43335,25 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 0C57.3075 8.42999e-07 -8.42999e-07 57.3075 0 128H128V0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "127.553",
+        "y1": "128.224",
+        "x2": "63.5528",
+        "y2": "0.223598",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 0C57.3075 8.42999e-07 -8.42999e-07 57.3075 0 128H128V0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "127.553",
-          "y1": "128.224",
-          "x2": "63.5528",
-          "y2": "0.223598",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
     }]
   };
   const sop = {
@@ -45712,66 +43361,56 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "circle",
       "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "64",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "32",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "64",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "32",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.00292969 0L127.997 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "32",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "32",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-0.00292969 0L127.997 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "32",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "32",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const sor = {
@@ -45779,73 +43418,55 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-0.00292969 0L127.997 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.00292969 0L127.997 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "g",
-        "value": "",
-        "attributes": {
-          "fill": "none"
-        },
-        "children": [{
-          "name": "path",
-          "value": "",
-          "attributes": {
-            "d": "M128 0C128 35.3511 113.669 67.3551 90.5 90.5193",
-            "stroke": 0,
-            "fill": "none"
-          },
-          "children": []
-        }, {
-          "name": "path",
-          "value": "",
-          "attributes": {
-            "d": "M96 0C96 26.5077 85.2564 50.5061 67.8862 67.8783",
-            "stroke": 0,
-            "fill": "none"
-          },
-          "children": []
-        }, {
-          "name": "path",
-          "value": "",
-          "attributes": {
-            "d": "M64 0C64 17.6721 56.8374 33.6713 45.2568 45.2529",
-            "stroke": 0,
-            "fill": "none"
-          },
-          "children": []
-        }, {
-          "name": "path",
-          "value": "",
-          "attributes": {
-            "d": "M32.3716 0C32.3716 8.83603 28.7903 16.8356 23 22.6264",
-            "stroke": 0,
-            "fill": "none"
-          },
-          "children": []
-        }]
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 0C128 35.3511 113.669 67.3551 90.5 90.5193",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M96 0C96 26.5077 85.2564 50.5061 67.8862 67.8783",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M64 0C64 17.6721 56.8374 33.6713 45.2568 45.2529",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M32.3716 0C32.3716 8.83603 28.7903 16.8356 23 22.6264",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const sov = {
@@ -45853,74 +43474,56 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "rect",
       "attributes": {
+        "width": "128",
+        "height": "128",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M0 128L128 0",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "rect",
-        "value": "",
-        "attributes": {
-          "width": "128",
-          "height": "128",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 128L128 0",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "g",
-        "value": "",
-        "attributes": {
-          "fill": "none"
-        },
-        "children": [{
-          "name": "path",
-          "value": "",
-          "attributes": {
-            "d": "M128 128C92.6489 128 60.6449 113.669 37.4807 90.5",
-            "stroke": 0,
-            "fill": "none"
-          },
-          "children": []
-        }, {
-          "name": "path",
-          "value": "",
-          "attributes": {
-            "d": "M128 96C101.492 96 77.4939 85.2564 60.1217 67.8862",
-            "stroke": 0,
-            "fill": "none"
-          },
-          "children": []
-        }, {
-          "name": "path",
-          "value": "",
-          "attributes": {
-            "d": "M128 64C110.328 64 94.3287 56.8374 82.7471 45.2568",
-            "stroke": 0,
-            "fill": "none"
-          },
-          "children": []
-        }, {
-          "name": "path",
-          "value": "",
-          "attributes": {
-            "d": "M128 32.3716C119.164 32.3716 111.164 28.7903 105.374 23",
-            "stroke": 0,
-            "fill": "none"
-          },
-          "children": []
-        }]
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 128C92.6489 128 60.6449 113.669 37.4807 90.5",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 96C101.492 96 77.4939 85.2564 60.1217 67.8862",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 64C110.328 64 94.3287 56.8374 82.7471 45.2568",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 32.3716C119.164 32.3716 111.164 28.7903 105.374 23",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const sub = {
@@ -45928,29 +43531,22 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M64 0L64 128",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 0L64 128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
     }]
   };
   const sud = {
@@ -45958,51 +43554,42 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "128",
+        "y1": "64",
+        "x2": "-8.87604e-09",
+        "y2": "64",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "128",
-          "y1": "64",
-          "x2": "-8.87604e-09",
-          "y2": "64",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 64L0 64",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "fill-rule": "evenodd",
-          "clip-rule": "evenodd",
-          "d": "M80 64C80 72.8366 72.8366 80 64 80C55.1634 80 48 72.8366 48 64C48 55.1634 55.1634 48 64 48C72.8366 48 80 55.1634 80 64ZM64 72C68.4183 72 72 68.4183 72 64C72 59.5817 68.4183 56 64 56C59.5817 56 56 59.5817 56 64C56 68.4183 59.5817 72 64 72Z",
-          "fill": 0
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 64L0 64",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "fill-rule": "evenodd",
+        "clip-rule": "evenodd",
+        "d": "M80 64C80 72.8366 72.8366 80 64 80C55.1634 80 48 72.8366 48 64C48 55.1634 55.1634 48 64 48C72.8366 48 80 55.1634 80 64ZM64 72C68.4183 72 72 68.4183 72 64C72 59.5817 68.4183 56 64 56C59.5817 56 56 59.5817 56 64C56 68.4183 59.5817 72 64 72Z",
+        "fill": 0
+      },
+      "children": []
     }]
   };
   const sug = {
@@ -46011,15 +43598,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 128H0L5.59506e-06 0L64 5.59506e-06C99.3462 8.68512e-06 128 28.6538 128 64C128 99.3462 99.3462 128 64 128Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "16",
         "cy": "64",
@@ -46030,7 +43617,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "16",
         "cy": "64",
@@ -46042,7 +43628,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "80",
         "cy": "64",
@@ -46053,7 +43638,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "80",
         "cy": "64",
@@ -46071,17 +43655,17 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
         "r": "64",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 96C46.3269 96 32 81.6731 32 64C32 46.3269 46.3269 32 64 32",
         "stroke": 0,
@@ -46095,29 +43679,22 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M5.59506e-06 128C70.6925 128 128 70.6925 128 0L0 5.59506e-06L5.59506e-06 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M1.01717e-06 64C35.3462 64 64 35.3462 64 0",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M5.59506e-06 128C70.6925 128 128 70.6925 128 0L0 5.59506e-06L5.59506e-06 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M1.01717e-06 64C35.3462 64 64 35.3462 64 0",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
     }]
   };
   const sun = {
@@ -46126,7 +43703,6 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -46136,7 +43712,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "80",
         "cy": "80",
@@ -46147,7 +43722,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "80",
         "cy": "80",
@@ -46159,7 +43733,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "80",
         "cy": "48",
@@ -46170,7 +43743,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "80",
         "cy": "48",
@@ -46182,7 +43754,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "48",
         "cy": "48",
@@ -46193,7 +43764,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "48",
         "cy": "48",
@@ -46205,7 +43775,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "48",
         "cy": "80",
@@ -46216,7 +43785,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "48",
         "cy": "80",
@@ -46233,61 +43801,51 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M64 128H0L5.59506e-06 0L64 5.59506e-06C99.3462 8.68512e-06 128 28.6538 128 64C128 99.3462 99.3462 128 64 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M64 112C90.5097 112 112 90.5097 112 64C112 37.4903 90.5097 16 64 16",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 128H0L5.59506e-06 0L64 5.59506e-06C99.3462 8.68512e-06 128 28.6538 128 64C128 99.3462 99.3462 128 64 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 112C90.5097 112 112 90.5097 112 64C112 37.4903 90.5097 16 64 16",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 64L0 64",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 64L0 64",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const sur = {
@@ -46295,48 +43853,39 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-0.00292969 0L127.997 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.00292969 0L127.997 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M3.73284e-05 64.0001C17.6633 64.0001 33.6554 56.8446 45.2356 45.2742",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0.000105172 128C35.3582 128 67.3679 113.664 90.5332 90.4863",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M3.73284e-05 64.0001C17.6633 64.0001 33.6554 56.8446 45.2356 45.2742",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M0.000105172 128C35.3582 128 67.3679 113.664 90.5332 90.4863",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const sut = {
@@ -46345,16 +43894,16 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "rect",
-      "value": "",
       "attributes": {
         "width": "128",
         "height": "128",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "32",
         "cy": "32",
@@ -46365,7 +43914,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "32",
         "cy": "32",
@@ -46377,7 +43925,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "96",
         "cy": "96",
@@ -46388,7 +43935,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "96",
         "cy": "96",
@@ -46405,39 +43951,31 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0.0541 0C70.7217 0.0292317 128 57.3256 128 128C57.3177 128 0.0164917 70.7089 7.62806e-06 0.0305091C7.62851e-06 0.0203397 -4.44317e-10 0.01017 0 0H0.0541Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M64 16C37.4903 16 16 37.4903 16 64",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0.0541 0C70.7217 0.0292317 128 57.3256 128 128C57.3177 128 0.0164917 70.7089 7.62806e-06 0.0305091C7.62851e-06 0.0203397 -4.44317e-10 0.01017 0 0H0.0541Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 16C37.4903 16 16 37.4903 16 64",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.00292969 0L127.997 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-0.00292969 0L127.997 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const syl = {
@@ -46445,76 +43983,65 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M5.59506e-06 128C70.6925 128 128 70.6925 128 0L0 5.59506e-06L5.59506e-06 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-0.00292969 0L127.997 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M5.59506e-06 128C70.6925 128 128 70.6925 128 0L0 5.59506e-06L5.59506e-06 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.00292969 0L127.997 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "32",
-          "cy": "96",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "32",
-          "cy": "96",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "96",
-          "cy": "32",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "96",
-          "cy": "32",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "32",
+        "cy": "96",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "32",
+        "cy": "96",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "96",
+        "cy": "32",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "96",
+        "cy": "32",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const sym = {
@@ -46523,15 +44050,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M5.59506e-06 128C70.6925 128 128 70.6925 128 0L0 5.59506e-06L5.59506e-06 128Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "96.5",
         "y1": "3.07317e-08",
@@ -46548,63 +44075,46 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M5.59506e-06 128C70.6925 128 128 70.6925 128 0L0 5.59506e-06L5.59506e-06 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M0 0C35.3511 0 67.3551 14.3309 90.5193 37.5",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M5.59506e-06 128C70.6925 128 128 70.6925 128 0L0 5.59506e-06L5.59506e-06 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "g",
-        "value": "",
-        "attributes": {
-          "fill": "none"
-        },
-        "children": [{
-          "name": "path",
-          "value": "",
-          "attributes": {
-            "d": "M0 0C35.3511 0 67.3551 14.3309 90.5193 37.5",
-            "stroke": 0,
-            "fill": "none"
-          },
-          "children": []
-        }, {
-          "name": "path",
-          "value": "",
-          "attributes": {
-            "d": "M0 32C26.5077 32 50.5061 42.7436 67.8783 60.1138",
-            "stroke": 0,
-            "fill": "none"
-          },
-          "children": []
-        }, {
-          "name": "path",
-          "value": "",
-          "attributes": {
-            "d": "M0 64C17.6721 64 33.6713 71.1626 45.2529 82.7432",
-            "stroke": 0,
-            "fill": "none"
-          },
-          "children": []
-        }, {
-          "name": "path",
-          "value": "",
-          "attributes": {
-            "d": "M0 95.6284C8.83603 95.6284 16.8356 99.2097 22.6264 105",
-            "stroke": 0,
-            "fill": "none"
-          },
-          "children": []
-        }]
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M0 32C26.5077 32 50.5061 42.7436 67.8783 60.1138",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M0 64C17.6721 64 33.6713 71.1626 45.2529 82.7432",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M0 95.6284C8.83603 95.6284 16.8356 99.2097 22.6264 105",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const syp = {
@@ -46612,39 +44122,31 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M5.59506e-06 128C70.6925 128 128 70.6925 128 0L0 5.59506e-06L5.59506e-06 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-0.00280762 0L127.997 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M5.59506e-06 128C70.6925 128 128 70.6925 128 0L0 5.59506e-06L5.59506e-06 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.00280762 0L127.997 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M1.01717e-06 64C35.3462 64 64 35.3462 64 0",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M1.01717e-06 64C35.3462 64 64 35.3462 64 0",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const syr = {
@@ -46652,53 +44154,44 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0 127.946C0.0292286 57.2783 57.3256 3.08928e-06 128 0C128 70.6823 70.7089 127.984 0.0305092 128C0.0203397 128 0.01017 128 2.36469e-09 128L0 127.946Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-0.00292969 0L127.997 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 127.946C0.0292286 57.2783 57.3256 3.08928e-06 128 0C128 70.6823 70.7089 127.984 0.0305092 128C0.0203397 128 0.01017 128 2.36469e-09 128L0 127.946Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.00292969 0L127.997 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "96",
-          "cy": "32",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "96",
-          "cy": "32",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "96",
+        "cy": "32",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "96",
+        "cy": "32",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const syt = {
@@ -46707,15 +44200,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 128H0L5.59506e-06 0L64 5.59506e-06C99.3462 8.68512e-06 128 28.6538 128 64C128 99.3462 99.3462 128 64 128Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -46726,7 +44219,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -46736,22 +44228,14 @@ var dist = createCommonjsModule(function (module, exports) {
       },
       "children": []
     }, {
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 0L0 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 0L0 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
     }]
   };
   const syx = {
@@ -46759,73 +44243,55 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M5.59506e-06 128C70.6925 128 128 70.6925 128 0L0 5.59506e-06L5.59506e-06 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M0 128C4.63574e-06 92.6488 14.3309 60.6449 37.5 37.4807",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M5.59506e-06 128C70.6925 128 128 70.6925 128 0L0 5.59506e-06L5.59506e-06 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "g",
-        "value": "",
-        "attributes": {
-          "fill": "none"
-        },
-        "children": [{
-          "name": "path",
-          "value": "",
-          "attributes": {
-            "d": "M0 128C4.63574e-06 92.6488 14.3309 60.6449 37.5 37.4807",
-            "stroke": 0,
-            "fill": "none"
-          },
-          "children": []
-        }, {
-          "name": "path",
-          "value": "",
-          "attributes": {
-            "d": "M32 128C32 101.492 42.7436 77.4939 60.1138 60.1216",
-            "stroke": 0,
-            "fill": "none"
-          },
-          "children": []
-        }, {
-          "name": "path",
-          "value": "",
-          "attributes": {
-            "d": "M64 128C64 110.328 71.1626 94.3287 82.7432 82.7471",
-            "stroke": 0,
-            "fill": "none"
-          },
-          "children": []
-        }, {
-          "name": "path",
-          "value": "",
-          "attributes": {
-            "d": "M95.6284 128C95.6284 119.164 99.2097 111.164 105 105.374",
-            "stroke": 0,
-            "fill": "none"
-          },
-          "children": []
-        }]
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.00280762 0L127.997 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M32 128C32 101.492 42.7436 77.4939 60.1138 60.1216",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M64 128C64 110.328 71.1626 94.3287 82.7432 82.7471",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M95.6284 128C95.6284 119.164 99.2097 111.164 105 105.374",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-0.00280762 0L127.997 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const tab = {
@@ -46833,66 +44299,56 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "8",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "8",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "-0.0029152",
-          "x2": "127.983",
-          "y2": "127.986",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "16",
-          "cy": "112",
-          "r": "11.5",
-          "fill": 0,
-          "stroke": 0
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "16",
-          "cy": "112",
-          "r": "9",
-          "fill": 1,
-          "stroke": 1,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "-0.0029152",
+        "x2": "127.983",
+        "y2": "127.986",
+        "stroke": 0,
+        "stroke-linecap": "square",
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "16",
+        "cy": "112",
+        "r": "11.5",
+        "fill": 0,
+        "stroke": 0
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "16",
+        "cy": "112",
+        "r": "9",
+        "fill": 1,
+        "stroke": 1,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const tac = {
@@ -46900,76 +44356,65 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 0L0 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 0L0 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "32",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "32",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "96",
-          "cy": "64",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "96",
-          "cy": "64",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "32",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "32",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "96",
+        "cy": "64",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "96",
+        "cy": "64",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const tad = {
@@ -46978,15 +44423,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "32",
         "cy": "32",
@@ -46997,7 +44442,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "32",
         "cy": "32",
@@ -47009,7 +44453,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "96",
         "cy": "96",
@@ -47020,7 +44463,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "96",
         "cy": "96",
@@ -47038,15 +44480,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "80.0036",
         "y1": "79.9964",
@@ -47063,43 +44505,35 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0.0541 0C70.7217 0.0292317 128 57.3256 128 128C57.3177 128 0.0164917 70.7089 7.62806e-06 0.0305091C7.62851e-06 0.0203397 -4.44317e-10 0.01017 0 0H0.0541Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "0.5",
+        "y1": "-0.5",
+        "x2": "181.5",
+        "y2": "-0.5",
+        "transform": "matrix(-0.707107 0.707107 0.707107 0.707107 128.71 0)",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0.0541 0C70.7217 0.0292317 128 57.3256 128 128C57.3177 128 0.0164917 70.7089 7.62806e-06 0.0305091C7.62851e-06 0.0203397 -4.44317e-10 0.01017 0 0H0.0541Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "0.5",
-          "y1": "-0.5",
-          "x2": "181.5",
-          "y2": "-0.5",
-          "transform": "matrix(-0.707107 0.707107 0.707107 0.707107 128.71 0)",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M96 128C96 74.9807 53.0193 32 0 32",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M96 128C96 74.9807 53.0193 32 0 32",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const tam = {
@@ -47108,15 +44542,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "128",
         "y1": "96",
@@ -47128,7 +44562,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "128",
         "y1": "32",
@@ -47140,7 +44573,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -47151,7 +44583,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -47168,74 +44599,62 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M96 128C96 74.9807 53.0193 32 0 32",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M96 128C96 74.9807 53.0193 32 0 32",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 128C64 92.6538 35.3462 64 0 64",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M48 128C48 101.49 26.5097 80 0 80",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M32 128C32 110.327 17.6731 96 0 96",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M16 128C16 119.163 8.83656 112 0 112",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 128C128 57.3075 70.6925 0 0 0",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M64 128C64 92.6538 35.3462 64 0 64",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M48 128C48 101.49 26.5097 80 0 80",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M32 128C32 110.327 17.6731 96 0 96",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M16 128C16 119.163 8.83656 112 0 112",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 128C128 57.3075 70.6925 0 0 0",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const tap = {
@@ -47244,17 +44663,17 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
         "r": "64",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -47265,7 +44684,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "128",
         "y1": "64",
@@ -47277,7 +44695,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 32C81.6731 32 96 46.3269 96 64C96 81.6731 81.6731 96 64 96",
         "stroke": 0,
@@ -47286,7 +44703,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -47297,7 +44713,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -47315,17 +44730,17 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
         "r": "64",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -47336,7 +44751,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "16",
         "cy": "64",
@@ -47347,7 +44761,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "16",
         "cy": "64",
@@ -47364,39 +44777,31 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "rect",
       "attributes": {
+        "width": "128",
+        "height": "128",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M64 0L64 128",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "rect",
-        "value": "",
-        "attributes": {
-          "width": "128",
-          "height": "128",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 0L64 128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 32C81.6731 32 96 46.3269 96 64C96 81.6731 81.6731 96 64 96",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M64 32C81.6731 32 96 46.3269 96 64C96 81.6731 81.6731 96 64 96",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const teb = {
@@ -47404,30 +44809,23 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "rect",
       "attributes": {
+        "width": "128",
+        "height": "128",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M1.52575e-06 96C53.0193 96 96 53.0193 96 0",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "rect",
-        "value": "",
-        "attributes": {
-          "width": "128",
-          "height": "128",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M1.52575e-06 96C53.0193 96 96 53.0193 96 0",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
     }]
   };
   const tec = {
@@ -47436,15 +44834,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "80.0035",
         "y1": "79.9965",
@@ -47456,7 +44854,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "fill-rule": "evenodd",
         "clip-rule": "evenodd",
@@ -47472,17 +44869,17 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
         "r": "64",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "32",
         "cy": "96",
@@ -47493,7 +44890,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "32",
         "cy": "96",
@@ -47510,30 +44906,23 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "rect",
       "attributes": {
+        "width": "128",
+        "height": "128",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 80C119.163 80 112 72.8366 112 64C112 55.1634 119.163 48 128 48",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "rect",
-        "value": "",
-        "attributes": {
-          "width": "128",
-          "height": "128",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 80C119.163 80 112 72.8366 112 64C112 55.1634 119.163 48 128 48",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
     }]
   };
   const tel = {
@@ -47541,83 +44930,71 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0 127.946C0.0292286 57.2783 57.3256 3.08928e-06 128 0C128 70.6823 70.7089 127.984 0.0305092 128C0.0203397 128 0.01017 128 2.36469e-09 128L0 127.946Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "15",
+        "cy": "112",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "15",
+        "cy": "112",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M0 0L127.986 127.986",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 127.946C0.0292286 57.2783 57.3256 3.08928e-06 128 0C128 70.6823 70.7089 127.984 0.0305092 128C0.0203397 128 0.01017 128 2.36469e-09 128L0 127.946Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "15",
-          "cy": "112",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "15",
-          "cy": "112",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 0L127.986 127.986",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M32 0L128 96",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 0L128 64",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M96 0L128 32",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M32 0L128 96",
+        "stroke": 0,
+        "stroke-linecap": "square",
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M64 0L128 64",
+        "stroke": 0,
+        "stroke-linecap": "square",
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M96 0L128 32",
+        "stroke": 0,
+        "stroke-linecap": "square",
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const tem = {
@@ -47625,43 +45002,35 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "circle",
       "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "64",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 64C92.6538 64 64 92.6538 64 128",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "64",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 64C92.6538 64 64 92.6538 64 128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "-0.00285417",
-          "x2": "127.983",
-          "y2": "127.986",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "-0.00285417",
+        "x2": "127.983",
+        "y2": "127.986",
+        "stroke": 0,
+        "stroke-linecap": "square",
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const ten = {
@@ -47670,16 +45039,16 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "rect",
-      "value": "",
       "attributes": {
         "width": "128",
         "height": "128",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "48",
         "cy": "48",
@@ -47690,7 +45059,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "48",
         "cy": "48",
@@ -47702,7 +45070,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "80",
         "cy": "48",
@@ -47713,7 +45080,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "80",
         "cy": "48",
@@ -47725,7 +45091,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "80",
         "cy": "80",
@@ -47736,7 +45101,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "80",
         "cy": "80",
@@ -47748,7 +45112,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "48",
         "cy": "80",
@@ -47759,7 +45122,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "48",
         "cy": "80",
@@ -47777,15 +45139,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M128 0C57.3075 8.42999e-07 -8.42999e-07 57.3075 0 128H128V0Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M1.14479e-06 96C53.0193 96 96 53.0193 96 0",
         "stroke": 0,
@@ -47799,41 +45161,33 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0 64L5.59506e-06 0L128 1.11901e-05V64C128 99.3462 99.3462 128 64 128C28.6538 128 -4.6351e-06 99.3462 0 64Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "96.5",
+        "y1": "3.07317e-08",
+        "x2": "96.5",
+        "y2": "128",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 64L5.59506e-06 0L128 1.11901e-05V64C128 99.3462 99.3462 128 64 128C28.6538 128 -4.6351e-06 99.3462 0 64Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "96.5",
-          "y1": "3.07317e-08",
-          "x2": "96.5",
-          "y2": "128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M1.01717e-06 64C35.3462 64 64 35.3462 64 0",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M1.01717e-06 64C35.3462 64 64 35.3462 64 0",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const tes = {
@@ -47841,38 +45195,30 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 0C57.3075 8.42999e-07 -8.42999e-07 57.3075 0 128H128V0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M64 0L64 128",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 0C57.3075 8.42999e-07 -8.42999e-07 57.3075 0 128H128V0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 0L64 128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 64L0 64",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 64L0 64",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const tev = {
@@ -47881,15 +45227,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 128H0L5.59506e-06 0L64 5.59506e-06C99.3462 8.68512e-06 128 28.6538 128 64C128 99.3462 99.3462 128 64 128Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -47906,15 +45252,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 128H0L5.59506e-06 0L64 5.59506e-06C99.3462 8.68512e-06 128 28.6538 128 64C128 99.3462 99.3462 128 64 128Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "15.9965",
         "y1": "111.997",
@@ -47926,7 +45272,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "fill-rule": "evenodd",
         "clip-rule": "evenodd",
@@ -47942,15 +45287,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M128 32C110.327 32 96 17.6731 96 -1.39876e-06",
         "stroke": 0,
@@ -47959,7 +45304,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -47970,7 +45314,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -47981,7 +45324,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -47999,15 +45341,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "64",
         "y1": "2.18557e-08",
@@ -48019,7 +45361,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "96",
         "y1": "2.18557e-08",
@@ -48031,7 +45372,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "fill-rule": "evenodd",
         "clip-rule": "evenodd",
@@ -48047,15 +45387,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "80.0036",
         "y1": "79.9965",
@@ -48067,7 +45407,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -48078,7 +45417,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -48095,30 +45433,23 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 64V128H0L2.79753e-06 64C4.34256e-06 28.6538 28.6538 -1.54503e-06 64 0C99.3462 1.54503e-06 128 28.6538 128 64Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-0.00291443 0L127.997 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 64V128H0L2.79753e-06 64C4.34256e-06 28.6538 28.6538 -1.54503e-06 64 0C99.3462 1.54503e-06 128 28.6538 128 64Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.00291443 0L127.997 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
     }]
   };
   const tin = {
@@ -48127,16 +45458,16 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "rect",
-      "value": "",
       "attributes": {
         "width": "128",
         "height": "128",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "32",
         "y1": "2.18557e-08",
@@ -48153,39 +45484,31 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 0C57.3075 8.42999e-07 -8.42999e-07 57.3075 0 128H128V0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M64 0L64 128",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 0C57.3075 8.42999e-07 -8.42999e-07 57.3075 0 128H128V0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 0L64 128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "fill-rule": "evenodd",
-          "clip-rule": "evenodd",
-          "d": "M80 64C80 72.8366 72.8366 80 64 80C55.1634 80 48 72.8366 48 64C48 55.1634 55.1634 48 64 48C72.8366 48 80 55.1634 80 64ZM64 72C68.4183 72 72 68.4183 72 64C72 59.5817 68.4183 56 64 56C59.5817 56 56 59.5817 56 64C56 68.4183 59.5817 72 64 72Z",
-          "fill": 0
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "fill-rule": "evenodd",
+        "clip-rule": "evenodd",
+        "d": "M80 64C80 72.8366 72.8366 80 64 80C55.1634 80 48 72.8366 48 64C48 55.1634 55.1634 48 64 48C72.8366 48 80 55.1634 80 64ZM64 72C68.4183 72 72 68.4183 72 64C72 59.5817 68.4183 56 64 56C59.5817 56 56 59.5817 56 64C56 68.4183 59.5817 72 64 72Z",
+        "fill": 0
+      },
+      "children": []
     }]
   };
   const tir = {
@@ -48193,54 +45516,45 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "-0.0029152",
+        "x2": "127.983",
+        "y2": "127.986",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "-0.0029152",
-          "x2": "127.983",
-          "y2": "127.986",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "16",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "32",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "16",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "32",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const tob = {
@@ -48248,29 +45562,22 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 64V128H0L2.79753e-06 64C4.34256e-06 28.6538 28.6538 -1.54503e-06 64 0C99.3462 1.54503e-06 128 28.6538 128 64Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 96L0 96",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 64V128H0L2.79753e-06 64C4.34256e-06 28.6538 28.6538 -1.54503e-06 64 0C99.3462 1.54503e-06 128 28.6538 128 64Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 96L0 96",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
     }]
   };
   const toc = {
@@ -48279,15 +45586,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M0.0541 0C70.7217 0.0292317 128 57.3256 128 128C57.3177 128 0.0164917 70.7089 7.62806e-06 0.0305091C7.62851e-06 0.0203397 -4.44317e-10 0.01017 0 0H0.0541Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "128",
         "y1": "96",
@@ -48299,7 +45606,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -48316,15 +45622,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "96",
@@ -48335,7 +45641,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "96",
@@ -48347,7 +45652,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "32",
@@ -48358,7 +45662,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "32",
@@ -48376,15 +45679,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M128 0C57.3075 8.42999e-07 -8.42999e-07 57.3075 0 128H128V0Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 96C46.3269 96 32 81.6731 32 64",
         "stroke": 0,
@@ -48393,7 +45696,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -48403,22 +45705,14 @@ var dist = createCommonjsModule(function (module, exports) {
       },
       "children": []
     }, {
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 0L0 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 0L0 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
     }]
   };
   const tol = {
@@ -48427,17 +45721,17 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
         "r": "64",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "128",
         "y1": "64",
@@ -48449,7 +45743,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M16 128C16 101.49 37.4903 80 64 80C90.5097 80 112 101.49 112 128",
         "stroke": 0,
@@ -48464,16 +45757,16 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "rect",
-      "value": "",
       "attributes": {
         "width": "128",
         "height": "128",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "32",
         "cy": "32",
@@ -48484,7 +45777,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "32",
         "cy": "32",
@@ -48496,7 +45788,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "96",
         "cy": "32",
@@ -48507,7 +45798,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "96",
         "cy": "32",
@@ -48519,7 +45809,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "32",
         "cy": "96",
@@ -48530,7 +45819,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "32",
         "cy": "96",
@@ -48547,47 +45835,38 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 0C57.3075 8.42999e-07 -8.42999e-07 57.3075 0 128H128V0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 32C74.9807 32 32 74.9807 32 128",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 0C57.3075 8.42999e-07 -8.42999e-07 57.3075 0 128H128V0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 32C74.9807 32 32 74.9807 32 128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 64C92.6538 64 64 92.6538 64 128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 96C110.327 96 96 110.327 96 128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 64C92.6538 64 64 92.6538 64 128",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 96C110.327 96 96 110.327 96 128",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const top = {
@@ -48595,73 +45874,29 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "circle",
       "attributes": {
-        "fill": "none"
+        "cx": "64",
+        "cy": "64",
+        "r": "64",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
-      "children": [{
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "64",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "-0.0029152",
-          "x2": "127.983",
-          "y2": "127.986",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "32",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "16",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
-    }]
-  };
-  const tor = {
-    "name": "g",
-    "value": "",
-    "attributes": {},
-    "children": [{
-      "name": "path",
-      "value": "",
+      "children": []
+    }, {
+      "name": "line",
       "attributes": {
-        "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
-        "fill": 1
+        "x1": "-0.0029152",
+        "x2": "127.983",
+        "y2": "127.986",
+        "stroke": 0,
+        "stroke-linecap": "square",
+        "fill": "none"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -48672,7 +45907,41 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "16",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }]
+  };
+  const tor = {
+    "name": "g",
+    "value": "",
+    "attributes": {},
+    "children": [{
+      "name": "path",
+      "attributes": {
+        "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "32",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "circle",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -48683,7 +45952,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
@@ -48700,84 +45968,72 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 64L0 64",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 64L0 64",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 96L0 96",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "96",
-          "cy": "96",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "96",
-          "cy": "96",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "32",
-          "cy": "64",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "32",
-          "cy": "64",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 96L0 96",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "96",
+        "cy": "96",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "96",
+        "cy": "96",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "32",
+        "cy": "64",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "32",
+        "cy": "64",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const tud = {
@@ -48785,52 +46041,43 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 64L0 64",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 64L0 64",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "32",
-          "cy": "64",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "32",
-          "cy": "64",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "32",
+        "cy": "64",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "32",
+        "cy": "64",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const tug = {
@@ -48838,38 +46085,30 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M64 128H0L5.59506e-06 0L64 5.59506e-06C99.3462 8.68512e-06 128 28.6538 128 64C128 99.3462 99.3462 128 64 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 64L0 64",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 128H0L5.59506e-06 0L64 5.59506e-06C99.3462 8.68512e-06 128 28.6538 128 64C128 99.3462 99.3462 128 64 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 64L0 64",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 32L0 32",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 32L0 32",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const tul = {
@@ -48878,17 +46117,17 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
         "r": "64",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "fill-rule": "evenodd",
         "clip-rule": "evenodd",
@@ -48903,64 +46142,54 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 64V128H0L2.79753e-06 64C4.34256e-06 28.6538 28.6538 -1.54503e-06 64 0C99.3462 1.54503e-06 128 28.6538 128 64Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-0.00292969 0L127.997 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 64V128H0L2.79753e-06 64C4.34256e-06 28.6538 28.6538 -1.54503e-06 64 0C99.3462 1.54503e-06 128 28.6538 128 64Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.00292969 0L127.997 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "48",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "48",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const tus = {
@@ -48968,53 +46197,44 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 0L0 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 0L0 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "32",
-          "cy": "32",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "32",
-          "cy": "32",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "32",
+        "cy": "32",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "32",
+        "cy": "32",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const tux = {
@@ -49022,52 +46242,43 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 64L0 64",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 64L0 64",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "96",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "96",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "96",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "96",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const tyc = {
@@ -49076,15 +46287,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "fill-rule": "evenodd",
         "clip-rule": "evenodd",
@@ -49099,77 +46310,66 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0.0541 0C70.7217 0.0292317 128 57.3256 128 128C57.3177 128 0.0164917 70.7089 7.62806e-06 0.0305091C7.62851e-06 0.0203397 -4.44317e-10 0.01017 0 0H0.0541Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-0.00280762 0L127.997 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0.0541 0C70.7217 0.0292317 128 57.3256 128 128C57.3177 128 0.0164917 70.7089 7.62806e-06 0.0305091C7.62851e-06 0.0203397 -4.44317e-10 0.01017 0 0H0.0541Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.00280762 0L127.997 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "y1": "-0.5",
-          "x2": "45.2548",
-          "y2": "-0.5",
-          "transform": "matrix(0.707107 -0.707107 -0.707107 -0.707107 79.65 47.6499)",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "15.9964",
-          "y1": "111.997",
-          "x2": "47.9964",
-          "y2": "79.9965",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "y1": "-0.5",
+        "x2": "45.2548",
+        "y2": "-0.5",
+        "transform": "matrix(0.707107 -0.707107 -0.707107 -0.707107 79.65 47.6499)",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "15.9964",
+        "y1": "111.997",
+        "x2": "47.9964",
+        "y2": "79.9965",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const tyl = {
@@ -49177,29 +46377,22 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M7.37542e-06 -3.56072e-06C1.19529e-06 70.6924 57.3075 128 128 128",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M7.37542e-06 -3.56072e-06C1.19529e-06 70.6924 57.3075 128 128 128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
     }]
   };
   const tyn = {
@@ -49207,29 +46400,22 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M5.59506e-06 128C70.6925 128 128 70.6925 128 0L0 5.59506e-06L5.59506e-06 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 -2.28831e-06C57.3076 -3.13131e-06 8.42999e-07 57.3075 0 128",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M5.59506e-06 128C70.6925 128 128 70.6925 128 0L0 5.59506e-06L5.59506e-06 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 -2.28831e-06C57.3076 -3.13131e-06 8.42999e-07 57.3075 0 128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
     }]
   };
   const typ = {
@@ -49237,39 +46423,31 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M5.59506e-06 128C70.6925 128 128 70.6925 128 0L0 5.59506e-06L5.59506e-06 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-0.00292969 0L127.997 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M5.59506e-06 128C70.6925 128 128 70.6925 128 0L0 5.59506e-06L5.59506e-06 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.00292969 0L127.997 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M96 1.90735e-06C96 53.0193 53.0193 96 0 96",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M96 1.90735e-06C96 53.0193 53.0193 96 0 96",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const tyr = {
@@ -49277,48 +46455,39 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0 127.946C0.0292286 57.2783 57.3256 3.08928e-06 128 0C128 70.6823 70.7089 127.984 0.0305092 128C0.0203397 128 0.01017 128 2.36469e-09 128L0 127.946Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M0 0L128 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 127.946C0.0292286 57.2783 57.3256 3.08928e-06 128 0C128 70.6823 70.7089 127.984 0.0305092 128C0.0203397 128 0.01017 128 2.36469e-09 128L0 127.946Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 0L128 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 64C92.6538 64 64 35.3462 64 0",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 64C35.3462 64 64 92.6538 64 128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 64C92.6538 64 64 35.3462 64 0",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M0 64C35.3462 64 64 92.6538 64 128",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const tyv = {
@@ -49326,87 +46495,75 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0 127.946C0.0292286 57.2783 57.3256 3.08928e-06 128 0C128 70.6823 70.7089 127.984 0.0305092 128C0.0203397 128 0.01017 128 2.36469e-09 128L0 127.946Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M256 0L128 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 127.946C0.0292286 57.2783 57.3256 3.08928e-06 128 0C128 70.6823 70.7089 127.984 0.0305092 128C0.0203397 128 0.01017 128 2.36469e-09 128L0 127.946Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M256 0L128 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "32",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "96",
-          "cy": "32",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "96",
-          "cy": "32",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "32",
-          "cy": "96",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "32",
-          "cy": "96",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "32",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "96",
+        "cy": "32",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "96",
+        "cy": "32",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "32",
+        "cy": "96",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "32",
+        "cy": "96",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const wac = {
@@ -49414,75 +46571,64 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 64L0 64",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 64L0 64",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "16",
-          "cy": "112",
-          "r": "11.5",
-          "fill": 0,
-          "stroke": 0
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "16",
-          "cy": "112",
-          "r": "9",
-          "fill": 1,
-          "stroke": 1,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "16",
+        "cy": "112",
+        "r": "11.5",
+        "fill": 0,
+        "stroke": 0
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "16",
+        "cy": "112",
+        "r": "9",
+        "fill": 1,
+        "stroke": 1,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const wal = {
@@ -49490,44 +46636,36 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0 127.946C0.0292286 57.2783 57.3256 3.08928e-06 128 0C128 70.6823 70.7089 127.984 0.0305092 128C0.0203397 128 0.01017 128 2.36469e-09 128L0 127.946Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "64.5",
+        "y1": "-0.5",
+        "x2": "64.5",
+        "y2": "127.5",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 127.946C0.0292286 57.2783 57.3256 3.08928e-06 128 0C128 70.6823 70.7089 127.984 0.0305092 128C0.0203397 128 0.01017 128 2.36469e-09 128L0 127.946Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "64.5",
-          "y1": "-0.5",
-          "x2": "64.5",
-          "y2": "127.5",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "32",
-          "y1": "2.18557e-08",
-          "x2": "32",
-          "y2": "128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "32",
+        "y1": "2.18557e-08",
+        "x2": "32",
+        "y2": "128",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const wan = {
@@ -49536,18 +46674,20 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }]
@@ -49558,15 +46698,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "fill-rule": "evenodd",
         "clip-rule": "evenodd",
@@ -49581,30 +46721,23 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "rect",
       "attributes": {
+        "width": "128",
+        "height": "128",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 128C128 57.3075 70.6925 0 0 0",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "rect",
-        "value": "",
-        "attributes": {
-          "width": "128",
-          "height": "128",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 128C128 57.3075 70.6925 0 0 0",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
     }]
   };
   const wed = {
@@ -49613,17 +46746,17 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
         "r": "64",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "32",
         "cy": "32",
@@ -49634,7 +46767,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "32",
         "cy": "32",
@@ -49651,30 +46783,23 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "rect",
       "attributes": {
+        "width": "128",
+        "height": "128",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M79.5254 0C79.5254 8.83656 72.3619 16 63.5254 16C54.6888 16 47.5254 8.83656 47.5254 0",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "rect",
-        "value": "",
-        "attributes": {
-          "width": "128",
-          "height": "128",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M79.5254 0C79.5254 8.83656 72.3619 16 63.5254 16C54.6888 16 47.5254 8.83656 47.5254 0",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
     }]
   };
   const wel = {
@@ -49683,15 +46808,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M0 127.946C0.0292286 57.2783 57.3256 3.08928e-06 128 0C128 70.6823 70.7089 127.984 0.0305092 128C0.0203397 128 0.01017 128 2.36469e-09 128L0 127.946Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M128 32C74.9807 32 32 74.9807 32 128",
         "stroke": 0,
@@ -49700,7 +46825,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M128 64C92.6538 64 64 92.6538 64 128",
         "stroke": 0,
@@ -49709,7 +46833,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M128 96C110.327 96 96 110.327 96 128",
         "stroke": 0,
@@ -49723,40 +46846,32 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "rect",
       "attributes": {
+        "width": "128",
+        "height": "128",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M1.01717e-06 64C35.3462 64 64 35.3462 64 0",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "rect",
-        "value": "",
-        "attributes": {
-          "width": "128",
-          "height": "128",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M1.01717e-06 64C35.3462 64 64 35.3462 64 0",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.00292969 0L127.997 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-0.00292969 0L127.997 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const wep = {
@@ -49765,15 +46880,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M128 0C57.3075 8.42999e-07 -8.42999e-07 57.3075 0 128H128V0Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "96",
         "cy": "96",
@@ -49784,7 +46899,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "96",
         "cy": "96",
@@ -49801,52 +46915,43 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0 64L5.59506e-06 0L128 1.11901e-05V64C128 99.3462 99.3462 128 64 128C28.6538 128 -4.6351e-06 99.3462 0 64Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M32 0L32 128",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 64L5.59506e-06 0L128 1.11901e-05V64C128 99.3462 99.3462 128 64 128C28.6538 128 -4.6351e-06 99.3462 0 64Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M32 0L32 128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "32",
-          "cy": "32",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "32",
-          "cy": "32",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "32",
+        "cy": "32",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "32",
+        "cy": "32",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const wes = {
@@ -49855,15 +46960,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M128 0C57.3075 8.42999e-07 -8.42999e-07 57.3075 0 128H128V0Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "80.0035",
         "y1": "79.9965",
@@ -49875,7 +46980,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "112",
         "cy": "112",
@@ -49886,7 +46990,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "112",
         "cy": "112",
@@ -49904,17 +47007,17 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
         "r": "64",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 64H0",
         "stroke": 0,
@@ -49929,15 +47032,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M64 128H0L5.59506e-06 0L64 5.59506e-06C99.3462 8.68512e-06 128 28.6538 128 64C128 99.3462 99.3462 128 64 128Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "fill-rule": "evenodd",
         "clip-rule": "evenodd",
@@ -49953,15 +47056,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M128 0C57.3075 8.42999e-07 -8.42999e-07 57.3075 0 128H128V0Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "96",
         "cy": "32",
@@ -49972,7 +47075,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "96",
         "cy": "32",
@@ -49984,7 +47086,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "32",
         "cy": "96",
@@ -49995,7 +47096,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "32",
         "cy": "96",
@@ -50013,15 +47113,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "48.0035",
         "y1": "80.0036",
@@ -50033,7 +47133,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "path",
-      "value": "",
       "attributes": {
         "fill-rule": "evenodd",
         "clip-rule": "evenodd",
@@ -50049,16 +47148,16 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "rect",
-      "value": "",
       "attributes": {
         "width": "128",
         "height": "128",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "64",
         "y1": "2.18557e-08",
@@ -50075,38 +47174,30 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 64L0 64",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 0C0 70.6925 57.3075 128 128 128V0H0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 64L0 64",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 32L0 32",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 32L0 32",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const wit = {
@@ -50115,15 +47206,15 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M0 127.946C0.0292286 57.2783 57.3256 3.08928e-06 128 0C128 70.6823 70.7089 127.984 0.0305092 128C0.0203397 128 0.01017 128 2.36469e-09 128L0 127.946Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "64",
         "y1": "2.18557e-08",
@@ -50135,7 +47226,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "32",
         "y1": "2.18557e-08",
@@ -50147,7 +47237,6 @@ var dist = createCommonjsModule(function (module, exports) {
       "children": []
     }, {
       "name": "line",
-      "value": "",
       "attributes": {
         "x1": "96",
         "y1": "2.18557e-08",
@@ -50164,40 +47253,32 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "circle",
       "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "64",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M0 64L128 64",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "64",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0 64L128 64",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 96C110.327 96 96 81.6731 96 64C96 46.3269 110.327 32 128 32",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 96C110.327 96 96 81.6731 96 64C96 46.3269 110.327 32 128 32",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const wor = {
@@ -50205,76 +47286,65 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "y1": "-0.5",
+        "x2": "45.2548",
+        "y2": "-0.5",
+        "transform": "matrix(0.707107 -0.707107 -0.707107 -0.707107 79.65 47.65)",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "y1": "-0.5",
-          "x2": "45.2548",
-          "y2": "-0.5",
-          "transform": "matrix(0.707107 -0.707107 -0.707107 -0.707107 79.65 47.65)",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "line",
-        "value": "",
-        "attributes": {
-          "x1": "-0.0029152",
-          "x2": "127.983",
-          "y2": "127.986",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 96C46.3269 96 32 81.6731 32 64",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "line",
+      "attributes": {
+        "x1": "-0.0029152",
+        "x2": "127.983",
+        "y2": "127.986",
+        "stroke": 0,
+        "stroke-linecap": "square",
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M64 96C46.3269 96 32 81.6731 32 64",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const wyc = {
@@ -50283,10 +47353,11 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "path",
-      "value": "",
       "attributes": {
         "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }]
@@ -50296,62 +47367,52 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M0.0541 0C70.7217 0.0292317 128 57.3256 128 128C57.3177 128 0.0164917 70.7089 7.62806e-06 0.0305091C7.62851e-06 0.0203397 -4.44317e-10 0.01017 0 0H0.0541Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-0.00292969 0L127.997 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M0.0541 0C70.7217 0.0292317 128 57.3256 128 128C57.3177 128 0.0164917 70.7089 7.62806e-06 0.0305091C7.62851e-06 0.0203397 -4.44317e-10 0.01017 0 0H0.0541Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.00292969 0L127.997 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M32 64C32 46.3269 46.3269 32 64 32",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "32",
-          "cy": "64",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "32",
-          "cy": "64",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M32 64C32 46.3269 46.3269 32 64 32",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "32",
+        "cy": "64",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "32",
+        "cy": "64",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const wyl = {
@@ -50359,29 +47420,22 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-3.8147e-06 128C-7.24633e-07 92.6538 28.6538 64 64 64C99.3462 64 128 92.6538 128 128",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 128C128 57.3076 70.6925 6.18013e-06 1.11901e-05 0L0 128L128 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-3.8147e-06 128C-7.24633e-07 92.6538 28.6538 64 64 64C99.3462 64 128 92.6538 128 128",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
     }]
   };
   const wyn = {
@@ -50389,47 +47443,38 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M5.59506e-06 128C70.6925 128 128 70.6925 128 0L0 5.59506e-06L5.59506e-06 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M1.52575e-06 96C53.0193 96 96 53.0193 96 0",
+        "stroke": 0,
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M5.59506e-06 128C70.6925 128 128 70.6925 128 0L0 5.59506e-06L5.59506e-06 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M1.52575e-06 96C53.0193 96 96 53.0193 96 0",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M1.01717e-06 64C35.3462 64 64 35.3462 64 0",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M5.08584e-07 32C17.6731 32 32 17.6731 32 0",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M1.01717e-06 64C35.3462 64 64 35.3462 64 0",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M5.08584e-07 32C17.6731 32 32 17.6731 32 0",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
     }]
   };
   const wyt = {
@@ -50437,64 +47482,54 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M64 128H0L5.59506e-06 0L64 5.59506e-06C99.3462 8.68512e-06 128 28.6538 128 64C128 99.3462 99.3462 128 64 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M128 0L0 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M64 128H0L5.59506e-06 0L64 5.59506e-06C99.3462 8.68512e-06 128 28.6538 128 64C128 99.3462 99.3462 128 64 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M128 0L0 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "64",
-          "cy": "64",
-          "r": "48",
-          "stroke": 0,
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "16",
-          "cy": "64",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "16",
-          "cy": "64",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "64",
+        "cy": "64",
+        "r": "48",
+        "stroke": 0,
+        "fill": "none"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "16",
+        "cy": "64",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "16",
+        "cy": "64",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const wyx = {
@@ -50502,99 +47537,86 @@ var dist = createCommonjsModule(function (module, exports) {
     "value": "",
     "attributes": {},
     "children": [{
-      "name": "g",
-      "value": "",
+      "name": "path",
       "attributes": {
+        "d": "M5.59506e-06 128C70.6925 128 128 70.6925 128 0L0 5.59506e-06L5.59506e-06 128Z",
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
+      },
+      "children": []
+    }, {
+      "name": "path",
+      "attributes": {
+        "d": "M-0.00292969 0L127.997 128",
+        "stroke": 0,
+        "stroke-linecap": "square",
         "fill": "none"
       },
-      "children": [{
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M5.59506e-06 128C70.6925 128 128 70.6925 128 0L0 5.59506e-06L5.59506e-06 128Z",
-          "fill": 1
-        },
-        "children": []
-      }, {
-        "name": "path",
-        "value": "",
-        "attributes": {
-          "d": "M-0.00292969 0L127.997 128",
-          "stroke": 0,
-          "stroke-linecap": "square",
-          "fill": "none"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "32",
-          "cy": "96",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "32",
-          "cy": "96",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "32",
-          "cy": "32",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "32",
-          "cy": "32",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "96",
-          "cy": "32",
-          "r": "11.5",
-          "fill": 1,
-          "stroke": 1
-        },
-        "children": []
-      }, {
-        "name": "circle",
-        "value": "",
-        "attributes": {
-          "cx": "96",
-          "cy": "32",
-          "r": "9",
-          "fill": 0,
-          "stroke": 0,
-          "stroke-width": "2"
-        },
-        "children": []
-      }]
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "32",
+        "cy": "96",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "32",
+        "cy": "96",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "32",
+        "cy": "32",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "32",
+        "cy": "32",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "96",
+        "cy": "32",
+        "r": "11.5",
+        "fill": 1,
+        "stroke": 1
+      },
+      "children": []
+    }, {
+      "name": "circle",
+      "attributes": {
+        "cx": "96",
+        "cy": "32",
+        "r": "9",
+        "fill": 0,
+        "stroke": 0,
+        "stroke-width": "2"
+      },
+      "children": []
     }]
   };
   const zod = {
@@ -50603,12 +47625,13 @@ var dist = createCommonjsModule(function (module, exports) {
     "attributes": {},
     "children": [{
       "name": "circle",
-      "value": "",
       "attributes": {
         "cx": "64",
         "cy": "64",
         "r": "64",
-        "fill": 1
+        "fill": 1,
+        "stroke": 0,
+        "stroke-width": "0.5"
       },
       "children": []
     }]
@@ -51130,15 +48153,15 @@ var dist = createCommonjsModule(function (module, exports) {
       "attributes": {},
       "children": [{
         "name": "path",
-        "value": "",
         "attributes": {
           "d": "M64 0H128V128H64C28.6538 128 0 99.3462 0 64C0 28.6538 28.6538 0 64 0Z",
-          "fill": 1
+          "fill": 1,
+          "stroke": 0,
+          "stroke-width": "0.5"
         },
         "children": []
       }, {
         "name": "line",
-        "value": "",
         "attributes": {
           "x1": "96",
           "y1": "2.18557e-08",
@@ -51150,7 +48173,6 @@ var dist = createCommonjsModule(function (module, exports) {
         "children": []
       }, {
         "name": "circle",
-        "value": "",
         "attributes": {
           "cx": "64",
           "cy": "64",
@@ -51161,7 +48183,6 @@ var dist = createCommonjsModule(function (module, exports) {
         "children": []
       }, {
         "name": "circle",
-        "value": "",
         "attributes": {
           "cx": "64",
           "cy": "64",
@@ -51179,17 +48200,17 @@ var dist = createCommonjsModule(function (module, exports) {
       "attributes": {},
       "children": [{
         "name": "circle",
-        "value": "",
         "attributes": {
           "cx": "64",
           "cy": "64",
           "r": "64",
-          "fill": 1
+          "fill": 1,
+          "stroke": 0,
+          "stroke-width": "0.5"
         },
         "children": []
       }, {
         "name": "path",
-        "value": "",
         "attributes": {
           "d": "M64 0L64 128",
           "stroke": 0,
@@ -51198,13 +48219,55 @@ var dist = createCommonjsModule(function (module, exports) {
         "children": []
       }]
     }
+  }; // const UNIT_CENTER = UNIT / 2
+  // const MARGIN_RATIO = 0.1
+
+  const COLOR_CODES = {
+    FG: 1,
+    BG: 0
   };
-  const UNIT = 128;
-  const MARGIN_RATIO = 0.1;
-  const BG = 0;
+  const UNIT_GRIDS = {
+    4: [{
+      x: 0,
+      y: 0
+    }, {
+      x: 0,
+      y: 128
+    }, {
+      x: 128,
+      y: 0
+    }, {
+      x: 128,
+      y: 128
+    }],
+    2: [{
+      x: 0,
+      y: 0
+    }, {
+      x: 128,
+      y: 0
+    }],
+    1: [{
+      x: 0,
+      y: 0
+    }]
+  };
+  const TILEMAP = {
+    4: {
+      x: 2,
+      y: 2
+    },
+    2: {
+      x: 2,
+      y: 1
+    },
+    1: {
+      x: 1,
+      y: 1 // class ConfigError extends Error {}
+      // apply color preference
 
-  class ConfigError extends Error {} // apply color preference
-
+    }
+  };
 
   const paint = (node, colors, strokeWidth) => {
     if (node.attributes.fill !== undefined && node.attributes.fill !== 'none') {
@@ -51214,7 +48277,9 @@ var dist = createCommonjsModule(function (module, exports) {
     if (node.attributes.stroke !== undefined && node.attributes.stroke !== 'none') {
       node.attributes.stroke = colors[node.attributes.stroke];
       node.attributes['stroke-width'] = strokeWidth + 'px';
-      node.attributes['stroke-linecap'] = 'square';
+      node.attributes['stroke-linecap'] = 'square'; // non-scaling-stroke is used to prevent the stroke from scaling when a scaling transformation is applied by sigil()
+
+      node.attributes['vector-effect'] = 'non-scaling-stroke';
     }
 
     return {
@@ -51222,113 +48287,110 @@ var dist = createCommonjsModule(function (module, exports) {
       attributes: node.attributes,
       children: node.children.map(n => paint(n, colors, strokeWidth))
     };
-  }; // perform transformations
+  };
 
+  const sigil = props => {
+    props = _objectSpread2({}, props); // Set default values from config
 
-  const transformations = (symbols, grid, scaleFactor) => {
-    return symbols.map((symbol, i) => {
-      const x = grid[i][0];
-      const y = grid[i][1];
-      let affineMatrix; // If the symbols has no transformations, generate affine matrix
-
-      if (symbol.attributes === undefined) {
-        affineMatrix = transform(translate(x, y), scale(scaleFactor, scaleFactor));
-        symbol.attributes = {};
-      } else {
-        let existingTransformation = symbol.attributes.transform === undefined ? identity() : fromString(symbol.attributes.transform);
-        affineMatrix = transform(translate(x, y), scale(scaleFactor, scaleFactor), existingTransformation);
-      }
-
-      symbol.attributes.transform = toSVG(affineMatrix);
-      return symbol;
-    });
-  }; //==============================================================================
-  // Main function
-  //
-
-
-  const sigil = params => {
-    // Set default values from config
-    const colors = params.colors === undefined ? ['#000', '#fff'] : params.colors;
-    params.attributes = params.attributes === undefined ? {} : params.attributes; //
-    // params.background = params.background === undefined
+    const colors = isUndefined$1(props.colors) ? ['#000', '#fff'] : props.colors;
+    props.attributes = isUndefined$1(props.attributes) ? {} : props.attributes; //
+    // props.background = props.background === undefined
     //   ? true
-    //   : params.background
+    //   : props.background
+    // props.full = props.full === undefined
+    //   ? false
+    //   : props.full
 
-    params.full = params.full === undefined ? false : params.full;
-    params.style = params.style === undefined ? {} : params.style;
-    params.class = params.class === undefined ? '' : params.class;
-    params.size = params.size === undefined ? params.height : params.size;
-    params.width = params.width === undefined ? params.size : params.width;
-    params.height = params.height === undefined ? params.size : params.height;
-    const sw = params.size / 128 + 0.33; // get phonemes as array from patp input
+    props.style = isUndefined$1(props.style) ? {} : props.style;
+    props.class = isUndefined$1(props.class) ? '' : props.class;
+    props.size = isUndefined$1(props.size) ? props.height : props.size;
+    props.width = isUndefined$1(props.width) ? props.size : props.width;
+    props.height = isUndefined$1(props.height) ? props.size : props.height;
+    props.margin = isUndefined$1(props.margin) ? true : props.margin; // get phonemes as array from patp input and split into array
 
-    let phonemes = params.patp.replace(/[\^~-]/g, '').match(/.{1,3}/g);
+    let phonemes = chunkStr(props.patp.replace(/[\^~-]/g, ''), 3); // Throw an error if the phoneme length is not a 32, 16 or 8 bit point.
 
-    if (params.iconMode === true) {
-      phonemes = [phonemes[0]];
-    }
+    const phonemeLengthDidPass = phonemes.length === 1 || phonemes.length === 2 || phonemes.length === 4;
+    invariant_1(phonemeLengthDidPass, `urbit-sigil-js cannot render @p of length ${phonemes.length}. Only lengths of 1 (galaxy), 2 (star), and 4 (planet) are supported at this time.`); // get symbols and clone them. If no symbol is found, the @p prop was invalid.
 
-    if (phonemes.length !== 1 && phonemes.length !== 2 && phonemes.length !== 4) {
-      throw new ConfigError(`sigil.js cannot render @p of length ${phonemes.length}. Only lengths of 1 (galaxy), 2 (star), and 4 (planet) are supported at this time.`);
-    } // get symbols and clone them.
-
-
+    let patpDidPass;
     const symbols = phonemes.map(phoneme => {
       const ast = index[phoneme];
 
-      if (ast !== undefined) {
-        return JSON.parse(JSON.stringify(ast));
+      if (isUndefined$1(ast)) {
+        patpDidPass = false;
       } else {
-        throw new ConfigError(`@p is invalid. Recieved '${params.patp}'`);
+        patpDidPass = true;
+        return deepClone(ast);
       }
     });
-    const ss = params.size;
-    const ma = params.margin = params.margin === undefined ? MARGIN_RATIO * ss : params.margin;
-    const sz = (ss - ma * 2 - sw) / 2;
-    const grids = {
-      '4': [[ma, ma], // 1st Quartile
-      [ma + sz + sw, ma], // 2nd Quartile
-      [ma, ma + sz + sw], // 3rd Quartile
-      [ma + sz + sw, ma + sz + sw] // 4th Quartile
-      ],
-      '2': [[ma, ss - ss / 2 - sz / 2], // Left half
-      [ma + sz + sw, ss - ss / 2 - sz / 2]],
-      '2-f': [[ma, ma], // [x,y] Left half
-      [ma + sz * 2 + sw, ma]],
-      '1': [[ss - ss / 2 - sz / 2, ss - ss / 2 - sz / 2]],
-      '1-f': [[ma, ma]]
-    };
-    const gridKey = params.full === true ? `${symbols.length}-f` : symbols.length;
-    const grid = grids[gridKey];
-    const scaleFactor = params.full === true ? sz / UNIT * 2 : sz / UNIT; // apply the transformations
+    invariant_1(patpDidPass, `urbit-sigil-js needs a valid patp (point name). Patp field is invalid. Recieved ${props.patp}`);
+    const tier = symbols.length === 4 ? 4 : symbols.length === 2 ? 2 : 1; // get a grid according to the point's tier (planet, start, galaxy)
 
-    const arranged = transformations(symbols, grid, scaleFactor);
+    const grid = UNIT_GRIDS[tier]; // Move each symbol into it's new x/y position on a unit rectangle sized 256 by 256.
 
-    if (params.style.width === undefined) {
-      params.style.width = `${params.width}px`;
+    for (let i = 0; i < grid.length; i++) {
+      const positionTransform = toString(translate(grid[i].x, grid[i].y));
+
+      if (symbols[i].attributes === undefined) {
+        symbols[i].attributes = {};
+      }
+
+      symbols[i].attributes.transform = positionTransform;
     }
 
-    if (params.style.height === undefined) {
-      params.style.height = `${params.height}px`;
-    } // wrap symbols in SVG tag and add background rect. Also merge in values from the params including class and attributes.
-    // const children = params.background === true
-    //   ? [
-    //       {
-    //       name: 'rect',
-    //       attributes: {
-    //         fill: BG,
-    //         width: `${params.width}px`,
-    //         height: `${params.height}px`,
-    //         x: 0,
-    //         y: 0,
-    //       },
-    //       children: [],
-    //     },
-    //     ...arranged,
-    //   ]
-    // : arranged
+    let resizeRatio;
 
+    if (tier === 1) {
+      // If there is only 1 symbol being drawn
+      if (props.margin === true) {
+        // If this symbol will be drawn with a margin
+        resizeRatio = 0.5 * 0.8;
+      } else {
+        // If this symbol will be drawn without a margin
+        resizeRatio = 1;
+      }
+    } else {
+      // If the sigils is 2 symbols wide
+      if (props.margin === true) {
+        // If this symbol will be drawn with a margin
+        resizeRatio = 0.5 * 0.8;
+      } else {
+        // If this symbol will be drawn without a margin
+        resizeRatio = 0.5;
+      }
+    } // Calculate the size of each symbol - IE, for planets, there are four symbols.
+
+
+    const symbolSize = {
+      x: props.width * resizeRatio,
+      y: props.height * resizeRatio // Calculate the left and top margins that will be used to transform the symbolsGroup.
+
+    };
+    const marginPx = {
+      x: (props.size - TILEMAP[tier].x * symbolSize.x) / 2,
+      y: (props.size - TILEMAP[tier].y * symbolSize.y) / 2 // Calculate how much the symbolsGroups should change in scale. 128 is the unit size of the SVGs as drawn in their source file.
+
+    };
+    const symbolsGroupScale = symbolSize.x / 128; // First translate the symbols group to a centered x/y position, then scale the group to it's final size.
+
+    const scaleAndCenteringTransform = toString(transform(translate(marginPx.x, marginPx.y), scale(symbolsGroupScale, symbolsGroupScale))); // Create a SVG AST group and assign the transformation and child symbols to it.
+
+    const symbolsGroup = {
+      name: 'g',
+      attributes: {
+        transform: scaleAndCenteringTransform
+      },
+      children: symbols
+    };
+
+    if (props.style.width === undefined) {
+      props.style.width = `${props.width}px`;
+    }
+
+    if (props.style.height === undefined) {
+      props.style.height = `${props.height}px`;
+    }
 
     const wrapped = {
       name: 'svg',
@@ -51336,37 +48398,43 @@ var dist = createCommonjsModule(function (module, exports) {
         style: _objectSpread2({
           // prevent bottom margin on svg tag
           display: 'block'
-        }, params.style),
-        viewBox: `0 0 ${params.width} ${params.height}`,
+        }, props.style),
+        viewBox: `0 0 ${props.width} ${props.height}`,
         version: '1.1',
         xmlns: "http://www.w3.org/2000/svg",
-        class: params.class
-      }, params.attributes),
-      children: [{
+        class: props.class
+      }, props.attributes),
+      children: [// Background rectangle
+      {
         name: 'rect',
         attributes: {
-          fill: BG,
-          width: `${params.width}px`,
-          height: `${params.height}px`,
+          fill: COLOR_CODES.BG,
+          width: `${props.width}px`,
+          height: `${props.height}px`,
           x: 0,
           y: 0
         },
         children: []
-      }, ...arranged] // apply color
+      }, symbolsGroup] // Calculate a strokeWidth based on props.size
 
     };
-    const resultAST = paint(wrapped, colors, sw / scaleFactor);
-    return params.renderer === undefined ? resultAST : params.renderer(resultAST);
+    const strokeWidth = props.size / 128 + 0.33; // Recursively apply color and other style attributes.
+
+    const out = paint(wrapped, colors, strokeWidth); // If a renderer function has been provided, call this renderer with provided AST. If there is no renderer, return the AST.
+
+    return props.renderer === undefined ? out : props.renderer(out);
   };
 
+  exports.reactImageRenderer = reactImageRenderer;
   exports.reactRenderer = reactRenderer;
   exports.sigil = sigil;
   exports.stringRenderer = stringRenderer;
 });
 unwrapExports(dist);
-var dist_1 = dist.reactRenderer;
-var dist_2 = dist.sigil;
-var dist_3 = dist.stringRenderer;
+var dist_1 = dist.reactImageRenderer;
+var dist_2 = dist.reactRenderer;
+var dist_3 = dist.sigil;
+var dist_4 = dist.stringRenderer;
 
 var global$1 = (typeof global !== "undefined" ? global :
             typeof self !== "undefined" ? self :
@@ -74655,47 +71723,15 @@ var FileSaver_min = createCommonjsModule(function (module, exports) {
 
 const _jsxFileName = "/Users/gavinatkinson/tlon/sigil-js/toolkit/preview/src/js/Main.js";
 
-const compose = (...fs) => {
-  return fs.reduceRight((f, g) => (...args) => g(f(...args)), v => v);
-};
-
-const randInt = max => Math.floor(Math.random() * Math.floor(max));
-
-const noSig = str => str.replace(/~+/g, '');
-
-const sequence = num => Array.from(Array(num), (_, i) => i);
-
-const SHIP_TYPES = {
-  COMET: 'COMET',
-  MOON: 'MOON',
-  PLANET: 'PLANET',
-  STAR: 'STAR',
-  GALAXY: 'GALAXY'
-};
-
-const randShip = k => {
-  let b = 8;
-  if (k === SHIP_TYPES.COMET) b = 128;
-  if (k === SHIP_TYPES.MOON) b = 64;
-  if (k === SHIP_TYPES.PLANET) b = 32;
-  if (k === SHIP_TYPES.STAR) b = 16;
-  if (k === SHIP_TYPES.GALAXY) b = 8;
-  return randInt(Math.pow(2, b) - 1);
-};
-
-const randomShip = classOf => {
-  return compose(noSig, src.patp, randShip)(classOf);
-};
-
 class Main extends react_1 {
   downloadSVG() {
     const config = {
       patp: 'noslec-hopsyx',
-      renderer: dist_3,
+      renderer: dist_4,
       size: 32,
       colors: ['white', 'black'].reverse()
     };
-    const s = dist_2(config);
+    const s = dist_3(config);
     const b = new Blob([s], {
       type: "text/plain;charset=utf-8"
     });
@@ -74737,64 +71773,120 @@ class Main extends react_1 {
 
 
   render() {
-    const randoms = sequence(312).map(() => randomShip('PLANET'));
-    const sizes = [32, 64, 72, 128, 256];
+    const s = 32;
+    const r = dist_1;
+    const configs = [{
+      patp: 'ridlur-figbud',
+      size: s,
+      renderer: r,
+      style: {
+        border: '1px solid blue'
+      },
+      class: 'm2',
+      margin: false,
+      colors: ['white', 'black']
+    }, {
+      patp: 'ridlur-figbud',
+      size: s,
+      renderer: r,
+      style: {
+        border: '1px solid blue'
+      },
+      class: 'm2',
+      margin: true,
+      colors: ['white', 'black']
+    }, {
+      patp: 'ridlur',
+      size: s,
+      renderer: r,
+      style: {
+        border: '1px solid blue'
+      },
+      class: 'm2',
+      margin: false,
+      colors: ['white', 'black']
+    }, {
+      patp: 'ridlur',
+      size: s,
+      renderer: r,
+      style: {
+        border: '1px solid blue'
+      },
+      class: 'm2',
+      margin: true,
+      colors: ['white', 'black']
+    }, {
+      patp: 'rid',
+      size: s,
+      renderer: r,
+      style: {
+        border: '1px solid blue'
+      },
+      class: 'm2',
+      margin: false,
+      colors: ['white', 'black']
+    }, {
+      patp: 'rid',
+      size: s,
+      renderer: r,
+      style: {
+        border: '1px solid blue'
+      },
+      class: 'm2',
+      margin: true,
+      colors: ['white', 'black']
+    }];
     return react.createElement('div', {
       className: "bg-white",
       __self: this,
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 124
+        lineNumber: 185
       }
     }, react.createElement('button', {
       onClick: () => this.downloadSVG(),
       __self: this,
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 125
+        lineNumber: 186
       }
     }, "Download Test SVG") // <button onClick={()=>this.downloadPNG()}>Download Test PNG</button>
     , react.createElement('div', {
-      className: "p8 flex flex-wrap",
+      className: "p8 flex flex-col",
       __self: this,
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 130
+        lineNumber: 191
       }
     }, react.createElement('p', {
       className: "mono",
       __self: this,
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 131
+        lineNumber: 192
       }
-    }, "Glyph Toolkit"), sizes.map((s, i) => {
+    }, "Glyph Toolkit"), react.createElement('span', {
+      class: "flex flex-wrap",
+      __self: this,
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 194
+      }
+    }, configs.map((config, i) => {
       return react.createElement('div', {
         __self: this,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 137
+          lineNumber: 198
         }
-      }, dist_2({
-        patp: 'figbud-budbud',
-        // index: index,
-        // size: s,
-        width: s,
-        height: s,
-        renderer: dist_1,
-        // className: "mr1 mt1",
-        // iconMode: true,
-        style: {
-          border: '1px solid blue'
-        },
-        full: true,
-        // background: false,
-        margin: 0,
-        // style:{width: s+'px', height:s+'px'},
-        class: 'm2',
-        colors: ['black', 'white']
-      }));
-    }) // Object
+      }, dist_3(config), react.createElement('pre', {
+        __self: this,
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 202
+        }
+      }, JSON.stringify(config, null, '  ')));
+    })) // Object
     //   .entries(index)
     //   .map(([k, v], i) => {
     //     return (
@@ -74819,55 +71911,61 @@ class Main extends react_1 {
       __self: this,
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 185
-      }
-    }, randoms.map((p, i) => {
-      return react.createElement('div', {
-        key: i,
-        className: "flex mono",
-        __self: this,
-        __source: {
-          fileName: _jsxFileName,
-          lineNumber: 189
-        }
-      }, dist_2({
-        patp: p,
-        // index: index,
-        size: 128,
-        renderer: dist_1,
-        // className: "mr1 mt1",
-        // iconMode: true,
-        // margin: 1,
-        colors: ['black', 'white']
-      }) // sigil({
-      //   patp: p,
-      //   index: index,
-      //   size: 64,
-      //   // margin:0,
-      //   renderer: ReactSVGRenderer,
-      //   className: "mr1 mt1",
-      //   colors: ['white', 'black'].reverse(),
-      // })
-      // sigil({
-      //   patp: p,
-      //   index: index,
-      //   size: 128,
-      //   // margin:0,
-      //   renderer: ReactSVGRenderer,
-      //   className: "mr1 mt1",
-      //   colors: ['white', 'black'].reverse(),
-      // })
-      // sigil({
-      //   patp: p,
-      //   index: index,
-      //   size: 512,
-      //   // margin:0,
-      //   renderer: ReactSVGRenderer,
-      //   className: "mr1 mt1",
-      //   colors: ['white', 'black'].reverse(),
-      // })
-      );
-    }))));
+        lineNumber: 236
+      } //   randoms.map((p, i) => {
+      //     return (
+      //       <div key={i} className='flex mono p1'>
+      //         {
+      //           sigil({
+      //             patp: p,
+      //             // index: index,
+      //             size: 128,
+      //             renderer: reactRenderer,
+      //             // className: "mr1 mt1",
+      //             // iconMode: true,
+      //             // margin: 1,
+      //             colors: ['black', 'white'],
+      //           })
+      //         }
+      //         {
+      //           // sigil({
+      //           //   patp: p,
+      //           //   index: index,
+      //           //   size: 64,
+      //           //   // margin:0,
+      //           //   renderer: ReactSVGRenderer,
+      //           //   className: "mr1 mt1",
+      //           //   colors: ['white', 'black'].reverse(),
+      //           // })
+      //         }
+      //         {
+      //           // sigil({
+      //           //   patp: p,
+      //           //   index: index,
+      //           //   size: 128,
+      //           //   // margin:0,
+      //           //   renderer: ReactSVGRenderer,
+      //           //   className: "mr1 mt1",
+      //           //   colors: ['white', 'black'].reverse(),
+      //           // })
+      //         }
+      //         {
+      //           // sigil({
+      //           //   patp: p,
+      //           //   index: index,
+      //           //   size: 512,
+      //           //   // margin:0,
+      //           //   renderer: ReactSVGRenderer,
+      //           //   className: "mr1 mt1",
+      //           //   colors: ['white', 'black'].reverse(),
+      //           // })
+      //         }
+      //       </div>
+      //     )
+      //   }
+      // )
+
+    })));
   }
 
 }

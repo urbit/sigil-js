@@ -13,6 +13,7 @@ const compose = (...fns) => fns.reduce((fn, g) => (...args) => fn(g(...args)))
 
 const preprocess = (ast) => {
   return compose(
+    unwrapGroups,
     removeClipPath,
     dropSVGTag,
     createPaintTargets,
@@ -20,10 +21,23 @@ const preprocess = (ast) => {
     // addNoScalingStroke,
     wrapRootInGroup,
     ensureNoFill,
-    label,
+    removeValue,
+    // label,
   )(ast)
 }
 
+
+
+const removeValue = node => {
+  delete node.value
+  if (node.attributes !== undefined) {
+    delete node.attributes.id
+  }
+  return {
+    ...node,
+    children: node.children.map(n => removeValue(n)),
+  }
+}
 
 
 const label = node => {
@@ -168,6 +182,40 @@ const createPaintTargets = node => {
     attributes: node.attributes,
     children: node.children.map(n => createPaintTargets(n)),
   }
+}
+
+
+
+
+
+const unwrapGroups = (node) => {
+
+  let children = []
+
+  let getChildren = (node) => {
+    for (let i = 0; i < node.children.length; i++) {
+      // console.log(i, children)
+      if (node.children[i].name !== 'g') {
+        children = children.concat(node.children[i])
+      }
+      getChildren(node.children[i])
+    }
+  }
+
+  getChildren(node)
+
+  // console.log(children)
+
+  node.children = children
+
+  return node
+
+  // return {
+  //   name: node.name,
+  //   value: node.value,
+  //   attributes: node.attributes,
+  //   children: node.children.reduce((root, childNode) => unwrapGroups(root, childNode)),
+  // }
 }
 
 

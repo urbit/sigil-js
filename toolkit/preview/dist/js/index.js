@@ -48306,7 +48306,8 @@ var dist = createCommonjsModule(function (module, exports) {
     props.size = isUndefined$1(props.size) ? props.height : props.size;
     props.width = isUndefined$1(props.width) ? props.size : props.width;
     props.height = isUndefined$1(props.height) ? props.size : props.height;
-    props.margin = isUndefined$1(props.margin) ? true : props.margin; // get phonemes as array from patp input and split into array
+    props.margin = isUndefined$1(props.margin) ? true : props.margin;
+    props.useScalingStroke = isUndefined$1(props.useScalingStroke) ? true : props.useScalingStroke; // get phonemes as array from patp input and split into array
 
     let phonemes = chunkStr(props.patp.replace(/[\^~-]/g, ''), 3); // Throw an error if the phoneme length is not a 32, 16 or 8 bit point.
 
@@ -48418,7 +48419,14 @@ var dist = createCommonjsModule(function (module, exports) {
       }, symbolsGroup] // Calculate a strokeWidth based on props.size
 
     };
-    const strokeWidth = props.size / 128 + 0.33; // Recursively apply color and other style attributes.
+    let strokeWidth;
+
+    if (props.useScalingStroke) {
+      strokeWidth = props.size / 128 + 0.33;
+    } else {
+      strokeWidth = props.size < 48 ? 0.66 : 1;
+    } // Recursively apply color and other style attributes.
+
 
     const out = paint(wrapped, colors, strokeWidth); // If a renderer function has been provided, call this renderer with provided AST. If there is no renderer, return the AST.
 
@@ -71773,7 +71781,7 @@ class Main extends react_1 {
 
 
   render() {
-    const s = 32;
+    const s = 320;
     const r = dist_1;
     const configs = [{
       patp: 'ridlur-figbud',

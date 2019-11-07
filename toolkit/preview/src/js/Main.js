@@ -121,7 +121,7 @@ class Main extends Component {
 
   const sizes = [32, 64, 72, 128, 256]
 
-  const s = 320
+  const s = 128
   const r = reactImageRenderer
 
   const configs = [

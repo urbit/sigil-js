@@ -71781,7 +71781,7 @@ class Main extends react_1 {
 
 
   render() {
-    const s = 320;
+    const s = 128;
     const r = dist_1;
     const configs = [{
       patp: 'ridlur-figbud',

@@ -8,6 +8,8 @@
   "devDependencies": {
     "@types/invariant": "^2.2.31",
     "@types/react": "^16.9.23",
+    "husky": "^4.2.3",
+    "prettier": "^1.19.1",
     "tsdx": "^0.12.3",
     "typescript": "^3.8.3"
   },
@@ -25,5 +27,24 @@
     "build": "tsdx build",
     "lint": "tsdx lint",
     "lint:fix": "tsdx lint src --fix"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "tsdx lint"
+    }
+  },
+  "prettier": {
+    "arrowParens": "avoid",
+    "bracketSpacing": false,
+    "jsxBracketSameLine": false,
+    "jsxSingleQuote": false,
+    "printWidth": 100,
+    "proseWrap": "always",
+    "quoteProps": "as-needed",
+    "semi": true,
+    "singleQuote": true,
+    "tabWidth": 2,
+    "trailingComma": "es5",
+    "useTabs": false
   }
 }

@@ -1,12 +1,12 @@
 # sigil-js
 
-[![Version](https://img.shields.io/npm/v/urbit-sigil-js.svg)](https://www.npmjs.com/package/urbit-sigil-js)
-![Minzipped Size](https://img.shields.io/bundlephobia/minzip/urbit-sigil-js.svg)
+[![Version](https://img.shields.io/npm/v/urbit-sigil-js.svg)](https://www.npmjs.com/package/@tlon/sigil-js)
+![Minzipped Size](https://img.shields.io/bundlephobia/minzip/@tlon/sigil-js.svg)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 [→ Github](https://github.com/urbit/sigil-js)
 
-[→ NPM](https://www.npmjs.com/package/urbit-sigil-js)
+[→ NPM](https://www.npmjs.com/package/@tlon/sigil-js)
 
 Each of the ~4.2 billion points on Azimuth is unique. Each one has a pronounceable, easily memorized name, something like ~ravmel-ropdyl. Sigils visualize these names – there are as many unique Sigils as there are Azimuth points. `sigil-js` is a javascript library that converts one of these names into its corresponding Sigil.
 
@@ -66,7 +66,6 @@ HTTPS: `npm install git+https://git@github.com/urbit/sigil-js`
 |`margin`| Should the layout use margin or not? | `boolean` | Yes
 |`class`| CSS class to add to the outer SVG tag| `string` | Yes
 |`attributes`| Adds DOM tag attributes to the outer SVG element| `object` | Yes
-|`icon`| used to create small, icon-like sigils without decorators| `bool` | Yes
 
 ### About the `renderer` param
 

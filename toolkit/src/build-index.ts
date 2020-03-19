@@ -8,6 +8,8 @@ import { Ast } from '../../types'
 // Paths relative from /dist
 const SVG_INPUT_PATH = __dirname + '/../assets/svg/';
 const INDEX_OUTPUT_PATH = __dirname + '/../assets/';
+const FG = '@FG'
+const BG = '@BG'
 
 const compose = (...fns: Array<Function>) => {
   return fns.reduce((f, g) => (...xs: any) => {
@@ -28,10 +30,14 @@ const buildIndex = () => {
       // compose executes functions from bottom (last) to first (top)
       //@ts-ignore
       acc[k] = compose(
+        // remove several attributes to save disk space
+        removeType,
+        removeValue,
+        removeId,
         // assigns fill and stroke color (FG or BG)
         createPaintTargets,
         // add fill="none" to tags with no fill
-        ensureNoFill,
+        // ensureNoFill,
         // Unwraps nested groups and wraps all children in single group tage with data-geon marked if the element is a base shape
         normalizeGroups,
         // Removes the root tag, in this case we remove the <svg> tag
@@ -56,56 +62,54 @@ const buildIndex = () => {
 
 const removeOuterSVGTag = (node:Ast) => node.children[0];
 
-// flattenGroups and normalize groups propbably could be written better
-// const flattenGroups = (acc:Ast[], node:Ast) => {
-//   if (node.name === 'g') {
-//     // @ts-ignore
-//     acc = [...acc, ...node.children.reduce((a, c) => [...a, flattenGroups(a, c)], [])]
-//     return acc
-//   }
-//   return node
-// }
-
 const flatten = (_acc:Ast[], children:Ast[]):Ast[] => children.reduce((acc, c) => {
 	acc = [...acc, c]
   return flatten(acc, c.children)
 }, _acc)
 
-const trim = (arr:Ast[]):Ast[] => arr.map(n => {
+const removeChildren = (arr:Ast[]):Ast[] => arr.map(n => {
 	n.children = []
   return n
 })
 
-const normalizeGroups = (node:Ast) => {
+const removeGroups = (arr: Ast[]):Ast[] => arr.filter(n => {
+  if (n.name === 'g') return false
+  return true
+})
 
+const normalizeGroups = (node:Ast) => {
   const group = {
     name: "g",
     type: "element",
     value: "",
     attributes: {},
-    children: trim(flatten([], node.children)),
+    children: removeGroups(removeChildren(flatten([], node.children))),
   }
-
   // Assign property to root shape
-  group.children[0].attributes['data-isGeon'] = 'true'
+  group.children[0].attributes['dataisgeon'] = 'true'
   return group
 }
 
-const FG = '@FG'
-const BG = '@BG'
-
 const createPaintTargets = (node:Ast):Ast => {
 
-  if (node.attributes.fill !== undefined && node.attributes.fill !== 'none') {
-    node.attributes.fill = node.attributes.fill === 'white'
-      ? BG
-      : FG
+  if (node.attributes.fill === undefined) {
+    node.attributes.fill = 'none'
   }
 
-  if (node.attributes.stroke !== undefined && node.attributes.stroke !== 'none') {
-    node.attributes.stroke = node.attributes.stroke === 'white'
-      ? BG
-      : FG
+  if (node.attributes.fill === 'white') {
+    node.attributes.fill = BG
+  }
+
+  if (node.attributes.fill === 'black') {
+    node.attributes.fill = FG
+  }
+
+  if (node.attributes.stroke === 'white') {
+    node.attributes.stroke = BG
+  }
+
+  if (node.attributes.stroke === 'black') {
+    node.attributes.stroke = FG
   }
 
   return {
@@ -114,16 +118,40 @@ const createPaintTargets = (node:Ast):Ast => {
   }
 }
 
-const ensureNoFill = (node:Ast):Ast => {
+// const ensureNoFill = (node:Ast):Ast => {
+//   return {
+//     attributes: {
+//       ...node.attributes,
+//       fill: node.attributes.fill === undefined
+//         ? 'none'
+//         : node.attributes.fill
+//     },
+//     children: node.children.map(n => ensureNoFill(n)),
+//     ...node
+//   }
+// }
+
+const removeId = (node:Ast):Ast => {
+  delete node.attributes.id
   return {
-    attributes: {
-      ...node.attributes,
-      fill: node.attributes.fill === undefined
-        ? 'none'
-        : node.attributes.fill
-    },
-    children: node.children.map(n => ensureNoFill(n)),
-    ...node
+    ...node,
+    children: node.children.map(c => removeId(c))
+  }
+}
+
+const removeType = (node:Ast):Ast => {
+  delete node.type
+  return {
+    ...node,
+    children: node.children.map(c => removeType(c))
+  }
+}
+
+const removeValue = (node:Ast):Ast => {
+  delete node.value
+  return {
+    ...node,
+    children: node.children.map(c => removeValue(c))
   }
 }
 

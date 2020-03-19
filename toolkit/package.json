@@ -18,14 +18,11 @@
   "author": "Tlon",
   "license": "MIT",
   "devDependencies": {
-    "@types/lodash": "^4.14.149",
     "tsdx": "^0.12.3",
     "typescript": "^3.8.3"
   },
   "dependencies": {
     "del": "^5.1.0",
-    "lodash": "^4.17.15",
-    "lodash.flatten": "^4.4.0",
     "svgson": "^4.0.0"
   }
 }

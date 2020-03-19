@@ -27,7 +27,7 @@ type Attributes = {
   y?: string
   transform?: string
   'vector-effect'?: string
-  'data-isGeon'?: string
+  'dataisgeon'?: string
 }
 
 type Ast = {
@@ -38,7 +38,25 @@ type Ast = {
   children: Ast[]
 }
 
+type Config = {
+  patp: string;
+  colors?: [string, string];
+  attributes?: Attributes;
+  style?: {
+    [key: string]:string
+  };
+  class?: string;
+  size?: number;
+  width?: number;
+  height?: number;
+  margin?: boolean;
+  strokeScalingFunction?: Function;
+  renderer?: Function;
+  icon?: boolean;
+};
+
 export {
   Attributes,
   Ast,
+  Config,
 }

@@ -4,25 +4,9 @@ import invariant from 'invariant';
 import stringRenderer from './stringRenderer';
 import reactRenderer from './reactRenderer';
 import reactImageRenderer from './reactImageRenderer';
-import {Ast} from '../types';
+import { Ast, Config } from '../types';
 import {deepClone, chunkStr, isUndefined} from './lib';
 import index from './index.json';
-
-type Config = {
-  patp: string;
-  colors?: string[];
-  attributes?: {};
-  style?: {
-    [key: string]:string
-  };
-  class?: string;
-  size?: number;
-  width?: number;
-  height?: number;
-  margin?: boolean;
-  strokeScalingFunction?: Function;
-  renderer?: Function;
-};
 
 const FG = 1;
 const BG = 0;
@@ -55,7 +39,7 @@ const TILEMAP = {
 // class ConfigError extends Error {}
 
 // apply color preference
-const paint = (node: Ast, colors: string[], strokeWidth: number): Ast => {
+const paint = (node: Ast, colors: [string, string], strokeWidth: number): Ast => {
   const fillIndex = node.attributes.fill === COLOR_CODES.FG ? FG : BG;
   const strokeIndex = node.attributes.stroke === COLOR_CODES.FG ? FG : BG;
 
@@ -83,43 +67,41 @@ const sigil = (props: Config) => {
   props = {...props};
 
   // Set default values from config
-  const colors = props.colors || ['#000', '#fff'];
+  if (typeof props.colors === 'undefined') {
+    props.colors = ['#000', '#fff']
+  }
 
-  props.attributes = isUndefined(props.attributes) ? {} : props.attributes;
+  if (typeof props.attributes === 'undefined') {
+    props.attributes = {}
+  }
 
-  props.style = isUndefined(props.style) ? {} : props.style;
+  if (typeof props.style === 'undefined') {
+    props.style = {}
+  }
 
-  props.class = isUndefined(props.class) ? '' : props.class;
+  if (typeof props.class === 'undefined') {
+    props.class = ''
+  }
 
-  invariant(
-    typeof props.size !== 'undefined'
-    && (typeof props.height !== 'undefined'
-      || typeof props.width !== 'undefined'),
-      '@tlon/sigil-js requires size or width and height'
-  )
+  // if props.size is defined, set width and height
+  if (!(typeof props.size === 'undefined')) {
+    props.width = props.size
+    props.height = props.size
+  }
 
-  // if props.size is undefined, set to default
-  props.size = typeof props.size === 'undefined'
-    ? 128
-    : props.size
+  // if width and height are undefined, set default size
+  if (typeof props.width === 'undefined' || typeof props.height === 'undefined') {
+    props.width = 128
+    props.height = 128
+  }
 
-  // if props.size is undefined, use props.width or default 128
-  props.width = typeof props.size === 'undefined'
-    ? props.width || 128
-    : props.size
+  if (typeof props.margin === 'undefined') {
+    props.margin = true
+  }
 
-  // if props.size is undefined, use props.height or default 128
-  props.height = typeof props.size === 'undefined'
-    ? props.height || 128
-    : props.size
-
-  // props.size = isUndefined(props.size) ? props.height || 128 : props.size;
-  //
-  // props.width = isUndefined(props.width) ? props.size || 128 : props.width;
-  //
-  // props.height = isUndefined(props.height) ? props.size || 128 : props.height;
-
-  props.margin = isUndefined(props.margin) ? true : props.margin;
+  if (props.icon === true) {
+    props.margin = false
+  }
 
   // get phonemes as array from patp input and split into array
   let phonemes = chunkStr(props.patp.replace(/[\^~-]/g, ''), 3);
@@ -138,7 +120,7 @@ const sigil = (props: Config) => {
   // get symbols and clone them. If no symbol is found, the @p prop was invalid.
   let patpDidPass;
 
-  const symbols = phonemes.map(phoneme => {
+  let symbols = phonemes.map(phoneme => {
     // @ts-ignore
     const ast = index[phoneme];
     if (isUndefined(ast)) {
@@ -154,6 +136,15 @@ const sigil = (props: Config) => {
     patpDidPass,
     `@tlon/sigil-js  needs a valid patp (point name). Patp field is invalid. Recieved ${props.patp}`
   );
+
+  if (props.icon === true) {
+    symbols = symbols.map((s:Ast) => {
+      return {
+        ...s,
+        children: s.children.filter((c:Ast) => c.attributes['dataisgeon'])
+      }
+    })
+  }
 
   const tier = symbols.length === 4 ? 4 : symbols.length === 2 ? 2 : 1;
 
@@ -204,7 +195,10 @@ const sigil = (props: Config) => {
     y: ((props.height) - TILEMAP[tier].y * symbolSize.y) / 2,
   };
 
-  console.log(marginPx, props.height, props.width)
+  if (props.margin === false || props.icon === true) {
+    marginPx.x = 0
+    marginPx.y = 0
+  }
 
   // Calculate how much the symbolsGroups should change in scale. 128 is the unit size of the SVGs as drawn in their source file.
   const symbolsGroupScale = symbolSize.x / 128;
@@ -278,11 +272,15 @@ const sigil = (props: Config) => {
   if (props.strokeScalingFunction) {
     strokeWidth = props.strokeScalingFunction(props.size);
   } else {
-    strokeWidth = (props.size) / 128 + 0.33;
+    strokeWidth = (props.width) / 128 + 0.33;
+  }
+
+  if (props.icon === true) {
+    strokeWidth = 0.80
   }
 
   // Recursively apply color and other style attributes.
-  const out = paint(wrapped, colors, strokeWidth);
+  const out = paint(wrapped, props.colors, strokeWidth);
 
   // If a renderer function has been provided, call this renderer with provided AST. If there is no renderer, return the AST.
   return props.renderer === undefined ? out : props.renderer(out);

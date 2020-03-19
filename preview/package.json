@@ -18,14 +18,16 @@
     "@reach/menu-button": "^0.1.18",
     "@tlon/indigo-react": "^1.1.5",
     "@tlon/indigo-tokens": "^1.2.10",
-    "@tlon/sigil-js": "file:..",
+    "@tlon/sigil-js": "^1.3.14",
     "formik": "^2.1.4",
     "indigo-react": "^1.1.1",
     "prop-types": "^15.5.4",
     "react": "^15.0.0 || ^16.0.0",
     "react-dom": "^15.0.0 || ^16.0.0",
     "react-router-dom": "^5.1.2",
+    "sigil-js": "file:..",
     "styled-components": ">= 3",
-    "styled-system": "^5.1.5"
+    "styled-system": "^5.1.5",
+    "urbit-ob": "^4.1.4"
   }
 }

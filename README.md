@@ -66,6 +66,7 @@ HTTPS: `npm install git+https://git@github.com/urbit/sigil-js`
 |`margin`| Should the layout use margin or not? | `boolean` | Yes
 |`class`| CSS class to add to the outer SVG tag| `string` | Yes
 |`attributes`| Adds DOM tag attributes to the outer SVG element| `object` | Yes
+|`icon`| used to create small, icon-like sigils without decorators| `bool` | Yes
 
 ### About the `renderer` param
 

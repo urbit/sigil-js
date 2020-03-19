@@ -6,12 +6,10 @@
 # testing
 /coverage
 /docs
-/gulp
 /test
 /toolkit
-/lib/src
-gulpfile.js
-/assets/*
+/src
+/preview
 
 # misc
 .DS_Store

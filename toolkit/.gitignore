@@ -5,11 +5,14 @@
 
 # testing
 /coverage
-/docs
-/test
-/toolkit
-/src
-/preview
+
+# production
+/build
+/assets/*/*
+/bin/*/*
+**/dist
+*/bin
+*/**/dist
 
 # misc
 .DS_Store

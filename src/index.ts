@@ -4,7 +4,7 @@ import invariant from 'invariant';
 import stringRenderer from './stringRenderer';
 import reactRenderer from './reactRenderer';
 import reactImageRenderer from './reactImageRenderer';
-import { Ast, Config } from '../types';
+import {Ast, Config} from '../types';
 import {deepClone, chunkStr, isUndefined} from './lib';
 import index from './index.json';
 
@@ -68,39 +68,39 @@ const sigil = (props: Config) => {
 
   // Set default values from config
   if (typeof props.colors === 'undefined') {
-    props.colors = ['#000', '#fff']
+    props.colors = ['#000', '#fff'];
   }
 
   if (typeof props.attributes === 'undefined') {
-    props.attributes = {}
+    props.attributes = {};
   }
 
   if (typeof props.style === 'undefined') {
-    props.style = {}
+    props.style = {};
   }
 
   if (typeof props.class === 'undefined') {
-    props.class = ''
+    props.class = '';
   }
 
   // if props.size is defined, set width and height
   if (!(typeof props.size === 'undefined')) {
-    props.width = props.size
-    props.height = props.size
+    props.width = props.size;
+    props.height = props.size;
   }
 
   // if width and height are undefined, set default size
   if (typeof props.width === 'undefined' || typeof props.height === 'undefined') {
-    props.width = 128
-    props.height = 128
+    props.width = 128;
+    props.height = 128;
   }
 
   if (typeof props.margin === 'undefined') {
-    props.margin = true
+    props.margin = true;
   }
 
   if (props.icon === true) {
-    props.margin = false
+    props.margin = false;
   }
 
   // get phonemes as array from patp input and split into array
@@ -138,12 +138,12 @@ const sigil = (props: Config) => {
   );
 
   if (props.icon === true) {
-    symbols = symbols.map((s:Ast) => {
+    symbols = symbols.map((s: Ast) => {
       return {
         ...s,
-        children: s.children.filter((c:Ast) => c.attributes['dataisgeon'])
-      }
-    })
+        children: s.children.filter((c: Ast) => c.attributes['dataisgeon']),
+      };
+    });
   }
 
   const tier = symbols.length === 4 ? 4 : symbols.length === 2 ? 2 : 1;
@@ -185,19 +185,19 @@ const sigil = (props: Config) => {
 
   // Calculate the size of each symbol - IE, for planets, there are four symbols.
   const symbolSize = {
-    x: (props.width) * resizeRatio,
-    y: (props.height) * resizeRatio,
+    x: props.width * resizeRatio,
+    y: props.height * resizeRatio,
   };
 
   // Calculate the left and top margins that will be used to transform the symbolsGroup.
   const marginPx = {
-    x: ((props.width) - TILEMAP[tier].x * symbolSize.x) / 2,
-    y: ((props.height) - TILEMAP[tier].y * symbolSize.y) / 2,
+    x: (props.width - TILEMAP[tier].x * symbolSize.x) / 2,
+    y: (props.height - TILEMAP[tier].y * symbolSize.y) / 2,
   };
 
   if (props.margin === false || props.icon === true) {
-    marginPx.x = 0
-    marginPx.y = 0
+    marginPx.x = 0;
+    marginPx.y = 0;
   }
 
   // Calculate how much the symbolsGroups should change in scale. 128 is the unit size of the SVGs as drawn in their source file.
@@ -272,11 +272,11 @@ const sigil = (props: Config) => {
   if (props.strokeScalingFunction) {
     strokeWidth = props.strokeScalingFunction(props.size);
   } else {
-    strokeWidth = (props.width) / 128 + 0.33;
+    strokeWidth = props.width / 128 + 0.33;
   }
 
   if (props.icon === true) {
-    strokeWidth = 0.80
+    strokeWidth = 0.8;
   }
 
   // Recursively apply color and other style attributes.

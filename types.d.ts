@@ -1,17 +1,20 @@
+declare module '@tlon/sigil-js'
+
 type Attributes = {
   style?: {
-    width?: string
-    height?: string
+    [key: string]:string
   }
+  version?: string
+  class?: string
   width?: string
   height?: string
   viewBox?: string
-  fill?: string | number
+  fill?: string
   xmlns?: string
   id?: string
   'clip-path'?: string
   d?: string
-  stroke?: string | number
+  stroke?: string
   'stroke-width'?: string
   x1?: string
   x2?: string
@@ -22,15 +25,15 @@ type Attributes = {
   r?: string
   x?: string
   y?: string
-  transform?: string;
-  'vector-effect'?: string;
+  transform?: string
+  'vector-effect'?: string
   'data-isGeon'?: string
 }
 
 type Ast = {
   name: string
-  type: string
-  value: string
+  type?: string
+  value?: string
   attributes: Attributes
   children: Ast[]
 }

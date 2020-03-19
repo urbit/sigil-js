@@ -1,14 +1,11 @@
 import {scale, translate, transform, toString} from 'transformation-matrix';
-
 import invariant from 'invariant';
 
 import stringRenderer from './stringRenderer';
 import reactRenderer from './reactRenderer';
 import reactImageRenderer from './reactImageRenderer';
 import {Ast} from '../types';
-
 import {deepClone, chunkStr, isUndefined} from './lib';
-
 import index from './index.json';
 
 type Config = {
@@ -16,8 +13,7 @@ type Config = {
   colors?: string[];
   attributes?: {};
   style?: {
-    height?: string;
-    width?: string;
+    [key: string]:string
   };
   class?: string;
   size?: number;
@@ -95,11 +91,33 @@ const sigil = (props: Config) => {
 
   props.class = isUndefined(props.class) ? '' : props.class;
 
-  props.size = isUndefined(props.size) ? props.height || 128 : props.size;
+  invariant(
+    typeof props.size !== 'undefined'
+    && (typeof props.height !== 'undefined'
+      || typeof props.width !== 'undefined'),
+      '@tlon/sigil-js requires size or width and height'
+  )
 
-  props.width = isUndefined(props.width) ? props.size || 128 : props.width;
+  // if props.size is undefined, set to default
+  props.size = typeof props.size === 'undefined'
+    ? 128
+    : props.size
 
-  props.height = isUndefined(props.height) ? props.size || 128 : props.height;
+  // if props.size is undefined, use props.width or default 128
+  props.width = typeof props.size === 'undefined'
+    ? props.width || 128
+    : props.size
+
+  // if props.size is undefined, use props.height or default 128
+  props.height = typeof props.size === 'undefined'
+    ? props.height || 128
+    : props.size
+
+  // props.size = isUndefined(props.size) ? props.height || 128 : props.size;
+  //
+  // props.width = isUndefined(props.width) ? props.size || 128 : props.width;
+  //
+  // props.height = isUndefined(props.height) ? props.size || 128 : props.height;
 
   props.margin = isUndefined(props.margin) ? true : props.margin;
 
@@ -114,7 +132,7 @@ const sigil = (props: Config) => {
 
   invariant(
     phonemeLengthDidPass,
-    `urbit-sigil-js cannot render @p of length ${phonemes.length}. Only lengths of 1 (galaxy), 2 (star), and 4 (planet) are supported at this time.`
+    `@tlon/sigil-js cannot render @p of length ${phonemes.length}. Only lengths of 1 (galaxy), 2 (star), and 4 (planet) are supported at this time.`
   );
 
   // get symbols and clone them. If no symbol is found, the @p prop was invalid.
@@ -134,7 +152,7 @@ const sigil = (props: Config) => {
 
   invariant(
     patpDidPass,
-    `urbit-sigil-js needs a valid patp (point name). Patp field is invalid. Recieved ${props.patp}`
+    `@tlon/sigil-js  needs a valid patp (point name). Patp field is invalid. Recieved ${props.patp}`
   );
 
   const tier = symbols.length === 4 ? 4 : symbols.length === 2 ? 2 : 1;
@@ -176,15 +194,17 @@ const sigil = (props: Config) => {
 
   // Calculate the size of each symbol - IE, for planets, there are four symbols.
   const symbolSize = {
-    x: (props.width || 128) * resizeRatio,
-    y: (props.height || 128) * resizeRatio,
+    x: (props.width) * resizeRatio,
+    y: (props.height) * resizeRatio,
   };
 
   // Calculate the left and top margins that will be used to transform the symbolsGroup.
   const marginPx = {
-    x: ((props.size || 128) - TILEMAP[tier].x * symbolSize.x) / 2,
-    y: ((props.size || 128) - TILEMAP[tier].y * symbolSize.y) / 2,
+    x: ((props.width) - TILEMAP[tier].x * symbolSize.x) / 2,
+    y: ((props.height) - TILEMAP[tier].y * symbolSize.y) / 2,
   };
+
+  console.log(marginPx, props.height, props.width)
 
   // Calculate how much the symbolsGroups should change in scale. 128 is the unit size of the SVGs as drawn in their source file.
   const symbolsGroupScale = symbolSize.x / 128;
@@ -258,7 +278,7 @@ const sigil = (props: Config) => {
   if (props.strokeScalingFunction) {
     strokeWidth = props.strokeScalingFunction(props.size);
   } else {
-    strokeWidth = (props.size || 128) / 128 + 0.33;
+    strokeWidth = (props.size) / 128 + 0.33;
   }
 
   // Recursively apply color and other style attributes.

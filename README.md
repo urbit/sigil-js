@@ -51,9 +51,7 @@ const svgString = sigil({
 
 ## Install
 
-SSH: `npm install git+ssh://git@github.com/urbit/sigil-js`
-
-HTTPS: `npm install git+https://git@github.com/urbit/sigil-js`
+`npm install @tlon/sigil-js`
 
 ## API
 

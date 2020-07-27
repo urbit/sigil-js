@@ -1,27 +1,23 @@
 # sigil-js
 
-[![Version](https://img.shields.io/npm/v/urbit-sigil-js.svg)](https://www.npmjs.com/package/@tlon/sigil-js)
-![Minzipped Size](https://img.shields.io/bundlephobia/minzip/@tlon/sigil-js.svg)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![npm (scoped)](https://img.shields.io/npm/v/@tlon/sigil-js?style=flat)](https://www.npmjs.com/package/@tlon/sigil-js)
 
 [→ Github](https://github.com/urbit/sigil-js)
 
-[→ NPM](https://www.npmjs.com/package/@tlon/sigil-js)
+Each of the ~4.2 billion points on Azimuth is unique. Each one has a pronounceable, easily memorized name, something like ~ravmel-ropdyl. Sigils visualize these names – there are as many unique Sigils as there are Azimuth points. `@tlon/sigil-js` is a javascript library that converts one of these names into its corresponding Sigil.
 
-Each of the ~4.2 billion points on Azimuth is unique. Each one has a pronounceable, easily memorized name, something like ~ravmel-ropdyl. Sigils visualize these names – there are as many unique Sigils as there are Azimuth points. `sigil-js` is a javascript library that converts one of these names into its corresponding Sigil.
+![sigil intro image](https://github.com/urbit/sigil-js/blob/master/docs/intro.png?raw=true)
 
-![example images](https://github.com/urbit/sigil-js/blob/master/docs/a.png?raw=true)
-
-## Usage
+## Basic Usage
 
 
-### ES2015 / React
+### React
  ```js
- import { sigil, reactRenderer } from 'urbit-sigil-js'
+ import { sigil, reactRenderer } from '@tlon/sigil-js'
 
 const Sigil = props => {
   return (
-    <div>
+    <>
     {
       sigil({
         patp: props.patp,
@@ -30,24 +26,12 @@ const Sigil = props => {
         colors: ['black', 'white'],
       })
     }
-    </div>
+    </>
   )
 }
  ```
 
-### Node
-```js
-const { sigil, stringRenderer } = require('urbit-sigil-js')
-
-const svgString = sigil({
-  patp: 'zod',
-  renderer: stringRenderer,
-  size: 128,
-  colors: ['black', 'white'],
-})
-
-```
-
+ [More examples...](https://github.com/urbit/sigil-js/blob/master/preview/src/pages/Home.tsx)
 
 ## Install
 
@@ -60,10 +44,12 @@ const svgString = sigil({
 |`patp`|Any valid urbit [@p](https://urbit.org/docs/learn/hoon/hoon-tutorial/nouns)                                                                        |`string`|No, and can only accept galaxies, stars and planets.
 |`renderer`| A recursive function that controls the DOM output. See [stringRenderer()](https://github.com/urbit/sigil-js/blob/master/stringRenderer.js) and [reactRenderer()](https://github.com/urbit/sigil-js/blob/master/reactRenderer.js) for examples. Both are exported via sigil-js.|`function`| Yes. If left undefined, `sigil()` will return an SVG AST
 |`size`| Width and height of desired SVG output| `integer`| No |
+|`width`| Width of desired SVG output| `integer`| No |
+|`height`| Height of desired SVG output| `integer`| No |
 |`colors`| A background (first value) and foreground color (second value) with which to paint the sigil| `array` like `[#4330FC, #FFFFFF]`| Yes, default is ['#000', '#fff']
 |`margin`| Should the layout use margin or not? | `boolean` | Yes
 |`class`| CSS class to add to the outer SVG tag| `string` | Yes
-|`attributes`| Adds DOM tag attributes to the outer SVG element| `object` | Yes
+|`attributes`| Adds DOM tag attributes to the outer SVG element, like width and height| `object` | Yes
 
 ### About the `renderer` param
 
@@ -71,18 +57,6 @@ const svgString = sigil({
  - [SVG Plaintext](https://github.com/urbit/sigil-js/src/stringRenderer.js)
  - [React DOM nodes](https://github.com/urbit/sigil-js/src/reactRenderer.js)
  - [Inline background image on React node](https://github.com/urbit/sigil-js/src/reactImageRenderer.js)
-
-## Development
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
-
-### Prerequisites
-You'll need Node installed. We use 10.0.0. To install Node on MacOS or Ubuntu, look [here](https://nodesource.com/blog/installing-node-js-tutorial-using-nvm-on-mac-os-x-and-ubuntu/). Once you have Node, you'll need to clone this repository.
-
-SSH: `git@github.com:urbit/sigil-js.git`
-
-HTTPS: `https://github.com/urbit/sigil-js.git`
-
-Then, `cd` into the repository and run `npm install`.
 
 ### Build
 
@@ -115,4 +89,4 @@ Please read [CONTRIBUTING.md](https://github.com/urbit/sigil-js/CONTRIBUTING.md)
 ### License
 This project is licensed under the MIT License - see the [LICENSE.txt](https://github.com/urbit/sigil-js/LICENSE.md) file for details
 
-![many](https://github.com/urbit/sigil-js/blob/master/docs/outro.png?raw=true)
+![sigil outro image](https://github.com/urbit/sigil-js/blob/master/docs/outro.png?raw=true)

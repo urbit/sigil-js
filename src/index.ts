@@ -197,7 +197,9 @@ const sigil = (props: Config) => {
 
   if (props.margin === false || props.icon === true) {
     marginPx.x = 0;
-    marginPx.y = 0;
+    if (props.icon !== true) {
+      marginPx.y = 0;
+    }
   }
 
   // Calculate how much the symbolsGroups should change in scale. 128 is the unit size of the SVGs as drawn in their source file.

@@ -4,7 +4,7 @@
   "private": false,
   "license": "MIT",
   "main": "dist/index.js",
-  "module": "dist/indigo-react.esm.js",
+  "module": "dist/sigil-js.esm.js",
   "devDependencies": {
     "@types/invariant": "^2.2.31",
     "@types/react": "^16.9.23",

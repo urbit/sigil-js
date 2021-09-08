@@ -4,10 +4,10 @@
   "private": false,
   "license": "MIT",
   "main": "dist/index.js",
-  "module": "dist/indigo-react.esm.js",
+  "module": "dist/sigil-js.esm.js",
   "devDependencies": {
     "@types/invariant": "^2.2.31",
-    "@types/react": "^16.9.23",
+    "@types/react": "^17.0.20",
     "husky": "^4.2.3",
     "prettier": "^1.19.1",
     "tsdx": "^0.12.3",
@@ -19,7 +19,7 @@
     "transformation-matrix": "2.1.1"
   },
   "peerDependencies": {
-    "react": "^16"
+    "react": "^17"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

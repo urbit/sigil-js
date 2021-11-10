@@ -19,7 +19,7 @@
     "transformation-matrix": "2.1.1"
   },
   "peerDependencies": {
-    "react": "^17"
+    "react": "^16 || ^17"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

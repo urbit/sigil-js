@@ -10,7 +10,7 @@
     "@types/react": "^17.0.20",
     "husky": "^4.2.3",
     "prettier": "^1.19.1",
-    "tsdx": "^0.12.3",
+    "tsdx": "^0.14.1",
     "typescript": "^3.8.3"
   },
   "dependencies": {

@@ -1,5 +1,7 @@
 # Changelog
-
+- 1.5.9 (Sep 8, 2021)
+    * Corrects typo in package.json
+    * Updates react dep to ^17
 - 1.3.7 (Nov 4, 2019)
     * Refactors how symbols are scaled and transformed for simplicity and accuracy.
     * Adds `reactImageRenderer`, which adds a base64 encoded background image to a react element, bypassing any recursive use of `react.createElement()`.

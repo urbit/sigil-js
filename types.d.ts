@@ -1,4 +1,4 @@
-declare module '@tlon/sigil-js'
+ddeclare module '@tlon/sigil-js'
 
 // type Attributes = {
 //   style?: {
@@ -63,8 +63,8 @@ type Config = {
   foreground?: string,
 
   // Modes
-  mode?: 'icon' | 'default',
-  includeBackground?: boolean,
+  detail?: 'icon' | 'default',
+  space?: 'none' | 'default' | 'large',
 
   // Sizing
   size?: number,

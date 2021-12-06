@@ -1030,6 +1030,14 @@ var index$1 = {
   zod: "<g transform='@TR'><circle cx='64' cy='64' r='64' fill='@FG' stroke='@BG' stroke-width='@SW'/></g>"
 };
 
+/* TODO
+- Make galaxies and stars have correct symbol transformations
+- Try non-scaling-stroke
+- Should icon mode override stroke-width for pixel-perfect symnbol borders?
+- Add padding argument
+-
+*/
+
 var chunkStr = function chunkStr(str, size) {
   var regex = new RegExp(".{1," + size + "}", 'g');
   var result = str.match(regex);
@@ -1053,11 +1061,14 @@ var sigil = function sigil(_ref) {
       style = _ref$style === void 0 ? '' : _ref$style,
       _ref$className = _ref.className,
       className = _ref$className === void 0 ? '' : _ref$className,
-      mode = _ref.mode;
+      _ref$space = _ref.space,
+      space = _ref$space === void 0 ? 'default' : _ref$space,
+      _ref$detail = _ref.detail,
+      detail = _ref$detail === void 0 ? 'default' : _ref$detail;
   !(point !== undefined) ? process.env.NODE_ENV !== "production" ? invariant(false, "@tlon/sigil-js must be given a point name as input.") : invariant(false) : void 0;
   var symbolsIndex;
 
-  if (mode === 'icon') {
+  if (detail === 'icon') {
     symbolsIndex = index$1;
   } else {
     symbolsIndex = index;
@@ -1084,13 +1095,29 @@ var sigil = function sigil(_ref) {
     //   `
     // }
 
-    var scale = size / 256;
-    var transformation = index === 0 ? "scale(" + scale + ") translate(0,0) " : index === 1 ? "scale(" + scale + ") translate(128,0)" : index === 2 ? "scale(" + scale + ") translate(0,128)" : "scale(" + scale + ") translate(128,128)";
-    var newSVGSubstring = SVGSubstring.replaceAll('@FG', foreground).replaceAll('@BG', background).replaceAll('@TR', transformation).replaceAll('@SW', '4');
+    var scale = size / 256; // Symbols don't know where they should be on the canvas out of the index.
+
+    var symbolTransformation = index === 0 ? "scale(" + scale + ") translate(0,0) " : index === 1 ? "scale(" + scale + ") translate(128,0)" : index === 2 ? "scale(" + scale + ") translate(0,128)" : "scale(" + scale + ") translate(128,128)"; // Symbols also don't know what color they should be. Variables in symbols are denoted with an '@'. 
+    // @GF = foreground color, @BG = background color, @TR = transformation applied to each symbol and @SW = stroke-width
+
+    var newSVGSubstring = SVGSubstring.replaceAll('@FG', foreground).replaceAll('@BG', background).replaceAll('@TR', symbolTransformation).replaceAll('@SW', '4');
     acc = acc + newSVGSubstring;
     return acc;
-  }, '');
-  var resultSVG = "\n    <svg\n      class=\"" + className + "\"\n      style=\"display: block; " + style + "\"\n      width=\"" + size + "\"\n      height=\"" + size + "\"\n      viewbox=\"0 0 " + size + " " + size + "\"\n      version=\"1.1\"\n      xmlns=\"http://www.w3.org/2000/svg\"\n    >\n    <rect fill=\"" + background + "\" width=\"" + size + "\" height=\"" + size + "\" x=\"0\" y=\"0\" />\n    " + innerSVG + "\n    </svg>\n  ";
+  }, ''); // Padding is a number in pixels which determines the interior space between the symbols and the background border.
+  // Padding adjusts `scale`, which makes the existing symbols smaller. It also needs to adjust `translate` because the symbols will need to be recentered.
+  // Maybe the symbols should be wrapped in a group so they can be moved around instead of adjusted individually.
+
+  var groupTransformation = function f() {
+    if (space === 'none') {
+      return phonemes.length === 1 ? "scale(1) translate(32,32)" : phonemes.length === 2 ? "scale(1) translate(0,32)" : "scale(1) translate(0,0)";
+    } else if (space === 'large') {
+      return phonemes.length === 1 ? "scale(0.50) translate(96, 96)" : phonemes.length === 2 ? "scale(0.50) translate(64,96)" : "scale(0.50) translate(64,64)";
+    } else {
+      return phonemes.length === 1 ? "scale(0.75) translate(56, 56)" : phonemes.length === 2 ? "scale(0.75) translate(20,56)" : "scale(0.75) translate(20,20)";
+    }
+  }();
+
+  var resultSVG = "\n    <svg\n      class=\"" + className + "\"\n      style=\"display: block; " + style + "\"\n      width=\"" + size + "\"\n      height=\"" + size + "\"\n      viewbox=\"0 0 " + size + " " + size + "\"\n      version=\"1.1\"\n      xmlns=\"http://www.w3.org/2000/svg\"\n    >\n      <rect fill=\"" + background + "\" width=\"" + size + "\" height=\"" + size + "\" x=\"0\" y=\"0\" />\n      <g transform=\"" + groupTransformation + "\">\n        " + innerSVG + "\n      </g>\n    </svg>\n  ";
   return resultSVG;
 };
 

@@ -3,7 +3,7 @@ import * as svgson from 'svgson'
 import * as fs from 'fs'
 import * as path from 'path'
 import * as del from 'del'
-import { Ast } from '../../types'
+import { Ast } from '../types'
 
 // Paths relative from /dist
 const SVG_INPUT_PATH = __dirname + '/../assets/svg/';

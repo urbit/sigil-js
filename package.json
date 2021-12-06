@@ -7,44 +7,21 @@
   "module": "dist/sigil-js.esm.js",
   "devDependencies": {
     "@types/invariant": "^2.2.31",
-    "@types/react": "^17.0.20",
-    "husky": "^4.2.3",
-    "prettier": "^1.19.1",
+    "jest": "^25.5.4",
     "tsdx": "^0.14.1",
-    "typescript": "^3.8.3"
+    "typescript": "^3.9.10"
   },
   "dependencies": {
     "invariant": "^2.2.4",
     "svgson": "^4.0.0",
     "transformation-matrix": "2.1.1"
   },
-  "peerDependencies": {
-    "react": "^16 || ^17"
-  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "start": "tsdx watch",
     "build": "tsdx build",
+    "dev": "tsdx build && cp -a ./dist/. ./preview/lib",
     "lint": "tsdx lint",
     "lint:fix": "tsdx lint src --fix"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "tsdx lint"
-    }
-  },
-  "prettier": {
-    "arrowParens": "avoid",
-    "bracketSpacing": false,
-    "jsxBracketSameLine": false,
-    "jsxSingleQuote": false,
-    "printWidth": 100,
-    "proseWrap": "always",
-    "quoteProps": "as-needed",
-    "semi": true,
-    "singleQuote": true,
-    "tabWidth": 2,
-    "trailingComma": "es5",
-    "useTabs": false
   }
 }

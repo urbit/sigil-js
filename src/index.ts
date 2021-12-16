@@ -33,10 +33,10 @@ export default function sigil({
     "@tlon/sigil-js must be given a point name as input."
   )
 
-  // The 'icon' mode visually removes all superimposed linework on top of the core shapes of the sigil. It is implemented as a separate index.
+  // The 'none' mode visually removes all superimposed linework on top of the core shapes of the sigil. It is implemented as a separate index.
 
   let symbolsIndex:SymbolIndex
-  if (detail === 'icon') {
+  if (detail === 'none') {
     symbolsIndex = ICON_INDEX
   } else {
     symbolsIndex = DEFAULT_INDEX

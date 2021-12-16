@@ -63,7 +63,7 @@ type Config = {
   foreground?: string,
 
   // Modes
-  detail?: 'icon' | 'default',
+  detail?: 'none' | 'default',
   space?: 'none' | 'default' | 'large',
 
   // Sizing

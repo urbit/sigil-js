@@ -6,6 +6,7 @@
   "main": "dist/index.js",
   "module": "dist/sigil-js.esm.js",
   "devDependencies": {
+    "@tlon/sigil-js": "^1.4.5",
     "@types/invariant": "^2.2.31",
     "jest": "^25.5.4",
     "tsdx": "^0.14.1",

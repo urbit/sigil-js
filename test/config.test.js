@@ -7,6 +7,5 @@ const config = {
 test('Uses defaults', () => {
   expect(() => {
     const s = sigil(config);
-    console.log(s)
   }).not.toThrow();
 });

@@ -1,4 +1,4 @@
-ddeclare module '@tlon/sigil-js'
+declare module '@tlon/sigil-js'
 
 // type Attributes = {
 //   style?: {

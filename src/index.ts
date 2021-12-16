@@ -1,16 +1,9 @@
 import invariant from 'invariant';
-
 import {Config, SymbolIndex} from '../types';
 import DEFAULT_INDEX from './symbols/default'
 import ICON_INDEX from './symbols/icon' 
 
-
-/* TODO
-- Try non-scaling-stroke
-- Should icon mode override stroke-width for pixel-perfect symnbol borders?
-- 
-*/
-
+// Splits a string into equal-sized substrings and returns an array of these substrings.
 const chunkStr = (str: string, size: number):string[] => {
   const regex = new RegExp(`.{1,${size}}`, 'g')
   const result = str.match(regex)
@@ -22,7 +15,7 @@ const chunkStr = (str: string, size: number):string[] => {
   return result
 }
 
-const sigil = ({
+export default function sigil({
   point,
   background = '#000',
   foreground = '#FFF',
@@ -31,12 +24,16 @@ const sigil = ({
   className = '',
   space = 'default',
   detail = 'default',
-}: Config) => {
+}: Config) {
+
+  // Point must be defined, otherwise there is nothing to do.
 
   invariant(
     point !== undefined,
     "@tlon/sigil-js must be given a point name as input."
   )
+
+  // The 'icon' mode visually removes all superimposed linework on top of the core shapes of the sigil. It is implemented as a separate index.
 
   let symbolsIndex:SymbolIndex
   if (detail === 'icon') {
@@ -45,11 +42,14 @@ const sigil = ({
     symbolsIndex = DEFAULT_INDEX
   }
 
-  // get phonemes as array from patp input and split into array
+  // Get phonemes as array from patp input and split into array
+
   let phonemes = chunkStr(point.replace(/[\^~-]/g, ''), 3)
 
+  // Point name must be valid in several ways. 1) must be a valid @p data type. 2) Must be a planet, star or galaxy.
+
   invariant(
-    Array.isArray(phonemes) || phonemes !== null, 
+    Array.isArray(phonemes) || phonemes !== null,
     `@tlon/sigil-js recieved an invalid point name and cannot render a sigil. Recieved '${point}'.`
   )
 
@@ -57,6 +57,8 @@ const sigil = ({
     phonemes.length === 1 || phonemes.length === 2 || phonemes.length === 4,
     `@tlon/sigil-js cannot render point name of length '${phonemes.length}'.  Recieved "${point}". Only lengths of 1 (galaxy), 2 (star), and 4 (planet) are supported at this time.`
   )
+
+  // Symbols are stored in the index js files as svg strings indexed by phoneme. They need to be retrieved from the index with a little bit of string processing to fill in the templated parts of the SVG, ie color.
 
   const innerSVG = phonemes.reduce((acc, phoneme, index) => {
 
@@ -67,25 +69,9 @@ const sigil = ({
 
     const SVGSubstring = symbolsIndex[phoneme] as string
 
-    // if (typeof SVGSubstring === 'undefined') {
-    //   return `
-    //     <svg
-    //       class="${className}"
-    //       style="display: block; ${style}"
-    //       viewbox="0 0 128 128"
-    //       version="1.1"
-    //       xmlns="http://www.w3.org/2000/svg"
-    //     >
-    //     <rect fill="${background}" width="128" height="128" x="0" y="0" />
-    //     <!-- tlon/sigil-js requires a valid point name. "${phoneme}" is not a valid point name phoneme. -->
-    //     </svg>
-    //   `
-    // }
-
-    const scale = (size / 256)
-
     // Symbols don't know where they should be on the canvas out of the index.
 
+    const scale = (size / 256)
     const symbolTransformation = index === 0
       ? `scale(${scale}) translate(0,0) `
       : index === 1
@@ -93,15 +79,20 @@ const sigil = ({
       : index === 2
       ? `scale(${scale}) translate(0,128)`
       : `scale(${scale}) translate(128,128)`
+    
+    // Path stroke-widths should never be less than 1px wide
+    const strokeWidth = size < 64
+      ? (256 / size).toString()
+      : '4'
 
     // Symbols also don't know what color they should be. Variables in symbols are denoted with an '@'. 
     // @GF = foreground color, @BG = background color, @TR = transformation applied to each symbol and @SW = stroke-width
-
+  
     let newSVGSubstring = SVGSubstring
       .replaceAll('@FG', foreground)
       .replaceAll('@BG', background)
       .replaceAll('@TR', symbolTransformation)
-      .replaceAll('@SW', '4')
+      .replaceAll('@SW', strokeWidth)
 
     acc = acc + newSVGSubstring
     return acc
@@ -110,46 +101,53 @@ const sigil = ({
   // 'Space' is a number in pixels which determines the interior space between the symbols and the background border.
   // Space adjusts `scale`, which makes the existing symbols smaller. It also needs to adjust `translate` because the symbols will need to be recentered.
   // The symbols are wrapped in a group so they can be moved around instead of adjusted individually.
+
+  const width = size
+
+  // If the sigil is for a star, and space is set to 'none', change the height so a rectangle is returned.
+
+  const height = space === 'none' && phonemes.length === 2
+    ? size / 2
+    : size
+
   const groupTransformation = function f() {
     if (space === 'none') {
       return phonemes.length === 1
-        ? `scale(1) translate(32,32)`
+        ? `scale(2)`
         : phonemes.length === 2
-        ? `scale(1) translate(0,32)`
-        : `scale(1) translate(0,0)`
+        ? ``
+        : ``
     } else if (space === 'large') {
       return phonemes.length === 1
-        ? `scale(0.50) translate(96, 96)`
+        ? `translate(${(size*0.5) - (size*0.125)},${(size*0.5) - (size*0.125)}) scale(0.50)`
         : phonemes.length === 2
-        ? `scale(0.50) translate(64,96)`
-        : `scale(0.50) translate(64,64)`
+        ? `translate(${(size*0.5) - (size*0.25)},${(size*0.5) - (size*0.125)}) scale(0.50)`
+        : `translate(${(size*0.5) - (size*0.25)},${(size*0.5) - (size*0.25)}) scale(0.50)`
     } else {
       return phonemes.length === 1
-        ? `scale(0.75) translate(56, 56)`
+        ? `translate(${(size*0.5) - (size*0.1875)},${(size*0.5) - (size*0.1875)}) scale(0.75)`
         : phonemes.length === 2
-        ? `scale(0.75) translate(20,56)`
-        : `scale(0.75) translate(20,20)`
+        ? `translate(${(size*0.5) - (size*0.3750)},${(size*0.5) - (size*0.1875)}) scale(0.75)`
+        : `translate(${(size*0.5) - (size*0.3750)},${(size*0.5) - (size*0.3750)}) scale(0.75)`
     }
-  }();
+  }()
 
-  const resultSVG = `
+  // Merge arguments, computed property values and inner SVG substring and return.
+
+  return `
     <svg
       class="${className}"
       style="display: block; ${style}"
-      width="${size}"
-      height="${size}"
-      viewbox="0 0 ${size} ${size}"
+      width="${width}"
+      height="${height}"
+      viewbox="0 0 ${width} ${height}"
       version="1.1"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <rect fill="${background}" width="${size}" height="${size}" x="0" y="0" />
+      <rect fill="${background}" width="${width}" height="${height}" x="0" y="0" />
       <g transform="${groupTransformation}">
         ${innerSVG}
       </g>
     </svg>
   `
-
-  return resultSVG
-};
-
-export default sigil;
+}

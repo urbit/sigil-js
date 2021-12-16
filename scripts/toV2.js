@@ -22,6 +22,8 @@ const stringifiedDefaultIndex = Object
         val.children.forEach((child => {
             if (typeof child.attributes.stroke !== 'undefined') {
                 child.attributes['stroke-width'] = '@SW'
+                // child.attributes['vector-effect'] = 'non-scaling-stroke'
+
             }
 
             // if (child.type === 'line')
@@ -56,7 +58,9 @@ const stringifiedIconIndex = Object
         val.children.forEach((child => {
             if (typeof child.attributes['stroke-width'] !== 'undefined') {
                 child.attributes['stroke-width'] = '@SW'
+                // child.attributes['vector-effect'] = 'non-scaling-stroke'
             }
+
 
             delete child.attributes.dataisgeon
         }))

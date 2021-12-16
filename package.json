@@ -1,6 +1,6 @@
 {
   "name": "@tlon/sigil-js",
-  "version": "1.4.5",
+  "version": "2.0.0",
   "private": false,
   "license": "MIT",
   "main": "dist/index.js",
@@ -12,9 +12,7 @@
     "typescript": "^3.9.10"
   },
   "dependencies": {
-    "invariant": "^2.2.4",
-    "svgson": "^4.0.0",
-    "transformation-matrix": "2.1.1"
+    "invariant": "^2.2.4"
   },
   "scripts": {
     "test": "jest",

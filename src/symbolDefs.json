@@ -1,0 +1,2879 @@
+{
+  "bac": [
+    "gq3",
+    "lbf",
+    "cmlf",
+    "cmmb",
+    "cbl3lb",
+    "cbl3mf"
+  ],
+  "bal": [
+    "gbs",
+    "ctl2lf",
+    "ctl2mb",
+    "lff",
+    "lffb"
+  ],
+  "ban": [
+    "gq3",
+    "atlf8"
+  ],
+  "bar": [
+    "gci",
+    "lbf",
+    "am081",
+    "ctl2lf",
+    "ctl2mb"
+  ],
+  "bat": [
+    "gq3",
+    "at4"
+  ],
+  "bec": [
+    "gq1",
+    "lbf",
+    "dm"
+  ],
+  "bel": [
+    "gfs",
+    "am082"
+  ],
+  "ben": [
+    "gsq",
+    "am08s",
+    "cl2lf",
+    "cl2mb"
+  ],
+  "bep": [
+    "gq2",
+    "abrf4"
+  ],
+  "ber": [
+    "ghr",
+    "lvfr"
+  ],
+  "bes": [
+    "gq1",
+    "ablf4",
+    "lbf"
+  ],
+  "bet": [
+    "gci",
+    "lbht"
+  ],
+  "bex": [
+    "ghr",
+    "lbht",
+    "dm"
+  ],
+  "bic": [
+    "gq3",
+    "atrf6"
+  ],
+  "bid": [
+    "gq3",
+    "b4t3",
+    "lhf"
+  ],
+  "bil": [
+    "ghl",
+    "lbhb",
+    "dm"
+  ],
+  "bin": [
+    "gsq"
+  ],
+  "bis": [
+    "gq3",
+    "lhf",
+    "lhfb",
+    "lhft"
+  ],
+  "bit": [
+    "gbs",
+    "lff",
+    "cmlf",
+    "cmmb"
+  ],
+  "bol": [
+    "gci",
+    "am083",
+    "lhf"
+  ],
+  "bon": [
+    "gq2",
+    "ar4"
+  ],
+  "bor": [
+    "ghl",
+    "lbf",
+    "abrb8",
+    "abrb6",
+    "abrb4",
+    "abrb2"
+  ],
+  "bos": [
+    "gq3",
+    "lbf",
+    "ctl2lf",
+    "ctl2mb"
+  ],
+  "bot": [
+    "ghl",
+    "lvfl",
+    "cbl2lf",
+    "cbl2mb",
+    "ctl2lf",
+    "ctl2mb"
+  ],
+  "bud": [
+    "gq1",
+    "am423",
+    "cl3lf",
+    "cl3mb"
+  ],
+  "bur": [
+    "gq4",
+    "atrf8",
+    "lff"
+  ],
+  "bus": [
+    "gq1",
+    "ablf2",
+    "lbf"
+  ],
+  "byl": [
+    "gq4",
+    "cbl3lf",
+    "cbl3mb",
+    "lbf",
+    "atla2",
+    "atla4",
+    "atla6"
+  ],
+  "byn": [
+    "gq4",
+    "atlb8",
+    "atlb6",
+    "atlb4",
+    "atlb2"
+  ],
+  "byr": [
+    "gfs",
+    "lbf",
+    "cbl1lf",
+    "cbl1mb"
+  ],
+  "byt": [
+    "ghr",
+    "am083",
+    "lhf",
+    "lvfl"
+  ],
+  "dab": [
+    "gq3",
+    "lfht",
+    "cbl3lb",
+    "cbl3mf"
+  ],
+  "dac": [
+    "gq3",
+    "lff",
+    "lvf",
+    "lhf"
+  ],
+  "dal": [
+    "gbs",
+    "lbhtf",
+    "lff",
+    "lffb"
+  ],
+  "dan": [
+    "ghl",
+    "lvf",
+    "lvfr",
+    "am081"
+  ],
+  "dap": [
+    "gq3",
+    "lbhb",
+    "cmlf",
+    "cmmb"
+  ],
+  "dar": [
+    "gci",
+    "cbl2lf",
+    "cbl2mb",
+    "am742",
+    "am741",
+    "am743",
+    "lbf"
+  ],
+  "das": [
+    "gsq",
+    "lvf",
+    "dm"
+  ],
+  "dat": [
+    "gq3",
+    "ar4"
+  ],
+  "dav": [
+    "ghl",
+    "lhf",
+    "am022",
+    "cr2lf",
+    "cr2mb"
+  ],
+  "deb": [
+    "gsq",
+    "atlf4"
+  ],
+  "dec": [
+    "gq1",
+    "cmlf",
+    "cmmb",
+    "ctr3lb",
+    "ctr3mf"
+  ],
+  "def": [
+    "gbs",
+    "lff",
+    "lfft",
+    "cbl3lb",
+    "cbl3mf"
+  ],
+  "deg": [
+    "gsq",
+    "ablf4"
+  ],
+  "del": [
+    "gfs",
+    "cbl2lf",
+    "cbl2mb"
+  ],
+  "dem": [
+    "gci",
+    "lbf",
+    "atlf4",
+    "ctl2lf",
+    "ctl2mb"
+  ],
+  "den": [
+    "gsq",
+    "atlf6",
+    "lbf"
+  ],
+  "dep": [
+    "gq2",
+    "abrb6",
+    "abrb4",
+    "abrb2"
+  ],
+  "der": [
+    "ghb",
+    "lvfr"
+  ],
+  "des": [
+    "gq2",
+    "lvfr"
+  ],
+  "det": [
+    "gci",
+    "lfhb"
+  ],
+  "dev": [
+    "ghr",
+    "lvfr",
+    "lvfl",
+    "cmlf",
+    "cmmb"
+  ],
+  "dex": [
+    "ghr",
+    "lvf",
+    "dm"
+  ],
+  "dib": [
+    "gci",
+    "lhf",
+    "lhft",
+    "ct2lf",
+    "ct2mb"
+  ],
+  "dif": [
+    "gq3",
+    "lff",
+    "atra2",
+    "atra4",
+    "atra6",
+    "ctl3lf",
+    "ctl3mb",
+    "cbl3lb",
+    "cbl3mf"
+  ],
+  "dig": [
+    "ghl",
+    "lvf",
+    "lbht",
+    "am081"
+  ],
+  "dil": [
+    "ghl",
+    "lbhb",
+    "lff"
+  ],
+  "din": [
+    "gsq",
+    "lvfr"
+  ],
+  "dir": [
+    "gq3",
+    "am622",
+    "lbht",
+    "am081"
+  ],
+  "dis": [
+    "gq2",
+    "lbf",
+    "ctr2lf",
+    "ctr2mb",
+    "cbl2lf",
+    "cbl2mb"
+  ],
+  "div": [
+    "gsq",
+    "lvf",
+    "b1l3",
+    "b1l2"
+  ],
+  "doc": [
+    "gfs",
+    "lff",
+    "am081",
+    "am142"
+  ],
+  "dol": [
+    "gci",
+    "lhf",
+    "al3"
+  ],
+  "don": [
+    "gq2",
+    "ab4"
+  ],
+  "dop": [
+    "gci",
+    "am643",
+    "lhf",
+    "cmlf",
+    "cmmb"
+  ],
+  "dor": [
+    "ghl",
+    "lhf"
+  ],
+  "dos": [
+    "gq3",
+    "lbf",
+    "am742"
+  ],
+  "dot": [
+    "ghl",
+    "cmlf",
+    "cmmb"
+  ],
+  "dov": [
+    "gsq",
+    "lff",
+    "ablb2",
+    "ablb4",
+    "ablb6",
+    "ablb8"
+  ],
+  "doz": [
+    "gci",
+    "lbf",
+    "am743",
+    "am742",
+    "am741"
+  ],
+  "duc": [
+    "gq1",
+    "lhf",
+    "lhft",
+    "ctl2lf",
+    "ctl2mb"
+  ],
+  "dul": [
+    "gci",
+    "am023",
+    "lvhb",
+    "cmlf",
+    "cmmb"
+  ],
+  "dun": [
+    "ghr",
+    "am023"
+  ],
+  "dur": [
+    "ghb"
+  ],
+  "dus": [
+    "gq1",
+    "atrf6",
+    "lff"
+  ],
+  "dut": [
+    "gsq",
+    "cbr2lf",
+    "cbr2mb"
+  ],
+  "dux": [
+    "gq4",
+    "ablf8"
+  ],
+  "dyl": [
+    "gq1",
+    "atlf8"
+  ],
+  "dyn": [
+    "gq4",
+    "lhft"
+  ],
+  "dyr": [
+    "gfs",
+    "lbf",
+    "ctr2lf",
+    "ctr2mb",
+    "cbl2lf",
+    "cbl2mb"
+  ],
+  "dys": [
+    "gq1",
+    "at4"
+  ],
+  "dyt": [
+    "ghr",
+    "am082",
+    "lhf",
+    "cl2lf",
+    "cl2mb"
+  ],
+  "fab": [
+    "gq3",
+    "lff",
+    "cmlf",
+    "cmmb",
+    "cbl3lb",
+    "cbl3mf"
+  ],
+  "fad": [
+    "gq4",
+    "ctr2lf",
+    "ctr2mb",
+    "cbl2lf",
+    "cbl2mb"
+  ],
+  "fal": [
+    "gfs",
+    "lff",
+    "ablb8",
+    "ablb6",
+    "ablb4",
+    "ablb2"
+  ],
+  "fam": [
+    "ghl",
+    "lhf",
+    "lvf",
+    "cmlf",
+    "cmmb"
+  ],
+  "fan": [
+    "ghl",
+    "lff",
+    "lvf",
+    "lbf"
+  ],
+  "fas": [
+    "gsq",
+    "am082",
+    "cr2lf",
+    "cr2mb"
+  ],
+  "feb": [
+    "gsq",
+    "atrf8"
+  ],
+  "fed": [
+    "gci",
+    "lhft",
+    "cmlf",
+    "cmmb"
+  ],
+  "fel": [
+    "gfs",
+    "lfht"
+  ],
+  "fen": [
+    "gsq",
+    "lbf",
+    "abrb8",
+    "abrb6",
+    "abrb4",
+    "abrb2"
+  ],
+  "fep": [
+    "gq1",
+    "lff"
+  ],
+  "fer": [
+    "ghr",
+    "lvf"
+  ],
+  "fes": [
+    "gq2",
+    "lvfl"
+  ],
+  "fet": [
+    "gci",
+    "lff"
+  ],
+  "fex": [
+    "ghr",
+    "lfht",
+    "dm"
+  ],
+  "fid": [
+    "gq3",
+    "lbf",
+    "cbr2lf",
+    "cbr2mb",
+    "ctl2lf",
+    "ctl2mb"
+  ],
+  "fig": [
+    "ghl",
+    "lvf",
+    "am082",
+    "am081"
+  ],
+  "fil": [
+    "ghl",
+    "lhf",
+    "lvf",
+    "lvfl"
+  ],
+  "fin": [
+    "gsq",
+    "lvfr"
+  ],
+  "fip": [
+    "ghl",
+    "am082",
+    "lbf",
+    "cb2lf",
+    "cb2mb"
+  ],
+  "fir": [
+    "gq3",
+    "lfht",
+    "lbhb",
+    "lbht",
+    "cmlf",
+    "cmmb"
+  ],
+  "fit": [
+    "gbs",
+    "lff"
+  ],
+  "fod": [
+    "ghl",
+    "dm"
+  ],
+  "fog": [
+    "gq2",
+    "lbf",
+    "am742",
+    "am081"
+  ],
+  "fol": [
+    "gci",
+    "am081",
+    "lhf"
+  ],
+  "fon": [
+    "gq2",
+    "lbf"
+  ],
+  "fop": [
+    "gci",
+    "lbf",
+    "am423",
+    "cl3lf",
+    "cl3mb"
+  ],
+  "for": [
+    "ghl",
+    "lvfr",
+    "cmlf",
+    "cmmb"
+  ],
+  "fos": [
+    "gq4",
+    "lbf",
+    "atlf6",
+    "atlf4",
+    "atlf2"
+  ],
+  "fot": [
+    "ghl",
+    "lfhb",
+    "cmlf",
+    "cmmb"
+  ],
+  "ful": [
+    "gci",
+    "am642"
+  ],
+  "fun": [
+    "ght",
+    "lfhb",
+    "lbf",
+    "cbl3lf",
+    "cbl3mb"
+  ],
+  "fur": [
+    "gq4",
+    "lff",
+    "am142",
+    "am081"
+  ],
+  "fus": [
+    "gq1",
+    "lff",
+    "ablf2"
+  ],
+  "fyl": [
+    "gq4",
+    "atla2",
+    "atla4",
+    "atla6",
+    "lbf"
+  ],
+  "fyn": [
+    "gq4",
+    "lff"
+  ],
+  "fyr": [
+    "gfs",
+    "lbf",
+    "lfht"
+  ],
+  "hab": [
+    "gq3",
+    "lff",
+    "atra2",
+    "atra4",
+    "atra6",
+    "cbl3lb",
+    "cbl3mf"
+  ],
+  "hac": [
+    "gq3",
+    "lff",
+    "am082",
+    "cmlf",
+    "cmmb"
+  ],
+  "had": [
+    "gq4",
+    "ctl2lf",
+    "ctl2mb"
+  ],
+  "hal": [
+    "gfs",
+    "lvf",
+    "am423",
+    "am023"
+  ],
+  "han": [
+    "gq4"
+  ],
+  "hap": [
+    "gci",
+    "am082",
+    "am083",
+    "lbf",
+    "cmlf",
+    "cmmb"
+  ],
+  "har": [
+    "gci",
+    "lvf",
+    "am081"
+  ],
+  "has": [
+    "gsq",
+    "am082",
+    "ct2lf",
+    "ct2mb",
+    "cl2lf",
+    "cl2mb"
+  ],
+  "hat": [
+    "gq3",
+    "lff",
+    "dtl"
+  ],
+  "hav": [
+    "gq3",
+    "lvfr"
+  ],
+  "heb": [
+    "gsq",
+    "atlf8"
+  ],
+  "hec": [
+    "gq1",
+    "ctl2lf",
+    "ctl2mb",
+    "cbl2lf",
+    "cbl2mb",
+    "cbr2lf",
+    "cbr2mb"
+  ],
+  "hep": [
+    "gq1",
+    "lbf",
+    "lbf"
+  ],
+  "hes": [
+    "gq2",
+    "lvfl",
+    "dbl"
+  ],
+  "het": [
+    "gci",
+    "lvfr"
+  ],
+  "hex": [
+    "ghr",
+    "lff",
+    "dm"
+  ],
+  "hid": [
+    "gq3",
+    "lbf",
+    "atlf8",
+    "atlf6",
+    "atlf4",
+    "atlf2"
+  ],
+  "hil": [
+    "ghl",
+    "lhf",
+    "lvf"
+  ],
+  "hin": [
+    "gsq",
+    "lvfl",
+    "dl"
+  ],
+  "hob": [
+    "ght",
+    "lhf"
+  ],
+  "hoc": [
+    "ghl",
+    "lfht",
+    "cmlf",
+    "cmmb"
+  ],
+  "hod": [
+    "ghl",
+    "lvfl"
+  ],
+  "hol": [
+    "gci",
+    "lhf",
+    "am081",
+    "cb2lf",
+    "cb2mb"
+  ],
+  "hop": [
+    "gci",
+    "lhf",
+    "am642",
+    "cmlf",
+    "cmmb"
+  ],
+  "hos": [
+    "gq3",
+    "lbhb",
+    "lbht",
+    "ctl1lf",
+    "ctl1mb",
+    "ctr1lf",
+    "ctr1mb",
+    "cbr1lf",
+    "cbr1mb",
+    "cbl1lf",
+    "cbl1mb"
+  ],
+  "hul": [
+    "gci",
+    "am082",
+    "cl1lf",
+    "cl1mb"
+  ],
+  "hus": [
+    "gq1",
+    "lbf",
+    "am422",
+    "cmlf",
+    "cmmb"
+  ],
+  "hut": [
+    "gsq",
+    "am083",
+    "ctl2lf",
+    "ctl2mb",
+    "cbr2lf",
+    "cbr2mb"
+  ],
+  "lab": [
+    "gq2",
+    "lbf",
+    "lfht",
+    "lfhb"
+  ],
+  "lac": [
+    "gq3",
+    "b4t2",
+    "b4t3",
+    "lhf"
+  ],
+  "lad": [
+    "gq2",
+    "lfhm",
+    "ctr2lf",
+    "ctr2mb",
+    "cbl2lf",
+    "cbl2mb"
+  ],
+  "lag": [
+    "ghl",
+    "am623"
+  ],
+  "lan": [
+    "ghl",
+    "lvf",
+    "lvfl",
+    "am081"
+  ],
+  "lap": [
+    "gq3",
+    "am023",
+    "cr3lf",
+    "cr3mb"
+  ],
+  "lar": [
+    "gci",
+    "lhf",
+    "am081",
+    "cb2lf",
+    "cb2mb",
+    "ct2lf",
+    "ct2mb"
+  ],
+  "las": [
+    "gsq",
+    "am083",
+    "cl3lf",
+    "cl3mb"
+  ],
+  "lat": [
+    "gq3",
+    "atlf8",
+    "atlf6",
+    "atlf4",
+    "atlf2"
+  ],
+  "lav": [
+    "gq2",
+    "atrb8",
+    "atrb6",
+    "atrb4",
+    "atrb2"
+  ],
+  "leb": [
+    "gsq",
+    "ablf6"
+  ],
+  "lec": [
+    "gq1",
+    "lbf",
+    "cmlf",
+    "cmmb"
+  ],
+  "led": [
+    "gci",
+    "ct2lf",
+    "ct2mb"
+  ],
+  "leg": [
+    "gsq",
+    "al2"
+  ],
+  "len": [
+    "gsq",
+    "am083",
+    "cb2lf",
+    "cb2mb"
+  ],
+  "lep": [
+    "gq2",
+    "abrf2"
+  ],
+  "ler": [
+    "ghr",
+    "lvfl",
+    "ctl2lf",
+    "ctl2mb"
+  ],
+  "let": [
+    "gci",
+    "lvf"
+  ],
+  "lev": [
+    "ghr",
+    "ctl2lf",
+    "ctl2mb"
+  ],
+  "lex": [
+    "ghr",
+    "lbf",
+    "lfhb",
+    "dm"
+  ],
+  "lib": [
+    "gci",
+    "abrf4",
+    "lhf"
+  ],
+  "lid": [
+    "gq3",
+    "lbht",
+    "lff"
+  ],
+  "lig": [
+    "gci",
+    "am083"
+  ],
+  "lin": [
+    "gsq",
+    "lvf",
+    "cr1sb"
+  ],
+  "lis": [
+    "gq1",
+    "lhf",
+    "atlf4"
+  ],
+  "lit": [
+    "gbs",
+    "lbf",
+    "atlb8",
+    "atlb6",
+    "atlb4",
+    "atlb2"
+  ],
+  "liv": [
+    "gsq",
+    "b1l1",
+    "b1l3",
+    "lvf"
+  ],
+  "loc": [
+    "gbs",
+    "atrf6"
+  ],
+  "lod": [
+    "ghl",
+    "am423"
+  ],
+  "lom": [
+    "gsq",
+    "ctl2lf",
+    "ctl2mb",
+    "ctr2lf",
+    "ctr2mb",
+    "cbr2lf",
+    "cbr2mb"
+  ],
+  "lon": [
+    "gq2",
+    "atlf8",
+    "atlf6",
+    "atlf4"
+  ],
+  "lop": [
+    "gci",
+    "lhf",
+    "lhft",
+    "cmlf",
+    "cmmb"
+  ],
+  "lor": [
+    "ghl",
+    "lvf"
+  ],
+  "los": [
+    "gq3",
+    "lbf",
+    "cbr2lf",
+    "cbr2mb"
+  ],
+  "luc": [
+    "gq1",
+    "lhf",
+    "lhf",
+    "lhfb"
+  ],
+  "lud": [
+    "gq1",
+    "lhf",
+    "lvfl",
+    "lvf",
+    "lvfr"
+  ],
+  "lug": [
+    "ghr"
+  ],
+  "lun": [
+    "gci",
+    "am082"
+  ],
+  "lup": [
+    "ghr",
+    "am643",
+    "lhf"
+  ],
+  "lur": [
+    "gq1",
+    "lvf",
+    "lvfr",
+    "lvfl"
+  ],
+  "lus": [
+    "gq1",
+    "lff",
+    "cbr2lf",
+    "cbr2mb"
+  ],
+  "lut": [
+    "gsq",
+    "cl2lf",
+    "cl2mb"
+  ],
+  "lux": [
+    "gq4",
+    "dm"
+  ],
+  "lyd": [
+    "gbs",
+    "lbf",
+    "am082",
+    "ct2lf",
+    "ct2mb"
+  ],
+  "lyn": [
+    "gq4",
+    "lvfl"
+  ],
+  "lyr": [
+    "gfs",
+    "lbf",
+    "ctr1lf",
+    "ctr1mb"
+  ],
+  "lys": [
+    "gq1",
+    "cmlf",
+    "cmmb",
+    "cbl3lf",
+    "cbl3mb"
+  ],
+  "lyt": [
+    "ghr",
+    "lff",
+    "lbhb",
+    "am081"
+  ],
+  "lyx": [
+    "gq4",
+    "lbf",
+    "ctl2lf",
+    "ctl2mb"
+  ],
+  "mac": [
+    "gq3",
+    "cbl3lb",
+    "cbl3mf"
+  ],
+  "mag": [
+    "ghl",
+    "am082",
+    "lhf",
+    "cb2lf",
+    "cb2mb"
+  ],
+  "mal": [
+    "gbs",
+    "lbhb",
+    "cbl3lb",
+    "cbl3mf"
+  ],
+  "map": [
+    "gq2",
+    "lbhb",
+    "cmlf",
+    "cmmb"
+  ],
+  "mar": [
+    "gci",
+    "lbf",
+    "lvhb",
+    "am743",
+    "am742",
+    "am741"
+  ],
+  "mas": [
+    "gsq",
+    "am082",
+    "dm"
+  ],
+  "mat": [
+    "gq3",
+    "atrf2"
+  ],
+  "meb": [
+    "gsq",
+    "atrf6"
+  ],
+  "mec": [
+    "gq1",
+    "lbhb",
+    "cmlf",
+    "cmmb"
+  ],
+  "med": [
+    "gci",
+    "cr2lf",
+    "cr2mb"
+  ],
+  "meg": [
+    "gsq",
+    "abrf4"
+  ],
+  "mel": [
+    "gfs",
+    "lfhb"
+  ],
+  "mep": [
+    "gq2",
+    "lhf",
+    "lhfb",
+    "lhft"
+  ],
+  "mer": [
+    "ghr",
+    "lvfl"
+  ],
+  "mes": [
+    "gq1",
+    "lbf",
+    "lfhb"
+  ],
+  "met": [
+    "gci",
+    "lvfl"
+  ],
+  "mev": [
+    "ghr",
+    "am081"
+  ],
+  "mex": [
+    "ghr",
+    "lbf",
+    "dm"
+  ],
+  "mic": [
+    "gq1",
+    "ablf3"
+  ],
+  "mid": [
+    "gq3",
+    "lhf",
+    "abrf4"
+  ],
+  "mig": [
+    "ghl",
+    "lvf",
+    "lbhb",
+    "am081"
+  ],
+  "mil": [
+    "ghl",
+    "lhf",
+    "lhft",
+    "lhfb"
+  ],
+  "min": [
+    "gsq",
+    "lbf"
+  ],
+  "mip": [
+    "gq2",
+    "lvf",
+    "ar4",
+    "am081"
+  ],
+  "mir": [
+    "gq3",
+    "lbht",
+    "am022",
+    "am081"
+  ],
+  "mis": [
+    "gq2",
+    "abrf4",
+    "lbf"
+  ],
+  "mit": [
+    "gbs",
+    "lff",
+    "ctl2lf",
+    "ctl2mb"
+  ],
+  "moc": [
+    "gbs",
+    "lhf",
+    "lhfb",
+    "lhft"
+  ],
+  "mod": [
+    "ghl",
+    "lhfb",
+    "lbht"
+  ],
+  "mog": [
+    "gq2",
+    "lbf",
+    "am082",
+    "am081"
+  ],
+  "mol": [
+    "gci",
+    "lhf",
+    "am443",
+    "at3"
+  ],
+  "mon": [
+    "gq2",
+    "dm"
+  ],
+  "mop": [
+    "gci",
+    "lbf",
+    "am082",
+    "cl2lf",
+    "cl2mb"
+  ],
+  "mor": [
+    "ghl",
+    "lbht",
+    "lfhb",
+    "cmlf",
+    "cmmb"
+  ],
+  "mos": [
+    "gq3",
+    "lff",
+    "ctr2lf",
+    "ctr2mb"
+  ],
+  "mot": [
+    "ghl",
+    "ar2",
+    "cmlf",
+    "cmmb"
+  ],
+  "mud": [
+    "gq1",
+    "lbf",
+    "cbr1lf",
+    "cbr1mb"
+  ],
+  "mug": [
+    "ghr",
+    "am642"
+  ],
+  "mul": [
+    "gci",
+    "lbhb",
+    "am023"
+  ],
+  "mun": [
+    "gci",
+    "atrf4",
+    "cmlf",
+    "cmmb"
+  ],
+  "mur": [
+    "gq1",
+    "lhf",
+    "cmlf",
+    "cmmb",
+    "cl2lf",
+    "cl2mb"
+  ],
+  "mus": [
+    "gq1",
+    "lff",
+    "ablf6"
+  ],
+  "mut": [
+    "gsq",
+    "ctr2lf",
+    "ctr2mb"
+  ],
+  "myl": [
+    "gq4",
+    "lbht",
+    "ctl3lf",
+    "ctl3mb"
+  ],
+  "myn": [
+    "gq4",
+    "abrf8",
+    "abrf6",
+    "abrf4"
+  ],
+  "myr": [
+    "gfs",
+    "lbf",
+    "cbl2lf",
+    "cbl2mb"
+  ],
+  "nac": [
+    "gq3",
+    "am081",
+    "cbl3lb",
+    "cbl3mf"
+  ],
+  "nal": [
+    "gbs",
+    "lbf",
+    "atlf6l",
+    "atlf4l",
+    "atlf2l"
+  ],
+  "nam": [
+    "ghl",
+    "lhf",
+    "cmlf",
+    "cmmb",
+    "cr3lf",
+    "cr3mb"
+  ],
+  "nap": [
+    "gq2",
+    "lvf",
+    "ctr2lf",
+    "ctr2mb",
+    "cbr2lf",
+    "cbr2mb"
+  ],
+  "nar": [
+    "gci",
+    "am082",
+    "am08s"
+  ],
+  "nat": [
+    "gq3",
+    "abrf8"
+  ],
+  "nav": [
+    "gq3",
+    "atrb6",
+    "atrb4",
+    "atrb2"
+  ],
+  "neb": [
+    "gsq",
+    "abrf6"
+  ],
+  "nec": [
+    "gq1",
+    "ctl2lf",
+    "ctl2mb",
+    "cbr2lf",
+    "cbr2mb",
+    "lvf"
+  ],
+  "ned": [
+    "gci",
+    "cmlf",
+    "cmmb"
+  ],
+  "nel": [
+    "gfs",
+    "lbf",
+    "atlf6"
+  ],
+  "nem": [
+    "gci",
+    "lbf",
+    "abrf4",
+    "ctl2lf",
+    "ctl2mb"
+  ],
+  "nep": [
+    "gq1",
+    "atrf8",
+    "atrf6",
+    "atrf4"
+  ],
+  "ner": [
+    "ghr",
+    "lvf",
+    "lfhb"
+  ],
+  "nes": [
+    "gq2",
+    "lvf"
+  ],
+  "net": [
+    "gci",
+    "lvhb"
+  ],
+  "nev": [
+    "ghr",
+    "am081",
+    "ctl2lf",
+    "ctl2mb"
+  ],
+  "nex": [
+    "ghr",
+    "lbhb",
+    "dm"
+  ],
+  "nib": [
+    "gci",
+    "lhf",
+    "lhfb"
+  ],
+  "nid": [
+    "gq3",
+    "lhf",
+    "b4t2"
+  ],
+  "nil": [
+    "ghl",
+    "lhf",
+    "lhft"
+  ],
+  "nim": [
+    "ght",
+    "lvf"
+  ],
+  "nis": [
+    "gq2",
+    "abrf6",
+    "lbf"
+  ],
+  "noc": [
+    "ghl",
+    "lvf",
+    "cmlf",
+    "cmmb"
+  ],
+  "nod": [
+    "ghl",
+    "cl2lf",
+    "cl2mb",
+    "cr2lf",
+    "cr2mb"
+  ],
+  "nol": [
+    "gci",
+    "lhf",
+    "cb2lf",
+    "cb2mb"
+  ],
+  "nom": [
+    "gsq",
+    "cbl2lf",
+    "cbl2mb",
+    "cbr2lf",
+    "cbr2mb",
+    "ctr2lf",
+    "ctr2mb"
+  ],
+  "nop": [
+    "gci",
+    "lbf",
+    "lfht",
+    "cmlf",
+    "cmmb"
+  ],
+  "nor": [
+    "ghl",
+    "am422",
+    "cmlf",
+    "cmmb"
+  ],
+  "nos": [
+    "gq3",
+    "lff",
+    "ctl2lf",
+    "ctl2mb"
+  ],
+  "nov": [
+    "gsq",
+    "lbf",
+    "atlf8",
+    "atlf6",
+    "atlf4",
+    "atlf2"
+  ],
+  "nub": [
+    "gq1",
+    "lhf"
+  ],
+  "nul": [
+    "gci",
+    "am082",
+    "cl2lf",
+    "cl2mb"
+  ],
+  "num": [
+    "gq1",
+    "lff",
+    "ctl2lf",
+    "ctl2mb",
+    "cbr2lf",
+    "cbr2mb"
+  ],
+  "nup": [
+    "ghr",
+    "am643"
+  ],
+  "nus": [
+    "gq1",
+    "lbf",
+    "atla8",
+    "ctl2lf",
+    "ctl2mb"
+  ],
+  "nut": [
+    "gsq",
+    "lbhb",
+    "lfht",
+    "cbr2lf",
+    "cbr2mb"
+  ],
+  "nux": [
+    "gq1",
+    "lhf",
+    "lhfb",
+    "lhft"
+  ],
+  "nyd": [
+    "gbs",
+    "lbf",
+    "am082",
+    "am081"
+  ],
+  "nyl": [
+    "gq1",
+    "lbf",
+    "abrb8",
+    "abrb6",
+    "abrb4",
+    "abrb2"
+  ],
+  "nym": [
+    "gq4",
+    "lvf",
+    "lvfr",
+    "lvfl"
+  ],
+  "nyr": [
+    "gfs",
+    "lbf",
+    "atlb4",
+    "atlb6"
+  ],
+  "nys": [
+    "gq1",
+    "cbl3lf",
+    "cbl3mb"
+  ],
+  "nyt": [
+    "ghr",
+    "lhf",
+    "am022",
+    "am023"
+  ],
+  "nyx": [
+    "gq4",
+    "lbf",
+    "dm"
+  ],
+  "pac": [
+    "gq3",
+    "lff",
+    "am081",
+    "ct2lf",
+    "ct2mb"
+  ],
+  "pad": [
+    "gq3",
+    "ctr2lf",
+    "ctr2mb"
+  ],
+  "pag": [
+    "ghl",
+    "lfhb"
+  ],
+  "pal": [
+    "gbs",
+    "lff",
+    "atrb6",
+    "atrb4"
+  ],
+  "pan": [
+    "gq3",
+    "lff",
+    "am142"
+  ],
+  "par": [
+    "gci",
+    "lff",
+    "am081"
+  ],
+  "pas": [
+    "gsq",
+    "lvfl",
+    "lvf",
+    "lvfr"
+  ],
+  "pat": [
+    "gq3",
+    "atrf6",
+    "atrf4",
+    "atrf2"
+  ],
+  "pec": [
+    "gq1",
+    "lff",
+    "cmlf",
+    "cmmb"
+  ],
+  "ped": [
+    "gci",
+    "cl2lf",
+    "cl2mb"
+  ],
+  "peg": [
+    "gsq",
+    "at4"
+  ],
+  "pel": [
+    "gfs",
+    "am082",
+    "am023"
+  ],
+  "pem": [
+    "gci",
+    "lbf",
+    "ablf4"
+  ],
+  "pen": [
+    "gsq",
+    "at4",
+    "lbf"
+  ],
+  "per": [
+    "ghb",
+    "lvf"
+  ],
+  "pes": [
+    "gq2",
+    "am623",
+    "lbf"
+  ],
+  "pet": [
+    "gci",
+    "lbhb"
+  ],
+  "pex": [
+    "ghr",
+    "am082",
+    "dm"
+  ],
+  "pic": [
+    "gq1",
+    "ablf6",
+    "ablf4",
+    "ablf2"
+  ],
+  "pid": [
+    "gq3",
+    "lbf",
+    "cbl3lb",
+    "cbl3mf"
+  ],
+  "pil": [
+    "ghl",
+    "lff",
+    "cbr2lf",
+    "cbr2mb"
+  ],
+  "pin": [
+    "gsq",
+    "lvfl",
+    "ctl2lf",
+    "ctl2mb"
+  ],
+  "pit": [
+    "gbs",
+    "lff",
+    "cbl3lb",
+    "cbl3mf"
+  ],
+  "poc": [
+    "gbs",
+    "lvf",
+    "lvfr",
+    "lvfl"
+  ],
+  "pod": [
+    "ghl",
+    "lhfb"
+  ],
+  "pol": [
+    "gci",
+    "am083",
+    "lhft"
+  ],
+  "pon": [
+    "gq2"
+  ],
+  "pos": [
+    "gq3",
+    "lbf",
+    "ctr2lf",
+    "ctr2mb"
+  ],
+  "pub": [
+    "gq1",
+    "lvfl"
+  ],
+  "pun": [
+    "gci",
+    "am023",
+    "am022",
+    "am021"
+  ],
+  "pur": [
+    "gq4",
+    "lbf",
+    "atla4"
+  ],
+  "put": [
+    "gsq",
+    "cbl2lf",
+    "cbl2mb"
+  ],
+  "pyl": [
+    "gq1",
+    "al4"
+  ],
+  "pyx": [
+    "gq4",
+    "lbf",
+    "ctr2lf",
+    "ctr2mb"
+  ],
+  "rab": [
+    "gq2",
+    "lbf",
+    "lfhb"
+  ],
+  "rac": [
+    "gbs",
+    "cbl3lb",
+    "cbl3mf"
+  ],
+  "rad": [
+    "gq1",
+    "cbl2lf",
+    "cbl2mb"
+  ],
+  "rag": [
+    "ghl",
+    "lbht"
+  ],
+  "ral": [
+    "gbs",
+    "am082",
+    "am081"
+  ],
+  "ram": [
+    "ghl",
+    "lvf",
+    "dm"
+  ],
+  "ran": [
+    "ghl",
+    "lvf",
+    "lbf",
+    "am081"
+  ],
+  "rap": [
+    "gq3",
+    "lvf",
+    "cr2lf",
+    "cr2mb"
+  ],
+  "rav": [
+    "gq3",
+    "lhft"
+  ],
+  "reb": [
+    "gsq",
+    "abrf8"
+  ],
+  "rec": [
+    "gq1",
+    "cbl2lf",
+    "cbl2mb",
+    "cbr2lf",
+    "cbr2mb"
+  ],
+  "red": [
+    "gci",
+    "cb2lf",
+    "cb2mb"
+  ],
+  "ref": [
+    "gbs",
+    "lbf",
+    "cbl3lb",
+    "cbl3mf"
+  ],
+  "reg": [
+    "gsq",
+    "ar2"
+  ],
+  "rel": [
+    "gfs",
+    "lhf",
+    "lhfb",
+    "lhft"
+  ],
+  "rem": [
+    "gci",
+    "lbf",
+    "atrf4"
+  ],
+  "ren": [
+    "gsq",
+    "lbhb",
+    "am081"
+  ],
+  "rep": [
+    "gq2",
+    "abrf6"
+  ],
+  "res": [
+    "gq2",
+    "lbhb"
+  ],
+  "ret": [
+    "gci",
+    "lhf"
+  ],
+  "rev": [
+    "ghr",
+    "lfhbm",
+    "cbl3lf",
+    "cbl3mb",
+    "dm"
+  ],
+  "rex": [
+    "ghr",
+    "lhf",
+    "dm"
+  ],
+  "rib": [
+    "gci",
+    "lhf",
+    "lvf"
+  ],
+  "ric": [
+    "gq1",
+    "ablf6"
+  ],
+  "rid": [
+    "gq3",
+    "lvf",
+    "lvfr"
+  ],
+  "rig": [
+    "gci",
+    "ct2lf",
+    "ct2mb",
+    "cb2lf",
+    "cb2mb"
+  ],
+  "ril": [
+    "ghl",
+    "lff",
+    "ctr2lf",
+    "ctr2mb"
+  ],
+  "rin": [
+    "gsq",
+    "lvf",
+    "lvfl"
+  ],
+  "rip": [
+    "ghl",
+    "lbf",
+    "am022",
+    "cr2lf",
+    "cr2mb"
+  ],
+  "ris": [
+    "gq2",
+    "lbf",
+    "atlb8",
+    "atlb6",
+    "atlb4"
+  ],
+  "rit": [
+    "gbs",
+    "lff",
+    "dm"
+  ],
+  "riv": [
+    "gsq",
+    "am082",
+    "lvf",
+    "am083"
+  ],
+  "roc": [
+    "gbs",
+    "cmlf",
+    "cmmb",
+    "cbl3lb",
+    "cbl3mf",
+    "ctr3lb",
+    "ctr3mf"
+  ],
+  "rol": [
+    "gci",
+    "lhf",
+    "am643"
+  ],
+  "ron": [
+    "gq2",
+    "atlf8"
+  ],
+  "rop": [
+    "gci",
+    "lbf",
+    "am023"
+  ],
+  "ros": [
+    "gq3",
+    "lff",
+    "cbr2lf",
+    "cbr2mb"
+  ],
+  "rov": [
+    "gsq",
+    "lbf",
+    "atlb8",
+    "atlb6",
+    "atlb4",
+    "atlb2"
+  ],
+  "ruc": [
+    "gq1",
+    "lhf",
+    "lhft"
+  ],
+  "rud": [
+    "gq1",
+    "lhf",
+    "lvfl",
+    "lvf"
+  ],
+  "rul": [
+    "gci",
+    "lbhb",
+    "dm"
+  ],
+  "rum": [
+    "gq4",
+    "atlf2"
+  ],
+  "run": [
+    "ghr",
+    "lvf",
+    "lvfr",
+    "lvfl"
+  ],
+  "rup": [
+    "ghr",
+    "lvf",
+    "am643",
+    "am082"
+  ],
+  "rus": [
+    "gq1",
+    "lff",
+    "ablf4"
+  ],
+  "rut": [
+    "gsq",
+    "ctl2lf",
+    "ctl2mb"
+  ],
+  "rux": [
+    "gq1",
+    "lhf",
+    "am422"
+  ],
+  "ryc": [
+    "gq1",
+    "lhfb"
+  ],
+  "ryd": [
+    "gbs",
+    "lbf",
+    "am622"
+  ],
+  "ryg": [
+    "gq4",
+    "ablf8",
+    "lbht",
+    "cmlf",
+    "cmmb"
+  ],
+  "ryl": [
+    "gq3",
+    "lff",
+    "atrb8",
+    "atrb6",
+    "atrb4",
+    "atrb2"
+  ],
+  "rym": [
+    "gq4",
+    "lhfb"
+  ],
+  "ryn": [
+    "gq4",
+    "atrf8"
+  ],
+  "ryp": [
+    "gq4",
+    "lbf"
+  ],
+  "rys": [
+    "gq1",
+    "atlf6"
+  ],
+  "ryt": [
+    "ghr",
+    "am081",
+    "am083",
+    "lff"
+  ],
+  "ryx": [
+    "gq4",
+    "lff",
+    "lff",
+    "am081"
+  ],
+  "sab": [
+    "gq3",
+    "lbf",
+    "lfht",
+    "cbl3lb",
+    "cbl3mf"
+  ],
+  "sal": [
+    "gbs",
+    "lff",
+    "ablb4",
+    "ablb6"
+  ],
+  "sam": [
+    "ghl",
+    "am083",
+    "lvf",
+    "dm"
+  ],
+  "san": [
+    "gq3",
+    "lbf"
+  ],
+  "sap": [
+    "gq3",
+    "lhf",
+    "cr2sb"
+  ],
+  "sar": [
+    "gci",
+    "am083",
+    "am083",
+    "lvf"
+  ],
+  "sat": [
+    "gq3",
+    "ablf8"
+  ],
+  "sav": [
+    "ghl",
+    "lff",
+    "am022",
+    "ct2lf",
+    "ct2mb"
+  ],
+  "seb": [
+    "gsq",
+    "atrf4"
+  ],
+  "sec": [
+    "gq1",
+    "ctl2lf",
+    "ctl2mb"
+  ],
+  "sed": [
+    "gci",
+    "cmlf",
+    "cmmb",
+    "cr2lf",
+    "cr2mb"
+  ],
+  "sef": [
+    "gbs",
+    "cmlf",
+    "cmmb",
+    "cbl3lb",
+    "cbl3mf"
+  ],
+  "seg": [
+    "gsq",
+    "ab2"
+  ],
+  "sel": [
+    "gfs",
+    "am08s"
+  ],
+  "sem": [
+    "gci",
+    "atlf4",
+    "lbf"
+  ],
+  "sen": [
+    "gsq",
+    "lvf",
+    "ab2",
+    "cmlf",
+    "cmmb"
+  ],
+  "sep": [
+    "gq2",
+    "lvf",
+    "lvfl",
+    "lvfr"
+  ],
+  "ser": [
+    "ghb",
+    "lvfl"
+  ],
+  "set": [
+    "gci",
+    "lhhr"
+  ],
+  "sev": [
+    "ghr",
+    "am083"
+  ],
+  "sib": [
+    "gci",
+    "lff",
+    "atrf4"
+  ],
+  "sic": [
+    "gq3",
+    "lff"
+  ],
+  "sid": [
+    "gq3",
+    "lhf",
+    "arb2"
+  ],
+  "sig": [
+    "gci",
+    "cl2lf",
+    "cl2mb",
+    "cr2lf",
+    "cr2mb"
+  ],
+  "sil": [
+    "ghl",
+    "lbht",
+    "lff"
+  ],
+  "sim": [
+    "ght",
+    "lvf",
+    "lvfl"
+  ],
+  "sip": [
+    "gsq",
+    "lvf",
+    "am223",
+    "cl3lf",
+    "cl3mb"
+  ],
+  "sit": [
+    "gbs",
+    "dm"
+  ],
+  "siv": [
+    "gsq",
+    "lvf",
+    "lhfb",
+    "cmlf",
+    "cmmb"
+  ],
+  "soc": [
+    "gfs",
+    "lvf",
+    "am081",
+    "ctl3lb",
+    "ctl3mf"
+  ],
+  "sog": [
+    "gq2",
+    "lff",
+    "am642",
+    "am081"
+  ],
+  "sol": [
+    "gci",
+    "am082",
+    "lhf"
+  ],
+  "som": [
+    "gsq",
+    "cbr2lf",
+    "cbr2mb",
+    "cbl2lf",
+    "cbl2mb",
+    "ctl2lf",
+    "ctl2mb"
+  ],
+  "son": [
+    "gq2",
+    "lbrf"
+  ],
+  "sop": [
+    "gci",
+    "am082",
+    "lbf",
+    "ct2lf",
+    "ct2mb"
+  ],
+  "sor": [
+    "ghl",
+    "lbf",
+    "atlb8",
+    "atlb6",
+    "atlb4",
+    "atlb2"
+  ],
+  "sov": [
+    "gsq",
+    "lff",
+    "atrb8",
+    "atrb6",
+    "atrb4",
+    "atrb2"
+  ],
+  "sub": [
+    "gq1",
+    "lvf"
+  ],
+  "sud": [
+    "gq1",
+    "lhf",
+    "lhf",
+    "dm"
+  ],
+  "sug": [
+    "ghr",
+    "cl3lf",
+    "cl3mb",
+    "cr1lf",
+    "cr1mb"
+  ],
+  "sul": [
+    "gci",
+    "am242"
+  ],
+  "sum": [
+    "gq4",
+    "atlf4"
+  ],
+  "sun": [
+    "gci",
+    "cbr1lf",
+    "cbr1mb",
+    "ctr1lf",
+    "ctr1mb",
+    "ctl1lf",
+    "ctl1mb",
+    "cbl1lf",
+    "cbl1mb"
+  ],
+  "sup": [
+    "ghr",
+    "am643",
+    "lhf",
+    "cmlf",
+    "cmmb"
+  ],
+  "sur": [
+    "gq1",
+    "lbf",
+    "atla4",
+    "atla8"
+  ],
+  "sut": [
+    "gsq",
+    "ctl2lf",
+    "ctl2mb",
+    "cbr2lf",
+    "cbr2mb"
+  ],
+  "syd": [
+    "gbs",
+    "am223",
+    "lbf"
+  ],
+  "syl": [
+    "gq4",
+    "lbf",
+    "cbl2lf",
+    "cbl2mb",
+    "ctr2lf",
+    "ctr2mb"
+  ],
+  "sym": [
+    "gq4",
+    "lvfr"
+  ],
+  "syn": [
+    "gq4",
+    "ablb8",
+    "ablb6",
+    "ablb4",
+    "ablb2"
+  ],
+  "syp": [
+    "gq4",
+    "lbf",
+    "atlf4"
+  ],
+  "syr": [
+    "gfs",
+    "lbf",
+    "ctr2lf",
+    "ctr2mb"
+  ],
+  "syt": [
+    "ghr",
+    "am082",
+    "am083",
+    "lff"
+  ],
+  "syx": [
+    "gq4",
+    "abrb8",
+    "abrb6",
+    "abrb4",
+    "lbf"
+  ],
+  "tab": [
+    "gq3",
+    "am08s",
+    "lbf",
+    "cbl3lb",
+    "cbl3mf"
+  ],
+  "tac": [
+    "gq3",
+    "lff",
+    "ct2lf",
+    "ct2mb",
+    "cr2lf",
+    "cr2mb"
+  ],
+  "tad": [
+    "gq3",
+    "ctl2lf",
+    "ctl2mb",
+    "cbr2lf",
+    "cbr2mb"
+  ],
+  "tag": [
+    "ghl",
+    "lbhb"
+  ],
+  "tal": [
+    "gbs",
+    "lff",
+    "ablf6"
+  ],
+  "tam": [
+    "ghl",
+    "lhfb",
+    "lhft",
+    "cmlf",
+    "cmmb"
+  ],
+  "tan": [
+    "gq3",
+    "ablf8",
+    "ablf6",
+    "ablf4"
+  ],
+  "tap": [
+    "gci",
+    "am083",
+    "lhf",
+    "am642",
+    "cmlf",
+    "cmmb"
+  ],
+  "tar": [
+    "gci",
+    "am083",
+    "cl3lf",
+    "cl3mb"
+  ],
+  "tas": [
+    "gsq",
+    "lvf",
+    "am642"
+  ],
+  "teb": [
+    "gsq",
+    "atlf6"
+  ],
+  "tec": [
+    "gq1",
+    "lbhb",
+    "dm"
+  ],
+  "ted": [
+    "gci",
+    "cbl2lf",
+    "cbl2mb"
+  ],
+  "teg": [
+    "gsq",
+    "ar1"
+  ],
+  "tel": [
+    "gfs",
+    "cbl3lf",
+    "cbl3mb",
+    "lbf",
+    "lbft"
+  ],
+  "tem": [
+    "gci",
+    "abrf4",
+    "lbf"
+  ],
+  "ten": [
+    "gsq",
+    "ctl1lf",
+    "ctl1mb",
+    "ctr1lf",
+    "ctr1mb",
+    "cbr1lf",
+    "cbr1mb",
+    "cbl1lf",
+    "cbl1mb"
+  ],
+  "tep": [
+    "gq2",
+    "atlf6"
+  ],
+  "ter": [
+    "ghb",
+    "lvfr",
+    "atlf4"
+  ],
+  "tes": [
+    "gq2",
+    "lvf",
+    "lhf"
+  ],
+  "tev": [
+    "ghr",
+    "am082"
+  ],
+  "tex": [
+    "ghr",
+    "lfhb",
+    "dm"
+  ],
+  "tic": [
+    "gq3",
+    "atrf2",
+    "am082",
+    "cmlf",
+    "cmmb"
+  ],
+  "tid": [
+    "gq3",
+    "lvf",
+    "lvfr",
+    "dtr"
+  ],
+  "til": [
+    "ghl",
+    "lbhb",
+    "cmlf",
+    "cmmb"
+  ],
+  "tim": [
+    "ght",
+    "lbf"
+  ],
+  "tin": [
+    "gsq",
+    "lvfl"
+  ],
+  "tip": [
+    "gq2",
+    "lvf",
+    "dm"
+  ],
+  "tir": [
+    "gq3",
+    "lbf",
+    "am081",
+    "am082"
+  ],
+  "tob": [
+    "ght",
+    "lhfb"
+  ],
+  "toc": [
+    "gbs",
+    "lhfb",
+    "am081"
+  ],
+  "tod": [
+    "ghl",
+    "cb2lf",
+    "cb2mb",
+    "ct2lf",
+    "ct2mb"
+  ],
+  "tog": [
+    "gq2",
+    "am422",
+    "am081",
+    "lff"
+  ],
+  "tol": [
+    "gci",
+    "lhf",
+    "ab3"
+  ],
+  "tom": [
+    "gsq",
+    "ctl2lf",
+    "ctl2mb",
+    "ctr2lf",
+    "ctr2mb",
+    "cbl2lf",
+    "cbl2mb"
+  ],
+  "ton": [
+    "gq2",
+    "abrf6",
+    "abrf4",
+    "abrf2"
+  ],
+  "top": [
+    "gci",
+    "lbf",
+    "am082",
+    "am081"
+  ],
+  "tor": [
+    "ghl",
+    "am082",
+    "cmlf",
+    "cmmb"
+  ],
+  "tuc": [
+    "gq1",
+    "lhf",
+    "lhfb",
+    "cbr2lf",
+    "cbr2mb",
+    "cl2lf",
+    "cl2mb"
+  ],
+  "tud": [
+    "gq1",
+    "lhf",
+    "cl2lf",
+    "cl2mb"
+  ],
+  "tug": [
+    "ghr",
+    "lhf",
+    "lhft"
+  ],
+  "tul": [
+    "gci",
+    "dm"
+  ],
+  "tun": [
+    "ght",
+    "lbf",
+    "am083",
+    "cmlf",
+    "cmmb"
+  ],
+  "tus": [
+    "gq1",
+    "lff",
+    "ctl2lf",
+    "ctl2mb"
+  ],
+  "tux": [
+    "gq1",
+    "lhf",
+    "cb2lf",
+    "cb2mb"
+  ],
+  "tyc": [
+    "gq1",
+    "dm"
+  ],
+  "tyd": [
+    "gbs",
+    "lbf",
+    "lfht",
+    "lfhb",
+    "cmlf",
+    "cmmb"
+  ],
+  "tyl": [
+    "gq1",
+    "atrf8"
+  ],
+  "tyn": [
+    "gq4",
+    "abrf8"
+  ],
+  "typ": [
+    "gq4",
+    "lbf",
+    "atlf6"
+  ],
+  "tyr": [
+    "gfs",
+    "lbf",
+    "atrf4",
+    "ablf4"
+  ],
+  "tyv": [
+    "gfs",
+    "am082",
+    "ctr2lf",
+    "ctr2mb",
+    "cbl2lf",
+    "cbl2mb"
+  ],
+  "wac": [
+    "gq3",
+    "lhf",
+    "cmlf",
+    "cmmb",
+    "cbl3lb",
+    "cbl3mf"
+  ],
+  "wal": [
+    "gfs",
+    "lvf",
+    "lvfl"
+  ],
+  "wan": [
+    "gq3"
+  ],
+  "wat": [
+    "gq3",
+    "dm"
+  ],
+  "web": [
+    "gsq",
+    "ablf8"
+  ],
+  "wed": [
+    "gci",
+    "ctl2lf",
+    "ctl2mb"
+  ],
+  "weg": [
+    "gsq",
+    "at1"
+  ],
+  "wel": [
+    "gfs",
+    "abrf6",
+    "abrf4"
+  ],
+  "wen": [
+    "gsq",
+    "atlf4",
+    "lbf"
+  ],
+  "wep": [
+    "gq2",
+    "cbr2lf",
+    "cbr2mb"
+  ],
+  "wer": [
+    "ghb",
+    "lvfl",
+    "ctl2lf",
+    "ctl2mb"
+  ],
+  "wes": [
+    "gq2",
+    "lbhb",
+    "cbr3lf",
+    "cbr3mb"
+  ],
+  "wet": [
+    "gci",
+    "lhhl"
+  ],
+  "wex": [
+    "ghr",
+    "dm"
+  ],
+  "wic": [
+    "gq2",
+    "ctr2lf",
+    "ctr2mb",
+    "cbl2lf",
+    "cbl2mb"
+  ],
+  "wid": [
+    "gq3",
+    "lfhb",
+    "dm"
+  ],
+  "win": [
+    "gsq",
+    "lvf"
+  ],
+  "wis": [
+    "gq3",
+    "lhf",
+    "lhft"
+  ],
+  "wit": [
+    "gfs",
+    "lvf",
+    "lvfl",
+    "lvfr"
+  ],
+  "wol": [
+    "gci",
+    "lhf",
+    "ar2"
+  ],
+  "wor": [
+    "ghl",
+    "lfht",
+    "lbf",
+    "am422",
+    "cmlf",
+    "cmmb"
+  ],
+  "wyc": [
+    "gq1"
+  ],
+  "wyd": [
+    "gbs",
+    "lbf",
+    "am222",
+    "cl2lf",
+    "cl2mb"
+  ],
+  "wyl": [
+    "gq1",
+    "ab4"
+  ],
+  "wyn": [
+    "gq4",
+    "atlf6",
+    "atlf4",
+    "atlf2"
+  ],
+  "wyt": [
+    "ghr",
+    "lff",
+    "am083",
+    "cl3lf",
+    "cl3mb"
+  ],
+  "wyx": [
+    "gq4",
+    "lbf",
+    "cbl2lf",
+    "cbl2mb",
+    "ctl2lf",
+    "ctl2mb",
+    "ctr2lf",
+    "ctr2mb"
+  ],
+  "zod": [
+    "gci"
+  ]
+}

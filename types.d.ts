@@ -51,6 +51,8 @@ type Config = {
   height?: number;
   margin?: boolean;
   strokeScalingFunction?: Function;
+  strokeScalingFunctionV2?: Function;
+  autoScaleStrokes?: boolean;
   renderer?: Function;
   icon?: boolean;
 };

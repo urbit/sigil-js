@@ -5,8 +5,9 @@ import stringRenderer from './stringRenderer';
 import reactRenderer from './reactRenderer';
 import reactImageRenderer from './reactImageRenderer';
 import {Ast, Config} from '../types';
-import {deepClone, chunkStr, isUndefined} from './lib';
-import index from './index.json';
+import {deepClone, chunkStr, isUndefined, symbolFromDef, symbolFromPhoneme, partParents} from './lib';
+import symbolDefs from './symbolDefs.json';
+import parts from './parts.json';
 
 const FG = 1;
 const BG = 0;
@@ -39,7 +40,7 @@ const TILEMAP = {
 // class ConfigError extends Error {}
 
 // apply color preference
-const paint = (node: Ast, colors: [string, string], strokeWidth: number): Ast => {
+const paint = (node: Ast, colors: [string, string], strokeWidth: string, autoScaleStrokes: boolean = false): Ast => {
   const fillIndex = node.attributes.fill === COLOR_CODES.FG ? FG : BG;
   const strokeIndex = node.attributes.stroke === COLOR_CODES.FG ? FG : BG;
 
@@ -52,18 +53,60 @@ const paint = (node: Ast, colors: [string, string], strokeWidth: number): Ast =>
     node.attributes['stroke-width'] = strokeWidth + 'px';
     node.attributes['stroke-linecap'] = 'square';
     // non-scaling-stroke is used to prevent the stroke from scaling when a scaling transformation is applied by sigil()
-    node.attributes['vector-effect'] = 'non-scaling-stroke';
+    if (!autoScaleStrokes) {
+      node.attributes['vector-effect'] = 'non-scaling-stroke';
+    }
   }
 
   return {
     name: node.name,
     attributes: node.attributes,
-    children: node.children.map(n => paint(n, colors, strokeWidth)),
+    children: node.children.map(n => paint(n, colors, strokeWidth, autoScaleStrokes)),
     ...node,
   };
 };
 
 const sigil = (props: Config) => {
+  props = {...props};
+
+  // get phonemes as array from patp input and split into array
+  let phonemes = chunkStr(props.patp.replace(/[\^~-]/g, ''), 3);
+
+  invariant(Array.isArray(phonemes), `Invalid patp argument`);
+
+  // Throw an error if the phoneme length is not a 32, 16 or 8 bit point.
+  const phonemeLengthDidPass =
+    phonemes.length === 1 || phonemes.length === 2 || phonemes.length === 4;
+
+  invariant(
+    phonemeLengthDidPass,
+    `@tlon/sigil-js cannot render @p of length ${phonemes.length}. Only lengths of 1 (galaxy), 2 (star), and 4 (planet) are supported at this time.`
+  );
+
+  // get symbols and clone them. If no symbol is found, the @p prop was invalid.
+  let patpDidPass;
+
+  let symbols = phonemes.map(phoneme => {
+    const ast = symbolFromPhoneme(phoneme);
+    if (isUndefined(ast)) {
+      patpDidPass = false;
+      return {};
+    } else {
+      patpDidPass = true;
+      return ast;
+    }
+  });
+
+  invariant(
+    patpDidPass,
+    `@tlon/sigil-js  needs a valid patp (point name). Patp field is invalid. Recieved ${props.patp}`
+  );
+  
+  return sigilFromSymbols(symbols, props);
+};
+
+const sigilFromSymbols = (symbols: any[], props: Config) => {
+  symbols = deepClone(symbols);
   props = {...props};
 
   // Set default values from config
@@ -102,40 +145,6 @@ const sigil = (props: Config) => {
   if (props.icon === true) {
     props.margin = false;
   }
-
-  // get phonemes as array from patp input and split into array
-  let phonemes = chunkStr(props.patp.replace(/[\^~-]/g, ''), 3);
-
-  invariant(Array.isArray(phonemes), `Invalid patp argument`);
-
-  // Throw an error if the phoneme length is not a 32, 16 or 8 bit point.
-  const phonemeLengthDidPass =
-    phonemes.length === 1 || phonemes.length === 2 || phonemes.length === 4;
-
-  invariant(
-    phonemeLengthDidPass,
-    `@tlon/sigil-js cannot render @p of length ${phonemes.length}. Only lengths of 1 (galaxy), 2 (star), and 4 (planet) are supported at this time.`
-  );
-
-  // get symbols and clone them. If no symbol is found, the @p prop was invalid.
-  let patpDidPass;
-
-  let symbols = phonemes.map(phoneme => {
-    // @ts-ignore
-    const ast = index[phoneme];
-    if (isUndefined(ast)) {
-      patpDidPass = false;
-      return {};
-    } else {
-      patpDidPass = true;
-      return deepClone(ast);
-    }
-  });
-
-  invariant(
-    patpDidPass,
-    `@tlon/sigil-js  needs a valid patp (point name). Patp field is invalid. Recieved ${props.patp}`
-  );
 
   if (props.icon === true) {
     symbols = symbols.map((s: Ast) => {
@@ -273,6 +282,8 @@ const sigil = (props: Config) => {
 
   if (props.strokeScalingFunction) {
     strokeWidth = props.strokeScalingFunction(props.size);
+  } else if (props.strokeScalingFunctionV2) {
+    strokeWidth = props.strokeScalingFunctionV2(symbolSize.x);
   } else {
     strokeWidth = props.width / 128 + 0.33;
   }
@@ -281,11 +292,20 @@ const sigil = (props: Config) => {
     strokeWidth = 0.8;
   }
 
+  // if (props.autoScaleStrokes) {
+  //   strokeWidth /= symbolsGroupScale;
+  // }
+
   // Recursively apply color and other style attributes.
-  const out = paint(wrapped, props.colors, strokeWidth);
+  const out = paint(wrapped, props.colors, strokeWidth, props.autoScaleStrokes);
 
   // If a renderer function has been provided, call this renderer with provided AST. If there is no renderer, return the AST.
   return props.renderer === undefined ? out : props.renderer(out);
 };
 
-export {sigil, stringRenderer, reactRenderer, reactImageRenderer};
+export {
+  sigil, sigilFromSymbols,
+  stringRenderer, reactRenderer, reactImageRenderer,
+  symbolDefs, parts, partParents,
+  symbolFromDef, symbolFromPhoneme,
+};

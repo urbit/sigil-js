@@ -17,6 +17,24 @@ const COLOR_CODES = {
 };
 
 const UNIT_GRIDS = {
+  16: [
+    {x: 0, y: 0},
+    {x: 64, y: 0},
+    {x: 128, y: 0},
+    {x: 192, y: 0},
+    {x: 0, y: 64},
+    {x: 64, y: 64},
+    {x: 128, y: 64},
+    {x: 192, y: 64},
+    {x: 0, y: 128},
+    {x: 64, y: 128},
+    {x: 128, y: 128},
+    {x: 192, y: 128},
+    {x: 0, y: 192},
+    {x: 64, y: 192},
+    {x: 128, y: 192},
+    {x: 192, y: 192},
+  ],
   4: [
     {x: 0, y: 0},
     {x: 128, y: 0},
@@ -31,6 +49,7 @@ const UNIT_GRIDS = {
 };
 
 const TILEMAP = {
+  16: {x: 4, y: 4},
   4: {x: 2, y: 2},
   2: {x: 2, y: 1},
   1: {x: 1, y: 1},
@@ -108,13 +127,16 @@ const sigil = (props: Config) => {
 
   invariant(Array.isArray(phonemes), `Invalid patp argument`);
 
-  // Throw an error if the phoneme length is not a 32, 16 or 8 bit point.
+  // Throw an error if the phoneme length is not a 64, 32, 16 or 8 bit point.
   const phonemeLengthDidPass =
-    phonemes.length === 1 || phonemes.length === 2 || phonemes.length === 4;
+    phonemes.length === 1 ||
+    phonemes.length === 2 ||
+    phonemes.length === 4 ||
+    phonemes.length === 16;
 
   invariant(
     phonemeLengthDidPass,
-    `@tlon/sigil-js cannot render @p of length ${phonemes.length}. Only lengths of 1 (galaxy), 2 (star), and 4 (planet) are supported at this time.`
+    `@tlon/sigil-js cannot render @p of length ${phonemes.length}. Only lengths of 1 (galaxy), 2 (star), 4 (planet), and 16 (moon) are supported at this time.`
   );
 
   // get symbols and clone them. If no symbol is found, the @p prop was invalid.
@@ -146,7 +168,7 @@ const sigil = (props: Config) => {
     });
   }
 
-  const tier = symbols.length === 4 ? 4 : symbols.length === 2 ? 2 : 1;
+  const tier = symbols.length === 16 ? 16 : symbols.length === 4 ? 4 : symbols.length === 2 ? 2 : 1;
 
   // get a grid according to the point's tier (planet, start, galaxy)
   const grid = UNIT_GRIDS[tier];

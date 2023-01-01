@@ -11,7 +11,7 @@
   "author": "Gavin Atkinson",
   "license": "MIT",
   "devDependencies": {
-    "parcel": "^1.12.4",
+    "parcel": "^2.8.2",
     "typescript": "^3.8.3"
   },
   "dependencies": {

@@ -60,9 +60,7 @@ const Sigil = props => {
 
 ### Build
 
-|Commands              | Description                                   |
-| -------------------- | --------------------------------------------- |
-|`gulp` or `npm run build`| Build the library from source              |
+`npm run build`
 
 ### Tests
 

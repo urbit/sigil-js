@@ -1,6 +1,6 @@
 {
   "name": "@tlon/sigil-js",
-  "version": "1.4.5",
+  "version": "1.4.6",
   "private": false,
   "license": "MIT",
   "main": "dist/index.js",
@@ -19,7 +19,7 @@
     "transformation-matrix": "2.1.1"
   },
   "peerDependencies": {
-    "react": "^16 || ^17"
+    "react": "^16 || ^17 || ^18"
   },
   "scripts": {
     "test": "tsdx test",

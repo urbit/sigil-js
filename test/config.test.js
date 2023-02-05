@@ -1,4 +1,4 @@
-const {sigil, stringRenderer} = require('../lib/dist/index');
+const {sigil, stringRenderer} = require('../dist/index');
 
 const config = {
   patp: 'zod',
@@ -14,5 +14,8 @@ const config2 = {
 test('Uses defaults', () => {
   expect(() => {
     sigil(config);
+  }).not.toThrow();
+  expect(() => {
+    sigil(config2);
   }).not.toThrow();
 });

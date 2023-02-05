@@ -1,4 +1,4 @@
-const {sigil, stringRenderer} = require('../lib/dist/index');
+const {sigil, stringRenderer} = require('../dist/index');
 
 const config = {
   patp: null,

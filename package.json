@@ -22,7 +22,7 @@
     "react": "^16 || ^17"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "tsdx test",
     "start": "tsdx watch",
     "build": "tsdx build",
     "lint": "tsdx lint",

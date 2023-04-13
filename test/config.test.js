@@ -6,11 +6,6 @@ const config = {
   size: 128,
 };
 
-const config2 = {
-  patp: 'zod',
-  size: 128,
-};
-
 test('Uses defaults', () => {
   expect(() => {
     sigil(config);

@@ -1,9 +1,9 @@
 import {scale, translate, transform, toString} from 'transformation-matrix';
 import invariant from 'invariant';
 
-import {Ast, Config} from '../types';
 import {deepClone, chunkStr, isUndefined} from './lib';
 import index from './index.json';
+import {Ast, Config} from './types';
 
 const FG = 1;
 const BG = 0;
@@ -105,7 +105,7 @@ const sigil = ({
 
   invariant(
     patpDidPass,
-    `@tlon/sigil-js  needs a valid patp (point name). Patp field is invalid. Recieved ${props.patp}`
+    `@tlon/sigil-js  needs a valid patp (point name). Patp field is invalid. Recieved ${patp}`
   );
 
   if (icon) {

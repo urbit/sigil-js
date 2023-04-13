@@ -1,7 +1,7 @@
-import sigil from 'core';
-import {deSig} from 'lib';
-import {memoize} from 'lodash';
-import stringRenderer from 'stringRenderer';
+import sigil from '../core';
+import {deSig} from '../lib';
+import memoize from 'lodash.memoize';
+import stringRenderer from '../stringRenderer';
 
 const memSigil = memoize(sigil, ({strokeScalingFunction, ...props}) =>
   JSON.stringify(Object.values(props))
@@ -10,10 +10,6 @@ const memSigil = memoize(sigil, ({strokeScalingFunction, ...props}) =>
 export class Sigil extends HTMLElement {
   static get observedAttributes() {
     return ['patp', 'size', 'fg', 'bg', 'icon', 'margin'];
-  }
-
-  constructor() {
-    super();
   }
 
   connectedCallback() {

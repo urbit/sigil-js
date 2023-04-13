@@ -1,6 +1,4 @@
-declare module '@tlon/sigil-js';
-
-type Attributes = {
+export type Attributes = {
   version?: string;
   class?: string;
   width?: string;
@@ -27,7 +25,7 @@ type Attributes = {
   dataisgeon?: string;
 } & Record<string, string>;
 
-type Ast = {
+export type Ast = {
   name: string;
   type: string;
   value: string;
@@ -35,7 +33,7 @@ type Ast = {
   children: Ast[];
 };
 
-type Config = {
+export type Config = {
   /**
    * the patp that the sigil will represent, ie ~sampel-palnet
    */
@@ -66,5 +64,3 @@ type Config = {
    */
   strokeScalingFunction?: (size: number) => number;
 };
-
-export {Attributes, Ast, Config};

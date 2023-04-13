@@ -1,4 +1,3 @@
-// @ts-ignore
 import {stringify} from 'svgson';
 import {Ast} from '../types';
 

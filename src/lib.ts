@@ -14,4 +14,6 @@ const compose = (...fns: Array<Function>) => {
 
 const isUndefined = (v: any) => typeof v === 'undefined';
 
-export {deepClone, chunkStr, compose, isUndefined};
+const deSig = (patp: string) => patp.replace('~', '');
+
+export {deepClone, deSig, chunkStr, compose, isUndefined};

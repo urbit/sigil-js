@@ -7,6 +7,7 @@
   "module": "dist/sigil-js.esm.js",
   "devDependencies": {
     "@types/invariant": "^2.2.31",
+    "@types/lodash": "^4.14.192",
     "@types/react": "^17.0.20",
     "husky": "^4.2.3",
     "prettier": "^1.19.1",
@@ -15,7 +16,8 @@
   },
   "dependencies": {
     "invariant": "^2.2.4",
-    "svgson": "^4.0.0",
+    "lodash.memoize": "^4.1.2",
+    "svgson": "^5.2.1",
     "transformation-matrix": "2.1.1"
   },
   "peerDependencies": {

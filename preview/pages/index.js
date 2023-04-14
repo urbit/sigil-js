@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import { useState } from 'react'
 import ob from 'urbit-ob'
-import sigil from '../lib/index'
+import '../lib/index'
 
 const sequence = num => Array.from(Array(num), (_, i) => i);
 
@@ -52,19 +52,7 @@ export default function Home() {
         {
           sequence(qty).map(() => {
             return (
-              <div 
-                dangerouslySetInnerHTML={{
-                  __html: sigil({
-                    point: point, 
-                    size:size,
-                    padding:0,
-                    background:'#010101', 
-                    foreground:'yellow',
-                    detail:detail,
-                    space:space,
-                  }) 
-                }}
-              />
+              <urbit-sigil point={point} size={size} detail={detail} space={space} bg="#010101" fg="yellow" />
             )
           })
         }

@@ -48,7 +48,6 @@ export type Config = {
   margin?: boolean;
   /**
    * whether to simplify the shapes inside the sigil for use as an icon.
-   * removes margin automatically
    */
   icon?: boolean;
   /**

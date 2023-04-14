@@ -67,13 +67,6 @@ const sigil = ({
   bg = '#000',
   strokeScalingFunction,
 }: Config) => {
-  const width = size;
-  const height = size;
-
-  if (icon) {
-    margin = false;
-  }
-
   // get phonemes as array from patp input and split into array
   let phonemes = chunkStr(patp.replace(/[\^~-]/g, ''), 3);
 
@@ -156,21 +149,19 @@ const sigil = ({
 
   // Calculate the size of each symbol - IE, for planets, there are four symbols.
   const symbolSize = {
-    x: width * resizeRatio,
-    y: height * resizeRatio,
+    x: size * resizeRatio,
+    y: size * resizeRatio,
   };
 
   // Calculate the left and top margins that will be used to transform the symbolsGroup.
   const marginPx = {
-    x: (width - TILEMAP[tier].x * symbolSize.x) / 2,
-    y: (height - TILEMAP[tier].y * symbolSize.y) / 2,
+    x: (size - TILEMAP[tier].x * symbolSize.x) / 2,
+    y: (size - TILEMAP[tier].y * symbolSize.y) / 2,
   };
 
-  if (!margin || icon) {
+  if (!margin) {
     marginPx.x = 0;
-    if (!icon) {
-      marginPx.y = 0;
-    }
+    marginPx.y = 0;
   }
 
   // Calculate how much the symbolsGroups should change in scale. 128 is the unit size of the SVGs as drawn in their source file.
@@ -197,7 +188,7 @@ const sigil = ({
     type: '',
     value: '',
     attributes: {
-      viewBox: `0 0 ${width} ${height}`,
+      viewBox: `0 0 ${size} ${size}`,
       version: '1.1',
       xmlns: 'http://www.w3.org/2000/svg',
     },
@@ -209,8 +200,8 @@ const sigil = ({
         value: '',
         attributes: {
           fill: COLOR_CODES.BG,
-          width: `${width}px`,
-          height: `${height}px`,
+          width: `${size}px`,
+          height: `${size}px`,
           x: 0 + 'px',
           y: 0 + 'px',
         },
@@ -223,10 +214,10 @@ const sigil = ({
   // Calculate a strokeWidth based on props.size
   let strokeWidth;
 
-  if (strokeScalingFunction && size) {
+  if (strokeScalingFunction) {
     strokeWidth = strokeScalingFunction(size);
   } else {
-    strokeWidth = width / 128 + 0.33;
+    strokeWidth = size / 128 + 0.33;
   }
 
   if (icon) {

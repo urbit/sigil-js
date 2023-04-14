@@ -52,7 +52,7 @@ export default function Home() {
         {
           sequence(qty).map(() => {
             return (
-              <urbit-sigil point={point} size={size} detail={detail} space={space} bg="#010101" fg="yellow" />
+              <urbit-sigil key={point} point={point} size={size} detail={detail} space={space} bg="#010101" fg="yellow" />
             )
           })
         }
@@ -132,9 +132,12 @@ export default function Home() {
             >
               Large
             </button>
-            <hr className="mt-4 mb-2 p-0 -mx-4" />
-
-            <hr className="mt-4 mb-2 p-0 -mx-4" />
+            </div>
+            </div>
+            <div 
+          style={{ width: "220px" }}
+          className="hidden md:flex absolute top-0 right-0 m-4 flex-col">
+          <div className="bg-white p-4 rounded-2xl flex flex-col">
             <b>Size</b>
             <button
               className="mt-2"
@@ -168,7 +171,7 @@ export default function Home() {
             >
               12
             </button>
-
+            <hr className="mt-4 mb-2 p-0 -mx-4" />
             <b>Detail Mode</b>
             <button
               className="mt-2"
@@ -178,12 +181,12 @@ export default function Home() {
             </button>
             <button
               className="mt-2"
-              onClick={() => setDetail('icon')}
+              onClick={() => setDetail('none')}
             >
               Icon
             </button>
 
-            <p>
+            <p className='mt-4'>
               Viewing <b>{point}</b>
             </p>
 

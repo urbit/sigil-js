@@ -1,12 +1,18 @@
 import sigil from './core';
-import {Sigil as SigilComponent} from './components/sigil';
-import {SigilImage} from './components/sigil-image';
 
-if (customElements) {
-  customElements.define('urbit-sigil', SigilComponent);
-  customElements.define('urbit-sigil-image', SigilImage);
+if (typeof window !== 'undefined' && window.customElements) {
+  import('./components/sigil').then(({ Sigil }) => {
+    if (typeof customElements.get('urbit-sigil') === 'undefined') {
+      customElements.define('urbit-sigil', Sigil);
+    }
+  }) 
+  import('./components/sigil-image').then(({ SigilImage }) => {
+    if (typeof customElements.get('urbit-sigil-image') === 'undefined') {
+      customElements.define('urbit-sigil-image', SigilImage);
+    }
+  }) 
 }
 
 export * from './types';
-export {sigil, SigilComponent, SigilImage};
+export {sigil};
 export default sigil;

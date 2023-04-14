@@ -18,10 +18,6 @@ export class SigilImage extends Sigil {
     const comp = template.content.childNodes[0] as HTMLElement;
     comp.id = 'sigil';
 
-    if (this.size) {
-      comp.style.height = `${this.size}px`;
-      comp.style.width = `${this.size}px`;
-    }
     this.shadowRoot.appendChild(comp);
   }
 }

@@ -2,7 +2,7 @@ import sigil from '../core';
 import memoize from 'lodash.memoize';
 
 const deSig = (patp: string) => patp.replace('~', '');
-const memSigil = memoize(sigil,
+const memSigil = memoize(arg => sigil(arg).trim(),
   (props) => JSON.stringify(Object.values(props))
 );
 const template = document.createElement('template');
@@ -14,7 +14,7 @@ template.innerHTML = `<style>
 
 export class Sigil extends HTMLElement {
   static get observedAttributes() {
-    return ['patp', 'size', 'fg', 'bg', 'icon', 'margin'];
+    return ['point', 'size', 'foreground', 'background', 'space', 'detail'];
   }
 
   constructor() {
@@ -35,8 +35,8 @@ export class Sigil extends HTMLElement {
     return memSigil({
       point: deSig(this.point || 'zod'),
       size: this.size ? parseInt(this.size) : undefined,
-      foreground: this.fg,
-      background: this.bg,
+      foreground: this.foreground,
+      background: this.background,
       space: this.space,
       detail: this.detail,
     });
@@ -47,20 +47,16 @@ export class Sigil extends HTMLElement {
       return;
     }
 
-    const svg = this.shadowRoot.getElementById('svg');
+    const svg = this.shadowRoot.getElementById('sigil');
     if (svg) {
       this.shadowRoot.removeChild(svg);
     }
 
+    console.log(this.getSvg())
     const template = document.createElement('template');
     template.innerHTML = this.getSvg();
     const comp = template.content.childNodes[0] as HTMLElement;
-    comp.id = 'svg';
-
-    if (this.size) {
-      comp.style.height = `${this.size}px`;
-      comp.style.width = `${this.size}px`;
-    }
+    comp.id = 'sigil';
     this.shadowRoot.appendChild(comp);
   }
 
@@ -72,12 +68,12 @@ export class Sigil extends HTMLElement {
     return this.getAttribute('size');
   }
 
-  get fg() {
-    return this.getAttribute('fg') || undefined;
+  get foreground() {
+    return this.getAttribute('foreground') || undefined;
   }
 
-  get bg() {
-    return this.getAttribute('bg') || undefined;
+  get background() {
+    return this.getAttribute('background') || undefined;
   }
 
   get space() {

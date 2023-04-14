@@ -20,6 +20,7 @@
   "devDependencies": {
     "@size-limit/esbuild-why": "^8.2.4",
     "@size-limit/preset-small-lib": "^8.2.4",
+    "@tlon/sigil-js": "^1.4.5",
     "@tsconfig/recommended": "^1.0.2",
     "@types/invariant": "^2.2.31",
     "@types/lodash.memoize": "^4.1.7",

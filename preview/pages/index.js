@@ -1,7 +1,6 @@
 import Head from 'next/head'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import ob from 'urbit-ob'
-import '../lib/index'
 
 const sequence = num => Array.from(Array(num), (_, i) => i);
 
@@ -33,7 +32,9 @@ const randPatp = k => {
 const randPlanet = () => compose(noSig, ob.patp, randPatp)(PLANET);
 
 export default function Home() {
-  // console.log(sigil)
+  useEffect(() => {
+    import('../lib/index')
+  }, [])
 
   const [point, setPoint] = useState('ridlur-figsun')
   const [size, setSize] = useState(150)

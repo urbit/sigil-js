@@ -14,8 +14,8 @@
     "url": "https://github.com/urbit/sigil-js"
   },
   "engines": {
-    "node": ">=16",
-    "npm": ">=8"
+    "node": ">=18",
+    "npm": ">=9"
   },
   "devDependencies": {
     "@size-limit/esbuild-why": "^8.2.4",

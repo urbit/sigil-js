@@ -53,7 +53,7 @@ export default function sigil({
 
   invariant(
     phonemes.length === 1 || phonemes.length === 2 || phonemes.length === 4,
-    `@tlon/sigil-js cannot render point name of length '${phonemes.length}'.  Recieved "${point}". Only lengths of 1 (galaxy), 2 (star), and 4 (planet) are supported at this time.`
+    `@urbit/sigil-js cannot render point name of length '${phonemes.length}'.  Recieved "${point}". Only lengths of 1 (galaxy), 2 (star), and 4 (planet) are supported at this time.`
   )
 
   // Symbols are stored in the index js files as svg strings indexed by phoneme. They need to be retrieved from the index with a little bit of string processing to fill in the templated parts of the SVG, ie color.

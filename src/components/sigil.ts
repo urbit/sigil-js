@@ -52,7 +52,6 @@ export class Sigil extends HTMLElement {
       this.shadowRoot.removeChild(svg);
     }
 
-    console.log(this.getSvg())
     const template = document.createElement('template');
     template.innerHTML = this.getSvg();
     const comp = template.content.childNodes[0] as HTMLElement;

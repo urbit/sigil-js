@@ -48,7 +48,7 @@ export default function sigil({
 
   invariant(
     Array.isArray(phonemes) || phonemes !== null,
-    `@tlon/sigil-js recieved an invalid point name and cannot render a sigil. Recieved '${point}'.`
+    `@urbit/sigil-js recieved an invalid point name and cannot render a sigil. Recieved '${point}'.`
   )
 
   invariant(

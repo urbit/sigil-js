@@ -34,7 +34,7 @@
   },
   "scripts": {
     "test": "jest",
-    "dev": "dts build && cp -a ./dist/. ./preview/lib",
+    "dev": "dts build && cp -a ./dist/* ./preview/lib",
     "start": "dts watch",
     "build": "dts build",
     "lint": "dts lint",

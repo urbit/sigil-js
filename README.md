@@ -4,7 +4,7 @@
 
 [→ Github](https://github.com/urbit/sigil-js)
 
-Urbit address space contains ~4.2 billion unique points. Each has a pronounceable, easily memorized name, something like ~ravmel-ropdyl. Sigils visualize these names – there are as many unique Sigils as there are Azimuth points. `@tlon/sigil-js` is a javascript library that converts one of these names into its corresponding Sigil.
+Urbit address space contains ~4.2 billion unique points. Each has a pronounceable, easily memorized name, something like ~ravmel-ropdyl. Sigils visualize these names – there are as many unique Sigils as there are Azimuth points. `@urbit/sigil-js` is a javascript library that converts one of these names into its corresponding Sigil.
 
 ![sigil intro image](https://github.com/urbit/sigil-js/blob/master/docs/intro.png?raw=true)
 
@@ -13,7 +13,7 @@ Urbit address space contains ~4.2 billion unique points. Each has a pronounceabl
 
 ### React
  ```js
-import sigil from '@tlon/sigil-js'
+import '@urbit/sigil-js'
 
 const config = {
   point: '~zod', // or 'zod'
@@ -26,18 +26,14 @@ const config = {
 
 const Sigil = ({ config }) => {
   return (
-    <div 
-      dangerouslySetInnerHTML={{
-        __html: sigil(config) 
-      }}
-    />
+    <urbit-sigil {...config} />
   )
 }
  ```
 
 ## Install
 
-`npm install @tlon/sigil-js`
+`npm install @urbit/sigil-js`
 
 ## API
 
@@ -49,8 +45,6 @@ const Sigil = ({ config }) => {
 |`background`| Background color| `string` | Yes, defaults to '#000' 
 |`detail`| Controls whether or not details should be rendered. Useful for small sizes below 48px | `none` or `default` | Yes, defaults to `default`
 |`space`| space between edge of sigil and edge of background| `none`, `large` or `default` | Yes, defaults to `default`
-|`className`| CSS class to add to the outer SVG tag| `string` | Yes
-|`style`| style attribute on the outer SVG tag| `string` | Yes
 
 
 ### Build

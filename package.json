@@ -1,26 +1,61 @@
 {
-  "name": "@tlon/sigil-js",
+  "name": "@urbit/sigil-js",
   "version": "2.0.0",
   "private": false,
   "license": "MIT",
   "main": "dist/index.js",
   "module": "dist/sigil-js.esm.js",
+  "typings": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/urbit/sigil-js"
+  },
+  "engines": {
+    "node": ">=18",
+    "npm": ">=9"
+  },
   "devDependencies": {
+    "@size-limit/esbuild-why": "^8.2.4",
+    "@size-limit/preset-small-lib": "^8.2.4",
     "@tlon/sigil-js": "^1.4.5",
+    "@tsconfig/recommended": "^1.0.2",
     "@types/invariant": "^2.2.31",
-    "jest": "^25.5.4",
-    "tsdx": "^0.14.1",
-    "typescript": "^3.9.10"
+    "@types/lodash.memoize": "^4.1.7",
+    "dts-cli": "^2.0.0",
+    "husky": "^8.0.3",
+    "typescript": "^5.0.4"
   },
   "dependencies": {
-    "invariant": "^2.2.4"
+    "invariant": "^2.2.4",
+    "lodash.memoize": "^4.1.2"
   },
   "scripts": {
     "test": "jest",
-    "start": "tsdx watch",
-    "build": "tsdx build",
-    "dev": "tsdx build && cp -a ./dist/. ./preview/lib",
-    "lint": "tsdx lint",
-    "lint:fix": "tsdx lint src --fix"
-  }
+    "dev": "dts build && cp -a ./dist/. ./preview/lib",
+    "start": "dts watch",
+    "build": "dts build",
+    "lint": "dts lint",
+    "lint:fix": "dts lint src --fix",
+    "size": "size-limit",
+    "analyze": "size-limit --why",
+    "prepare": "husky install"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "dts lint"
+    }
+  },
+  "size-limit": [
+    {
+      "path": "dist/sigil-js.cjs.production.min.js",
+      "limit": "30 KB"
+    },
+    {
+      "path": "dist/sigil-js.esm.js",
+      "limit": "30 KB"
+    }
+  ]
 }

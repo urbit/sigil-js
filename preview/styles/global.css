@@ -1,0 +1,4 @@
+
+button {
+    @apply bg-gray-200 py-1 px-2 rounded-xl border border-gray-300 hover:bg-gray-100 font-medium;
+}

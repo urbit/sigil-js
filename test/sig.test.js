@@ -1,11 +1,12 @@
 const sigil = require('../dist/index').default;
 
 const config = {
-  point: 'zod',
+  point: null,
 };
 
-test('Uses defaults', () => {
+test('Accepts sig', () => {
+  config.point = '~mitten';
   expect(() => {
-    const s = sigil(config);
+    sigil(config);
   }).not.toThrow();
 });

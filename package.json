@@ -1,50 +1,61 @@
 {
-  "name": "@tlon/sigil-js",
-  "version": "1.4.5",
+  "name": "@urbit/sigil-js",
+  "version": "2.0.0",
   "private": false,
   "license": "MIT",
   "main": "dist/index.js",
   "module": "dist/sigil-js.esm.js",
+  "typings": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/urbit/sigil-js"
+  },
+  "engines": {
+    "node": ">=18",
+    "npm": ">=9"
+  },
   "devDependencies": {
+    "@size-limit/esbuild-why": "^8.2.4",
+    "@size-limit/preset-small-lib": "^8.2.4",
+    "@tlon/sigil-js": "^1.4.5",
+    "@tsconfig/recommended": "^1.0.2",
     "@types/invariant": "^2.2.31",
-    "@types/react": "^17.0.20",
-    "husky": "^4.2.3",
-    "prettier": "^1.19.1",
-    "tsdx": "^0.14.1",
-    "typescript": "^3.8.3"
+    "@types/lodash.memoize": "^4.1.7",
+    "dts-cli": "^2.0.0",
+    "husky": "^8.0.3",
+    "typescript": "^5.0.4"
   },
   "dependencies": {
     "invariant": "^2.2.4",
-    "svgson": "^4.0.0",
-    "transformation-matrix": "2.1.1"
-  },
-  "peerDependencies": {
-    "react": "^16 || ^17"
+    "lodash.memoize": "^4.1.2"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "tsdx watch",
-    "build": "tsdx build",
-    "lint": "tsdx lint",
-    "lint:fix": "tsdx lint src --fix"
+    "test": "jest",
+    "dev": "dts build && cp -a ./dist/. ./preview/lib",
+    "start": "dts watch",
+    "build": "dts build",
+    "lint": "dts lint",
+    "lint:fix": "dts lint src --fix",
+    "size": "size-limit",
+    "analyze": "size-limit --why",
+    "prepare": "husky install"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "tsdx lint"
+      "pre-commit": "dts lint"
     }
   },
-  "prettier": {
-    "arrowParens": "avoid",
-    "bracketSpacing": false,
-    "jsxBracketSameLine": false,
-    "jsxSingleQuote": false,
-    "printWidth": 100,
-    "proseWrap": "always",
-    "quoteProps": "as-needed",
-    "semi": true,
-    "singleQuote": true,
-    "tabWidth": 2,
-    "trailingComma": "es5",
-    "useTabs": false
-  }
+  "size-limit": [
+    {
+      "path": "dist/sigil-js.cjs.production.min.js",
+      "limit": "30 KB"
+    },
+    {
+      "path": "dist/sigil-js.esm.js",
+      "limit": "30 KB"
+    }
+  ]
 }

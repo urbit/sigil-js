@@ -1,28 +1,25 @@
-const {sigil, stringRenderer} = require('../lib/dist/index');
+const sigil = require('../dist/index').default;
 
 const config = {
-  patp: null,
-  size: 128,
-  renderer: stringRenderer,
-  color: ['#fff', '#000'],
+  point: null,
 };
 
 test('throws on length 3', () => {
-  config.patp = 'rafter-fig';
+  config.point = 'rafter-fig';
   expect(() => {
     sigil(config);
   }).toThrow();
 });
 
 test('throws on length 5', () => {
-  config.patp = 'rovbud-fignys-mas';
+  config.point = 'rovbud-fignys-mas';
   expect(() => {
     sigil(config);
   }).toThrow();
 });
 
 test('throws on length 8', () => {
-  config.patp = 'ridlur-dozzod-master-listen';
+  config.point = 'ridlur-dozzod-master-listen';
   expect(() => {
     sigil(config);
   }).toThrow();

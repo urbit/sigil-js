@@ -76,7 +76,9 @@ export default function sigil({
       ? `scale(${scale}) translate(128,0)`
       : index === 2
       ? `scale(${scale}) translate(0,128)`
-      : `scale(${scale}) translate(128,128)`
+      : index === 4
+      ? `scale(${scale}) translate(128,128)`
+      : `scale(${scale}) translate(192,192)`
     
     // Path stroke-widths should never be less than 1px wide
     const strokeWidth = size < 64
@@ -120,13 +122,17 @@ export default function sigil({
         ? `translate(${(size*0.5) - (size*0.125)},${(size*0.5) - (size*0.125)}) scale(0.50)`
         : phonemes.length === 2
         ? `translate(${(size*0.5) - (size*0.25)},${(size*0.5) - (size*0.125)}) scale(0.50)`
-        : `translate(${(size*0.5) - (size*0.25)},${(size*0.5) - (size*0.25)}) scale(0.50)`
+        : phonemes.length === 4
+        ? `translate(${(size*0.5) - (size*0.25)},${(size*0.5) - (size*0.25)}) scale(0.50)`
+        : `translate(${(size*0.25) - (size*0.25)},${(size*0.25) - (size*0.25)}) scale(0.50)`
     } else {
       return phonemes.length === 1
         ? `translate(${(size*0.5) - (size*0.1875)},${(size*0.5) - (size*0.1875)}) scale(0.75)`
         : phonemes.length === 2
         ? `translate(${(size*0.5) - (size*0.3750)},${(size*0.5) - (size*0.1875)}) scale(0.75)`
-        : `translate(${(size*0.5) - (size*0.3750)},${(size*0.5) - (size*0.3750)}) scale(0.75)`
+        : phonemes.length === 4
+        ? `translate(${(size*0.5) - (size*0.3750)},${(size*0.5) - (size*0.3750)}) scale(0.75)`
+        : `translate(${(size*0.3750) - (size*0.3750)},${(size*0.3750) - (size*0.3750)}) scale(0.75)`
     }
   }()
 

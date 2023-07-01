@@ -27,6 +27,13 @@ test('Planet works', () => {
   }).not.toThrow();
 });
 
+test('Moon works', () => {
+  config.point = 'dister-dister-datryn-ribdun';
+  expect(() => {
+    sigil(config);
+  }).not.toThrow();
+});
+
 test('Invalid name is invalidated', () => {
   config.point = 'and';
   expect(() => {

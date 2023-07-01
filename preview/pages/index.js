@@ -101,6 +101,15 @@ export default function Home() {
 
             <button
               className="mt-2"
+              onClick={() => setPoint('dister-dister-datryn-ribdun')}
+            >
+              ~dister-dister-datryn-ribdun
+            </button>
+
+            <button
+
+            <button
+              className="mt-2"
               onClick={() => setPoint('binbin')}
             >
               ~binbin

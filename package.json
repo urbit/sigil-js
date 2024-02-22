@@ -1,11 +1,23 @@
 {
   "name": "@urbit/sigil-js",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "private": false,
   "license": "MIT",
-  "main": "dist/index.js",
-  "module": "dist/sigil-js.esm.js",
-  "typings": "dist/index.d.ts",
+  "main": "./dist/index.js",
+  "module": "./dist/index.esm.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.esm.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./core": {
+      "require": "./dist/core.js",
+      "import": "./dist/core.esm.js",
+      "types": "./dist/core.d.ts"
+    }
+  },
   "files": [
     "dist"
   ],
@@ -36,7 +48,7 @@
     "test": "jest",
     "dev": "dts build && cp -a ./dist/* ./preview/lib",
     "start": "dts watch",
-    "build": "dts build",
+    "build": "dts build --entry ./src/index.ts --entry ./src/core.ts",
     "lint": "dts lint",
     "lint:fix": "dts lint src --fix",
     "size": "size-limit",

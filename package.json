@@ -46,7 +46,7 @@
   },
   "scripts": {
     "test": "jest",
-    "dev": "dts build && cp -a ./dist/* ./preview/lib",
+    "dev": "npm run build && cp -a ./dist/* ./preview/lib",
     "start": "dts watch",
     "build": "dts build --entry ./src/index.ts --entry ./src/core.ts",
     "lint": "dts lint",

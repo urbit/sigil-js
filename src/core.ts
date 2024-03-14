@@ -52,8 +52,8 @@ export default function sigil({
   )
 
   invariant(
-    phonemes.length === 1 || phonemes.length === 2 || phonemes.length === 4,
-    `@urbit/sigil-js cannot render point name of length '${phonemes.length}'.  Recieved "${point}". Only lengths of 1 (galaxy), 2 (star), and 4 (planet) are supported at this time.`
+    phonemes.length === 1 || phonemes.length === 2 || phonemes.length === 4 || phonemes.length === 16,
+    `@urbit/sigil-js cannot render point name of length '${phonemes.length}'.  Recieved "${point}". Only lengths of 1 (galaxy), 2 (star), 4 (planet), and 16 (moon) are supported at this time.`
   )
 
   // Symbols are stored in the index js files as svg strings indexed by phoneme. They need to be retrieved from the index with a little bit of string processing to fill in the templated parts of the SVG, ie color.
@@ -76,7 +76,9 @@ export default function sigil({
       ? `scale(${scale}) translate(128,0)`
       : index === 2
       ? `scale(${scale}) translate(0,128)`
-      : `scale(${scale}) translate(128,128)`
+      : index === 4
+      ? `scale(${scale}) translate(128,128)`
+      : `scale(${scale}) translate(192,192)`
     
     // Path stroke-widths should never be less than 1px wide
     const strokeWidth = size < 64
@@ -120,13 +122,17 @@ export default function sigil({
         ? `translate(${(size*0.5) - (size*0.125)},${(size*0.5) - (size*0.125)}) scale(0.50)`
         : phonemes.length === 2
         ? `translate(${(size*0.5) - (size*0.25)},${(size*0.5) - (size*0.125)}) scale(0.50)`
-        : `translate(${(size*0.5) - (size*0.25)},${(size*0.5) - (size*0.25)}) scale(0.50)`
+        : phonemes.length === 4
+        ? `translate(${(size*0.5) - (size*0.25)},${(size*0.5) - (size*0.25)}) scale(0.50)`
+        : `translate(${(size*0.25) - (size*0.25)},${(size*0.25) - (size*0.25)}) scale(0.50)`
     } else {
       return phonemes.length === 1
         ? `translate(${(size*0.5) - (size*0.1875)},${(size*0.5) - (size*0.1875)}) scale(0.75)`
         : phonemes.length === 2
         ? `translate(${(size*0.5) - (size*0.3750)},${(size*0.5) - (size*0.1875)}) scale(0.75)`
-        : `translate(${(size*0.5) - (size*0.3750)},${(size*0.5) - (size*0.3750)}) scale(0.75)`
+        : phonemes.length === 4
+        ? `translate(${(size*0.5) - (size*0.3750)},${(size*0.5) - (size*0.3750)}) scale(0.75)`
+        : `translate(${(size*0.3750) - (size*0.3750)},${(size*0.3750) - (size*0.3750)}) scale(0.75)`
     }
   }()
 

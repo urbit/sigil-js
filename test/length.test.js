@@ -18,8 +18,15 @@ test('throws on length 5', () => {
   }).toThrow();
 });
 
-test('throws on length 8', () => {
-  config.point = 'ridlur-dozzod-master-listen';
+test('throws on length 7', () => {
+  config.point = 'ridlur-dozzod-master-lis';
+  expect(() => {
+    sigil(config);
+  }).toThrow();
+});
+
+test('throws on length 9', () => {
+  config.point = 'ridlur-dozzod-master-listen-mas';
   expect(() => {
     sigil(config);
   }).toThrow();
